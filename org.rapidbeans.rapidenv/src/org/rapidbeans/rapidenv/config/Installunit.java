@@ -1482,10 +1482,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 */
 	public ReadonlyListCollection<Filecheck> getSourcefilechecks() {
 		final List<Filecheck> filechecks = new ArrayList<Filecheck>();
-		for (final Filecheck check : super.getSourcefilechecks()) {
-			if (check.getOsfamily() == null
-					|| check.getOsfamily() == PlatformHelper.getOs()) {
-				filechecks.add(check);
+		if (super.getSourcefilechecks() != null) {
+			for (final Filecheck check : super.getSourcefilechecks()) {
+				if (check.getOsfamily() == null
+						|| check.getOsfamily() == PlatformHelper.getOs()) {
+					filechecks.add(check);
+				}
 			}
 		}
 		return new ReadonlyListCollection<Filecheck>(filechecks,
