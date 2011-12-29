@@ -65,8 +65,7 @@ public class PropertyTest {
         switch (PlatformHelper.getOs()) {
         case windows:
             Assert.assertTrue(cmdPath.getValue(),
-                    cmdPath.getValue().startsWith("D:\\h\\opt\\maven\\bin;"
-                    		+ "D:\\Projects\\RapidBeans\\sources\\org.rapidbeans.rapidenv\\testdata\\testinstall\\jdk\\1.6.0\\bin;"));
+                    cmdPath.getValue().startsWith("D:\\h\\opt\\maven\\bin;"));
             break;
         case linux:
             String expected = cmdPath.getValue();

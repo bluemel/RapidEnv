@@ -44,7 +44,7 @@ if "%1" == "-v" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 
 :# RAPID_ENV_COMMAND is the JVM call to execute the "renv" command
-set RAPID_ENV_COMMAND="%JAVA%" -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.2.1.jar
+set RAPID_ENV_COMMAND="%JAVA%" -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.3.0.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\rapidbeans-framework-0.9.4.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\ant-1.8.2.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
