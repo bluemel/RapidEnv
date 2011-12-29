@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<property name="maven.repo" category="common"
+		valuetype="file"
+		value="MavenRepository"
+		filetype="directory" mustExist="true" createIfNotExist="true"
+		>
+		<description>The home directory of build tool Maven</description>
+		<environment name="MAVEN_REPO"/>
+	</property>
+
+	<installunit name="unit01" version="2.1.2"
+		sourceurl="http://maven.apache.org/xxx.zip"
+		>
+		<command executable="cmd.exe"
+			osfamily="windows"
+			silent="true">
+			<argument value="/C"/>
+			<argument quoted="false" value="echo Hallo Martin!>%TMP%\test.txt &amp; type &quot;%TMP%\test.txt&quot;"/>
+			<return equals="0"/>
+			<stdout contains="artin"/>
+			<stderr>
+				<equals></equals>
+			</stderr>
+			<verifycmd executable="cmd.exe">
+				<argument value="/C"/>
+				<argument value="dir"/>
+				<argument value="%TMP%\test.txt"/>
+				<return equals="0"/>
+				<stdout matches="test.txt"/>
+			</verifycmd>
+		</command>
+		<command executable="testdata/cmd/test.bat"
+            osfamily="windows"
+			silent="true"
+			runasbatch="true">
+			<argument value="Ulrike"/>
+		</command>
+		<command executable="cmd.exe"
+            osfamily="windows"
+			silent="true">
+			<argument quoted="false" value="/C"/>
+			<argument quoted="false" value="echo hallihallo!!!"/>
+			<return equals="0"/>
+			<stdout containsmatch="halli.*\n"/>
+		</command>
+        <command executable="sh"
+            osfamily="linux"
+            silent="true">
+        	<argument quoted="false" value="-c"/>
+            <argument quoted="false" value="echo &quot;Hallo Martin! &quot; > /tmp/test.txt &amp;&amp; cat /tmp/test.txt"/>
+            <return equals="0"/>
+            <stdout contains="artin"/>
+			<stderr>
+				<equals></equals>
+			</stderr>
+            <verifycmd executable="ls">
+                <argument value="/tmp/test.txt"/>
+                <return equals="0"/>
+                <stdout matches="test.txt"/>
+            </verifycmd>
+        </command>
+        <command executable="testdata/cmd/test.sh"
+            osfamily="linux"
+            silent="true"
+            runasbatch="true">
+            <argument value="Ulrike"/>
+        </command>
+        <command executable="echo"
+            osfamily="linux"
+            silent="true">
+            <argument quoted="false" value="hallihallo!!!"/>
+            <return equals="0"/>
+            <stdout containsmatch="halli.*\n"/>
+        </command>
+        <command
+			osfamily="windows"
+			executable="cmd.exe"
+            silent="true">
+            <argument value="/C"/>
+            <argument value="testdata\\scripts\\windows\\testArgPassing.cmd"/>
+			<argument value="xxx"/>
+            <argument value="a b c"/>
+            <argument quoted="true" value="&quot;x&quot; &quot;y&quot; &quot;z&quot;"/>
+        </command>
+        <command executable="sh"
+            osfamily="linux"
+            silent="true">
+            <argument value="-c"/>
+            <argument value="testdata\\scripts\\unix\\testArgPassing.sh"/>
+            <argument value="xxx"/>
+            <argument value="a b c"/>
+            <argument quoted="true" value="&quot;x&quot; &quot;y&quot; &quot;z&quot;"/>
+        </command>
+	</installunit>
+</project>

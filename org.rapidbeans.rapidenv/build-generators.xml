@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "ant-buildfile.dtd">
+
+<!--
+####################################################
+# RapidEnv build file for generators
+# (c) Martin Bluemel, 2010
+####################################################
+-->
+<project name="rapidenv" basedir="." default="grammar">
+
+	<property environment="env"/>
+
+	<taskdef name="gendtd" classname="org.rapidbeans.sdk.anttasks.TaskGenDtd">
+		<classpath>
+			<pathelement
+				location="classes_generators"/>
+			<pathelement
+				location="classes"/>
+			<pathelement location="jar/jshortcut-${version.jshortcut}.jar"/>
+			<pathelement
+				location="${env.M2_REPO}/org/rapidbeans/rapidbeans-framework/${version.rapidbeans-framework}/rapidbeans-framework-${version.rapidbeans-framework}.jar"/>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="gencldescr" classname="org.rapidbeans.rapidenv.generators.TaskGenConfigLangInfo">
+		<classpath>
+			<pathelement
+				location="classes_generators"/>
+			<pathelement
+				location="classes"/>
+			<pathelement location="jar/jshortcut-${version.jshortcut}.jar"/>
+			<pathelement
+				location="${env.M2_REPO}/org/rapidbeans/rapidbeans-framework/${version.rapidbeans-framework}/rapidbeans-framework-${version.rapidbeans-framework}.jar"/>
+		</classpath>
+	</taskdef>
+
+<!--
+	####################################################
+	# generate the RapidEnv grammar file(s)
+	####################################################
+-->
+	<target name="grammar"
+		description="generate the RapidEnv DTD">
+		<gendtd
+			header="DTD for RapidEnv project definition"
+			type="org.rapidbeans.rapidenv.config.Project"
+			dtd="env.dtd"
+			modelroot="model"
+			force="${force}"
+			/>
+		<gencldescr
+			type="org.rapidbeans.rapidenv.config.Project"
+			out="doc/RapidEnvReferenceManualCldescr.xml"
+			modelroot="model"
+			force="${force}"
+			/>
+	</target>
+
+</project>

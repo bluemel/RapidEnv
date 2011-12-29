@@ -1,0 +1,11 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+  = my_osspecific_path = "/opt/postgres"
+  p my_perso_prop = "xyz"
+
+Install units:
+  ! myapp 1.0.2 installation required
+  - otherapp 1.0 optional

@@ -1,0 +1,10 @@
+booting RapidEnv development environment...
+
+reading personal properties:
+
+  - introduced property "my_osspecific_path" with value "C:\Program Files\Postgres"
+my_perso_prop [xyz] >  my_perso_prop = "xyz"
+
+
+Do you want to create a "Command Prompt Here" menu entry
+  in Windows Explorer for this development environment? <Y|N> [Y] >

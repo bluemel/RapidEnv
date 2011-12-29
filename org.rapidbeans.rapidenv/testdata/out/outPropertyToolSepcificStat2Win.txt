@@ -1,0 +1,13 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+  = my_osspecific_path = "C:\Program Files\Postgres"
+  p my_perso_prop = "xyz"
+  = myapp.home = "@RAPIDENV_HOME@\testdata\testinstall\myapp\1.0.2"
+  p otherapp.data = "@RAPIDENV_HOME@\testdata\testinstall\OtherappData"
+
+Install units:
+  = myapp 1.0.2
+  = otherapp 1.0

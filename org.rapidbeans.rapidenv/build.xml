@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "ant-buildfile.dtd">
+
+<!--
+####################################################
+# RapidEnv build file
+# (c) Martin Bluemel, 2010
+####################################################
+-->
+<project name="rapidenv" basedir="." default="testreport">
+
+<!--
+	####################################################
+	# set up environment and Ant properties
+	####################################################
+-->
+	<property environment="env"/>
+	<property file="build.properties"/>
+
+	<taskdef name="simpleftp" classname="org.rapidbeans.ant.TaskSimpleFtp">
+		<classpath>
+			<pathelement
+				location="${env.M2_REPO}/org/rapidbeans/rapidbeans-anttasks/${version.rapidbeans-anttasks}/rapidbeans-anttasks-${version.rapidbeans-anttasks}.jar"/>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="fileoverview"
+		classname="org.rapidbeans.ant.TaskFileOverview">
+		<classpath>
+			<pathelement
+				location="${env.M2_REPO}/org/rapidbeans/rapidbeans-anttasks/${version.rapidbeans-anttasks}/rapidbeans-anttasks-${version.rapidbeans-anttasks}.jar"/>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="genmodel" classname="org.rapidbeans.ant.TaskGenModel">
+		<classpath>
+			<pathelement
+				location="${env.M2_REPO}/org/rapidbeans/rapidbeans-anttasks/${version.rapidbeans-anttasks}/rapidbeans-anttasks-${version.rapidbeans-anttasks}.jar"/>
+		</classpath>
+	</taskdef>
+
+	<tstamp>
+		<format property="tstamp.datetime.en" pattern="MM/dd/yyyy hh:mm aa" 
+			locale="en"/>
+		<format property="tstamp.timestamp" pattern="yyyyMMddHHmm"/>
+	</tstamp>
+
+<!--
+	####################################################################
+	# settings
+	####################################################################
+-->
+	<path id="project.classpath">
+		<pathelement location="${env.M2_REPO}/junit/junit/${version.junit}/junit-${version.junit}.jar"/>
+		<pathelement location="${env.M2_REPO}/org/apache/ant/ant/${version.ant}/ant-${version.ant}.jar"/>
+		<pathelement location="${env.M2_REPO}/org/rapidbeans/rapidbeans-framework/${version.rapidbeans-framework}/rapidbeans-framework-${version.rapidbeans-framework}.jar"/>
+		<pathelement location="jar/jshortcut-${version.jshortcut}.jar"/>
+		<pathelement location="dist/lib/rapidenv-${version}.jar"/>
+	</path>
+
+<!--
+	####################################################
+	# RapidBeans code generation
+	####################################################
+-->
+	<target name="modelsources" 
+		description="RapidBeans source code generation (java classes)">
+		<mkdir dir="gensrc"/>
+		<genmodel srcdir="model" destdirsimple="gensrc" destdirjoint="src" 
+			styledir="codegentemplates" force="${force}"/>
+	</target>
+
+<!--
+	####################################################
+	# resolve
+	####################################################
+-->
+	<target name="resolve" unless="build.resolved"
+		description="resolve dependencies using maven">
+		<exec osfamily="windows" command="${env.M2_HOME}/bin/mvn.bat test"/>
+		<exec osfamily="unix" command="${env.M2_HOME}/bin/mvn test"/>
+	</target>
+
+<!--
+	####################################################
+	# classes
+	####################################################
+-->
+	<target name="classes" depends="modelsources,resolve" 
+		description="compile java classes source code">
+		<mkdir dir="classes"/>
+		<javac destdir="classes" debug="yes" 
+			source="${version.java.compile.source}" 
+			target="${version.java.compile.target}"
+			excludes="com/**/*"
+			includeantruntime="no"
+			>
+			<src path="src"/>
+			<src path="gensrc"/>
+			<classpath refid="project.classpath"/>
+		</javac>
+		<copy todir="classes">
+			<fileset dir="model"/>
+		</copy>
+		<copy todir="classes">
+			<fileset dir="res"/>
+		</copy>
+	</target>
+
+<!--
+	####################################################
+	# generatorclasses
+	####################################################
+-->
+	<target name="generatorclasses" 
+		description="compile java generator classes source code">
+		<mkdir dir="classes_generators"/>
+		<javac destdir="classes_generators" debug="yes">
+			<src path="srcgenerators"/>
+			<classpath refid="project.classpath"/>
+		</javac>
+	</target>
+
+<!--
+	####################################################
+	# generate the RapidEnv grammar file(s)
+	####################################################
+-->
+	<target name="grammar" depends="generatorclasses,classes"
+		description="generate the RapidEnv DTD">
+		<ant
+			antfile="build-generators.xml"
+			inheritall="yes"
+			target="grammar"
+			/>
+	</target>
+
+<!--
+	####################################################
+	# jar file
+	####################################################
+-->
+	<target name="jar" depends="classes" 
+		description="build the jar file including a manifest">
+		<property name="build.resolved" value="true"/>
+		<mkdir dir="dist/lib"/>
+		<jar jarfile="dist/lib/rapidenv-${version}.jar">
+			<manifest>
+				<attribute name="Implementation-Title" 
+					value="RapidEnv build environment tool"/>
+				<attribute name="Implementation-Version" 
+					value="${version} (build ${build.number}) ${tstamp.datetime.en}"/>
+				<attribute name="Java-Version" value="${version.java}"/>
+				<attribute name="Created-By" value="Martin Bluemel"/>
+			</manifest>
+			<fileset dir="classes"/>
+			<fileset dir="license"/>
+		</jar>
+	</target>
+
+<!--
+	####################################################
+	# testclasses
+	####################################################
+-->
+	<target name="testclasses"
+		description="compile java test classes source code">
+		<mkdir dir="classes_test"/>
+		<javac destdir="classes_test" debug="yes">
+			<src path="test"/>
+			<classpath refid="project.classpath"/>
+		</javac>
+	</target>
+
+<!--
+	####################################################
+	# functional (unit + integration) tests
+	####################################################
+-->
+	<target name="test" depends="jar,testclasses" unless="${test.skip}"
+		description="runs the functional (unit + integration) regression tests against RapidEnv. Option -Dtest.skip=true suppresses the tests">
+		<property name="build.resolved" value="true"/>
+		<delete dir="testreport"/>
+		<mkdir dir="testreport"/>
+		<!--
+			!!! forkmode != perBatch does currently not work out
+			forkmode controls how many Java Virtual Machines get created
+			if you want to fork some tests. Possible values are
+			"perTest" (the default), "perBatch" and "once".
+			"once" creates only a single Java VM for all tests.
+			"perTest" creates a new VM for each TestCase class.
+			"perBatch" creates a VM for each nested <batchtest>
+			and one collecting all nested <test>s.
+			Note that only tests with the same settings of
+			filtertrace, haltonerror, haltonfailure, errorproperty
+			and failureproperty can share a VM, so even if you set
+			forkmode to "once", Ant may have to create more than a
+			single Java VM. This attribute is ignored for tests that
+			don't get forked into a new Java VM. since Ant 1.6.2
+		-->
+		<junit showoutput="yes" printsummary="yes" dir="." 
+			failureproperty="test.fail" fork="no" forkmode="once">
+			<classpath>
+				<pathelement location="classes_test"/>
+				<path refid="project.classpath"/>
+			</classpath>
+			<formatter type="xml"/>
+			<batchtest todir="testreport">
+				<fileset dir="classes_test">
+					<include name="**/*Test.class"/>
+					<!-- example to test only a certain class: <include name="**/RapidEnvInterpreterTest.class"/>-->
+					<exclude name="**/*PerfTest.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<antcall target="-testreportafterfailure"/>
+		<fail if="test.fail" message="At least one Unit Test has failed."/>
+	</target>
+
+<!--
+	  ####################################################
+	  # functional unit + integration tests with test report afterwards
+	  ####################################################
+-->
+	<target name="testreport" depends="test" 
+		description="test and generate and show a test report">
+		<antcall target="-testreport"/>
+	</target>
+
+<!--
+	  ####################################################
+	  # pure failure test report after test failure
+	  ####################################################
+-->
+	<target name="-testreportafterfailure" if="test.fail">
+		<antcall target="-testreport"/>
+	</target>
+
+<!--
+	  ####################################################
+	  # generate and pop up a test report
+	  ####################################################
+-->
+	<target name="-testreport">
+		<junitreport todir="testreport">
+			<fileset dir="testreport">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="testreport"/>
+		</junitreport>
+		<exec os="Windows XP,Windows 2000" executable="cmd.exe" spawn="yes">
+			<arg value="/C testreport\\index.html"/>
+		</exec>
+		<exec os="Linux" executable="firefox" spawn="yes">
+			<arg value="testreport/index.html"/>
+		</exec>
+	</target>
+
+<!--
+	####################################################
+	# javadoc
+	####################################################
+-->
+	<target name="javadoc" depends="classes" 
+		description="generates javadoc api documentation by means of javadoc">
+		<uptodate property="javadoc.notrequired" 
+			targetfile="doc/dist/apidoc/index.html">
+			<srcfiles dir="src"/>
+		</uptodate>
+		<ant target="_javadoc"/>
+		<zip destfile="doc/dist/doc/rapidenv-${version}-apidoc.zip">
+			<fileset dir="doc/dist/apidoc"/>
+		</zip>
+	</target>
+	<target name="_javadoc" unless="javadoc.notrequired">
+		<javadoc sourcepath="src"
+			packagenames="*"
+			destdir="doc/dist/apidoc"
+			excludepackagenames="com.aloxerv.aloxenv"
+			>
+			<link href="file:${env.JAVA_HOME}/docs/api/"/>
+			<classpath refid="project.classpath"/>
+		</javadoc>
+	</target>
+
+<!--
+	####################################################
+	# (container) documents
+	####################################################
+-->
+	<target name="documents" depends="classes,grammar"
+		description="generate HTML / PDF documents">
+		<delete file="doc/RapidEnvReferenceManual.xml"/>
+		<xslt in="doc/RapidEnvGettingStarted.xml"
+			style="${env.DOCBOOK_XSL_HOME}/html/docbook.xsl"
+			out="doc/dist/doc/RapidEnvGettingStarted.html"
+			force="${force}"
+			/>
+		<copy todir="doc/dist/doc/RapidEnvGettingStarted-files">
+			<fileset dir="doc/RapidEnvGettingStarted-pictures" includes="*"/>
+		</copy>
+
+		<xslt in="doc/RapidEnvUserManual.xml"
+			style="${env.DOCBOOK_XSL_HOME}/html/docbook.xsl"
+			out="doc/dist/doc/RapidEnvUserManual.html"
+			force="${force}"
+			/>
+		<copy todir="doc/dist/doc/RapidEnvUserManual-files">
+			<fileset dir="doc/RapidEnvUserManual-pictures" includes="*"/>
+		</copy>
+
+		<xslt in="doc/RapidEnvReleaseNotes.xml"
+			style="${env.DOCBOOK_XSL_HOME}/html/docbook.xsl"
+			out="doc/dist/doc/releasenotes.html"
+			force="${force}"
+			/>
+<!--
+		<copy todir="doc/dist/doc/RapidEnvReleaseNotes-files">
+			<fileset dir="doc/releasenotes-pictures" includes="*"/>
+		</copy>
+-->
+
+		<fileoverview dir="model"
+			out="doc/model.xml"
+			excludedotdirs="yes"
+			absolute="no"
+			force="no"
+			/>
+
+		<xslt in="doc/model.xml"
+			style="doc/RapidEnvReferenceManual.xsl"
+			out="doc/RapidEnvReferenceManual.xml"
+			force="${force}"
+			>
+            <param name="projecthome" expression="${basedir}"/>
+		</xslt>
+		<xslt in="doc/RapidEnvReferenceManual.xml"
+			style="${env.DOCBOOK_XSL_HOME}/html/docbook.xsl"
+			out="doc/dist/doc/RapidEnvReferenceManual.html"
+			force="${force}"
+			/>
+
+		<copy todir="doc/dist/doc/RapidEnvReferenceManual-files">
+			<fileset dir="doc/RapidEnvReferenceManual-pictures" includes="*"/>
+		</copy>
+
+	</target>
+
+<!--
+	####################################################
+	# src jar file
+	####################################################
+-->
+	<target name="srcjar" depends="modelsources"
+		description="build a jar file with all the sources for debugging purposes">
+		<mkdir dir="dist/lib"/>
+		<jar jarfile="dist/lib/rapidenv-${version}-sources.jar">
+			<fileset dir="src">
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="model">
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="gensrc">
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="license"/>
+		</jar>
+	</target>
+
+<!--
+	####################################################
+	# javadoc jar file
+	####################################################
+-->
+	<target name="javadocjar" depends="javadoc"
+		description="build a jar file with the complete javadoc for debugging purposes">
+		<mkdir dir="dist/lib"/>
+		<jar jarfile="dist/lib/rapidenv-${version}-javadoc.jar">
+			<fileset dir="doc/dist/apidoc"/>
+			<fileset dir="license"/>
+		</jar>
+	</target>
+
+<!--
+	####################################################
+	# binary distribution
+	####################################################
+-->
+	<target name="binzip"
+		description="document generation and packaging">
+		<antcall target="grammar"/>
+		<property name="build.resolved" value="true"/>
+		<antcall target="test"/>
+		<fail if="test.fail"/>
+		<antcall target="documents"/>
+		<antcall target="srcjar"/>
+		<antcall target="javadocjar"/>
+
+		<mkdir dir="dist/bin"/>
+		<copy todir="dist/bin">
+			<fileset dir="scripts/windows"/>
+			<fileset dir="scripts/unix"/>
+			<filterset>
+				<filter token="version" value="${version}"/>
+				<filter token="version.rapidbeans-framework" value="${version.rapidbeans-framework}"/>
+				<filter token="version.ant" value="${version.ant}"/>
+				<filter token="version.jshortcut" value="${version.jshortcut}"/>
+			</filterset>
+		</copy>
+
+		<mkdir dir="dist/license"/>
+		<copy todir="dist/license">
+			<fileset dir="license"/>
+			<filterset>
+				<filter token="version" value="${version}"/>
+			</filterset>
+		</copy>
+
+		<copy todir="dist/lib">
+			<fileset dir="${env.M2_REPO}/org/rapidbeans/rapidbeans-framework/${version.rapidbeans-framework}"
+				includes="rapidbeans-framework-${version.rapidbeans-framework}.jar"/>
+			<fileset dir="${env.M2_REPO}/org/apache/ant/ant/${version.ant}"
+				includes="ant-${version.ant}.jar"/>
+		</copy>
+
+		<zip zipfile="dist/rapidenv-${version}-bin.zip">
+			<fileset dir="dist" includes="bin/*,lib/*"/>
+			<fileset dir="." includes="env.dtd"/>
+			<fileset dir="dist" includes="license/*"/>
+			<fileset dir="doc/dist" includes="**/*" excludes="apidoc,apidoc/**/*"/>
+		</zip>
+	</target>
+
+<!--
+	####################################################
+	# complete distribution from scratch
+	####################################################
+-->
+	<target name="dist"
+		description="build a complete distribution from scratch including sources, documentation">
+		<antcall target="clean"/>
+		<antcall target="binzip"/>
+	</target>
+
+<!--
+	####################################################
+	# deploy locally
+	####################################################
+-->
+	<target name="deploylocal"
+		depends="grammar,jar,srcjar,javadocjar"
+		description="deploy only to local Maven repository"
+		>
+
+		<copy todir="../env/bin">
+			<fileset dir="scripts/windows"/>
+			<fileset dir="scripts/unix"/>
+			<filterset>
+				<filter token="version" value="${version}"/>
+				<filter token="version.rapidbeans-framework" value="${version.rapidbeans-framework}"/>
+				<filter token="version.ant" value="${version.ant}"/>
+				<filter token="version.jshortcut" value="${version.jshortcut}"/>
+			</filterset>
+		</copy>
+
+		<!-- copy test installation -->
+		<copy todir="../env">
+			<fileset dir="." includes="env.dtd"/>
+		</copy>
+		<copy todir="../env/lib">
+			<fileset dir="dist/lib"/>
+		</copy>
+		<copy todir="../../../JavaEE_Example/sources/environment/lib">
+			<fileset dir="dist/lib"/>
+		</copy>
+		<!-- copy framework jar and sources directly to the local repository -->
+		<copy file="dist/lib/rapidenv-${version}.jar"
+			todir="${env.M2_REPO}/org/rapidbeans/rapidenv/${version}"/>
+		<copy file="dist/lib/rapidenv-${version}-sources.jar"
+			todir="${env.M2_REPO}/org/rapidbeans/rapidenv/${version}"/>
+		<copy file="dist/lib/rapidenv-${version}-javadoc.jar"
+			todir="${env.M2_REPO}/org/rapidbeans/rapidenv/${version}"/>
+	</target>
+
+<!--
+	####################################################
+	# deploy to rapidbeans.org
+	####################################################
+-->
+	<target name="deploy"
+		description="deploy to www.rapidbeans.org"
+		depends="deploylocal"
+		>
+
+		<!-- deploy latest release and documentation -->
+<!--
+		<mkdir dir="diststamps"/>
+		<simpleftp
+			server="www.muenchen-surf.de"
+			remotedir="software/rapidbeans/releases/latest"
+			userid="bluemel"
+			password="ka19th11"
+			localdir="dist"
+			stampdir="diststamps"
+			/>
+		<mkdir dir="docstamps"/>
+		<simpleftp
+			server="www.muenchen-surf.de"
+			remotedir="software/rapidbeans/documentation"
+			userid="bluemel"
+			password="ka19th11"
+			localdir="doc/dist/doc"
+			stampdir="docstamps"
+			/>
+-->
+	</target>
+
+<!--
+	####################################################
+	# clean
+	####################################################
+-->
+	<target name="clean" 
+		description="removes all files produced during batch build besides stamps">
+		<delete dir="dist"/>
+		<delete dir="doc/dist"/>
+		<delete file="doc/model.xml"/>
+		<delete file="doc/RapidEnvReferenceManual.xml"/>
+		<delete file="doc/RapidEnvReferenceManualCldescr.xml"/>
+		<delete file="env.dtd"/>
+		<delete dir="classes"/>
+		<delete dir="classes_generators"/>
+		<delete dir="classes_test"/>
+		<delete dir="profile"/>
+		<delete dir="gensrc"/>
+		<delete dir="target"/>
+		<delete dir="testreport"/>
+	</target>
+
+<!--
+	####################################################
+	# cleanall
+	####################################################
+-->
+	<target name="cleanall" depends="clean"
+		description="removes all files produced during any build">
+		<delete dir="diststamps"/>
+		<delete dir="docstamps"/>
+		<delete dir="classes_eclipse"/>
+	</target>
+
+</project>

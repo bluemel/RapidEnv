@@ -1,0 +1,10 @@
+booting RapidEnv development environment...
+
+reading personal properties:
+
+  - introduced property "my_osspecific_path" with value "/opt/postgres"
+my_perso_prop [xyz] >  my_perso_prop = "xyz"
+
+
+Do you want to create an "Open Terminal" action
+  for KDE's Dolphin file manager for this development environment? <Y|N> [Y] >

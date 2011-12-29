@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigFile.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/08/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFile"
+	extends="org.rapidbeans.rapidenv.config.Configuration">
+
+	<description>An configuration operation on a single file</description>
+
+	<property name="path" type="string"
+		mandatory="true" mustexist="false">
+		<description>The path to the file to configure. The path usually is a relative one.
+If it is relative it is supposed to be relative to the parent installation unit's home directory.</description>
+	</property>
+
+	<property name="sourceurl" type="string">
+		<description>Defines where the file to configure comes from.
+If "sourceurl" is not defined the file to configure is supposed to be already
+existent and will only be changed from its original form.</description>
+	</property>
+
+    <property name="deleteafterdeinstall" type="boolean"
+        default="true">
+        <description>Determines if the configuration file should be deleted
+after deinstallation in case it is not under the installation root.
+In the case it is under the installation root it will be deleted anyway.
+Set this value to false if you want to prevent this default behavior.</description>
+    </property>
+
+    <property name="newline" type="choice"
+        enum="NewlineType" default="platform">
+        <description>Defines the newline character(s) to use.</description>
+    </property>
+
+    <property name="canread" type="boolean"
+        default="true">
+        <description>Determines if the file to configure can be read
+(default = true).</description>
+    </property>
+
+    <property name="canwrite" type="boolean"
+        default="true">
+        <description>Determines if the file to configure can be written
+(default = true).</description>
+    </property>
+
+	<property name="canexecute" type="boolean"
+		default="false">
+        <description>Determines if the file to configure can be executed
+(default = false).</description>
+	</property>
+
+	<property name="copycondition" type="choice"
+		enum="FileCopyCondition"
+		default="sourcenewer">
+		<description>The condition when the source is copied over the target:
+notexist:    when the target does not exist
+sourcenewer: when the source is new than the target: allows manual and
+             automatic change aftwerwards but ensures template changes
+			 being processed
+diff:        strict binding to the source file (manual changes are excluded)</description>
+	</property>
+
+	<property name="tasks" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.ConfigurationTask">
+		<description>Tasks serve to extend the configuration.</description>
+	</property>
+
+	<property name="commandonconfig" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+		maxmult="1"
+		>
+		<description>Defines a system command that is automatically
+executed whenever a configuration on this file or folder has been performed</description>
+	</property>
+
+	<codegen mode="split"/>
+</beantype>

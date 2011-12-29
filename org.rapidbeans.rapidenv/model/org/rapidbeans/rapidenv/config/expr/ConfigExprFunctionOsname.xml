@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigExprFunctionOsname.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 11/01/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.expr.ConfigExprFunctionOsname"
+	extends="org.rapidbeans.rapidenv.config.expr.ConfigExprFunction">
+
+	<description>Determine the operating system (family) name of the underlying node.
+Currently the following operating systems (families) are recognized:
+linux, windows, mac</description>
+
+	<property name="conversionmap" mandatory="false">
+		<description>Maps certain operating system (family) names to other strings.
+The map is specified the following way: &amp;lt;osname&amp;gt;=&amp;lt;mapped packaging&amp;gt; [,&amp;lt;osname&amp;gt;=&amp;lt;mapped pckaging&amp;gt;] ...
+e.g. the expression "eclipse-modeling-indigo-''osname('windows=win32,linux=linux-gtk')''architecture('x86=,i386=;x86_64=-x86_64').packaging()"
+will result into following mappings:
+OS: windows, ARCH: x86 (32 Bit) => eclipse-modeling-indigo-win32.zip
+OS: windows, ARCH: x86_64 (64 Bit) => eclipse-modeling-indigo-win32-x86_64.zip
+OS: linux, ARCH: i386 (32 Bit) => eclipse-modeling-indigo-linux-gtk.tar.gz
+OS: linux, ARCH: x86_64 (64 Bit) => eclipse-modeling-indigo-linux-gtk-x86_64.tar.gz</description>
+	</property>
+
+	<property name="returnval">
+		<description>The operation system (family) of the underlying node.</description>
+	</property>
+
+	<codegen mode="split"/>
+
+</beantype>

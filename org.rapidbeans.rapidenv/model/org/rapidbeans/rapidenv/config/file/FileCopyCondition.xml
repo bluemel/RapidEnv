@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: FileCopyCondition.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/09/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.config.file.FileCopyCondition">
+	<description>Defines under which condition to copy a file to
+an installation folder.</description>
+	<enum name="notexist">
+		<description>Copy only if the target file does not exist.
+The file can be changed indiviually after installation.</description>
+	</enum>
+	<enum name="sourcenewer">
+		<description>Copy only if the source file is newer that the target file.</description>
+	</enum>
+	<enum name="diff">
+		<description>Copy every time the target file differs from the source file.
+THis ist the strictest rule.</description>
+	</enum>
+</enumtype>

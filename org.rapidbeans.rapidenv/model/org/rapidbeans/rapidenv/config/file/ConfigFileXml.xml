@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigFileXml.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/08/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileXml"
+	extends="org.rapidbeans.rapidenv.config.file.ConfigFile">
+
+	<description>An configuration operation on a single XML file</description>
+
+	<property name="addeleminnewline" type="boolean"
+		default="true"
+		>
+		<description>Defines if a new element node should be added to a new line</description>
+	</property>
+
+	<property name="addattrinnewline" type="boolean"
+		default="false"
+		>
+		<description>Defines if a new attribute node should be added to a new line</description>
+	</property>
+
+	<!-- activate the default escape map with multilie="true" -->
+	<property name="indent" type="string"
+		default="\t"
+		multiline="true"
+		>
+		<description>Defines the indentation string</description>
+	</property>
+
+	<property name="tasks" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.ConfigurationTask">
+		<description>Tasks serve extend the configuration.</description>
+	</property>
+
+	<xmlbinding>
+		<property name="tasks">
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileXmlTaskSetnodevalue"
+				xmlelement="setnodevalue"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileXmlTaskDeletenode"
+				xmlelement="deletenode"/>
+		</property>
+	</xmlbinding>
+
+	<codegen mode="split"/>
+
+</beantype>

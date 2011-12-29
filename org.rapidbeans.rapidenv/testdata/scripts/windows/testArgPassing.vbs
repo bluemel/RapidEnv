@@ -1,0 +1,5 @@
+WScript.Echo "Test Argument passing:"
+WScript.Echo "argument 1: @" & WScript.Arguments(0) & "@"
+WScript.Echo "argument 2: @" & WScript.Arguments(1) & "@"
+WScript.Echo "argument 3: @" & WScript.Arguments(2) & "@"
+WScript.Echo "argument 3': @" & Replace(WScript.Arguments(2), "&quot;", """") & "@"

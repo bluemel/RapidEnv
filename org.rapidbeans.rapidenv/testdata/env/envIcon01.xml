@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+
+    <installunit name="mysql" version="5.5.15"
+        sourcefile="mysql-''version()-''osname('windows=win;linux=linux')''architecture('x86=32;i386=-i386;x86_64=-x86_64').''packaging('windows=zip;linux=tar.gz')"
+        sourceurl="http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-''version()-''osname('windows=win;linux=linux')''architecture('x86=32;i386=-i386;x86_64=-x86_64').''packaging('windows=zip;linux=tar.gz')/from/http://sunsite.informatik.rwth-aachen.de/mysql/"
+        >
+        <icon osfamily="windows"
+            title="Start TestMySQL"
+            executable="environment('SystemRoot')/system32/cmd.exe"
+            executein="homedir('mysql')/bin"
+            iconfile="homedir('mysql')/bin/mysql.ico"
+			executionmode="simple"
+			showondesktop="true"
+			showonstartmenu="false"
+            >
+            <argument value="/C"/>
+            <argument value="mysqld_start.cmd"/>
+        </icon>
+        <icon osfamily="windows"
+            title="Start TestMySQL"
+            executable="mysqld_start.cmd"
+            executein="homedir('mysql')/bin"
+            iconfile="homedir('mysql')/bin/mysql.ico"
+            executionmode="cmd"
+            showondesktop="true"
+            showonstartmenu="false"
+            >
+            <argument value="argval1"/>
+            <argument quoted="true" value="argval2 argval3"/>
+        </icon>
+        <icon osfamily="windows"
+            title="Start TestMySQL"
+            executable="mysqld_start.cmd"
+            executein="homedir('mysql')/bin"
+            iconfile="homedir('mysql')/bin/mysql.ico"
+            executionmode="cmdenv"
+            showondesktop="true"
+            showonstartmenu="false"
+            >
+            <argument value="argval1"/>
+            <argument quoted="true" value="argval2 argval3"/>
+        </icon>
+    </installunit>
+
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<property name="my_osspecific_path"
+		propmode="common" value="/opt/postgres">
+		<specificvalue osfamily="windows">C:\Program Files\Postgres</specificvalue>
+	</property>
+	<property name="jdk_home" propmode="common"
+		value="homedir('jdk')">
+		<description>This is a multilined
+description.</description>
+		<!--<value>homedir('jdk')</value>-->
+		<environment name="JAVA_HOME"/>
+	</property>
+
+	<installunit name="jdk" version="1.6.0"/>
+	<installunit space="org.apache" name="ant" version="1.8.0"
+		sourceurl="http://ant.apache.org/xxx.zip"/>
+	<installunit space="org.apache" name="maven" version="2.1.2"
+		sourceurl="http://maven.apache.org/xxx.zip"
+		homedir="/h/opt/maven"
+		/>
+	<installunit space="org.rapidbeans" name="ambitool" version="1.0.0"
+		sourceurl="http://www.rapidbeans.org/xxx.zip"/>
+	<installunit space="org.rapidbeans.alt" name="ambitool" version="1.0.0"
+		sourceurl="http://www.rapidbeans.org/xxx.zip"/>
+</project>

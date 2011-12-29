@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Download.xml
+ *
+ * Copyright (C) 2011 Martin Bluemel
+ *
+ * Creation Date: 12/19/2011
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.Download">
+
+	<description>Defines a download for one single file.</description>
+
+	<property name="osfamily" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystem">
+		<description>If this value is defined this check will become an operating system specific one.
+If it is undefined the definition is valid for all platforms without specific definition.</description>
+	</property>
+
+	<property name="downloadtype" type="choice"
+		enum="DownloadType"
+		default="automatic">
+		<description>Describes the method how to download (automatic versus manual))</description>
+	</property>
+
+	<property name="url" type="string">
+		<description>The URL where you can download the file.</description>
+	</property>
+
+</beantype>

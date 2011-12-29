@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<!-- new common property to be introduced -->
+	<property name="testprop01" valuetype="file" filetype="directory"
+		value="D:/unknown"/>
+
+	<!-- common property changed by user or (central) configuration -->
+	<property name="testprop02" value="newvalue"
+		category="common"/>
+
+	<!-- common property unchanged and retrieved automatically -->
+	<property name="testprop03" category="common">
+		<specificvalue>
+			<value>homedir('jdk')</value>
+		</specificvalue>
+		<environment name="JAVA_HOME"/>
+	</property>
+
+	<!-- new personal property interactivly initialized
+		to given default value -->
+	<property name="testprop04" value="val4"
+		category="personal"/>
+
+	<!-- old personal property changed by user configuration -->
+	<property name="testprop05" value="oldvalue"
+		category="personal"/>
+
+	<!-- old personal property unchanged -->
+	<property name="testprop06" value="oldvalue"
+		category="personal"/>
+
+	<installunit name="jdk" version="1.6.0"
+		sourceurl="http://java.oracle.com"/>
+
+</project>

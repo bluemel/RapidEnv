@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<exceptionmap>
+	<exception
+		errorcode="ERRORCODE_HTTP_DOWNLOAD">
+		<errormessage lang="en">
+			<text>${message}</text>
+		</errormessage>
+	</exception>
+</exceptionmap>

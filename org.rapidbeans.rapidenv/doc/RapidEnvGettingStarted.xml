@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book SYSTEM "docbook.dtd">
+
+<book>
+	<title>
+		Getting started with RapidEnv
+		<author>
+			<personname>Martin Bl&#252;mel</personname>
+		</author>
+	</title>
+	<preface>
+		<para>
+			In the following I'm going to motivate and demonstrate the usage of RapidEnv using
+			simple examples.
+		</para>
+		<para>
+			Please note that this document is under construction!
+		</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata format="GIF" fileref="RapidEnvReferenceManual-files/image001_underConstruction.gif"/>
+			</imageobject>
+		</mediaobject>
+	</preface>
+	<chapter>
+		<title>Building a simple java application</title>
+		<para>
+			XXX
+			<itemizedlist>
+				<listitem>
+					<para>
+						Java Runtime Environment (version >= 1.6) installed at your computer.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						You have downloaded and unzipped the example zip file from the
+						<link xlink:href="http://www.rapidbeans.org/releases/latest/index.html">RapidBeans download page</link>
+						somewhere into your file system (e. g. into C:\tmp).
+						<figure>
+							<title>the example unpacked on a Windows file system</title>
+							<mediaobject>
+								<imageobject>
+									<imagedata format="JPG" fileref="RapidEnvGettingStarted-files/image01a.jpg" />
+								</imageobject>
+							</mediaobject>
+						</figure>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</chapter>
+	<chapter>
+		<title>Building an open source framework</title>
+		<para>
+		</para>
+	</chapter>
+	<chapter>
+		<title>Building a Web application</title>
+		<para>
+		</para>
+	</chapter>
+</book>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installsourceurl="file:testdata/site"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<property name="toolhome.myapp" category="common"
+		value="homedir('myapp')"
+		valuetype="file" filetype="directory"
+		mustExist="true" createIfNotExist="true"
+		>
+		<environment name="MYAPP_HOME"/>
+	</property>
+
+	<property name="toolhome.otherapp" category="common"
+		value="homedir('otherapp')"
+		valuetype="file" filetype="directory"
+		mustExist="true" createIfNotExist="true"
+		>
+		<environment name="OTHERAPP_HOME"/>
+	</property>
+
+	<property name="cmd.path.system" category="personal"
+		valuetype="string">
+<!--
+		<specificvalue osfamily="windows">
+			<value>environment('Path')</value>
+		</specificvalue>
+		<specificvalue osfamily="linux">
+			<value>environment('PATH')</value>
+		</specificvalue>
+-->
+	</property>
+
+	<property name="cmd.path" category="common"
+		valuetype="path" value="${cmd.path.system}">
+		<environment osfamily="linux" name="PATH"/>
+		<environment osfamily="windows" name="Path"/>
+		<extension propextmode="prepend" value="/fixed/extension"/>
+	</property>
+
+	<installunit name="myapp" version="1.0.2">
+		<propextension property="cmd.path" propextmode="prepend" value="homedir()/bin"/>
+	</installunit>
+
+	<installunit name="otherapp" version="1.0">
+		<propextension property="cmd.path" propextmode="prepend" value="homedir()/bin"/>
+	</installunit>
+
+</project>

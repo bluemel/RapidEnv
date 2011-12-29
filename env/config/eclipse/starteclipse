@@ -1,0 +1,3 @@
+#!/bin/bash
+. "@RAPID_ENV_HOME@/profile/renv_@USERNAME@_@HOSTNAME@.sh"
+"@ECLIPSE_HOME@/eclipse" -data "${ECLIPSE_WORKSPACE}"

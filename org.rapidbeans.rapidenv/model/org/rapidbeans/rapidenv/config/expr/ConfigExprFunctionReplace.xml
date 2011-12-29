@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigExprFunctionReplace.xml
+ *
+ * Copyright (C) 2011 Martin Bluemel
+ *
+ * Creation Date: 10/14/2011
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.expr.ConfigExprFunctionReplace"
+	extends="org.rapidbeans.rapidenv.config.expr.ConfigExprFunction">
+
+	<description>Text replacement using Java regular expressions.</description>
+
+	<property name="text" mandatory="true">
+		<description>The text to process.</description>
+	</property>
+
+	<property name="pattern" mandatory="true"
+		minlen="1">
+		<description>The pattern to search for.</description>
+	</property>
+
+	<property name="replacement" mandatory="true"
+		minlen="1">
+		<description>The replacement.</description>
+	</property>
+
+	<property name="returnval">
+		<description>The processed text.</description>
+	</property>
+
+	<codegen mode="split"/>
+
+</beantype>

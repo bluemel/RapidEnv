@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<property name="cmd.path" category="common"
+		valuetype="path" normalize="true"
+		value="substractextensions(${cmd.path})">
+		<environment osfamily="linux" name="PATH"/>
+		<environment osfamily="windows" name="Path"/>
+		<extension propextmode="prepend" value="/p0"/>
+		<extension propextmode="prepend" value="/p1"/>
+		<extension propextmode="prepend" value="/p2"/>
+		<extension propextmode="prepend" value="/p2a"/>
+		<extension propextmode="prepend" value="/p3"/>
+		<extension propextmode="append" value="/a1"/>
+		<extension propextmode="append" value="/a1a"/>
+		<extension propextmode="append" value="/a2"/>
+		<extension propextmode="append" value="/a3"/>
+	</property>
+
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * Rapid Beans Framework: PropertyCategory.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 05/16/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.config.PropertyCategory">
+	<description>Determines if the property's value can and should be
+personally set by the user or be a common setting for all environments
+which can be centrally controlled.</description>
+	<enum name="common">
+		<description>A common property is defined in the
+environment definition. Its value is not supposed to be changed not be changed personally.
+Whenever its is changed in the environment definition file all installed environments can overtake
+this change during the next run of the renv "update" or "configure" command.</description>
+	</enum>
+	<enum name="personal">
+		<description>A personal property can be adapted by a developer.</description>
+	</enum>
+</enumtype>

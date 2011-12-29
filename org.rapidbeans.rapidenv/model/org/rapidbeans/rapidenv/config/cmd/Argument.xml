@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Argument.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/30/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.cmd.Argument">
+
+	<description>
+</description>
+
+	<property name="name" type="string">
+		<description>Optionally define a name either in order only to document
+the argument or optionally to extend the argument value.</description>
+	</property>
+
+	<property name="value" type="string"
+		mandatory="true"
+		emptyvalid="true"
+		>
+		<description>The argument value. Can involve the argument name
+using special pseudo property "argument.name"
+e. g with "${argument.name}=((value))"</description>
+	</property>
+
+	<property name="valuetype" type="choice"
+		enum="org.rapidbeans.rapidenv.config.cmd.Argtype"
+		default="string"
+		>
+		<description>The value type of the argument.</description>
+	</property>
+
+	<property name="quoted" type="boolean"
+		default="false">
+		<description>Sometimes it's absolutely neccessary to have an argument
+quoted in the command line string automatically. In some cases however you might
+want to suppress this default behaviour. In these cases set this property to "false"</description>
+	</property>
+
+	<codegen mode="split"/>
+
+</beantype>

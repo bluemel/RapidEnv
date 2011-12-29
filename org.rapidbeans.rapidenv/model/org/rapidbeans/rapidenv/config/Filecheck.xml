@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Filecheck.xml
+ *
+ * Copyright (C) 2011 Martin Bluemel
+ *
+ * Creation Date: 18/12/2011
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.Filecheck">
+
+	<description>Defines a hash value check on a file.</description>
+
+	<property name="osfamily" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystem">
+		<description>If this value is defined this check will become an operating system specific one.
+If it is undefined the definition is valid for all platforms without specific definition.</description>
+	</property>
+
+	<property name="hashalgorithm" type="choice"
+		enum="org.rapidbeans.rapidenv.security.Hashalgorithm">
+		<description>The hash algorithm to use for the check.</description>
+	</property>
+
+	<property name="hashvalue" type="string">
+		<description>The hash value to check against.</description>
+	</property>
+
+</beantype>

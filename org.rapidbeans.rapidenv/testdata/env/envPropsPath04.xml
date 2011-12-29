@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installsourceurl="file:testdata/site"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<property name="cmd.path" category="common"
+		valuetype="path" normalize="true">
+		<environment osfamily="linux" name="PATH"/>
+		<environment osfamily="windows" name="Path"/>
+		<extension propextmode="prepend" value="/p1"/>
+		<extension propextmode="prepend" value="/p2"/>
+		<extension propextmode="prepend" value="/p3"/>
+		<extension propextmode="append" value="/a1"/>
+		<extension propextmode="append" value="/a2"/>
+	</property>
+
+	<installunit name="myapp" version="1.0.2">
+		<propextension property="cmd.path" propextmode="append"
+			value="homedir()"/>
+	</installunit>
+
+	<installunit name="otherapp" version="1.0">
+		<propextension property="cmd.path" propextmode="append"
+			value="homedir()"/>
+	</installunit>
+
+</project>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigFileText.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/20/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileText"
+	extends="org.rapidbeans.rapidenv.config.file.ConfigFile">
+
+	<description>An configuration operation on a single text file</description>
+
+	<!-- has to be defined redundantly in order to define a specific XML binding -->
+	<property name="tasks" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.ConfigurationTask">
+		<description>Tasks serve extend the configuration.</description>
+	</property>
+
+	<xmlbinding>
+		<property name="tasks">
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileTextTaskInsert"
+				xmlelement="insert"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileTextTaskDelete"
+				xmlelement="delete"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileTextTaskReplace"
+				xmlelement="replace"/>
+		</property>
+	</xmlbinding>
+
+	<codegen mode="split"/>
+
+</beantype>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigFilePropertiesTaskSetpropvalue.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/16/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFilePropertiesTaskSetpropvalue"
+	extends="org.rapidbeans.rapidenv.config.ConfigurationTask">
+
+	<description>Sets an XML node (element or attribute).
+Creates the node if not already present. Caution only use node creation for uniqe elements.</description>
+
+	<property name="section" type="string">
+		<description>The section of the property to set.</description>
+	</property>
+
+	<property name="name" type="string"
+		mandatory="true">
+		<description>The name of the property to set.</description>
+	</property>
+
+	<property name="value" type="string"
+		mandatory="true">
+		<description>The property value to set.</description>
+	</property>
+	
+	<property name="commenttag" type="string">
+		<description>The comment tag.
+Defaults to "RapidEnv project ((project name))".</description>
+	</property>
+
+	<codegen mode="split"/>
+</beantype>

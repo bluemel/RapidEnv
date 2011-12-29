@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+
+	<property name="my_osspecific_folder" category="common"
+		valuetype="file"
+		value="/opt/postgres">
+		<specificvalue osfamily="windows">
+			<value>C:\Program Files\Postgres</value>
+		</specificvalue>
+	</property>
+
+	<property name="jdk_home" category="common"
+		valuetype="file"
+		value="homedir('jdk')">
+		<description>This is a multilined
+description.</description>
+		<environment name="JAVA_HOME"/>
+	</property>
+
+	<property name="cmd.path" category="common"
+		valuetype="path">
+		<environment osfamily="linux" name="PATH"/>
+		<environment osfamily="windows" name="Path"/>
+		<specificvalue osfamily="windows">
+			<value>environment('Path');MyTestdir(X86)</value>
+		</specificvalue>
+		<specificvalue osfamily="linux">
+			<value>environment('PATH')</value>
+		</specificvalue>
+		<extension propextmode="prepend" value="homedir('maven')/bin"/>
+		<extension propextmode="prepend" value="${jdk_home}/bin"/>
+	</property>
+
+	<installunit name="jdk" version="1.6.0"
+		sourceurl="http://java.sun.com/xxx.exe"/>
+	<installunit space="org.apache" name="ant" version="1.8.0"
+		sourceurl="http://ant.apache.org/xxx.zip"/>
+	<installunit space="org.apache" name="maven" version="2.1.2"
+		sourceurl="http://maven.apache.org/xxx.zip"
+		homedir="/h/opt/maven"
+		/>
+	<installunit space="org.rapidbeans" name="ambitool" version="1.0.0"
+		sourceurl="http://www.rapidbeans.org/xxx.zip"/>
+</project>

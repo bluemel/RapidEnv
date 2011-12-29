@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article SYSTEM "docbook.dtd">
+
+<!--
+	<sect2>
+		<title>1.0.xxx</title>
+		<para>
+			Issue date: &lt;not yet issued&gt;
+		</para>
+		<itemizedlist>
+			<listitem><para><emphasis role="bold">TODO: try out a MySQL (silent) installation.</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">TODO: try out a PostgeSQL (silent) installation.</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">TODO: introduce eclipse plugin installation via link.</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">TODO: write user manual.</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">TODO: getting started.</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">TODO: remove compiler / javadoc batch warnings</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">TODO: findbugs / checkstyle</emphasis></para></listitem>
+		</itemizedlist>
+	</sect2>
+-->
+
+<article>
+	<title>
+		RapidEnv Release Notes
+	</title>
+	<sect1>
+		<title>1.2.x</title>
+	<sect2>
+		<title>1.3.0</title>
+		<para>
+			Issue date: 12/31/2011
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para><emphasis role="bold">Introduced install state data file ".renvstate.xml"</emphasis>
+				in order to persist the installation state and to make install unit home directories
+				independent from the name/version convention.
+				<emphasis role="bold">Please not: this change requires migration of existing environment.</emphasis>
+				Migration should happen automatically during the first "renv" call.
+				If not simply install the installation unit again.
+				</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Introduced integration of ant tasks</emphasis>
+				alternatively to system commands</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Introduced input for commands with multiple lines.</emphasis>
+				in order to allow automatic user interactions of e. g. installers.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Introduced message texts for commands</emphasis></para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Improved HTTP download speed by factor 4</emphasis></para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+	<sect2>
+		<title>1.2.0</title>
+		<para>
+			Issue date: 11/03/2011
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para><emphasis role="bold">RapidEnv language changes</emphasis>
+					(slight migration effort):
+					<itemizedlist>
+						<listitem>
+							<para>
+								Renamed property attribute <emphasis role="bold">propmode</emphasis> to <emphasis role="bold">category</emphasis>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Renamed property attribute <emphasis role="bold">proptype</emphasis> to <emphasis role="bold">valuetype</emphasis>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Changed property category value <emphasis role="bold">individual</emphasis> to <emphasis role="bold">personal</emphasis>
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+			<listitem><para>
+				<emphasis role="bold">Improved properties status display:</emphasis>
+				show common properties { '=' , '!' } and personal properties 'p'.
+				</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Introduced explicit property modification:</emphasis>
+				while "renv u &lt;property-name&gt; ..." will update one ore more
+				common properties if necessary the same command given on a
+				personal property will let you redefine its value.
+				"renv c &lt;property-name&gt; ..." exactly behaves the same
+				way.</para>
+			</listitem>
+			<listitem>
+				<para>Introduced <emphasis role="bold">folder</emphasis> configuration (in analogy
+				    to file configuration):
+					the <emphasis role="bold">sourceurl</emphasis> property defines a packed file
+					to unpack under the folder. If no packed file is specified the folder simply is
+					created</para>
+			</listitem>
+			<listitem><para>
+				Introduced element <emphasis role="bold">commandonconfig:</emphasis>
+				for commands that should be executed whenever a file or folder has been (re) configured.
+				</para>
+			</listitem>
+			<listitem><para>
+				Introduced property <emphasis role="bold">deleteafterdeinstall:</emphasis>
+				for configuration files (folders) outside the installation root (e. g. Eclipse links).
+				</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Replaced windows shortcut creation JShortcut solution
+				with Windows scripting host solution.</emphasis></para>
+			</listitem>
+			<listitem><para>Introduced <emphasis role="bold">replace() function expression</emphasis>
+				for simple text replacement in expressions.</para>
+			</listitem>
+			<listitem><para>
+				<emphasis role="bold">Started with Eclipse support:</emphasis>
+				plugins, simple workspace configurations (build pat variables), projects, ...
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+	</sect1>
+	<sect1>
+		<title>1.1.x</title>
+	<sect2>
+		<title>1.1.0</title>
+		<para>
+			Issue date: 08/01/2011
+		</para>
+		<itemizedlist>
+			<listitem><para><emphasis role="bold">Introduced UNIX support</emphasis> with
+				<itemizedlist>
+					<listitem><para>a cmd line shell script wrapper renv (execute '. renv')</para></listitem>
+					<listitem><para>support of desktop icons maintenance (start menu support is still incomplete)</para></listitem>
+					<listitem><para>support of a "command prompt here" like Dolphin (KDE) and Nautilus (Gnome) menu extension</para></listitem>
+				</itemizedlist>
+				tested und openSUSE Linux 11.4 together with KDE and Gnome</para></listitem>
+			<listitem><para><emphasis role="bold">Extended unpacking of archive files</emphasis>
+				in order to support not only zip format:
+				Currently the following formats are supported:
+				<emphasis role="bold">zip</emphasis> "*.zip
+				<emphasis role="bold">jar</emphasis> "*.jar
+				<emphasis role="bold">war</emphasis> "*.war
+				<emphasis role="bold">tar</emphasis> "*.tar
+				<emphasis role="bold">tar with gzip compression</emphasis> "*.tar.gz, *.tgz
+				<emphasis role="bold">tar with b2zip compression</emphasis> "*.tar.bz2, *.bz2
+				</para></listitem>
+			<listitem><para><emphasis role="bold">Introduced expression function packaging()</emphasis>
+				to determine platform specific packaging ("zip" vs. "tar.gz")</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Introduced expression function userhome()</emphasis>
+				to determine the user's home directory platform independently</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Introduced conversionmap argument</emphasis>
+				for expression functions <emphasis role="bold">osname()</emphasis>,
+				<emphasis role="bold">architcture()</emphasis>,
+				and <emphasis role="bold">packaging()</emphasis>
+				in order to allow flexible determination of OS and architecture specific
+				installation file names.</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Fixed expression function homedir()</emphasis>
+				which did not know its parent installunit in some cases.</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Introduced attribute sourcefile</emphasis>
+				to compensate complex download URLs.</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Introduced icon configuration</emphasis>
+				for shortcuts and start menu entries on the desktop (Windows and KDE)</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Introduced special environment variable RAPID_ENV_PROJECT_HOME</emphasis>
+				to determine the project development root directory.
+				Defining a property mapped to this environment variable lets you define
+				this project root commonly or individual.
+				Once RAPID_ENV_PROJECT_HOME is defined renv will issue a warning if executed
+				with a workind directory that is not below the project root. This will help
+				developers not to get mixed up especially when working with multiple development
+				environments for the same project e.g. when working with different branches.</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Fixed deinstallation of old installation unit versions during up and downgrade.</emphasis>
+				Upgrade and downgrade now perform a complete deinstallation instead of only removing the
+				installation files. The version to deinstall will now be properly expanded into expressions
+				used to define icons, deinstalltion commands etc...</para></listitem>
+			<listitem><para><emphasis role="bold">Fixed exception for "renv -v"</emphasis>
+				which is the shortcut for "renv -verbose stat"</para></listitem>
+			<listitem><para><emphasis role="bold">Fixed several use cases dealing with path extensions</emphasis>
+				including suppression of extendng path component '.' or './'.</para></listitem>
+			<listitem><para><emphasis role="bold">Renamed install control literal deprecated</emphasis>
+				to <emphasis role="bold">discontinued</emphasis>.</para></listitem>
+			<listitem><para><emphasis role="bold">Fixed missing propagation of "discontinued" to sub installation units</emphasis></para></listitem>
+			<listitem><para><emphasis role="bold">Investigated reflexive command path definition</emphasis>
+				When the command path is defined recursively during the next update all old values
+				were contained including the path that should be removed.
+				You have to use function "substractextions" around recursive value definitions
+				and you have to mark path compomnents you want to remove with a property extision
+				of kind "remove". Summary: do not define the command path as common property reflexively.
+				Rather define an individual string property that is part of the common command path property.</para></listitem>
+			<listitem><para><emphasis role="bold">Introduced new option "-yes": </emphasis>
+				If you use this option the "boot", "update", or "configuration"
+				will run without user interaction which causes individual properties to get the default values.
+				Yes / No questions will be automatically answered with "Yes".
+				So you should use this option for non-interactive (batch) build processes or scripts.</para>
+			</listitem>
+			<listitem><para><emphasis role="bold">Adapted property update behaviour: </emphasis>
+				Properties are from now on updated on demand
+				(with commands "update" or "configure").</para></listitem>
+			<listitem><para><emphasis role="bold">Introduced release notes</emphasis></para></listitem>
+		</itemizedlist>
+	</sect2>
+	</sect1>
+	<sect1>
+		<title>1.0.x</title>
+	<sect2>
+		<title>1.0.3</title>
+		<para>
+			Issue date: 12/20/2010
+		</para>
+		<itemizedlist>
+			<listitem><para>Renamed project attribute
+				<emphasis role="bold">branch</emphasis> to
+				<emphasis role="bold">tag</emphasis>.</para></listitem>
+			<listitem><para>Improved reference manual</para></listitem>
+		</itemizedlist>
+	</sect2>
+	<sect2>
+		<title>1.0.2</title>
+		<para>
+			Issue date: 11/11/2010
+		</para>
+		<itemizedlist>
+			<listitem><para>Fixed exception in case of unknown functions.
+Unknown functions now simply remain uninterpreted.</para></listitem>
+		</itemizedlist>
+	</sect2>
+	<sect2>
+		<title>1.0.1</title>
+		<para>
+			Issue date: 10/12/2010
+		</para>
+		<itemizedlist>
+			<listitem><para>First versioned release</para></listitem>
+		</itemizedlist>
+	</sect2>
+	</sect1>
+</article>

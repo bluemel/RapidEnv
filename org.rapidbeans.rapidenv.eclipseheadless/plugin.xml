@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="cmdlineapp"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+            <run
+               class="org.rapidbeans.rapidenv.eclipseheadless.EclipseHeadlessApplication">
+            </run>
+      </application>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.rapidbeans.rapidenv.eclipseheadless.cmdlineapp"
+            name="eclipseheadless">
+         <property
+               name="appName"
+               value="eclipseheadless">
+         </property>
+      </product>
+   </extension>
+
+</plugin>

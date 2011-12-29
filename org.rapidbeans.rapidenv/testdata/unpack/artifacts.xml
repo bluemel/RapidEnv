@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<repository name='Maven Integration for Eclipse' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>
+  <properties size='2'>
+    <property name='p2.timestamp' value='1294870863415'/>
+    <property name='p2.compressed' value='false'/>
+  </properties>
+  <mappings size='3'>
+    <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
+    <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
+    <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
+  </mappings>
+  <artifacts size='17'>
+    <artifact classifier='org.eclipse.update.feature' id='org.maven.ide.eclipse.site' version='0.12.1.20110112-1712'>
+      <properties size='4'>
+        <property name='artifact.size' value='6519'/>
+        <property name='download.size' value='6519'/>
+        <property name='download.md5' value='a972bc083ca0968896671e6c88146e45'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.pr' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='1740596'/>
+        <property name='download.size' value='1740596'/>
+        <property name='download.md5' value='72dc5621c2e033241e0b1e4b83e2a3cc'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='org.maven.ide.eclipse.feature' version='0.12.1.20110112-1712'>
+      <properties size='4'>
+        <property name='artifact.size' value='5837'/>
+        <property name='download.size' value='5837'/>
+        <property name='download.md5' value='18d89f26d1f105d23e92bb75142d9499'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.jdt' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='121557'/>
+        <property name='download.size' value='121557'/>
+        <property name='download.md5' value='cfd4d7013b39030d4eaf9fba72a958ce'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.refactoring' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='55842'/>
+        <property name='download.size' value='55842'/>
+        <property name='download.md5' value='72d822a3d64ac9ec6b31c94262d09ce8'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.nexus_indexer' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='791132'/>
+        <property name='download.size' value='791132'/>
+        <property name='download.md5' value='b06247750643e3464a5b85cfc7a4a683'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.maven_model_edit' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='397578'/>
+        <property name='download.size' value='397578'/>
+        <property name='download.md5' value='a7a483e7ebf3a563d2f57fdc6ae9ad8d'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.dependency_tree' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='35125'/>
+        <property name='download.size' value='35125'/>
+        <property name='download.md5' value='7c8d28a62b7cc352b207de61b621748c'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.launching' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='82899'/>
+        <property name='download.size' value='82899'/>
+        <property name='download.md5' value='949d89192bd1242bad72d143cce7919f'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='955764'/>
+        <property name='download.size' value='955764'/>
+        <property name='download.md5' value='caa86fcc16ff09ee243e2ff96ad8ed5f'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.tests.common' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='851068'/>
+        <property name='download.size' value='851068'/>
+        <property name='download.md5' value='52a53d41bdee028fe9d5f949d3e7f566'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.archetype_common' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='1866705'/>
+        <property name='download.size' value='1866705'/>
+        <property name='download.md5' value='9c7cb9a1ecad7b2a5d4b1537aad68962'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.editor' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='640441'/>
+        <property name='download.size' value='640441'/>
+        <property name='download.md5' value='f25280858b30c1ab072d27ef015d7489'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.editor.xml' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='91938'/>
+        <property name='download.size' value='91938'/>
+        <property name='download.md5' value='da250af77f42e6a0372194e8e1dc1ebc'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.integration.tests.common' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='62300'/>
+        <property name='download.size' value='62300'/>
+        <property name='download.md5' value='38a4a13de9f06880e11ea103d67a28b5'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='org.maven.ide.eclipse.sdk.feature' version='0.12.1.20110112-1712'>
+      <properties size='4'>
+        <property name='artifact.size' value='5559'/>
+        <property name='download.size' value='5559'/>
+        <property name='download.md5' value='c4bbb20641a2ea11cc98536026584b81'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.maven.ide.eclipse.maven_embedder' version='0.12.1.20110112-1712'>
+      <properties size='3'>
+        <property name='artifact.size' value='3827573'/>
+        <property name='download.size' value='3827573'/>
+        <property name='download.md5' value='fc7df858eacd39cc30ee4cd8f573816f'/>
+      </properties>
+    </artifact>
+  </artifacts>
+</repository>

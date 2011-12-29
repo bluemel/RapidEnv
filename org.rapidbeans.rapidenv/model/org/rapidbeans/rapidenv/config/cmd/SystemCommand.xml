@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: SystemCommand.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/30/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+	extends="org.rapidbeans.rapidenv.config.Configuration">
+
+	<description>A system command configuration allows you to define
+		the execution of an arbitrary batch script or executable synchronously
+		or asynchronously on operation system level with an arbitray set
+		of arguments. Additionally you can check preconditions on files
+		if the command has to be executed. Postconditions on the return code,
+		stdout and stderror as well as on files can be used to verify
+		command execution success.</description>
+
+	<property name="executable" type="string">
+		<description>The Executable or batch file to execute</description>
+	</property>
+
+	<property name="runasbatch" type="boolean"
+		default="false">
+		<description>The command will run under control of a separate command line shell</description>
+	</property>
+
+	<property name="async" type="boolean"
+		default="false">
+		<description>The command will run asynchronously</description>
+	</property>
+
+	<property name="workingdir" type="string"
+		>
+		<description>The working directory in which to execute the command.</description>
+	</property>
+
+	<property name="silent" type="boolean"
+		default="false">
+		<description>The command will run silently</description>
+	</property>
+
+	<property name="messagestart" type="string"
+		multiline="true">
+		<description>This message will be printed on standard output
+before the command is executed</description>
+	</property>
+
+	<property name="messagesuccess" type="string"
+		multiline="true">
+		<description>This message will be printed on standard output
+after the command has been executed successfully</description>
+	</property>
+
+	<property name="messagefailure" type="string"
+		multiline="true">
+		<description>This message will be printed on standard error
+after the command execution ended with errors (return != 0)</description>
+	</property>
+
+	<property name="arguments" type="association"
+		composition="true"
+		targettype="Argument">
+		<description>Command arguments.</description>
+	</property>
+
+	<property name="returns" type="association"
+		composition="true"
+		targettype="CmdCondReturn">
+		<description>Return value conditions.</description>
+	</property>
+
+	<property name="stdouts" type="association"
+		composition="true"
+		targettype="CmdCondStdout">
+		<description>Standard out contents conditions.</description>
+	</property>
+
+	<property name="stderrs" type="association"
+		composition="true"
+		targettype="CmdCondStderr">
+		<description>Standard err contents conditions.</description>
+	</property>
+
+	<property name="verifycmds" type="association"
+		composition="true"
+		targettype="SystemCommand">
+		<description>The verify commands.</description>
+	</property>
+
+	<property name="input" type="string"
+		multiline="true">
+		<description>Define input lines if you intend to
+to have automatic user input</description>
+	</property>
+
+	<codegen mode="split"/>
+
+</beantype>

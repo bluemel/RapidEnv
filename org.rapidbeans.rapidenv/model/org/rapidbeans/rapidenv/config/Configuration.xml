@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Configuration.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/08/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.Configuration"
+	abstract="true">
+
+	<description>A single configuration step for a RapidEnv installation unit e. g.
+- changing one or more (configuration) text files
+  (plain text | XML | properties)
+- executing a command
+- adding or deleting one or more files
+...
+A configuration always can be checked if it is neccessary or already done
+and executed.
+</description>
+
+	<property name="installphase" type="choice"
+		enum="org.rapidbeans.rapidenv.config.ConfigurationPhase"
+		default="config">
+		<description>The phase when the configuration is executed:
+- preinstall    before first or update installation
+- postinstall   after first or update installation only
+- config        after first or update installation or during explicit configuration
+- predeinstall  before removing the installation
+- postdeinstall after removing the installation</description>
+	</property>
+
+	<property name="osfamily" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystem">
+		<description>If this value is defined the configuration step gets a platform specific one.
+If ist is undefined the configuration is valid for all platforms without specific definition.</description>
+	</property>
+
+	<property name="expressionliteralescaping" type="boolean"
+		default="false">
+		<description>Set this value to true if you want to use expression literal escaping</description>
+	</property>
+
+	<property name="cleanupfilesonconfig" type="string">
+		<description>Defines a comma separated list of files that will be deleted
+after this configuration has been performed</description>
+	</property>
+
+	<property name="ok" type="boolean"
+		transient="true"
+		default="false"/>
+
+	<property name="issue" type="string"
+		transient="true"
+		multiline="true"/>
+
+	<codegen mode="split"/>
+
+</beantype>

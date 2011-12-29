@@ -1,0 +1,17 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+  - introduced property "testprop01" with value "D:\unknown"
+  - changed value of property "testprop02"
+    from "oldvalue"
+      to "newvalue
+  = testprop03 = "@RAPIDENV_HOME@\testdata\testinstall\jdk\1.6.0"
+  = testprop04 = "val4"
+  p testprop05 = "newvalue"
+  p testprop06 = "oldvalue"
+
+Install units:
+  ! jdk 1.6.0 installation required
+Some installation units are not installed or outdated
