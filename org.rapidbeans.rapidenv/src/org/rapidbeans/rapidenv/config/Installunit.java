@@ -17,10 +17,7 @@
 package org.rapidbeans.rapidenv.config;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,9 +40,13 @@ import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.Unpacker;
 import org.rapidbeans.rapidenv.cmd.CmdLineInteractions;
+import org.rapidbeans.rapidenv.config.cmd.Argument;
+import org.rapidbeans.rapidenv.config.cmd.ExceptionMap;
 import org.rapidbeans.rapidenv.config.cmd.ShellLinkIcon;
+import org.rapidbeans.rapidenv.config.cmd.SystemCommand;
 import org.rapidbeans.rapidenv.config.expr.ConfigExprTopLevel;
 import org.rapidbeans.rapidenv.config.file.ConfigFile;
+import org.rapidbeans.rapidenv.security.Verifyer;
 
 /**
  * The central class for RapidEnv installation units.
@@ -274,16 +275,46 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						removeLocalsourcefile = true;
 					}
 					if (!localsourcefile.exists()) {
-						RapidEnvInterpreter.getInstance().getOut().println(
-								"Downloading source URL " + getSourceurl().toString() + "\n"
-										+ "  to local source file " + localsourcefile.getAbsolutePath() + "...");
-						final long timeStart = System.currentTimeMillis();
-						HttpDownload.download(getSourceurlAsUrl(),
-								localsourcefile, getSourcefilechecks());
-						final double duration = (System.currentTimeMillis() - timeStart) / 1000;
-						RapidEnvInterpreter.getInstance().getOut().println(
-								"  Download finished after " + duration + " s");
-						break;
+						switch (this.getDownloadmode()) {
+
+						case automatic:
+							RapidEnvInterpreter.getInstance().getOut().println(
+									"Downloading source URL " + getSourceurl().toString() + "\n"
+											+ "  to local source file " + localsourcefile.getAbsolutePath() + "...");
+							final long timeStart = System.currentTimeMillis();
+							HttpDownload.download(getSourceurlAsUrl(),
+									localsourcefile, getSourcefilechecks());
+							final double duration = (System.currentTimeMillis() - timeStart) / 1000;
+							RapidEnvInterpreter.getInstance().getOut().println(
+									"  Download finished after " + duration + " s");
+							break;
+
+						case manual:
+							if (!localsourcefile.getParentFile().exists()) {
+								FileHelper.mkdirs(localsourcefile.getParentFile());
+							}
+							if (RapidEnvInterpreter.getInstance().getPropertyValue("rapid.env.browser") != null) {
+								SystemCommand command = new SystemCommand();
+								command.setExecutable(RapidEnvInterpreter.getInstance().getPropertyValue("rapid.env.browser"));
+								command.addArgument(new Argument(getSourceurlAsUrl().toString()));
+								command.setAsync(true);
+								command.execute();
+							}
+							throw new RapidEnvCmdException("\n"
+									+ "Manual download required for installation unit \""
+									+ getFullyQualifiedName() + "\"\n"
+									+ "  from URL:    " + getSourceurlAsUrl().toString() + "\n"
+									+ "  into folder: " + localsourcefile.getParentFile().getAbsolutePath() + "\n"
+									+ "  into file:   " + localsourcefile.getName(),
+									ExceptionMap.INFOCODE_DOWNLOAD_MANUAL_REQUIRED);
+
+						case never:
+							throw new RapidEnvCmdException("Download from URL \""
+									+ getSourceurlAsUrl().toString()
+									+ "\"\n"
+									+ "  is forbidden.",
+									ExceptionMap.ERRORCODE_DOWNLOAD_FORBIDDEN);
+						}
 					}
 				} else {
 					throw new RapidEnvException("Source URL protocol different to \"file\" not yet supported");
@@ -350,6 +381,26 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".tgz");
 					} else if (new File(localsourcefiledir, standardArchiveFileName + ".b2zip").exists()) {
 						localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".b2zip");
+					}
+				}
+				if ((getSourcefile() != null && localsourcefile.getName().equals(getSourcefile()))
+						|| (getSourceurlAsUrl() != null && localsourcefile.getName().equals(getSourceurlAsUrl().getFile()))) {
+					for (final Filecheck check : getSourcefilechecks()) {
+						final String checksum = Verifyer.hashValue(localsourcefile,
+								check.getHashalgorithm());
+						if (checksum.equals(check.getHashvalue())) {
+							final RapidEnvInterpreter interpreter =
+									RapidEnvInterpreter.getInstance();
+							if (interpreter != null) {
+								interpreter.getOut().println("  "
+										+ check.getHashalgorithm().name()
+										+ " Hashvalue OK");
+							}
+						} else {
+							throw new RapidEnvException("File \""
+									+ localsourcefile.getAbsolutePath() + "\" has an icorrect"
+									+ " hash value \"" + checksum + "\".");
+						}
 					}
 				}
 				RapidEnvInterpreter.getInstance().getOut().println("installing "
@@ -1381,81 +1432,81 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		}
 	}
 
-	/**
-	 * Download and zip together an Eclipse update site not provided
-	 * as site zip file.
-	 *
-	 * @param sourceRootUrl the root url 
-	 * @param localSourceFile the target zip file
-	 */
-	protected void downloadEclipseupdatesite(final URL sourceRootUrl,
-			final File localSourceFile) {
-		final File localSourceRoot = localSourceFile.getParentFile();
-		if (!localSourceRoot.exists() && !localSourceRoot.mkdirs()) {
-			throw new RapidEnvException("Could not create directrory \""
-					+ localSourceRoot.getAbsolutePath() + "\"");
-		}
-		final File localSiteRoot = new File(localSourceRoot, "site");
-		final File localSiteRootFeatures = new File(localSiteRoot, "features");
-		final File localSiteRootPlugins = new File(localSiteRoot, "plugins");
-		if (!localSiteRoot.exists() && !localSiteRoot.mkdir()) {
-			throw new RapidEnvException("Could not create directrory \""
-					+ localSiteRoot.getAbsolutePath() + "\"");
-		}
-		if (!localSiteRootFeatures.exists() && !localSiteRootFeatures.mkdir()) {
-			throw new RapidEnvException("Could not create directrory \""
-					+ localSiteRootFeatures.getAbsolutePath() + "\"");
-		}
-		if (!localSiteRootPlugins.exists() && !localSiteRootPlugins.mkdir()) {
-			throw new RapidEnvException("Could not create directrory \""
-					+ localSiteRootPlugins.getAbsolutePath() + "\"");
-		}
-		final File artifactsXml = new File(localSiteRoot, "artifacts.xml");
-		final File contentXml = new File(localSiteRoot, "content.xml");
-		InputStream artifactsXmlIs = null;
-		try {
-			RapidEnvInterpreter.getInstance().getOut().println(
-					"Downloading Eclipse update site configuration file "
-							+ new URL(sourceRootUrl.toString() + "/artifacts.xml").toString()
-							+ "...");
-			HttpDownload.download(new URL(sourceRootUrl.toString() + "/artifacts.xml"),
-					artifactsXml, getSourcefilechecks());
-			RapidEnvInterpreter.getInstance().getOut().println(
-					"Downloading Eclipse update site configuration file "
-							+ new URL(sourceRootUrl.toString() + "/content.xml").toString()
-							+ "...");
-			HttpDownload.download(new URL(sourceRootUrl.toString() + "/content.xml"),
-					contentXml, getSourcefilechecks());
-			artifactsXmlIs = new FileInputStream(artifactsXml);
-			for (final Artifact art : Artifact.parse(artifactsXmlIs)) {
-				String downloadUrlString = sourceRootUrl.toString();
-				String localFilePath = null;
-				if (art.getClassifier().equals("org.eclipse.update.feature")) {
-					downloadUrlString += "/features/";
-					localFilePath = localSiteRootFeatures.getAbsolutePath();
-				} else if (art.getClassifier().equals("osgi.bundle")) {
-					downloadUrlString += "/plugins/";
-					localFilePath = localSiteRootPlugins.getAbsolutePath();
-				}
-				final URL downloadUrl = new URL(downloadUrlString
-						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
-				final File localFile = new File(localFilePath + "/"
-						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
-				RapidEnvInterpreter.getInstance().getOut().println(
-						"Downloading Eclipse update site artifact file "
-								+ downloadUrl + "...");
-				HttpDownload.download(downloadUrl, localFile, getSourcefilechecks());
-			}			
-			RapidEnvInterpreter.getInstance().getOut().println(
-					"Packaging Eclipse update site artifact files under "
-							+ localSiteRoot + " to " + localSourceFile + "...");
-			new AntGateway().zip(localSiteRoot, localSourceFile);
-		} catch (MalformedURLException e) {
-			throw new RapidEnvException(e);
-		} catch (FileNotFoundException e) {
-			throw new RapidEnvException(e);
-		}
-	}
+//	/**
+//	 * Download and zip together an Eclipse update site not provided
+//	 * as site zip file.
+//	 *
+//	 * @param sourceRootUrl the root url 
+//	 * @param localSourceFile the target zip file
+//	 */
+//	protected void downloadEclipseupdatesite(final URL sourceRootUrl,
+//			final File localSourceFile) {
+//		final File localSourceRoot = localSourceFile.getParentFile();
+//		if (!localSourceRoot.exists() && !localSourceRoot.mkdirs()) {
+//			throw new RapidEnvException("Could not create directrory \""
+//					+ localSourceRoot.getAbsolutePath() + "\"");
+//		}
+//		final File localSiteRoot = new File(localSourceRoot, "site");
+//		final File localSiteRootFeatures = new File(localSiteRoot, "features");
+//		final File localSiteRootPlugins = new File(localSiteRoot, "plugins");
+//		if (!localSiteRoot.exists() && !localSiteRoot.mkdir()) {
+//			throw new RapidEnvException("Could not create directrory \""
+//					+ localSiteRoot.getAbsolutePath() + "\"");
+//		}
+//		if (!localSiteRootFeatures.exists() && !localSiteRootFeatures.mkdir()) {
+//			throw new RapidEnvException("Could not create directrory \""
+//					+ localSiteRootFeatures.getAbsolutePath() + "\"");
+//		}
+//		if (!localSiteRootPlugins.exists() && !localSiteRootPlugins.mkdir()) {
+//			throw new RapidEnvException("Could not create directrory \""
+//					+ localSiteRootPlugins.getAbsolutePath() + "\"");
+//		}
+//		final File artifactsXml = new File(localSiteRoot, "artifacts.xml");
+//		final File contentXml = new File(localSiteRoot, "content.xml");
+//		InputStream artifactsXmlIs = null;
+//		try {
+//			RapidEnvInterpreter.getInstance().getOut().println(
+//					"Downloading Eclipse update site configuration file "
+//							+ new URL(sourceRootUrl.toString() + "/artifacts.xml").toString()
+//							+ "...");
+//			HttpDownload.download(new URL(sourceRootUrl.toString() + "/artifacts.xml"),
+//					artifactsXml, getSourcefilechecks());
+//			RapidEnvInterpreter.getInstance().getOut().println(
+//					"Downloading Eclipse update site configuration file "
+//							+ new URL(sourceRootUrl.toString() + "/content.xml").toString()
+//							+ "...");
+//			HttpDownload.download(new URL(sourceRootUrl.toString() + "/content.xml"),
+//					contentXml, getSourcefilechecks());
+//			artifactsXmlIs = new FileInputStream(artifactsXml);
+//			for (final Artifact art : Artifact.parse(artifactsXmlIs)) {
+//				String downloadUrlString = sourceRootUrl.toString();
+//				String localFilePath = null;
+//				if (art.getClassifier().equals("org.eclipse.update.feature")) {
+//					downloadUrlString += "/features/";
+//					localFilePath = localSiteRootFeatures.getAbsolutePath();
+//				} else if (art.getClassifier().equals("osgi.bundle")) {
+//					downloadUrlString += "/plugins/";
+//					localFilePath = localSiteRootPlugins.getAbsolutePath();
+//				}
+//				final URL downloadUrl = new URL(downloadUrlString
+//						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
+//				final File localFile = new File(localFilePath + "/"
+//						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
+//				RapidEnvInterpreter.getInstance().getOut().println(
+//						"Downloading Eclipse update site artifact file "
+//								+ downloadUrl + "...");
+//				HttpDownload.download(downloadUrl, localFile, getSourcefilechecks());
+//			}			
+//			RapidEnvInterpreter.getInstance().getOut().println(
+//					"Packaging Eclipse update site artifact files under "
+//							+ localSiteRoot + " to " + localSourceFile + "...");
+//			new AntGateway().zip(localSiteRoot, localSourceFile);
+//		} catch (MalformedURLException e) {
+//			throw new RapidEnvException(e);
+//		} catch (FileNotFoundException e) {
+//			throw new RapidEnvException(e);
+//		}
+//	}
 
 	/**
 	 * Get all source file checks relevant for the current platform.

@@ -780,7 +780,7 @@ public class RapidEnvInterpreter {
 									this.in, this.out,
 									"Installation unit \"" + unit.getFullyQualifiedName()
 									+ "\" is discontinued.\n  Do you want to install anyway?",
-											false);
+									false);
 							break;
 						default:
 							throw new AssertionError("Run mode \""
@@ -1415,6 +1415,16 @@ public class RapidEnvInterpreter {
 				&& this.options.get(CmdRenvOption.yes) != null) {
 			this.runMode = RunMode.batch;
 		}
+
+		// create the profile directory if it doesn't exist
+		final String profilesHomePath = System.getenv("RAPID_ENV_PROFILES_HOME");
+		if (profilesHomePath != null) {
+			final File profileDir = new File(profilesHomePath);
+			if (!profileDir.exists()) {
+				FileHelper.mkdirs(profileDir);
+			}
+		}
+
 		// load the configuration file
 		final File configfile = cmd.getConfigfile();
 		TypeRapidBean.forName(Project.class.getName());
@@ -1681,7 +1691,7 @@ public class RapidEnvInterpreter {
 
 				// recurse over subunits
 				if (unit.getSubunits()!= null
-				&& unit.getSubunits().size() > 0) {
+						&& unit.getSubunits().size() > 0) {
 					checkDependencyCyclyesForSubunitNode(unit.getSubunits());
 				}
 			}
@@ -1794,104 +1804,104 @@ public class RapidEnvInterpreter {
 	 * @param configFilePath path of the configuration file
 	 * @return all install units and properties to process
 	 */
-	 protected InstallunitsAndProperties determineInstallunitsAndPropertiesToProcess(
-			 Collection<String> installUnitOrPropertyNames,
-			 final String configFilePath) {
+	protected InstallunitsAndProperties determineInstallunitsAndPropertiesToProcess(
+			Collection<String> installUnitOrPropertyNames,
+			final String configFilePath) {
 
-		 final InstallunitsAndProperties result = new InstallunitsAndProperties();
-		 final Map<String, Installunit> installUnitsToProcMap = new HashMap<String, Installunit>();
-		 final Map<String, Property> propertiesToProcMap = new HashMap<String, Property>();
+		final InstallunitsAndProperties result = new InstallunitsAndProperties();
+		final Map<String, Installunit> installUnitsToProcMap = new HashMap<String, Installunit>();
+		final Map<String, Property> propertiesToProcMap = new HashMap<String, Property>();
 
-		 // iterate over all install unit names
-		 for (final String installUnitOrPropertyName : installUnitOrPropertyNames) {
-			 Property property = null;
-			 Installunit unit = null;
-			 try {
-				 property = getProject().findPropertyConfiguration(installUnitOrPropertyName);
-				 unit = getProject().findInstallunitConfiguration(installUnitOrPropertyName);
-			 } catch (RapidEnvConfigurationException e) {
-				 if (e.getMessage().startsWith("Ambigouus tool name ")) {
-					 throw new RapidEnvCmdException("Ambigouus tool name \"" + installUnitOrPropertyName
-							 + "\" has been specified with the command");
-				 } else {
-					 throw e;
-				 }
-			 }
-			 if (unit == null && property == null) {
-				 throw new RapidEnvCmdException(
-						 "No install unit or property \"" + installUnitOrPropertyName
-						 + "\"\n  is defined in RapidEnv environment configuration file\n  \""
-						 + configFilePath + "\"",
-						 ExceptionMap.ERRORCODE_UNKNOWN_PROP_OR_UNIT);
-			 } else if (unit != null && property != null) {
-				 throw new RapidEnvCmdException(
-						 "Ambigouus install unit / property name \""
-								 + installUnitOrPropertyName
-								 + "\" defined in RapidEnv environment configuration file \""
-								 + configFilePath + "\"",
-								 ExceptionMap.ERRORCODE_AMBIGOUUS_NAME);
-			 } else if (unit != null && property == null) {
-				 if (installUnitsToProcMap.get(unit.getFullyQualifiedName()) == null) {
-					 installUnitsToProcMap.put(unit.getFullyQualifiedName(), unit);
-					 result.installunits.add(unit);
-				 } else {
-					 logger.warning("Install unit \"" + unit.getFullyQualifiedName()
-							 + "\" has been specified for one command multiple times");
-				 }
-			 } else if (unit == null && property != null) {
-				 if (propertiesToProcMap.get(property.getFullyQualifiedName()) == null) {
-					 propertiesToProcMap.put(property.getFullyQualifiedName(), property);
-					 result.properties.add(property);
-				 } else {
-					 logger.warning("Property \"" + property.getFullyQualifiedName()
-							 + "\" has been specified for one command multiple times");
-				 }
-			 } else {
-				 throw new AssertionError("What???");
-			 }
-		 }
-		 return result;
-	 }
+		// iterate over all install unit names
+		for (final String installUnitOrPropertyName : installUnitOrPropertyNames) {
+			Property property = null;
+			Installunit unit = null;
+			try {
+				property = getProject().findPropertyConfiguration(installUnitOrPropertyName);
+				unit = getProject().findInstallunitConfiguration(installUnitOrPropertyName);
+			} catch (RapidEnvConfigurationException e) {
+				if (e.getMessage().startsWith("Ambigouus tool name ")) {
+					throw new RapidEnvCmdException("Ambigouus tool name \"" + installUnitOrPropertyName
+							+ "\" has been specified with the command");
+				} else {
+					throw e;
+				}
+			}
+			if (unit == null && property == null) {
+				throw new RapidEnvCmdException(
+						"No install unit or property \"" + installUnitOrPropertyName
+						+ "\"\n  is defined in RapidEnv environment configuration file\n  \""
+						+ configFilePath + "\"",
+						ExceptionMap.ERRORCODE_UNKNOWN_PROP_OR_UNIT);
+			} else if (unit != null && property != null) {
+				throw new RapidEnvCmdException(
+						"Ambigouus install unit / property name \""
+								+ installUnitOrPropertyName
+								+ "\" defined in RapidEnv environment configuration file \""
+								+ configFilePath + "\"",
+								ExceptionMap.ERRORCODE_AMBIGOUUS_NAME);
+			} else if (unit != null && property == null) {
+				if (installUnitsToProcMap.get(unit.getFullyQualifiedName()) == null) {
+					installUnitsToProcMap.put(unit.getFullyQualifiedName(), unit);
+					result.installunits.add(unit);
+				} else {
+					logger.warning("Install unit \"" + unit.getFullyQualifiedName()
+							+ "\" has been specified for one command multiple times");
+				}
+			} else if (unit == null && property != null) {
+				if (propertiesToProcMap.get(property.getFullyQualifiedName()) == null) {
+					propertiesToProcMap.put(property.getFullyQualifiedName(), property);
+					result.properties.add(property);
+				} else {
+					logger.warning("Property \"" + property.getFullyQualifiedName()
+							+ "\" has been specified for one command multiple times");
+				}
+			} else {
+				throw new AssertionError("What???");
+			}
+		}
+		return result;
+	}
 
-	 public File getProfileCmd() {
-		 final File profileDir = getProject().getProfiledir();
-		 switch (PlatformHelper.getOs()) {
-		 case windows:
-			 return new File(profileDir,
-					 "renv_" + PlatformHelper.username() + "_"
-							 + PlatformHelper.hostname() + ".cmd");
-		 case linux:
-			 return new File(profileDir,
-					 "renv_" + PlatformHelper.username() + "_"
-							 + PlatformHelper.hostname() + ".sh");
-		 default:
-			 throw new RapidEnvException("OS platform \""
-					 + PlatformHelper.getOsName()
-					 + "\" not yet supported");
-		 }
-	 }
+	public File getProfileCmd() {
+		final File profileDir = getProject().getProfiledir();
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			return new File(profileDir,
+					"renv_" + PlatformHelper.username() + "_"
+							+ PlatformHelper.hostname() + ".cmd");
+		case linux:
+			return new File(profileDir,
+					"renv_" + PlatformHelper.username() + "_"
+							+ PlatformHelper.hostname() + ".sh");
+		default:
+			throw new RapidEnvException("OS platform \""
+					+ PlatformHelper.getOsName()
+					+ "\" not yet supported");
+		}
+	}
 
-	 public File getProfileProps() {
-		 final File profileDir = getProject().getProfiledir();
-		 final File profile = new File(profileDir,
-				 "renv_" + PlatformHelper.username() + "_"
-						 + PlatformHelper.hostname() + ".properties");
-		 return profile;
-	 }
+	public File getProfileProps() {
+		final File profileDir = getProject().getProfiledir();
+		final File profile = new File(profileDir,
+				"renv_" + PlatformHelper.username() + "_"
+						+ PlatformHelper.hostname() + ".properties");
+		return profile;
+	}
 
 
-	 public static String interpretStat(
-			 final Installunit enclosingUnit,
-			 final Property enclosingProperty,
-			 final String string) {
-		 final RapidEnvInterpreter interpreter = getInstance();
-		 if (interpreter == null || string == null) {
-			 return null;
-		 }
-		 final String interpreted = interpreter.interpret(
-				 enclosingUnit, enclosingProperty, string);
-		 RapidEnvInterpreter.log(Level.FINER, "Interpreted string \""
-				 + string + "\" to\n  \"" + interpreted + "\".");
-		 return interpreted;
-	 }
+	public static String interpretStat(
+			final Installunit enclosingUnit,
+			final Property enclosingProperty,
+			final String string) {
+		final RapidEnvInterpreter interpreter = getInstance();
+		if (interpreter == null || string == null) {
+			return null;
+		}
+		final String interpreted = interpreter.interpret(
+				enclosingUnit, enclosingProperty, string);
+		RapidEnvInterpreter.log(Level.FINER, "Interpreted string \""
+				+ string + "\" to\n  \"" + interpreted + "\".");
+		return interpreted;
+	}
 }

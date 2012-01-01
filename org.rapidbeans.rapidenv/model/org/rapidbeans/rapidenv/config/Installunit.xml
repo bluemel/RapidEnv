@@ -86,6 +86,13 @@ whereas each component of "space" will become a separate subfolder.</description
 In this case you simply specify the source file name separately.</description>
 	</property>
 
+	<property name="downloadmode" type="choice"
+		enum="DownloadMode"
+		default="automatic"
+		>
+		<description>Describes how to load the installation unit's file(s) (installer).</description>
+	</property>
+
 	<property name="homedir" type="string">
 		<description>The folder where the unit is installed on your machine.
 If "homedir" is not defined it automatically defaults to

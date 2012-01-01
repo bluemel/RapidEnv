@@ -465,13 +465,16 @@
 		</copy>
 
 		<!-- copy test installation -->
-		<copy todir="../env">
+		<copy todir="../environment">
 			<fileset dir="." includes="env.dtd"/>
 		</copy>
-		<copy todir="../env/lib">
+		<copy todir="../environment/lib">
 			<fileset dir="dist/lib"/>
 		</copy>
-		<copy todir="../../../JavaEE_Example/sources/environment/lib">
+		<copy todir="./../../RapidEnvExampleJavaEE/sources/environment">
+			<fileset dir="." includes="env.dtd"/>
+		</copy>
+		<copy todir="../../../RapidEnvExampleJavaEE/sources/environment/lib">
 			<fileset dir="dist/lib"/>
 		</copy>
 		<!-- copy framework jar and sources directly to the local repository -->

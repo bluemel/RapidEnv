@@ -66,7 +66,7 @@ public class CmdRenv {
 			System.exit(0);
 		} catch (RapidEnvException e) {
 //System.out.println("@@@ e.getErrocode(): " + e.getErrorcode());
-			if (e.getErrorcode() > 0) {
+			if (e.getErrorcode() > 0 && e.getErrorcode() < 10000) {
 				final int errorcode = e.getErrorcode();
 				final ExceptionMapping mapping = ExceptionMap.load().map(e);
 				String message = "ERROR: ";
@@ -77,6 +77,16 @@ public class CmdRenv {
 				}
 				System.out.println(message);
 				System.exit(errorcode);
+			} else if (e.getErrorcode() > 20000) {
+					final ExceptionMapping mapping = ExceptionMap.load().map(e);
+					String message = "";
+					if (mapping != null) {
+						message += mapping.getMessage(Locale.ENGLISH);
+					} else {
+						message += e.getMessage();
+					}
+					System.out.println(message);
+					System.exit(0);
 			} else {
 				e.printStackTrace();
 				System.exit(-1);

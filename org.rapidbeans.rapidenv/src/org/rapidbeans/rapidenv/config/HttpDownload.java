@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -62,6 +63,18 @@ public class HttpDownload {
 							+ e.getMessage() + "\"\n"
 							+ "Please check if you are connected to the LAN or Internet.",
 						e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD);
+			} catch (ConnectException e) {
+				if (e.getMessage().startsWith("Connection timed out")) {
+					throw new RapidEnvException("Download failed from URL \""
+							+ url.toString() + "\"\n"
+							+ "Connection timed out.",
+						e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT);
+				} else {
+					throw new RapidEnvException("Download failed from URL \""
+							+ url.toString() + "\"\n"
+							+ "Connection probleme \"" + e.getMessage() + "\"",
+						e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_PROBLEM);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new RapidEnvException("HTPP download failed from URL \""
