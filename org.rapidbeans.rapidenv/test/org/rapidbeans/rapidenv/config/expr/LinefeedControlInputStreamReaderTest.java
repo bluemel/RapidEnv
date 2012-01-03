@@ -49,6 +49,9 @@ public class LinefeedControlInputStreamReaderTest {
      */
     @Test
     public final void readPreserveWin() throws IOException {
+    	if (!(PlatformHelper.getOs() == OperatingSystem.windows)) {
+    		return;
+    	}
         LinefeedControlInputStreamReader reader = null;
         try {
             reader = new LinefeedControlInputStreamReader(
