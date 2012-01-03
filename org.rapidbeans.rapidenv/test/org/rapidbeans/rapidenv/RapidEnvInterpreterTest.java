@@ -97,7 +97,7 @@ public class RapidEnvInterpreterTest {
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		PrintStream sout = new PrintStream(bStream);
 		env.setOut(sout);
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.config);
 		Project project = env.getProject();
 		Installunit unit = project.findInstallunitConfiguration("mysql");
 		ShellLinkIcon icon =
@@ -170,7 +170,7 @@ public class RapidEnvInterpreterTest {
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		PrintStream sout = new PrintStream(bStream);
 		env.setOut(sout);
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.config);
 		Project project = env.getProject();
 		Installunit unit = project.findInstallunitConfiguration("mysql");
 		ShellLinkIcon icon =
@@ -255,7 +255,7 @@ public class RapidEnvInterpreterTest {
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		PrintStream sout = new PrintStream(bStream);
 		env.setOut(sout);
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.config);
 		Project project = env.getProject();
 		Installunit unit = project.findInstallunitConfiguration("mysql");
 		ShellLinkIcon icon =
@@ -330,7 +330,7 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(
 				new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
 				"b" }));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(4, env.getPropertiesToProcess().size());
 	}
 
@@ -617,7 +617,7 @@ public class RapidEnvInterpreterTest {
 		CmdRenv cmd = new CmdRenv(new String[]{
 				"-env", "testdata/env/envWithPathext.xml", "b"});
 		RapidEnvInterpreter env = new RapidEnvInterpreter(cmd);
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
 		switch (PlatformHelper.getOs()) {
@@ -641,7 +641,7 @@ public class RapidEnvInterpreterTest {
 		CmdRenv cmd = new CmdRenv(new String[]{
 				"-env", "testdata/env/envWithPathextBraces.xml", "b"});
 		RapidEnvInterpreter env = new RapidEnvInterpreter(cmd);
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
 		switch (PlatformHelper.getOs()) {
@@ -666,7 +666,7 @@ public class RapidEnvInterpreterTest {
 				"-env", "testdata/env/envWithPathext.xml", "b"});
 		RapidEnvInterpreter env = new RapidEnvInterpreter(cmd,
 				new AntGateway(new File("testdata/ant/ant02_win.properties")));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
 	}
@@ -676,7 +676,7 @@ public class RapidEnvInterpreterTest {
 		CmdRenv cmd = new CmdRenv(new String[]{
 				"-env", "testdata/env/envWithPathextBracesNoInterpret.xml", "b"});
 		RapidEnvInterpreter env = new RapidEnvInterpreter(cmd);
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
 		switch (PlatformHelper.getOs()) {
@@ -727,7 +727,7 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
 				"-env", "testdata/env/env.xml",
 				"s", "maven", "jdk" }));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(2, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.maven", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 		assertEquals("jdk", env.getInstallunitsToProcess().get(1).getFullyQualifiedName());
@@ -742,7 +742,7 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
 				"-env", "testdata/env/env.xml",
 		"s"}));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(6, env.getInstallunitsToProcess().size());
 		assertEquals("jdk", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 		assertEquals("org.apache.ant", env.getInstallunitsToProcess().get(1).getFullyQualifiedName());
@@ -763,7 +763,7 @@ public class RapidEnvInterpreterTest {
 			RapidEnvInterpreter renv = new RapidEnvInterpreter(new CmdRenv(
 					new String[] { "-env", "testdata/env/env.xml", "s", "ant",
 					"ambitool" }));
-			renv.initPropertiesAndInstallunitsToProcess();
+			renv.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		} catch (RapidEnvCmdException e) {
 			assertEquals("Ambigouus tool name \"ambitool\"" + " has been specified with the command",
 					e.getMessage());
@@ -781,7 +781,7 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter renv = new RapidEnvInterpreter(new CmdRenv(new String[] {
 				"-env", "testdata/env/env.xml", "s", "ant", "ant" }),
 				loggerMock);
-		renv.initPropertiesAndInstallunitsToProcess();
+		renv.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(1, loggerMock.getLogRecords().size());
 		assertEquals("Install unit \"org.apache.ant\"" + " has been specified for one command multiple times",
 				loggerMock.getLogRecords().get(0).getMessage());
@@ -799,7 +799,7 @@ public class RapidEnvInterpreterTest {
 				"-env", "testdata/env/env.xml",
 				"s", "org.apache.maven", "jdk",
 		"org.rapidbeans.alt.ambitool" }));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(3, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.maven",
 				env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
@@ -817,7 +817,7 @@ public class RapidEnvInterpreterTest {
 		try {
 			RapidEnvInterpreter renv = new RapidEnvInterpreter(new CmdRenv(new String[] {
 					"-env", "testdata/env/env.xml", "b", "jdk", "ant", "xxx" }));
-			renv.initPropertiesAndInstallunitsToProcess();
+			renv.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		} catch (RapidEnvCmdException e) {
 			assertTrue(e.getMessage().startsWith(
                     "No install unit or property \"xxx\"\n"
@@ -836,7 +836,7 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
 				"-env", "testdata/env/env.xml",
 				"s", "serializer"}));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(1, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 	}
@@ -850,7 +850,7 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
 				"-env", "testdata/env/env.xml",
 				"s", "xalan.serializer"}));
-		env.initPropertiesAndInstallunitsToProcess();
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(1, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 	}

@@ -34,6 +34,7 @@ import org.rapidbeans.core.util.FileHelper;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.core.util.Version;
 import org.rapidbeans.datasource.Document;
+import org.rapidbeans.rapidenv.CmdRenvCommand;
 import org.rapidbeans.rapidenv.InstallStatus;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.RapidEnvTestHelper;
@@ -97,7 +98,7 @@ public class ConfigFileTest {
                         "-env", "testdata/env/envFile01.xml", "s"}));
         Project project = interpreter.getProject();
         Installunit unit = project.findInstallunitConfiguration("maven");
-        Assert.assertSame(InstallStatus.configurationrequired, unit.getInstallationStatus());
+        Assert.assertSame(InstallStatus.configurationrequired, unit.getInstallationStatus(CmdRenvCommand.stat));
         ConfigFile file = (ConfigFile) unit.getConfigurations().get(0);
         final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
         final PrintStream sout = new PrintStream(bStream);

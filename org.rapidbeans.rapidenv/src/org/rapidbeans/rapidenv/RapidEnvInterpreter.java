@@ -349,7 +349,7 @@ public class RapidEnvInterpreter {
 			}
 			out.println("  Project: " + getProject().getName()
 					+ ", Tag: " + tag);
-			initPropertiesAndInstallunitsToProcess();
+			initPropertiesAndInstallunitsToProcess(this.command);
 			initProperties(this.command);
 			break;
 		}
@@ -771,7 +771,7 @@ public class RapidEnvInterpreter {
 		}
 		if (this.installUnitOrPropertyNamesExplicitelySpecified) {
 			for (final Installunit unit : getInstallunitsToProcess()) {
-				if (unit.getInstallationStatus() == InstallStatus.notinstalled) {
+				if (unit.getInstallationStatus(CmdRenvCommand.install) == InstallStatus.notinstalled) {
 					boolean install = true;
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
 						switch (this.runMode) {
@@ -800,7 +800,7 @@ public class RapidEnvInterpreter {
 		} else {
 			int installedUnitsCount = 0;
 			for (final Installunit unit : getInstallunitsToProcess()) {
-				if (unit.getInstallationStatus() == InstallStatus.notinstalled
+				if (unit.getInstallationStatus(CmdRenvCommand.install) == InstallStatus.notinstalled
 						&& !(unit.getInstallcontrol() == InstallControl.optional
 						|| unit.getInstallcontrol() == InstallControl.discontinued)) {
 					unit.install(this.renvCommand.getInstallunitOrPropertyNames());
@@ -824,7 +824,7 @@ public class RapidEnvInterpreter {
 		boolean deinstallAll = false;
 		if (this.installUnitOrPropertyNamesExplicitelySpecified) {
 			for (final Installunit unit : getInstallunitsToProcess()) {
-				if (unit.getInstallationStatus() != InstallStatus.notinstalled) {
+				if (unit.getInstallationStatus(CmdRenvCommand.deinstall) != InstallStatus.notinstalled) {
 					unit.deinstall();
 				} else {
 					out.println(" installation unit " + unit.getFullyQualifiedName() + " is not installed");
@@ -849,7 +849,7 @@ public class RapidEnvInterpreter {
 				return false;
 			}
 			for (final Installunit unit : getInstallunitsToProcess()) {
-				if (unit.getInstallationStatus() != InstallStatus.notinstalled) {
+				if (unit.getInstallationStatus(CmdRenvCommand.deinstall) != InstallStatus.notinstalled) {
 					unit.deinstall();
 				} else {
 					unit.stat();
@@ -912,7 +912,7 @@ public class RapidEnvInterpreter {
 			out.println("\nInstall units:");
 			int updatedUnitsCount = 0;
 			for (final Installunit unit : getInstallunitsToProcess()) {
-				switch (unit.getInstallationStatus()) {
+				switch (unit.getInstallationStatus(CmdRenvCommand.update)) {
 				case notinstalled:
 					if (!(unit.getInstallcontrol() == InstallControl.optional
 					|| unit.getInstallcontrol() == InstallControl.discontinued)) {
@@ -957,7 +957,7 @@ public class RapidEnvInterpreter {
 					break;
 				default:
 					throw new AssertionError("Unexpected installation status \""
-							+ unit.getInstallationStatus()
+							+ unit.getInstallationStatus(CmdRenvCommand.update)
 							+ "\" for installation unit \""
 							+ unit.getFullyQualifiedName() + "\"");
 				}
@@ -985,7 +985,7 @@ public class RapidEnvInterpreter {
 			int configuredUnitsCount = 0;
 			int iudRequieredUnitsCount = 0;
 			for (final Installunit unit : getInstallunitsToProcess()) {
-				switch (unit.getInstallationStatus()) {
+				switch (unit.getInstallationStatus(CmdRenvCommand.config)) {
 				case notinstalled:
 					unit.stat();
 					if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
@@ -1025,7 +1025,7 @@ public class RapidEnvInterpreter {
 					break;
 				default:
 					throw new AssertionError("Unexpected installation status \""
-							+ unit.getInstallationStatus()
+							+ unit.getInstallationStatus(CmdRenvCommand.config)
 							+ "\" for installation unit \""
 							+ unit.getFullyQualifiedName() + "\"");
 				}
@@ -1489,8 +1489,10 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Needed privately and for testing.
+	 *
+	 * @parameter command the command issued
 	 */
-	protected void initPropertiesAndInstallunitsToProcess() {
+	protected void initPropertiesAndInstallunitsToProcess(final CmdRenvCommand command) {
 
 		// collect install unit names from command
 		Collection<String> installUnitOrPropertyNames = this.renvCommand.getInstallunitOrPropertyNames();
@@ -1504,8 +1506,8 @@ public class RapidEnvInterpreter {
 				if (getProject().getPropertys() != null) {
 					for (final Property property : getProject().getPropertys()) {
 						if (property.getParentInstallunit() == null
-								|| (property.getParentInstallunit().getInstallationStatus() != InstallStatus.notinstalled
-								&& property.getParentInstallunit().getInstallationStatus() != InstallStatus.deinstallrequired)) {
+								|| (property.getParentInstallunit().getInstallationStatus(command) != InstallStatus.notinstalled
+								&& property.getParentInstallunit().getInstallationStatus(command) != InstallStatus.deinstallrequired)) {
 							//                                || property.getParentInstallunit().getInstallcontrol()
 							//                                    == InstallControl.normal) {
 							//                                || property.getParentInstallunit().getInstallcontrol()
@@ -1596,8 +1598,8 @@ public class RapidEnvInterpreter {
 			switch (command) {
 			case install:
 				if (unit.getParentUnit() != null && !installUnits.contains(unit.getParentUnit())) {
-					if (unit.getInstallationStatus() != null) {
-						switch (unit.getParentUnit().getInstallationStatus()) {
+					if (unit.getInstallationStatus(command) != null) {
+						switch (unit.getParentUnit().getInstallationStatus(command)) {
 						case notinstalled:
 							throw new RapidEnvCmdException("Can not install unit \""
 									+ unit.getFullyQualifiedName() + "\" because parent unit \""
@@ -1620,7 +1622,7 @@ public class RapidEnvInterpreter {
 				if (unit.getDependents() != null) {
 					for (final Installunit unit1 : unit.getDependents()) {
 						if (!installUnits.contains(unit1)) {
-							switch (unit1.getInstallationStatus()) {
+							switch (unit1.getInstallationStatus(command)) {
 							case uptodate:
 							case upgraderequired:
 							case configurationrequired:

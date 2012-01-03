@@ -124,7 +124,7 @@ public class Property extends RapidBeanBaseProperty {
                     // interpret path extension in the context of its parent install unit
                     final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
                     final String value = normalize(interpret(extfu.getValue(), parentInstallUnit));
-                    final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit.getInstallationStatus();
+                    final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit.getInstallationStatus(CmdRenvCommand.stat);
                     switch (parentInstallUnitInstallStatus) {
                     case deinstallrequired:
                         removePathExtension(pathComponents, extfu.getPropextmode(), value);
@@ -146,7 +146,7 @@ public class Property extends RapidBeanBaseProperty {
                     // interpret path extension in the context of its parent install unit
                     final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
                     final String value = normalize(interpret(extfu.getValue(), parentInstallUnit));
-                    final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit.getInstallationStatus();
+                    final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit.getInstallationStatus(CmdRenvCommand.install);
                     switch (parentInstallUnitInstallStatus) {
                     case deinstallrequired:
                         break;

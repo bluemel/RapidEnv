@@ -34,6 +34,7 @@ import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.core.util.Version;
 import org.rapidbeans.datasource.Document;
 import org.rapidbeans.rapidenv.AntGateway;
+import org.rapidbeans.rapidenv.CmdRenvCommand;
 import org.rapidbeans.rapidenv.InstallStatus;
 import org.rapidbeans.rapidenv.RapidEnvCmdException;
 import org.rapidbeans.rapidenv.RapidEnvException;
@@ -64,7 +65,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * Print the current status of this installation unit
 	 */
 	public void stat() {
-		final InstallStatus installStatus = getInstallationStatus();
+		final InstallStatus installStatus = getInstallationStatus(CmdRenvCommand.stat);
 		String sign = null;
 
 		switch (installStatus) {
@@ -96,8 +97,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						}
 					}
 				}
-				RapidEnvInterpreter.getInstance().getOut().print("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion());
-				final List<Version> installedVersions = findInstalledVersions();
+				RapidEnvInterpreter.getInstance().getOut().print("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.stat));
+				final List<Version> installedVersions = findInstalledVersions(CmdRenvCommand.stat);
 				if (installedVersions.size() == 1) {
 					RapidEnvInterpreter.getInstance().getOut().println();
 				} else {
@@ -143,11 +144,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		case upgraderequired:
 			if (getInstallcontrol() == InstallControl.discontinued) {
 				sign = "=";
-				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion()
+				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.update)
 						+ " should be deinstalled");
 			} else {
 				sign = "!";
-				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion()
+				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.update)
 						+ " upgrade required to version " + getVersion().toString());
 			}
 			break;
@@ -155,11 +156,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		case downgraderequired:
 			if (getInstallcontrol() == InstallControl.discontinued) {
 				sign = "=";
-				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion()
+				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.update)
 						+ " should be deinstalled");
 			} else {
 				sign = "!";
-				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion()
+				RapidEnvInterpreter.getInstance().getOut().println("  " + sign + " " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.update)
 						+ " downgrade required to version " + getVersion().toString());
 			}
 			break;
@@ -179,7 +180,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
         	RapidEnvInterpreter.log(Level.FINE, "Starting to install unit \"" + getFullyQualifiedName() + "\".");
 		}
 		if (checkInstalled
-				&& getInstallationStatus() != InstallStatus.notinstalled) {
+				&& getInstallationStatus(CmdRenvCommand.install) != InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is already installed");
 		}
 
@@ -357,6 +358,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 			// execute installation
 			switch (getInstallmode()) {
+
 			case unpack:
 				// prefer the (automatically packaged) standard archive file if the local source file is no archive
 				if ((!localsourcefile.getName().endsWith(".zip"))
@@ -410,6 +412,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				final Unpacker unpacker = new Unpacker(renv.getAnt());
 				unpacker.unpack(localsourcefile, homedir);
 				break;
+
 			case put:
 				RapidEnvInterpreter.getInstance().getOut().println("installing " + getFullyQualifiedName()
 						+ " " + this.getVersion().toString()
@@ -424,9 +427,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 				FileHelper.copyFile(localsourcefile, targetFile);
 				break;
+
 			case execute:
 				getInstallcommand().execute();
 				break;
+
 			default:
 				throw new AssertionError("Unexpected installation mode \"" + getInstallmode().name() + "\"");
 			}
@@ -436,6 +441,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				removeRootDirs(homedir);
 			}
 			installedSuccessfully = true;
+
+			storeData(InstallState.installed);
 
 			// execute configurations after installation
 			if (getConfigurations() != null) {
@@ -447,8 +454,6 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					}
 				}
 			}
-
-			storeData(InstallState.installed);
 
 		} catch (RuntimeException e) {
 			if (createdHomedir && (!installedSuccessfully)) {
@@ -476,7 +481,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 *                  update) or not.
 	 */
 	public void deinstall(final boolean keepIcons) {
-		if (getInstallationStatus() == InstallStatus.notinstalled) {
+		if (getInstallationStatus(CmdRenvCommand.deinstall) == InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is not installed");
 		}
 
@@ -719,13 +724,13 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	public void updowngrade() {
 
-		if (getInstallationStatus() == InstallStatus.notinstalled) {
+		if (getInstallationStatus(CmdRenvCommand.update) == InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is not installed");
 		}
 
 		// determine versions of this installation unit currently installed
 		// and if they should be deinstalled
-		final List<Version> installedVersions = findInstalledVersions();
+		final List<Version> installedVersions = findInstalledVersions(CmdRenvCommand.update);
 		boolean deinstall = false;
 		if (installedVersions.size() > 0) {
 			switch (getDeinstallunusedmode()) {
@@ -783,7 +788,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	public void configure(final boolean execute) {   
 		if (getConfigurations() != null) {
-			RapidEnvInterpreter.getInstance().getOut().println("  ! " + getFullyQualifiedName() + " " + getNearestInstalledVersion());
+			RapidEnvInterpreter.getInstance().getOut().println("  ! " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.config));
 			for (final Configuration cfg : getConfigurations()) {
 				if (cfg.getInstallphase() == ConfigurationPhase.config
 						&& cfg.checkOsfamily()) {
@@ -812,11 +817,13 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Determines the installation status of this install unit.
+	 *
+	 * @parameter command the command as working context
 	 * 
 	 * @return the installation status
 	 */
-	public InstallStatus getInstallationStatus() {
-		final Version nearestInstalledVersion = getNearestInstalledVersion();
+	public InstallStatus getInstallationStatus(final CmdRenvCommand command) {
+		final Version nearestInstalledVersion = getNearestInstalledVersion(command);
 		if (nearestInstalledVersion == null) {
 			return InstallStatus.notinstalled;
 		}
@@ -1105,12 +1112,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * nearest to the scheduled one. This function is based on the convention
 	 * that an install unit's home directory path always end with the version
 	 * number as separate folder.
-	 * 
+	 *
+	 * @parameter command the command as working context
+	 *
 	 * @return the nearest installed version or null if no version at all is
 	 *         installed
 	 */
-	public Version getNearestInstalledVersion() {
-		final List<Version> installedVersions = findInstalledVersions();
+	public Version getNearestInstalledVersion(final CmdRenvCommand command) {
+		final List<Version> installedVersions = findInstalledVersions(command);
 		if (installedVersions.size() == 0) {
 			return null;
 		}
@@ -1122,13 +1131,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 *
 	 * @return a list of already installed versions
 	 */
-	private List<Version> findInstalledVersions() {
+	private List<Version> findInstalledVersions(final CmdRenvCommand command) {
 		final List<Version> installedVersions = new ArrayList<Version>();
 		final File homedir = getHomedirAsFile();
 		if (homedir == null) {
 			return installedVersions;
 		}
 		switch (getInstallmode()) {
+
 		case put:
 			final String targetFileName = StringHelper.splitLast(
 					getFullyQualifiedName(), "/")
@@ -1150,7 +1160,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					final InstallunitData thisInstallData = (InstallunitData) thisDataDoc.getRoot();
 					if (thisInstallData.getFullname().equals(getFullyQualifiedName())
 							&& thisInstallData.getVersion().equals(getVersion())
-							&& thisInstallData.getInstallstate() == InstallState.installed) {
+							&& (thisInstallData.getInstallstate() == InstallState.installed
+									|| (thisInstallData.getInstallstate() == InstallState.installing
+										&& command == CmdRenvCommand.deinstall))) {
 						installedVersions.add(thisInstallData.getVersion());
 					}
 				} else {
