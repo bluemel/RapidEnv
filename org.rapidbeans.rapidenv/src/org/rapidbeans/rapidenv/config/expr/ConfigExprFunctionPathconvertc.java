@@ -72,7 +72,7 @@ public class ConfigExprFunctionPathconvertc extends RapidBeanBaseConfigExprFunct
      */
     private String pathconvert(final String s) {
         try {
-            return new File(s).getCanonicalPath();
+            return new File(s.replace("file:", "")).getCanonicalPath();
         } catch (IOException e) {
             throw new RapidEnvException(e);
         }
