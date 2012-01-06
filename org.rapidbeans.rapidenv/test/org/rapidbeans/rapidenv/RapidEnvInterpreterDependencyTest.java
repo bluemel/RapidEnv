@@ -223,7 +223,7 @@ public class RapidEnvInterpreterDependencyTest {
         RapidEnvInterpreter env = new RapidEnvInterpreter(
                 new CmdRenv(new String[] {"-env", "testdata/env/envDepSub.xml", "i",
                         "org.rapidenv.test01/test2/test1"}));
-        env.initPropertiesAndInstallunitsToProcess();
+        env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.install);
         List<Installunit> installUnits = env.getInstallunitsToProcess();
         env.checkDependencies(installUnits, CmdRenvCommand.install);
         } catch (RapidEnvCmdException e) {
@@ -333,7 +333,7 @@ public class RapidEnvInterpreterDependencyTest {
             String[] unitNames) {
         RapidEnvInterpreter env = new RapidEnvInterpreter(
                 new CmdRenv(new String[] {"-env", envFilePath, command}));
-        env.initPropertiesAndInstallunitsToProcess();
+        env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
         List<Installunit> installUnits = env.getInstallunitsToProcess();
         int size = installUnits.size();
         Assert.assertEquals(unitNames.length, size);
