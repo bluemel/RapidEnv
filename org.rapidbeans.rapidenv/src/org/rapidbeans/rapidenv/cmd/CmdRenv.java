@@ -48,6 +48,9 @@ public class CmdRenv {
 	 * @param args all command line arguments
 	 */
 	public static void main(final String[] args) {
+		int errorcode = 0;
+		CmdRenv command = null;
+		RapidEnvInterpreter interpreter = null;
 		try {
 			final LogManager lm = LogManager.getLogManager();
 			try {
@@ -61,13 +64,12 @@ public class CmdRenv {
 				throw new RapidEnvException(e);
 			}
 			TypePropertyCollection.setDefaultCharSeparator(',');
-			final RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(args));
+			command = new CmdRenv(args);
+			interpreter = new RapidEnvInterpreter(command);
 			interpreter.execute();
-			System.exit(0);
 		} catch (RapidEnvException e) {
-//System.out.println("@@@ e.getErrocode(): " + e.getErrorcode());
 			if (e.getErrorcode() > 0 && e.getErrorcode() < 10000) {
-				final int errorcode = e.getErrorcode();
+				errorcode = e.getErrorcode();
 				final ExceptionMapping mapping = ExceptionMap.load().map(e);
 				String message = "ERROR: ";
 				if (mapping != null) {
@@ -76,7 +78,6 @@ public class CmdRenv {
 					message += e.getMessage();
 				}
 				System.out.println(message);
-				System.exit(errorcode);
 			} else if (e.getErrorcode() > 20000) {
 					final ExceptionMapping mapping = ExceptionMap.load().map(e);
 					String message = "";
@@ -86,11 +87,26 @@ public class CmdRenv {
 						message += e.getMessage();
 					}
 					System.out.println(message);
-					System.exit(0);
 			} else {
 				e.printStackTrace();
-				System.exit(-1);
+				errorcode = 1;
 			}
+		} finally {
+			if (command != null && interpreter != null) {
+				switch (command.getCommand()) {
+				case boot:
+				case config:
+				case deinstall:
+				case install:
+				case update:
+					System.out.println("------------------------------------------------------------------------");
+					System.out.println(interpreter.getStatisicsAsString());
+					break;
+				default:
+					break;
+				}
+			}
+			System.exit(errorcode);
 		}
 	}
 

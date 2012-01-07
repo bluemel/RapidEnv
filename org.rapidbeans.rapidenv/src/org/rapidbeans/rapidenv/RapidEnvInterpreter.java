@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import org.rapidbeans.core.util.ManifestReader;
 import org.rapidbeans.core.util.OperatingSystem;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.core.util.StringHelper;
+import org.rapidbeans.core.util.StringHelper.FillMode;
 import org.rapidbeans.datasource.Document;
 import org.rapidbeans.rapidenv.cmd.CmdLineInteractions;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
@@ -316,91 +318,98 @@ public class RapidEnvInterpreter {
 	 * Dispatch to private handler.
 	 */
 	public void execute(final InputStream inStream, final PrintStream outStream, final PrintStream errStream) {
-		this.in = inStream;
-		this.out = outStream;
-		this.err = errStream;
 
-		log(Level.FINE, "executing command \""
-				+ this.command.name() + "\"...");
+		this.timeStart = System.currentTimeMillis();
 
-		boolean deinstallAll = false;
+		try {
+			this.in = inStream;
+			this.out = outStream;
+			this.err = errStream;
 
-		// initialize command execution
-		switch (this.command) {
-		case boot:
-			out.println("booting RapidEnv development environment...");
-			if (getProject().atLeastOnePersonalProperty()) {
-				out.println("\nreading personal properties:\n");
+			log(Level.FINE, "executing command \""
+					+ this.command.name() + "\"...");
+
+			boolean deinstallAll = false;
+
+			// initialize command execution
+			switch (this.command) {
+			case boot:
+				out.println("booting RapidEnv development environment...");
+				if (getProject().atLeastOnePersonalProperty()) {
+					out.println("\nreading personal properties:\n");
+				}
+				readProfile();
+				initProperties(this.command);
+				break;
+			case help:
+			case version:
+			case hashvalue:
+				// do nothing
+				break;
+			default:
+				out.println("\nRapidEnv development environment");
+				readProfile();
+				String tag = this.propertiesPersisted.getProperty("rapidbeans.tag");
+				if (tag == null) {
+					tag = getProject().getTag();
+				}
+				out.println("  Project: " + getProject().getName()
+						+ ", Tag: " + tag);
+				initPropertiesAndInstallunitsToProcess(this.command);
+				initProperties(this.command);
+				break;
 			}
-			readProfile();
-			initProperties(this.command);
-			break;
-		case help:
-		case version:
-		case hashvalue:
-			// do nothing
-			break;
-		default:
-			out.println("\nRapidEnv development environment");
-			readProfile();
-			String tag = this.propertiesPersisted.getProperty("rapidbeans.tag");
-			if (tag == null) {
-				tag = getProject().getTag();
+
+			// dispatch
+			switch (this.command) {
+			case boot:
+				execBoot();
+				break;
+			case stat:
+				execStat();
+				break;
+			case install:
+				execInstall();
+				break;
+			case deinstall:
+				deinstallAll = execDeinstall();
+				break;
+			case update:
+				execUpdate();
+				break;
+			case config:
+				execConfig();
+				break;
+			case help:
+				execHelp();
+				break;
+			case version:
+				execVersion();
+				break;
+			case hashvalue:
+				execHashvalue();
+				break;
+			default:
+				throw new RapidEnvCmdException("command \"" + this.command + "\" is not yest supported");
 			}
-			out.println("  Project: " + getProject().getName()
-					+ ", Tag: " + tag);
-			initPropertiesAndInstallunitsToProcess(this.command);
-			initProperties(this.command);
-			break;
-		}
 
-		// dispatch
-		switch (this.command) {
-		case boot:
-			execBoot();
-			break;
-		case stat:
-			execStat();
-			break;
-		case install:
-			execInstall();
-			break;
-		case deinstall:
-			deinstallAll = execDeinstall();
-			break;
-		case update:
-			execUpdate();
-			break;
-		case config:
-			execConfig();
-			break;
-		case help:
-			execHelp();
-			break;
-		case version:
-			execVersion();
-			break;
-		case hashvalue:
-			execHashvalue();
-			break;
-		default:
-			throw new RapidEnvCmdException("command \"" + this.command + "\" is not yest supported");
-		}
-
-		// finish command execution
-		switch (this.command) {
-		case boot:
-			writeProfile();
-			break;
-		case help:
-		case hashvalue:
-		case version:
-			break;
-		default:
-			if (profileChanged() && !deinstallAll) {
+			// finish command execution
+			switch (this.command) {
+			case boot:
 				writeProfile();
+				break;
+			case help:
+			case hashvalue:
+			case version:
+				break;
+			default:
+				if (profileChanged() && !deinstallAll) {
+					writeProfile();
+				}
+				break;
 			}
-			break;
+		} finally {
+			this.timeEnd = System.currentTimeMillis();
 		}
 	}
 
@@ -1891,7 +1900,6 @@ public class RapidEnvInterpreter {
 		return profile;
 	}
 
-
 	public static String interpretStat(
 			final Installunit enclosingUnit,
 			final Property enclosingProperty,
@@ -1905,5 +1913,34 @@ public class RapidEnvInterpreter {
 		RapidEnvInterpreter.log(Level.FINER, "Interpreted string \""
 				+ string + "\" to\n  \"" + interpreted + "\".");
 		return interpreted;
+	}
+
+	/**
+	 * Print out the statistics
+	 *
+	 * @return the statistics string
+	 */
+	public String getStatisicsAsString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Total time: " + formatHhmm(getExecutionTime())
+				+ " minutes:seconds" + PlatformHelper.getLineFeed());
+		sb.append("Finished at: "
+				+ DateFormat.getInstance().format(System.currentTimeMillis())
+				+ PlatformHelper.getLineFeed());
+		return sb.toString();
+	}
+
+	private long timeStart = Long.MIN_VALUE;
+
+	private long timeEnd = Long.MIN_VALUE;
+
+	private long getExecutionTime() {
+		return timeEnd - timeStart;
+	}
+
+	protected static String formatHhmm(final long time) {
+		return StringHelper.fillUp(Long.toString(time / 60000), 2, '0', FillMode.left)
+				+ ":"
+				+ StringHelper.fillUp(Long.toString((time / 1000) % 60), 2, '0', FillMode.left);
 	}
 }
