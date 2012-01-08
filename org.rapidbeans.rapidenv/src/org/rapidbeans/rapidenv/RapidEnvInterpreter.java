@@ -1922,11 +1922,14 @@ public class RapidEnvInterpreter {
 	 */
 	public String getStatisicsAsString() {
 		final StringBuilder sb = new StringBuilder();
+		sb.append("Started at: "
+				+ DateFormat.getInstance().format(this.timeStart)
+				+ PlatformHelper.getLineFeed());
+		sb.append("Finished at: "
+				+ DateFormat.getInstance().format(this.timeEnd)
+				+ PlatformHelper.getLineFeed());
 		sb.append("Total time: " + formatHhmm(getExecutionTime())
 				+ " minutes:seconds" + PlatformHelper.getLineFeed());
-		sb.append("Finished at: "
-				+ DateFormat.getInstance().format(System.currentTimeMillis())
-				+ PlatformHelper.getLineFeed());
 		return sb.toString();
 	}
 
