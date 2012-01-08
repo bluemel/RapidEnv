@@ -39,7 +39,8 @@ public class HttpDownload {
 				os = new FileOutputStream(target);
 				int bytesRead;
 				int retry = 0;
-				while (retry < 5) {
+				final int maxRetry = 20;
+				while (retry < maxRetry) {
 					bytesRead = is.read(buffer);
 					switch (bytesRead) {
 					case -1:
@@ -47,7 +48,7 @@ public class HttpDownload {
 						break;
 					case 0:
 						try {
-							Thread.sleep(100);
+							Thread.sleep(200);
 						} catch (InterruptedException e) {
 							throw new RapidEnvException(e);
 						}
@@ -57,6 +58,12 @@ public class HttpDownload {
 						os.write(buffer, 0, bytesRead);
 						break;
 					}
+				}
+				if (retry == maxRetry) {
+					throw new RapidEnvException("Download failed from URL \""
+							+ url.toString() + "\"\n"
+							+ "Connection timed out in read loop.",
+						ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT_LOOP);
 				}
 			} catch (UnknownHostException e) {
 				throw new RapidEnvException("Download failed from unknown host \""
