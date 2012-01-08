@@ -50,7 +50,7 @@ set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\ant-@version.ant@
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
 
 :# if there is not already an RapidEnv profile for this user and this host do the set up
-if not exist "%RAPID_ENV_PROFILE%.cmd" call :SETUPENV
+if not exist "%RAPID_ENV_PROFILE%.cmd" call :SETUPENV %*
 if not exist "%RAPID_ENV_PROFILE%.cmd" echo RapidEnv ERROR: boot error, %RAPID_ENV_PROFILE%.cmd not created.& goto END
 
 :# source the RapidEnv profile
@@ -68,7 +68,20 @@ goto END
 
 
 :SETUPENV
-call %RAPID_ENV_COMMAND% boot
+
+:SETUPENV_LOOP
+if "%1" == "" goto SETUPENV_CONT1
+if "%1" == "-yes" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -yes
+if "%1" == "-y" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -yes
+if "%1" == "-verbose" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -verbose
+if "%1" == "-v" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -verbose
+if "%1" == "-debug" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -debug
+if "%1" == "-d" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -debug
+shift
+goto SETUPENV_LOOP
+
+:SETUPENV_CONT1
+call %RAPID_ENV_COMMAND% %RAPID_ENV_OPTIONS% boot
 if not %ERRORLEVEL% == 0 echo ERROR %ERRORLEVEL% during execution of renv.cmd& goto END
 if not exist "%RAPID_ENV_PROFILE%.cmd" goto :EOF
 

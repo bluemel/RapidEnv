@@ -455,43 +455,36 @@ public class RapidEnvInterpreter {
 	 */
 	private void execBoot() {
 		boolean create = false;
-		switch (this.runMode) {
-		case command:
-			switch (PlatformHelper.getOs()) {
-			case windows:
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			create = CmdLineInteractions.promptYesNo(
+					this.in, this.out,
+					"\nDo you want to create a \"Command Prompt Here\" menu entry\n"
+							+ "  in Windows Explorer for this development environment?", true);
+			break;
+		case linux:
+			switch (RapidEnvInterpreter.getLinuxDesktop()) {
+			case kde:
 				create = CmdLineInteractions.promptYesNo(
 						this.in, this.out,
-						"\nDo you want to create a \"Command Prompt Here\" menu entry\n"
-								+ "  in Windows Explorer for this development environment?", true);
+						"\nDo you want to create an \"Open Terminal\" action\n"
+								+ "  for KDE's Dolphin file manager for this development environment?", true);
 				break;
-			case linux:
-				switch (RapidEnvInterpreter.getLinuxDesktop()) {
-				case kde:
-					create = CmdLineInteractions.promptYesNo(
-							this.in, this.out,
-							"\nDo you want to create an \"Open Terminal\" action\n"
-									+ "  for KDE's Dolphin file manager for this development environment?", true);
-					break;
-				case gnome:
-					create = CmdLineInteractions.promptYesNo(
-							this.in, this.out,
-							"\nDo you want to create a \"Open Terminal\" script\n"
-									+ "  for Gnome's Nautilus file manager for this development environment?", true);
-					break;
-				default:
-					log(Level.FINE, "No service menu entry to delete for Linux desktop \""
-							+ RapidEnvInterpreter.getLinuxDesktop().name());
-				}
+			case gnome:
+				create = CmdLineInteractions.promptYesNo(
+						this.in, this.out,
+						"\nDo you want to create a \"Open Terminal\" script\n"
+								+ "  for Gnome's Nautilus file manager for this development environment?", true);
 				break;
 			default:
-				throw new RapidEnvException("Operating systm \""
-						+ PlatformHelper.getOs().name()
-						+ "\" not yet supported");
+				log(Level.FINE, "No service menu entry to delete for Linux desktop \""
+						+ RapidEnvInterpreter.getLinuxDesktop().name());
 			}
 			break;
 		default:
-			throw new AssertionError("Run mode \"" + this.runMode.name()
-					+ " not yet supported");
+			throw new RapidEnvException("Operating systm \""
+					+ PlatformHelper.getOs().name()
+					+ "\" not yet supported");
 		}
 		if (create) {
 			switch (PlatformHelper.getOs()) {
