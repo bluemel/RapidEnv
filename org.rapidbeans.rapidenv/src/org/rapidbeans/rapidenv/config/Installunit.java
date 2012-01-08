@@ -175,10 +175,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	}
 
 	private void install(final boolean checkInstalled, final List<String> chosenUnits) {
+		RapidEnvInterpreter.log(Level.FINE, "Starting to install unit \"" + getFullyQualifiedName() + "\".");
+
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
-		if (renv != null) {
-        	RapidEnvInterpreter.log(Level.FINE, "Starting to install unit \"" + getFullyQualifiedName() + "\".");
-		}
+
 		if (checkInstalled
 				&& getInstallationStatus(CmdRenvCommand.install) != InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is already installed");
@@ -195,6 +195,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 			}
 			if (!explicitlyChosen) {
+				RapidEnvInterpreter.log(Level.FINE, "Skipping installation of unit \"" + getFullyQualifiedName() + "\""
+						+ " because it has not been explicitly chosen.");
 				return;
 			}
 		}
@@ -204,48 +206,66 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		boolean installedSuccessfully = false;
 		File localsourcefile = null;
 		boolean removeLocalsourcefile = false;
+
 		try {
 			// create the home directory
-			if (!homedir.exists()) {
-				homedir.mkdirs();
+			if (homedir.exists()) {
+				RapidEnvInterpreter.log(Level.FINE, "Home directory \""
+						+ homedir.getAbsolutePath() + "\" already exists.");
+			} else {
+				RapidEnvInterpreter.log(Level.FINE, "Creating home directory \""
+						+ homedir.getAbsolutePath() + "\"...");
+				if (!homedir.mkdirs()) {
+					throw new RapidEnvException("Problem while trying to creat home directory \""
+							+ homedir.getAbsolutePath() + "\"");
+				}
 				createdHomedir = true;
 			}
 
 			// determine the local source file and download if necessary
 			switch (getSourcetype()) {
+
 			case url:
 				final URL sourceurl = getSourceurlAsUrl();
+				RapidEnvInterpreter.log(Level.FINE, "sourceurl: \""
+						+ sourceurl + "\"");
 				if (sourceurl == null) {
 					throw new RapidEnvConfigurationException("No source URL specified for"
 							+ " install unit \"" + getFullyQualifiedName() + "\"");
 				}
 				if (sourceurl.getProtocol().equals("file")) {
-					final int start = getSourceurlAsUrl().getProtocol().length() + 1;
+					RapidEnvInterpreter.log(Level.FINE, "Determining local source file from file source URL...");
+					final int start = sourceurl.getProtocol().length() + 1;
 					final String path = sourceurl.toString().substring(start);
-					if (getProject() != null
-							&& getProject().getInstallsourceurlAsUrl() != null) {
-						localsourcefile = new File(
-								getProject().getInstallsourceurlAsUrl().getFile(),
-								getFullyQualifiedName().replace('.', '/')
-								+ File.separator + getVersion().toString()
-								+ File.separator + new File(getSourceurlAsUrl().getFile()).getName());
+					if (getProject() != null) {
+						final URL projectInstallsoureurl = getProject().getInstallsourceurlAsUrl();
+						if (projectInstallsoureurl != null) {
+							localsourcefile = new File(
+									projectInstallsoureurl.getFile(),
+									getFullyQualifiedName().replace('.', '/')
+									+ File.separator + getVersion().toString()
+									+ File.separator + new File(sourceurl.getFile()).getName());
+						}
 					}
 					if (localsourcefile == null) {
 						localsourcefile = new File(path);
 					} else {
 						if (!(localsourcefile.exists())) {
-							if (localsourcefile.getAbsolutePath().equals(new File(path).getAbsolutePath())) {
-//								throw new RapidEnvException("Installation source file \""
-//										+ localsourcefile.getAbsolutePath() + "\" not found");
-							} else {
+							if (!localsourcefile.getAbsolutePath().equals(new File(path).getAbsolutePath())) {
+								if (!localsourcefile.getParentFile().exists()) {
+									FileHelper.mkdirs(localsourcefile.getParentFile());
+								}
 								RapidEnvInterpreter.getInstance().getOut().println(
 										"Copying \"" + localsourcefile.getAbsolutePath()
 										+ "\" from \"" + new File(path).getAbsolutePath() + "\"");
-								FileHelper.copyFile(new File(path), localsourcefile);
+								FileHelper.copyFile(new File(path), localsourcefile, true);
+								RapidEnvInterpreter.log(Level.FINE, "copied");
 							}
 						}
 					}
-				} else if (getSourceurlAsUrl().getProtocol().equals("http")) {
+					RapidEnvInterpreter.log(Level.FINE, "copied 4");
+				} else if (sourceurl.getProtocol().equals("http")) {
+					RapidEnvInterpreter.log(Level.FINE, "Determining local source file from HTTP source URL...");
 					if (getProject().getInstallsourceurl() != null
 							&& getProject().getInstallsourceurlAsUrl().getProtocol().equals("file")) {
 						if (getSourcefile() != null) {
@@ -259,7 +279,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 									getProject().getInstallsourceurlAsUrl().getFile(),
 									getFullyQualifiedName().replace('.', '/')
 									+ File.separator + getVersion().toString()
-									+ File.separator + new File(getSourceurlAsUrl().getFile()).getName());
+									+ File.separator + new File(sourceurl.getFile()).getName());
 						}
 						if (!localsourcefile.getParentFile().exists()) {
 							if (!localsourcefile.getParentFile().mkdirs()) {
@@ -320,6 +340,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				} else {
 					throw new RapidEnvException("Source URL protocol different to \"file\" not yet supported");
 				}
+				RapidEnvInterpreter.log(Level.FINE, "Local source file from URL: \""
+						+ localsourcefile.getAbsolutePath() + "\"...");
 				break;
 
 			case mavenrepo:
@@ -333,23 +355,24 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						+ getSpace().replace('.', File.separatorChar) + File.separatorChar + getName()
 						+ File.separatorChar + getVersion().toString() + File.separatorChar + getName() + '-'
 						+ getVersion().toString() + ".zip");
+				RapidEnvInterpreter.log(Level.FINE, "Local source file from Maven repository: \""
+						+ localsourcefile.getAbsolutePath() + "\"...");
 				break;
+
 			default:
 				throw new AssertionError("Unexpected source type \"" + getSourcetype().name() + "\"");
 			}
 
 			// execute configurations before installation
-			if (renv != null) {
-	        	RapidEnvInterpreter.log(Level.FINE, "Checking configurations to execute before installation.");
-			}
+			RapidEnvInterpreter.log(Level.FINE, "Checking configurations to execute before installation.");
 			if (getConfigurations() != null) {
 				for (final Configuration cfg : getConfigurations()) {
 					if (cfg.checkOsfamily()
 							&& (cfg.getInstallphase() == ConfigurationPhase.preinstall)
 							) {
 						if (renv != null) {
-				        	RapidEnvInterpreter.log(Level.FINE, "Checking configuration \""
-				        			+ cfg.getClass().getName() + "\".");
+							RapidEnvInterpreter.log(Level.FINE, "Checking configuration \""
+									+ cfg.getClass().getName() + "\".");
 						}
 						cfg.check(true);
 					}
@@ -374,7 +397,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					if (new File(localsourcefiledir, standardArchiveFileName + ".zip").exists()) {
 						localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".zip");
 					} else if (new File(localsourcefiledir, standardArchiveFileName + ".tar").exists()) {
-							localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".tar");
+						localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".tar");
 					} else if (new File(localsourcefiledir, standardArchiveFileName + ".jar").exists()) {
 						localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".jar");
 					} else if (new File(localsourcefiledir, standardArchiveFileName + ".gzip").exists()) {
@@ -878,7 +901,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			rootdirMostUpper = dirElements[0];
 			rootdirLowest = dirElements[0];
 		}
-		
+
 		if (rootdirLowest != null) {
 			dirElements = rootdirLowest.listFiles();
 			while (dirElements.length == 1 && dirElements[0].isDirectory()) {
@@ -1022,7 +1045,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			final String defaultSourceurl = getDefaultSourceurl();
 			RapidEnvInterpreter.log(Level.FINER,
 					"Setting default source URL \""
-					+ defaultSourceurl + "\"");
+							+ defaultSourceurl + "\"");
 			super.setSourceurl(defaultSourceurl);
 		}
 		String sourceurl = null;
@@ -1043,11 +1066,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * @return the install unit's installation package source URL.
 	 */
 	public URL getSourceurlAsUrl() {
-		if (getSourceurl() == null) {
+		final String sourceurl = getSourceurl();
+		if (sourceurl == null) {
 			return null;
 		}
 		try {
-			return new URL(getSourceurl());
+			return new URL(sourceurl);
 		} catch (MalformedURLException e) {
 			throw new RapidEnvConfigurationException(
 					"Configuration problem of property \"sourceurl\" in installunit \""
@@ -1161,8 +1185,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					if (thisInstallData.getFullname().equals(getFullyQualifiedName())
 							&& thisInstallData.getVersion().equals(getVersion())
 							&& (thisInstallData.getInstallstate() == InstallState.installed
-									|| (thisInstallData.getInstallstate() == InstallState.installing
-										&& command == CmdRenvCommand.deinstall))) {
+							|| (thisInstallData.getInstallstate() == InstallState.installing
+							&& command == CmdRenvCommand.deinstall))) {
 						installedVersions.add(thisInstallData.getVersion());
 					}
 				} else {
@@ -1444,81 +1468,81 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		}
 	}
 
-//	/**
-//	 * Download and zip together an Eclipse update site not provided
-//	 * as site zip file.
-//	 *
-//	 * @param sourceRootUrl the root url 
-//	 * @param localSourceFile the target zip file
-//	 */
-//	protected void downloadEclipseupdatesite(final URL sourceRootUrl,
-//			final File localSourceFile) {
-//		final File localSourceRoot = localSourceFile.getParentFile();
-//		if (!localSourceRoot.exists() && !localSourceRoot.mkdirs()) {
-//			throw new RapidEnvException("Could not create directrory \""
-//					+ localSourceRoot.getAbsolutePath() + "\"");
-//		}
-//		final File localSiteRoot = new File(localSourceRoot, "site");
-//		final File localSiteRootFeatures = new File(localSiteRoot, "features");
-//		final File localSiteRootPlugins = new File(localSiteRoot, "plugins");
-//		if (!localSiteRoot.exists() && !localSiteRoot.mkdir()) {
-//			throw new RapidEnvException("Could not create directrory \""
-//					+ localSiteRoot.getAbsolutePath() + "\"");
-//		}
-//		if (!localSiteRootFeatures.exists() && !localSiteRootFeatures.mkdir()) {
-//			throw new RapidEnvException("Could not create directrory \""
-//					+ localSiteRootFeatures.getAbsolutePath() + "\"");
-//		}
-//		if (!localSiteRootPlugins.exists() && !localSiteRootPlugins.mkdir()) {
-//			throw new RapidEnvException("Could not create directrory \""
-//					+ localSiteRootPlugins.getAbsolutePath() + "\"");
-//		}
-//		final File artifactsXml = new File(localSiteRoot, "artifacts.xml");
-//		final File contentXml = new File(localSiteRoot, "content.xml");
-//		InputStream artifactsXmlIs = null;
-//		try {
-//			RapidEnvInterpreter.getInstance().getOut().println(
-//					"Downloading Eclipse update site configuration file "
-//							+ new URL(sourceRootUrl.toString() + "/artifacts.xml").toString()
-//							+ "...");
-//			HttpDownload.download(new URL(sourceRootUrl.toString() + "/artifacts.xml"),
-//					artifactsXml, getSourcefilechecks());
-//			RapidEnvInterpreter.getInstance().getOut().println(
-//					"Downloading Eclipse update site configuration file "
-//							+ new URL(sourceRootUrl.toString() + "/content.xml").toString()
-//							+ "...");
-//			HttpDownload.download(new URL(sourceRootUrl.toString() + "/content.xml"),
-//					contentXml, getSourcefilechecks());
-//			artifactsXmlIs = new FileInputStream(artifactsXml);
-//			for (final Artifact art : Artifact.parse(artifactsXmlIs)) {
-//				String downloadUrlString = sourceRootUrl.toString();
-//				String localFilePath = null;
-//				if (art.getClassifier().equals("org.eclipse.update.feature")) {
-//					downloadUrlString += "/features/";
-//					localFilePath = localSiteRootFeatures.getAbsolutePath();
-//				} else if (art.getClassifier().equals("osgi.bundle")) {
-//					downloadUrlString += "/plugins/";
-//					localFilePath = localSiteRootPlugins.getAbsolutePath();
-//				}
-//				final URL downloadUrl = new URL(downloadUrlString
-//						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
-//				final File localFile = new File(localFilePath + "/"
-//						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
-//				RapidEnvInterpreter.getInstance().getOut().println(
-//						"Downloading Eclipse update site artifact file "
-//								+ downloadUrl + "...");
-//				HttpDownload.download(downloadUrl, localFile, getSourcefilechecks());
-//			}			
-//			RapidEnvInterpreter.getInstance().getOut().println(
-//					"Packaging Eclipse update site artifact files under "
-//							+ localSiteRoot + " to " + localSourceFile + "...");
-//			new AntGateway().zip(localSiteRoot, localSourceFile);
-//		} catch (MalformedURLException e) {
-//			throw new RapidEnvException(e);
-//		} catch (FileNotFoundException e) {
-//			throw new RapidEnvException(e);
-//		}
-//	}
+	//	/**
+	//	 * Download and zip together an Eclipse update site not provided
+	//	 * as site zip file.
+	//	 *
+	//	 * @param sourceRootUrl the root url 
+	//	 * @param localSourceFile the target zip file
+	//	 */
+	//	protected void downloadEclipseupdatesite(final URL sourceRootUrl,
+	//			final File localSourceFile) {
+	//		final File localSourceRoot = localSourceFile.getParentFile();
+	//		if (!localSourceRoot.exists() && !localSourceRoot.mkdirs()) {
+	//			throw new RapidEnvException("Could not create directrory \""
+	//					+ localSourceRoot.getAbsolutePath() + "\"");
+	//		}
+	//		final File localSiteRoot = new File(localSourceRoot, "site");
+	//		final File localSiteRootFeatures = new File(localSiteRoot, "features");
+	//		final File localSiteRootPlugins = new File(localSiteRoot, "plugins");
+	//		if (!localSiteRoot.exists() && !localSiteRoot.mkdir()) {
+	//			throw new RapidEnvException("Could not create directrory \""
+	//					+ localSiteRoot.getAbsolutePath() + "\"");
+	//		}
+	//		if (!localSiteRootFeatures.exists() && !localSiteRootFeatures.mkdir()) {
+	//			throw new RapidEnvException("Could not create directrory \""
+	//					+ localSiteRootFeatures.getAbsolutePath() + "\"");
+	//		}
+	//		if (!localSiteRootPlugins.exists() && !localSiteRootPlugins.mkdir()) {
+	//			throw new RapidEnvException("Could not create directrory \""
+	//					+ localSiteRootPlugins.getAbsolutePath() + "\"");
+	//		}
+	//		final File artifactsXml = new File(localSiteRoot, "artifacts.xml");
+	//		final File contentXml = new File(localSiteRoot, "content.xml");
+	//		InputStream artifactsXmlIs = null;
+	//		try {
+	//			RapidEnvInterpreter.getInstance().getOut().println(
+	//					"Downloading Eclipse update site configuration file "
+	//							+ new URL(sourceRootUrl.toString() + "/artifacts.xml").toString()
+	//							+ "...");
+	//			HttpDownload.download(new URL(sourceRootUrl.toString() + "/artifacts.xml"),
+	//					artifactsXml, getSourcefilechecks());
+	//			RapidEnvInterpreter.getInstance().getOut().println(
+	//					"Downloading Eclipse update site configuration file "
+	//							+ new URL(sourceRootUrl.toString() + "/content.xml").toString()
+	//							+ "...");
+	//			HttpDownload.download(new URL(sourceRootUrl.toString() + "/content.xml"),
+	//					contentXml, getSourcefilechecks());
+	//			artifactsXmlIs = new FileInputStream(artifactsXml);
+	//			for (final Artifact art : Artifact.parse(artifactsXmlIs)) {
+	//				String downloadUrlString = sourceRootUrl.toString();
+	//				String localFilePath = null;
+	//				if (art.getClassifier().equals("org.eclipse.update.feature")) {
+	//					downloadUrlString += "/features/";
+	//					localFilePath = localSiteRootFeatures.getAbsolutePath();
+	//				} else if (art.getClassifier().equals("osgi.bundle")) {
+	//					downloadUrlString += "/plugins/";
+	//					localFilePath = localSiteRootPlugins.getAbsolutePath();
+	//				}
+	//				final URL downloadUrl = new URL(downloadUrlString
+	//						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
+	//				final File localFile = new File(localFilePath + "/"
+	//						+ art.getId() + "_" + art.getVersion().toString() + ".zip");
+	//				RapidEnvInterpreter.getInstance().getOut().println(
+	//						"Downloading Eclipse update site artifact file "
+	//								+ downloadUrl + "...");
+	//				HttpDownload.download(downloadUrl, localFile, getSourcefilechecks());
+	//			}			
+	//			RapidEnvInterpreter.getInstance().getOut().println(
+	//					"Packaging Eclipse update site artifact files under "
+	//							+ localSiteRoot + " to " + localSourceFile + "...");
+	//			new AntGateway().zip(localSiteRoot, localSourceFile);
+	//		} catch (MalformedURLException e) {
+	//			throw new RapidEnvException(e);
+	//		} catch (FileNotFoundException e) {
+	//			throw new RapidEnvException(e);
+	//		}
+	//	}
 
 	/**
 	 * Get all source file checks relevant for the current platform.

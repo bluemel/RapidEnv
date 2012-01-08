@@ -91,6 +91,9 @@ public class CmdRenv {
 				e.printStackTrace();
 				errorcode = 1;
 			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			errorcode = 1;
 		} finally {
 			if (command != null && interpreter != null) {
 				switch (command.getCommand()) {
