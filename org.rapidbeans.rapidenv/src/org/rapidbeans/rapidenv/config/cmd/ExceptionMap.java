@@ -35,6 +35,8 @@ public class ExceptionMap extends RapidBeanBaseExceptionMap {
 	public static final int ERRORCODE_HTTP_DOWNLOAD_CONNECTION_PROBLEM = 1005;
 	public static final int ERRORCODE_DOWNLOAD_FORBIDDEN = 1007;
 	public static final int ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT_LOOP = 1008;
+	public static final int ERRORCODE_HASH_INVALID_ALGORITHM = 1009;
+	public static final int ERRORCODE_HASH_FILE_NOT_FOUND = 1010;
 	public static final int INFOCODE_DOWNLOAD_MANUAL_REQUIRED = 20001;
 
 	/**

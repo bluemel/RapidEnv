@@ -79,14 +79,14 @@ public class CmdRenv {
 				}
 				System.out.println(message);
 			} else if (e.getErrorcode() > 20000) {
-					final ExceptionMapping mapping = ExceptionMap.load().map(e);
-					String message = "";
-					if (mapping != null) {
-						message += mapping.getMessage(Locale.ENGLISH);
-					} else {
-						message += e.getMessage();
-					}
-					System.out.println(message);
+				final ExceptionMapping mapping = ExceptionMap.load().map(e);
+				String message = "";
+				if (mapping != null) {
+					message += mapping.getMessage(Locale.ENGLISH);
+				} else {
+					message += e.getMessage();
+				}
+				System.out.println(message);
 			} else {
 				e.printStackTrace();
 				errorcode = 1;

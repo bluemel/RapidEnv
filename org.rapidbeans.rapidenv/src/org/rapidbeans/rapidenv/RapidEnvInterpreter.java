@@ -414,11 +414,34 @@ public class RapidEnvInterpreter {
 	}
 
 	private void execHashvalue() {
-		final Hashalgorithm hashalg = Hashalgorithm.valueOf(
-				this.renvCommand.getInstallunitOrPropertyNames().get(0));
-		final File file = new File(
-				this.renvCommand.getInstallunitOrPropertyNames().get(1));
-		this.out.println(Verifyer.hashValue(file, hashalg));
+		try {
+			final Hashalgorithm hashalg = Hashalgorithm.valueOf(
+					this.renvCommand.getInstallunitOrPropertyNames().get(0));
+			final File file = new File(
+					this.renvCommand.getInstallunitOrPropertyNames().get(1));
+			this.out.println(Verifyer.hashValue(file, hashalg));
+		} catch (java.lang.IllegalArgumentException e) {
+			final String messagePattern = "No enum const class org.rapidbeans.rapidenv.security.Hashalgorithm.";
+			if (e.getMessage().startsWith(messagePattern)) {
+				final StringBuilder halgList = new StringBuilder();
+				for (final Hashalgorithm halg : Hashalgorithm.values()) {
+					if (halgList.length() > 0) {
+						halgList.append("\", \"");
+					} else {
+						halgList.append("\"");
+					}
+					halgList.append(halg.name());
+				}
+				halgList.append("\"");
+				throw new RapidEnvException("Invalid hashalgorithm \""
+						+ e.getMessage().substring(messagePattern.length())
+						+ "\"\n  Please specifiy one of {"
+						+ halgList.toString() + "}.",
+						ExceptionMap.ERRORCODE_HASH_INVALID_ALGORITHM);
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	public String interpret(final Installunit enclosingUnit,
