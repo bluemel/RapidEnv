@@ -39,7 +39,8 @@ set RAPID_ENV_PROFILE=%RAPID_ENV_PROFILES_HOME%\renv_%USERNAME%_%COMPUTERNAME%
 set JAVA=java
 if exist "%ProgramFiles%\Java\jre5\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre5\bin\java.exe
 if exist "%ProgramFiles%\Java\jre6\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre6\bin\java.exe
-if "%JAVA%" == "java" echo WARNING no standard JRE 5 or 6 installation found
+if exist "%ProgramFiles%\Java\jre7\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre7\bin\java.exe
+if "%JAVA%" == "java" echo WARNING no standard JRE 5 or 6 or 7 installation found
 if "%1" == "-v" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 
