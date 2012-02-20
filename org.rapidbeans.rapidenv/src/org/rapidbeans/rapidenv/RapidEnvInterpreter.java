@@ -77,7 +77,6 @@ public class RapidEnvInterpreter {
 		return singleInstance;
 	}
 
-
 	/**
 	 * Attention: use for test purposes only.
 	 */
@@ -85,7 +84,7 @@ public class RapidEnvInterpreter {
 		singleInstance = null;
 	}
 
-	private Properties properties = new Properties();
+	private final Properties properties = new Properties();
 
 	/**
 	 * @param name
@@ -113,7 +112,7 @@ public class RapidEnvInterpreter {
 	 * @param name
 	 *            the property name
 	 * 
-	 * Remove the property value with the given name.
+	 *            Remove the property value with the given name.
 	 */
 	public void removeProperty(final String name) {
 		this.properties.remove(name);
@@ -153,8 +152,11 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Log a message using the given log level.
-	 * @param level the log level to use
-	 * @param msg the message to log
+	 * 
+	 * @param level
+	 *            the log level to use
+	 * @param msg
+	 *            the message to log
 	 */
 	public static void log(final Level level, final String msg) {
 		if (singleInstance != null) {
@@ -217,8 +219,9 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Set the output stream for test reasons.
-	 *
-	 * @param out the new output stream 
+	 * 
+	 * @param out
+	 *            the new output stream
 	 */
 	protected void setOut(final PrintStream out) {
 		this.out = out;
@@ -231,8 +234,8 @@ public class RapidEnvInterpreter {
 	private List<Installunit> installUnitsToProcess = null;
 
 	/**
-	 * Indicates if install units or properties were explicitly
-	 * given as command arguments or not.
+	 * Indicates if install units or properties were explicitly given as command
+	 * arguments or not.
 	 */
 	private boolean installUnitOrPropertyNamesExplicitelySpecified = false;
 
@@ -280,7 +283,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Determines the Linux desktop currently used.
-	 *
+	 * 
 	 * @return the Linux desktop currently used
 	 */
 	public static LinuxDesktop getLinuxDesktop() {
@@ -297,25 +300,21 @@ public class RapidEnvInterpreter {
 	}
 
 	/**
-	 * Execute RapidEnv command.
-	 * Dispatch to private handler.
+	 * Execute RapidEnv command. Dispatch to private handler.
 	 */
 	public void execute() {
 		execute(System.in, System.out, System.err);
 	}
 
-
 	/**
-	 * Execute RapidEnv command.
-	 * Dispatch to private handler.
+	 * Execute RapidEnv command. Dispatch to private handler.
 	 */
 	public void execute(final InputStream inStream, final PrintStream outStream) {
 		execute(inStream, outStream, System.err);
 	}
 
 	/**
-	 * Execute RapidEnv command.
-	 * Dispatch to private handler.
+	 * Execute RapidEnv command. Dispatch to private handler.
 	 */
 	public void execute(final InputStream inStream, final PrintStream outStream, final PrintStream errStream) {
 
@@ -326,8 +325,7 @@ public class RapidEnvInterpreter {
 			this.out = outStream;
 			this.err = errStream;
 
-			log(Level.FINE, "executing command \""
-					+ this.command.name() + "\"...");
+			log(Level.FINE, "executing command \"" + this.command.name() + "\"...");
 
 			boolean deinstallAll = false;
 
@@ -353,8 +351,7 @@ public class RapidEnvInterpreter {
 				if (tag == null) {
 					tag = getProject().getTag();
 				}
-				out.println("  Project: " + getProject().getName()
-						+ ", Tag: " + tag);
+				out.println("  Project: " + getProject().getName() + ", Tag: " + tag);
 				initPropertiesAndInstallunitsToProcess(this.command);
 				initProperties(this.command);
 				break;
@@ -415,10 +412,9 @@ public class RapidEnvInterpreter {
 
 	private void execHashvalue() {
 		try {
-			final Hashalgorithm hashalg = Hashalgorithm.valueOf(
-					this.renvCommand.getInstallunitOrPropertyNames().get(0));
-			final File file = new File(
-					this.renvCommand.getInstallunitOrPropertyNames().get(1));
+			final Hashalgorithm hashalg = Hashalgorithm
+			        .valueOf(this.renvCommand.getInstallunitOrPropertyNames().get(0));
+			final File file = new File(this.renvCommand.getInstallunitOrPropertyNames().get(1));
 			this.out.println(Verifyer.hashValue(file, hashalg));
 		} catch (java.lang.IllegalArgumentException e) {
 			final String messagePattern = "No enum const class org.rapidbeans.rapidenv.security.Hashalgorithm.";
@@ -434,20 +430,17 @@ public class RapidEnvInterpreter {
 				}
 				halgList.append("\"");
 				throw new RapidEnvException("Invalid hashalgorithm \""
-						+ e.getMessage().substring(messagePattern.length())
-						+ "\"\n  Please specifiy one of {"
-						+ halgList.toString() + "}.",
-						ExceptionMap.ERRORCODE_HASH_INVALID_ALGORITHM);
+				        + e.getMessage().substring(messagePattern.length()) + "\"\n  Please specifiy one of {"
+				        + halgList.toString() + "}.", ExceptionMap.ERRORCODE_HASH_INVALID_ALGORITHM);
 			} else {
 				throw e;
 			}
 		}
 	}
 
-	public String interpret(final Installunit enclosingUnit,
-			final Property enclosingProperty, final String in) {
-		return new ConfigExprTopLevel(enclosingUnit, enclosingProperty, in,
-				getProject().getExpressionLiteralEscaping()).interpret();
+	public String interpret(final Installunit enclosingUnit, final Property enclosingProperty, final String in) {
+		return new ConfigExprTopLevel(enclosingUnit, enclosingProperty, in, getProject().getExpressionLiteralEscaping())
+		        .interpret();
 	}
 
 	/**
@@ -457,39 +450,34 @@ public class RapidEnvInterpreter {
 		boolean create = false;
 		switch (PlatformHelper.getOs()) {
 		case windows:
-			create = CmdLineInteractions.promptYesNo(
-					this.in, this.out,
-					"\nDo you want to create a \"Command Prompt Here\" menu entry\n"
-							+ "  in Windows Explorer for this development environment?", true);
+			create = CmdLineInteractions.promptYesNo(this.in, this.out,
+			        "\nDo you want to create a \"Command Prompt Here\" menu entry\n"
+			                + "  in Windows Explorer for this development environment?", true);
 			break;
 		case linux:
 			switch (RapidEnvInterpreter.getLinuxDesktop()) {
 			case kde:
-				create = CmdLineInteractions.promptYesNo(
-						this.in, this.out,
-						"\nDo you want to create an \"Open Terminal\" action\n"
-								+ "  for KDE's Dolphin file manager for this development environment?", true);
+				create = CmdLineInteractions.promptYesNo(this.in, this.out,
+				        "\nDo you want to create an \"Open Terminal\" action\n"
+				                + "  for KDE's Dolphin file manager for this development environment?", true);
 				break;
 			case gnome:
-				create = CmdLineInteractions.promptYesNo(
-						this.in, this.out,
-						"\nDo you want to create a \"Open Terminal\" script\n"
-								+ "  for Gnome's Nautilus file manager for this development environment?", true);
+				create = CmdLineInteractions.promptYesNo(this.in, this.out,
+				        "\nDo you want to create a \"Open Terminal\" script\n"
+				                + "  for Gnome's Nautilus file manager for this development environment?", true);
 				break;
 			default:
 				log(Level.FINE, "No service menu entry to delete for Linux desktop \""
-						+ RapidEnvInterpreter.getLinuxDesktop().name());
+				        + RapidEnvInterpreter.getLinuxDesktop().name());
 			}
 			break;
 		default:
-			throw new RapidEnvException("Operating systm \""
-					+ PlatformHelper.getOs().name()
-					+ "\" not yet supported");
+			throw new RapidEnvException("Operating systm \"" + PlatformHelper.getOs().name() + "\" not yet supported");
 		}
 		if (create) {
 			switch (PlatformHelper.getOs()) {
 			case windows:
-				createExplorerMenuEntry();                    
+				createExplorerMenuEntry();
 				break;
 			case linux:
 				switch (RapidEnvInterpreter.getLinuxDesktop()) {
@@ -501,13 +489,12 @@ public class RapidEnvInterpreter {
 					break;
 				default:
 					log(Level.FINE, "No service menu entry to delete for Linux desktop \""
-							+ RapidEnvInterpreter.getLinuxDesktop().name());
+					        + RapidEnvInterpreter.getLinuxDesktop().name());
 				}
 				break;
 			default:
-				throw new RapidEnvException("Operating systm \""
-						+ PlatformHelper.getOs().name()
-						+ "\" not yet supported");
+				throw new RapidEnvException("Operating systm \"" + PlatformHelper.getOs().name()
+				        + "\" not yet supported");
 			}
 		}
 	}
@@ -520,18 +507,13 @@ public class RapidEnvInterpreter {
 			osw = new OutputStreamWriter(new FileOutputStream(tmpfile));
 			final String rapidEnvHome = System.getenv("RAPID_ENV_HOME");
 			osw.write("Windows Registry Editor Version 5.00" + lf + lf
-					+ "[HKEY_CLASSES_ROOT\\Directory\\shell\\RapidEnv_"
-					+ getProject().getName() + "_" + getProject().getTag() + "]" + lf
-					+ "@=\"" + getProject().getName() + " Command Prompt " + getProject().getTag() + "\"" + lf + lf
-					+ "[HKEY_CLASSES_ROOT\\Directory\\shell\\"
-					+ "RapidEnv_" + getProject().getName() + "_" + getProject().getTag()
-					+ "\\command]" + lf
-					+ "@=\"cmd.exe /K"
-					+ " title " + getProject().getName() + " " + getProject().getTag() + " Command Prompt"
-					+ " & cd /D \\\"%L\\\""
-					+ " & call \\\"" + rapidEnvHome.replace("\\", "\\\\").replace("\"", "\\\"")
-					+ "\\\\bin\\\\renv\\\""
-					+ "\"" + lf);
+			        + "[HKEY_CLASSES_ROOT\\Directory\\shell\\RapidEnv_" + getProject().getName() + "_"
+			        + getProject().getTag() + "]" + lf + "@=\"" + getProject().getName() + " Command Prompt "
+			        + getProject().getTag() + "\"" + lf + lf + "[HKEY_CLASSES_ROOT\\Directory\\shell\\" + "RapidEnv_"
+			        + getProject().getName() + "_" + getProject().getTag() + "\\command]" + lf + "@=\"cmd.exe /K"
+			        + " title " + getProject().getName() + " " + getProject().getTag() + " Command Prompt"
+			        + " & cd /D \\\"%L\\\"" + " & call \\\"" + rapidEnvHome.replace("\\", "\\\\").replace("\"", "\\\"")
+			        + "\\\\bin\\\\renv\\\"" + "\"" + lf);
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
 		} finally {
@@ -545,8 +527,7 @@ public class RapidEnvInterpreter {
 		}
 		out.println("Creating explorer menu entry...");
 		final SystemCommand command = new SystemCommand();
-		command.setExecutable(System.getenv("SystemRoot")
-				+ File.separator + "regedit.exe");
+		command.setExecutable(System.getenv("SystemRoot") + File.separator + "regedit.exe");
 		final Argument arg1 = new Argument();
 		arg1.setValue("/s");
 		command.addArgument(arg1);
@@ -555,9 +536,8 @@ public class RapidEnvInterpreter {
 		command.addArgument(arg2);
 		CommandExecutionResult result = command.execute();
 		if (result.getReturncode() != 0) {
-			throw new RapidEnvException(
-					"Problem while creating explorer menu entry:"
-							+ " returncode = " + result.getReturncode());
+			throw new RapidEnvException("Problem while creating explorer menu entry:" + " returncode = "
+			        + result.getReturncode());
 		}
 		tmpfile.delete();
 	}
@@ -569,8 +549,8 @@ public class RapidEnvInterpreter {
 			final String lf = PlatformHelper.getLineFeed();
 			osw = new OutputStreamWriter(new FileOutputStream(tmpfile));
 			osw.write("Windows Registry Editor Version 5.00" + lf + lf
-					+ "[-HKEY_CLASSES_ROOT\\Directory\\shell\\RapidEnv_"
-					+ getProject().getName() + "_" + getProject().getTag() + "]" + lf);
+			        + "[-HKEY_CLASSES_ROOT\\Directory\\shell\\RapidEnv_" + getProject().getName() + "_"
+			        + getProject().getTag() + "]" + lf);
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
 		} finally {
@@ -584,8 +564,7 @@ public class RapidEnvInterpreter {
 		}
 		out.println("Deleting explorer menu entry...");
 		final SystemCommand command = new SystemCommand();
-		command.setExecutable(System.getenv("SystemRoot")
-				+ File.separator + "regedit.exe");
+		command.setExecutable(System.getenv("SystemRoot") + File.separator + "regedit.exe");
 		final Argument arg1 = new Argument();
 		arg1.setValue("/s");
 		command.addArgument(arg1);
@@ -595,9 +574,8 @@ public class RapidEnvInterpreter {
 		command.execute();
 		CommandExecutionResult result = command.execute();
 		if (result.getReturncode() != 0) {
-			throw new RapidEnvException(
-					"Problem while deleting explorer menu entry:"
-							+ " returncode = " + result.getReturncode());
+			throw new RapidEnvException("Problem while deleting explorer menu entry:" + " returncode = "
+			        + result.getReturncode());
 		}
 		tmpfile.delete();
 	}
@@ -608,8 +586,8 @@ public class RapidEnvInterpreter {
 
 		out.println("Creating KDE \"Open Terminal\" service menu entry...");
 		final File menuEntry = new File(PlatformHelper.userhome() + File.separator
-				+ "/.kde4/share/kde4/services/ServiceMenus/konsolehere_"
-				+ getProject().getName() + "_" + getProject().getTag() + ".desktop");
+		        + "/.kde4/share/kde4/services/ServiceMenus/konsolehere_" + getProject().getName() + "_"
+		        + getProject().getTag() + ".desktop");
 		if (!menuEntry.getParentFile().exists()) {
 			FileHelper.mkdirs(menuEntry.getParentFile());
 		}
@@ -617,19 +595,13 @@ public class RapidEnvInterpreter {
 		try {
 			final String lf = PlatformHelper.getLineFeed();
 			osw2 = new OutputStreamWriter(new FileOutputStream(menuEntry));
-			osw2.write("[Desktop Entry]" + lf
-					+ "X-SuSE-translate=true" + lf
-					+ "Type=Service" + lf
-					+ "X-KDE-ServiceTypes=KonqPopupMenu/Plugin,inode/directory" + lf
-					+ "Actions=openTerminalHere;" + lf
-					+ "X-KDE-AuthorizeAction=shell_access" + lf
-					+ lf
-					+ "[Desktop Action openTerminalHere]" +lf
-					+ "Name=Open Terminal " + getProject().getName()
-					+ " " + getProject().getTag() + lf
-					+ "Icon=utilities-terminal" + lf
-					+ "Exec=konsole --workdir \"%f\" -e /bin/bash --rcfile ~/.profile_"
-					+ getProject().getName() + "_" + getProject().getTag() + lf);
+			osw2.write("[Desktop Entry]" + lf + "X-SuSE-translate=true" + lf + "Type=Service" + lf
+			        + "X-KDE-ServiceTypes=KonqPopupMenu/Plugin,inode/directory" + lf + "Actions=openTerminalHere;" + lf
+			        + "X-KDE-AuthorizeAction=shell_access" + lf + lf + "[Desktop Action openTerminalHere]" + lf
+			        + "Name=Open Terminal " + getProject().getName() + " " + getProject().getTag() + lf
+			        + "Icon=utilities-terminal" + lf
+			        + "Exec=konsole --workdir \"%f\" -e /bin/bash --rcfile ~/.profile_" + getProject().getName() + "_"
+			        + getProject().getTag() + lf);
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
 		} finally {
@@ -642,8 +614,7 @@ public class RapidEnvInterpreter {
 			}
 		}
 		if (!menuEntry.setExecutable(true)) {
-			throw new RapidEnvException("Problems to make file \""
-					+ menuEntry.getAbsolutePath() + "\" executeable.");
+			throw new RapidEnvException("Problems to make file \"" + menuEntry.getAbsolutePath() + "\" executeable.");
 		}
 	}
 
@@ -653,8 +624,7 @@ public class RapidEnvInterpreter {
 
 		out.println("Creating Gnome Nautilus \"Open Terminal\" script...");
 		final File menuEntry = new File(PlatformHelper.userhome() + File.separator
-				+ "/.gnome2/nautilus-scripts/Open Terminal "
-				+ getProject().getName() + " " + getProject().getTag());
+		        + "/.gnome2/nautilus-scripts/Open Terminal " + getProject().getName() + " " + getProject().getTag());
 		if (!menuEntry.getParentFile().exists()) {
 			FileHelper.mkdirs(menuEntry.getParentFile());
 		}
@@ -663,18 +633,13 @@ public class RapidEnvInterpreter {
 			final String lf = PlatformHelper.getLineFeed();
 			osw2 = new OutputStreamWriter(new FileOutputStream(menuEntry));
 			osw2.write("#!/bin/bash" + lf
-					+ "root=\"$(echo ${NAUTILUS_SCRIPT_CURRENT_URI} | cut -d'/' -f3- | sed 's/%20/ /g')\"" + lf
-					+ "if [ -z \"${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS}\" ]; then" + lf
-					+ "  folder=\"${root}\"" + lf
-					+ "else" + lf
-					+ "  while [ ! -z \"$1\" -a ! -d \"${root}/$1\" ]; do" + lf
-					+ "    shift;" + lf
-					+ "  done" + lf
-					+ "  folder=\"${root}/$1\"" +lf
-					+ "fi" + lf
-					+ "gnome-terminal --working-directory=\"${folder}\""
-					+ " --command \"/bin/bash --rcfile ~/.profile_"
-					+ getProject().getName() + "_" + getProject().getTag() + "\"" + lf);
+			        + "root=\"$(echo ${NAUTILUS_SCRIPT_CURRENT_URI} | cut -d'/' -f3- | sed 's/%20/ /g')\"" + lf
+			        + "if [ -z \"${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS}\" ]; then" + lf + "  folder=\"${root}\"" + lf
+			        + "else" + lf + "  while [ ! -z \"$1\" -a ! -d \"${root}/$1\" ]; do" + lf + "    shift;" + lf
+			        + "  done" + lf + "  folder=\"${root}/$1\"" + lf + "fi" + lf
+			        + "gnome-terminal --working-directory=\"${folder}\""
+			        + " --command \"/bin/bash --rcfile ~/.profile_" + getProject().getName() + "_"
+			        + getProject().getTag() + "\"" + lf);
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
 		} finally {
@@ -687,8 +652,7 @@ public class RapidEnvInterpreter {
 			}
 		}
 		if (!menuEntry.setExecutable(true)) {
-			throw new RapidEnvException("Problems to make file \""
-					+ menuEntry.getAbsolutePath() + "\" executeable.");
+			throw new RapidEnvException("Problems to make file \"" + menuEntry.getAbsolutePath() + "\" executeable.");
 		}
 	}
 
@@ -698,23 +662,16 @@ public class RapidEnvInterpreter {
 		// . /home/martin/Projects/RapidBeans/env/profile/renv_<user>_<host>.sh
 		// . renv
 		// -----------------------------------------------------------------------------
-		out.println("Creating profile for "
-				+ getProject().getName() + " "
-				+ getProject().getTag() + " "
-				+ "...");
-		final File profile = new File(PlatformHelper.userhome() + File.separator
-				+ ".profile_"
-				+ getProject().getName() + "_" + getProject().getTag());
+		out.println("Creating profile for " + getProject().getName() + " " + getProject().getTag() + " " + "...");
+		final File profile = new File(PlatformHelper.userhome() + File.separator + ".profile_" + getProject().getName()
+		        + "_" + getProject().getTag());
 		OutputStreamWriter osw1 = null;
 		try {
 			final String rapidEnvHome = System.getenv("RAPID_ENV_HOME");
 			final String lf = PlatformHelper.getLineFeed();
 			osw1 = new OutputStreamWriter(new FileOutputStream(profile));
-			osw1.write(". "
-					+ rapidEnvHome
-					+ "/profile/renv_" + PlatformHelper.username()
-					+ "_" + PlatformHelper.hostname() + ".sh" + lf
-					+ ". renv" + lf);
+			osw1.write(". " + rapidEnvHome + "/profile/renv_" + PlatformHelper.username() + "_"
+			        + PlatformHelper.hostname() + ".sh" + lf + ". renv" + lf);
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
 		} finally {
@@ -731,12 +688,11 @@ public class RapidEnvInterpreter {
 	private void deleteKdeServiceMenuEntry() {
 		out.println("Deleting KDE \"Open Terminal\" service menu entry...");
 		final File menuEntry = new File(PlatformHelper.userhome() + File.separator
-				+ "/.kde4/share/kde4/services/ServiceMenus/konsolehere_"
-				+ getProject().getName() + "_" + getProject().getTag() + ".desktop");
+		        + "/.kde4/share/kde4/services/ServiceMenus/konsolehere_" + getProject().getName() + "_"
+		        + getProject().getTag() + ".desktop");
 		if (menuEntry.exists()) {
 			if (!menuEntry.delete()) {
-				log(Level.WARNING, "Could not create service menu entry \""
-						+ menuEntry.getAbsolutePath() + "\"!");
+				log(Level.WARNING, "Could not create service menu entry \"" + menuEntry.getAbsolutePath() + "\"!");
 			}
 		}
 		deleteLinuxProfile();
@@ -745,12 +701,10 @@ public class RapidEnvInterpreter {
 	private void deleteGnomeServiceMenuEntry() {
 		out.println("Deleting Gnome Nautilus \"Open Terminal\" script...");
 		final File menuEntry = new File(PlatformHelper.userhome() + File.separator
-				+ "/.gnome2/nautilus-scripts/Open Terminal "
-				+ getProject().getName() + " " + getProject().getTag());
+		        + "/.gnome2/nautilus-scripts/Open Terminal " + getProject().getName() + " " + getProject().getTag());
 		if (menuEntry.exists()) {
 			if (!menuEntry.delete()) {
-				log(Level.WARNING, "Could not delete script file \""
-						+ menuEntry.getAbsolutePath() + "\"!");
+				log(Level.WARNING, "Could not delete script file \"" + menuEntry.getAbsolutePath() + "\"!");
 			}
 		}
 		deleteLinuxProfile();
@@ -758,13 +712,11 @@ public class RapidEnvInterpreter {
 
 	private void deleteLinuxProfile() {
 		out.println("Deleting Gnome Nautilus \"Open Terminal\" script...");
-		final File profile = new File(PlatformHelper.userhome() + File.separator
-				+ ".profile_"
-				+ getProject().getName() + "_" + getProject().getTag());
+		final File profile = new File(PlatformHelper.userhome() + File.separator + ".profile_" + getProject().getName()
+		        + "_" + getProject().getTag());
 		if (profile.exists()) {
 			if (!profile.delete()) {
-				log(Level.WARNING, "Could not delete profile \""
-						+ profile.getAbsolutePath() + "\"!");
+				log(Level.WARNING, "Could not delete profile \"" + profile.getAbsolutePath() + "\"!");
 			}
 		}
 	}
@@ -801,22 +753,18 @@ public class RapidEnvInterpreter {
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
 						switch (this.runMode) {
 						case command:
-							install = CmdLineInteractions.promptYesNo(
-									this.in, this.out,
-									"Installation unit \"" + unit.getFullyQualifiedName()
-									+ "\" is discontinued.\n  Do you want to install anyway?",
-									false);
+							install = CmdLineInteractions.promptYesNo(this.in, this.out,
+							        "Installation unit \"" + unit.getFullyQualifiedName()
+							                + "\" is discontinued.\n  Do you want to install anyway?", false);
 							break;
 						default:
-							throw new AssertionError("Run mode \""
-									+ this.runMode.name() + "\" not supported");
+							throw new AssertionError("Run mode \"" + this.runMode.name() + "\" not supported");
 						}
 					}
 					if (install) {
 						unit.install(this.renvCommand.getInstallunitOrPropertyNames());
 					} else {
-						out.println("  Installation of unit \"" + unit.getFullyQualifiedName()
-								+ "\" aborted.");
+						out.println("  Installation of unit \"" + unit.getFullyQualifiedName() + "\" aborted.");
 					}
 				} else {
 					out.println(" installation unit " + unit.getFullyQualifiedName() + " is already installed");
@@ -826,8 +774,7 @@ public class RapidEnvInterpreter {
 			int installedUnitsCount = 0;
 			for (final Installunit unit : getInstallunitsToProcess()) {
 				if (unit.getInstallationStatus(CmdRenvCommand.install) == InstallStatus.notinstalled
-						&& !(unit.getInstallcontrol() == InstallControl.optional
-						|| unit.getInstallcontrol() == InstallControl.discontinued)) {
+				        && !(unit.getInstallcontrol() == InstallControl.optional || unit.getInstallcontrol() == InstallControl.discontinued)) {
 					unit.install(this.renvCommand.getInstallunitOrPropertyNames());
 					installedUnitsCount++;
 				} else {
@@ -858,16 +805,13 @@ public class RapidEnvInterpreter {
 		} else {
 			switch (this.runMode) {
 			case command:
-				deinstallAll = CmdLineInteractions.promptYesNo(
-						this.in, this.out,
-						"Do you really want do deinstall the complete evironment including:\n"
-								+ "- all install units\n"
-								+ "- your personal profile\n"
-								+ "- the RapidEnv command prompt?", false);
+				deinstallAll = CmdLineInteractions.promptYesNo(this.in, this.out,
+				        "Do you really want do deinstall the complete evironment including:\n"
+				                + "- all install units\n" + "- your personal profile\n"
+				                + "- the RapidEnv command prompt?", false);
 				break;
 			default:
-				throw new AssertionError("Run mode \"" + this.runMode.name()
-						+ " not yet supported");
+				throw new AssertionError("Run mode \"" + this.runMode.name() + " not yet supported");
 			}
 			if (!deinstallAll) {
 				out.println("Complete deinstall aborted");
@@ -883,20 +827,16 @@ public class RapidEnvInterpreter {
 			deleteProfile();
 			switch (PlatformHelper.getOs()) {
 			case windows:
-				deleteExplorerMenuEntry();                    
+				deleteExplorerMenuEntry();
 				break;
 			case linux:
-				this.out.println("Deleting profile for "
-						+ getProject().getName() + " "
-						+ getProject().getTag() + " "
-						+ "...");
-				final File profile = new File(PlatformHelper.userhome() + File.separator
-						+ ".profile_"
-						+ getProject().getName() + "_" + getProject().getTag());
+				this.out.println("Deleting profile for " + getProject().getName() + " " + getProject().getTag() + " "
+				        + "...");
+				final File profile = new File(PlatformHelper.userhome() + File.separator + ".profile_"
+				        + getProject().getName() + "_" + getProject().getTag());
 				if (profile.exists()) {
 					if (!profile.delete()) {
-						log(Level.WARNING, "Could not delete profile \""
-								+ profile.getAbsolutePath() + "\"!");
+						log(Level.WARNING, "Could not delete profile \"" + profile.getAbsolutePath() + "\"!");
 					}
 				}
 				switch (RapidEnvInterpreter.getLinuxDesktop()) {
@@ -907,15 +847,14 @@ public class RapidEnvInterpreter {
 					deleteGnomeServiceMenuEntry();
 					break;
 				default:
-					log(Level.FINE, "No start menu shell link icon \"" 
-							+ getProject().getName() + "_" + getProject().getTag() + ".desktop"
-							+ "\" to delete for Linux desktop \"" + RapidEnvInterpreter.getLinuxDesktop().name());
+					log(Level.FINE, "No start menu shell link icon \"" + getProject().getName() + "_"
+					        + getProject().getTag() + ".desktop" + "\" to delete for Linux desktop \""
+					        + RapidEnvInterpreter.getLinuxDesktop().name());
 				}
 				break;
 			default:
-				throw new RapidEnvException("Operating systm \""
-						+ PlatformHelper.getOs().name()
-						+ "\" not yet supported");
+				throw new RapidEnvException("Operating systm \"" + PlatformHelper.getOs().name()
+				        + "\" not yet supported");
 			}
 			out.println("Deinstallation finished successfully");
 		}
@@ -939,11 +878,10 @@ public class RapidEnvInterpreter {
 			for (final Installunit unit : getInstallunitsToProcess()) {
 				switch (unit.getInstallationStatus(CmdRenvCommand.update)) {
 				case notinstalled:
-					if (!(unit.getInstallcontrol() == InstallControl.optional
-					|| unit.getInstallcontrol() == InstallControl.discontinued)) {
+					if (!(unit.getInstallcontrol() == InstallControl.optional || unit.getInstallcontrol() == InstallControl.discontinued)) {
 						unit.install(this.renvCommand.getInstallunitOrPropertyNames());
 						updatedUnitsCount++;
-					} else if (!this.installUnitOrPropertyNamesExplicitelySpecified){
+					} else if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
 						unit.stat();
 					}
 					break;
@@ -972,9 +910,8 @@ public class RapidEnvInterpreter {
 						unit.deinstall();
 					} else {
 						if (this.installUnitOrPropertyNamesExplicitelySpecified) {
-							out.println(" installation unit \""
-									+ unit.getFullyQualifiedName()
-									+ "\" is already up to date");
+							out.println(" installation unit \"" + unit.getFullyQualifiedName()
+							        + "\" is already up to date");
 						} else {
 							unit.stat();
 						}
@@ -982,9 +919,8 @@ public class RapidEnvInterpreter {
 					break;
 				default:
 					throw new AssertionError("Unexpected installation status \""
-							+ unit.getInstallationStatus(CmdRenvCommand.update)
-							+ "\" for installation unit \""
-							+ unit.getFullyQualifiedName() + "\"");
+					        + unit.getInstallationStatus(CmdRenvCommand.update) + "\" for installation unit \""
+					        + unit.getFullyQualifiedName() + "\"");
 				}
 			}
 			if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
@@ -1014,8 +950,7 @@ public class RapidEnvInterpreter {
 				case notinstalled:
 					unit.stat();
 					if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
-						if (!(unit.getInstallcontrol() == InstallControl.optional
-								|| unit.getInstallcontrol() == InstallControl.discontinued)) {
+						if (!(unit.getInstallcontrol() == InstallControl.optional || unit.getInstallcontrol() == InstallControl.discontinued)) {
 							iudRequieredUnitsCount++;
 						}
 					}
@@ -1030,9 +965,9 @@ public class RapidEnvInterpreter {
 						unit.configure(true);
 					} else {
 						if (unit.getInstallcontrol() == InstallControl.discontinued) {
-							getOut().println(" installation unit \""
-									+ unit.getFullyQualifiedName()
-									+ "\" is discontinued and should be uninstalled");
+							getOut().println(
+							        " installation unit \"" + unit.getFullyQualifiedName()
+							                + "\" is discontinued and should be uninstalled");
 						} else {
 							unit.configure(true);
 							configuredUnitsCount++;
@@ -1041,25 +976,23 @@ public class RapidEnvInterpreter {
 					break;
 				case uptodate:
 					if (this.installUnitOrPropertyNamesExplicitelySpecified) {
-						out.println(" installation unit \""
-								+ unit.getFullyQualifiedName()
-								+ "\" is already up to date and configured");
+						out.println(" installation unit \"" + unit.getFullyQualifiedName()
+						        + "\" is already up to date and configured");
 					} else {
 						unit.stat();
 					}
 					break;
 				default:
 					throw new AssertionError("Unexpected installation status \""
-							+ unit.getInstallationStatus(CmdRenvCommand.config)
-							+ "\" for installation unit \""
-							+ unit.getFullyQualifiedName() + "\"");
+					        + unit.getInstallationStatus(CmdRenvCommand.config) + "\" for installation unit \""
+					        + unit.getFullyQualifiedName() + "\"");
 				}
 			}
 			if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
 				if (configuredUnitsCount == 0 && iudRequieredUnitsCount == 0) {
 					out.println("All installation units are up to date and configured");
-				} else if (configuredUnitsCount == 0 && iudRequieredUnitsCount > 0
-						|| configuredUnitsCount > 0 && iudRequieredUnitsCount > 0) {
+				} else if (configuredUnitsCount == 0 && iudRequieredUnitsCount > 0 || configuredUnitsCount > 0
+				        && iudRequieredUnitsCount > 0) {
 					out.println("Some installation units are not installed or outdated");
 				} else if (configuredUnitsCount > 0 && iudRequieredUnitsCount == 0) {
 					out.println("Configuration finished successfully");
@@ -1069,24 +1002,19 @@ public class RapidEnvInterpreter {
 	}
 
 	/**
-	 * Execute the help command.
-	 * Print command help.
+	 * Execute the help command. Print command help.
 	 */
 	private void execHelp() {
 		out.println("\nUsage: renv [-<option> ...] [<command>] [<install unit> ...]");
 		out.println("\nCommands:");
 		for (final CmdRenvCommand command : CmdRenvCommand.values()) {
-			out.println(
-					StringHelper.fillUp(" " + command.name() + ", " + command.getShort1(), 14, ' ', StringHelper.FillMode.right)
-					+ command.getDescription()
-					);
+			out.println(StringHelper.fillUp(" " + command.name() + ", " + command.getShort1(), 14, ' ',
+			        StringHelper.FillMode.right) + command.getDescription());
 		}
 		out.println("\nOptions:");
 		for (final CmdRenvOption option : CmdRenvOption.values()) {
-			out.println(
-					StringHelper.fillUp(" -" + option.name() + ", -" + option.getShort1(), 14, ' ', StringHelper.FillMode.right)
-					+ option.getDescription()
-					);
+			out.println(StringHelper.fillUp(" -" + option.name() + ", -" + option.getShort1(), 14, ' ',
+			        StringHelper.FillMode.right) + option.getDescription());
 		}
 	}
 
@@ -1094,11 +1022,9 @@ public class RapidEnvInterpreter {
 	 * Execute the version command.
 	 */
 	private void execVersion() {
-		final Manifest manifest =
-				ManifestReader.readManifestFromJarOfClass(this.getClass());
+		final Manifest manifest = ManifestReader.readManifestFromJarOfClass(this.getClass());
 		out.println("RapidEnv (c) Martin Bluemel 2011");
-		out.println("version: "
-				+ manifest.getMainAttributes().getValue("Implementation-Version"));
+		out.println("version: " + manifest.getMainAttributes().getValue("Implementation-Version"));
 	}
 
 	private boolean profileChanged() {
@@ -1109,7 +1035,8 @@ public class RapidEnvInterpreter {
 					return true;
 				}
 				// property value changed
-				if (!getPropertyValuePersisted(prop.getFullyQualifiedName()).equals(getPropertyValue(prop.getFullyQualifiedName()))) {
+				if (!getPropertyValuePersisted(prop.getFullyQualifiedName()).equals(
+				        getPropertyValue(prop.getFullyQualifiedName()))) {
 					return true;
 				}
 			}
@@ -1125,16 +1052,16 @@ public class RapidEnvInterpreter {
 	}
 
 	/**
-	 * get the (default) values by interpreting the values
-	 * from the environment definition file and
-	 * ask for user definition in case of "personal" variables.
-	 *
-	 * @param cmd the renv command
+	 * get the (default) values by interpreting the values from the environment
+	 * definition file and ask for user definition in case of "personal"
+	 * variables.
+	 * 
+	 * @param cmd
+	 *            the renv command
 	 */
 	protected void initProperties(final CmdRenvCommand cmd) {
 
-		if (getProject().getPropertys() == null
-				|| getProject().getPropertys().size() == 0) {
+		if (getProject().getPropertys() == null || getProject().getPropertys().size() == 0) {
 			return;
 		}
 
@@ -1146,20 +1073,16 @@ public class RapidEnvInterpreter {
 				switch (cmd) {
 				case boot:
 					if (propCfg.getParentInstallunit() == null
-					&& (getPropertiesToProcess() == null
-					|| getPropertiesToProcess().size() == 0
-					|| this.getPropertiesToProcess().contains(propCfg))) {
+					        && (getPropertiesToProcess() == null || getPropertiesToProcess().size() == 0 || this
+					                .getPropertiesToProcess().contains(propCfg))) {
 						propValue = propCfg.update();
 					}
 					break;
 				case update:
 				case config:
 					if (propCfg.getParentInstallunit() != null
-					&& (getPropertyValuePersisted(propCfg.getFullyQualifiedName()) == null
-					&& (((getPropertiesToProcess() == null
-					|| getPropertiesToProcess().size() == 0)
-					&& (true))
-					|| this.getPropertiesToProcess().contains(propCfg)))) {
+					        && (getPropertyValuePersisted(propCfg.getFullyQualifiedName()) == null && (((getPropertiesToProcess() == null || getPropertiesToProcess()
+					                .size() == 0) && (true)) || this.getPropertiesToProcess().contains(propCfg)))) {
 						propValue = propCfg.update();
 					} else {
 						propValue = getPropertyValuePersisted(propCfg.getFullyQualifiedName());
@@ -1168,9 +1091,8 @@ public class RapidEnvInterpreter {
 				case install:
 					final boolean isInstallunitSpecific = propCfg.getParentInstallunit() != null;
 					final boolean isUndefined = getPropertyValuePersisted(propCfg.getFullyQualifiedName()) == null;
-					final boolean allInstallunitsToProcess =
-							getInstallunitsToProcess().size() == getProject().getContainer().findBeansByType(
-									"org.rapidbeans.rapidenv.config.Installunit").size();
+					final boolean allInstallunitsToProcess = getInstallunitsToProcess().size() == getProject()
+					        .getContainer().findBeansByType("org.rapidbeans.rapidenv.config.Installunit").size();
 					boolean thisPropsInstallunitToProcess = false;
 					if ((!allInstallunitsToProcess) && getInstallunitsToProcess() != null) {
 						for (final Installunit u : getInstallunitsToProcess()) {
@@ -1180,14 +1102,18 @@ public class RapidEnvInterpreter {
 							}
 						}
 					}
-					final boolean controlNormal = propCfg.getParentInstallunit()!= null && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.normal;
-					//                    final boolean controlOptional = propCfg.getParentInstallunit()!= null && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.optional;
-					final boolean controlDiscontinued = propCfg.getParentInstallunit()!= null && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.discontinued;
+					final boolean controlNormal = propCfg.getParentInstallunit() != null
+					        && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.normal;
+					// final boolean controlOptional =
+					// propCfg.getParentInstallunit()!= null &&
+					// propCfg.getParentInstallunit().getInstallcontrol() ==
+					// InstallControl.optional;
+					final boolean controlDiscontinued = propCfg.getParentInstallunit() != null
+					        && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.discontinued;
 					if (controlDiscontinued) {
 						propValue = null;
 					} else if (isInstallunitSpecific && isUndefined
-							&& (thisPropsInstallunitToProcess
-									|| (controlNormal && allInstallunitsToProcess))) {
+					        && (thisPropsInstallunitToProcess || (controlNormal && allInstallunitsToProcess))) {
 						propValue = propCfg.update();
 					} else {
 						propValue = getPropertyValuePersisted(propCfg.getFullyQualifiedName());
@@ -1204,16 +1130,15 @@ public class RapidEnvInterpreter {
 			break;
 
 		default:
-			throw new AssertionError("Run mode \""
-					+ RapidEnvInterpreter.getInstance().getRunMode().name()
-					+ " not yet supported");
+			throw new AssertionError("Run mode \"" + RapidEnvInterpreter.getInstance().getRunMode().name()
+			        + " not yet supported");
 		}
 	}
 
 	/**
-	 * get the (default) values by interpreting the values
-	 * from the environment definition file and
-	 * ask for user definition in case of "personal" variables.
+	 * get the (default) values by interpreting the values from the environment
+	 * definition file and ask for user definition in case of "personal"
+	 * variables.
 	 */
 	private void readProfile() {
 		final File profileFileProps = getProfileProps();
@@ -1248,25 +1173,20 @@ public class RapidEnvInterpreter {
 	 */
 	protected void writeProfile() {
 		final File profileDir = getProject().getProfiledir();
-		final File profileFileProps = new File(profileDir,
-				"renv_" + PlatformHelper.username() + "_"
-						+ PlatformHelper.hostname() + ".properties");
+		final File profileFileProps = new File(profileDir, "renv_" + PlatformHelper.username() + "_"
+		        + PlatformHelper.hostname() + ".properties");
 		File profileFileCmd = null;
 		switch (PlatformHelper.getOs()) {
 		case windows:
-			profileFileCmd = new File(profileDir,
-					"renv_" + PlatformHelper.username() + "_"
-							+ PlatformHelper.hostname() + ".cmd");
+			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
+			        + ".cmd");
 			break;
 		case linux:
-			profileFileCmd = new File(profileDir,
-					"renv_" + PlatformHelper.username() + "_"
-							+ PlatformHelper.hostname() + ".sh");
+			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
+			        + ".sh");
 			break;
 		default:
-			throw new RapidEnvException("OS platform \""
-					+ PlatformHelper.getOsName()
-					+ "\" not yet supported");
+			throw new RapidEnvException("OS platform \"" + PlatformHelper.getOsName() + "\" not yet supported");
 		}
 
 		FileWriter wrProps = null;
@@ -1274,66 +1194,49 @@ public class RapidEnvInterpreter {
 		try {
 			wrProps = new FileWriter(profileFileProps);
 			wrCmd = new FileWriter(profileFileCmd);
-			// do not use properties.store() for writing the properties file for it
+			// do not use properties.store() for writing the properties file for
+			// it
 			// - writes the properties unsorted
 			// - writes the unwanted time stamp
-			wrProps.write("# RapidEnv properties profile" + LF
-					+ "# Project: " + getProject().getName() + LF
-					+ "# Tag: " + getProject().getTag() + LF
-					+ "# User: " + PlatformHelper.username() + LF
-					+ "# Machine: " + PlatformHelper.hostname() + LF
-					+ "# Do not edit this file manually" + LF);
+			wrProps.write("# RapidEnv properties profile" + LF + "# Project: " + getProject().getName() + LF
+			        + "# Tag: " + getProject().getTag() + LF + "# User: " + PlatformHelper.username() + LF
+			        + "# Machine: " + PlatformHelper.hostname() + LF + "# Do not edit this file manually" + LF);
 			switch (PlatformHelper.getOs()) {
 			case windows:
-				wrCmd.write(":: RapidEnv environment profile" + LF
-						+ ":: Project: " + getProject().getName() + LF
-						+ ":: Tag: " + getProject().getTag() + LF
-						+ ":: User: " + PlatformHelper.username() + LF
-						+ ":: Machine: " + PlatformHelper.hostname() + LF
-						+ ":: Do not edit this file manually" + LF);
+				wrCmd.write(":: RapidEnv environment profile" + LF + ":: Project: " + getProject().getName() + LF
+				        + ":: Tag: " + getProject().getTag() + LF + ":: User: " + PlatformHelper.username() + LF
+				        + ":: Machine: " + PlatformHelper.hostname() + LF + ":: Do not edit this file manually" + LF);
 				wrCmd.write("@ECHO OFF" + LF);
 				break;
 			default:
-				wrCmd.write("# RapidEnv environment profile" + LF
-						+ "# Project: " + getProject().getName() + LF
-						+ "# Tag: " + getProject().getTag() + LF
-						+ "# User: " + PlatformHelper.username() + LF
-						+ "# Machine: " + PlatformHelper.hostname() + LF
-						+ "# Do not edit this file manually" + LF);
+				wrCmd.write("# RapidEnv environment profile" + LF + "# Project: " + getProject().getName() + LF
+				        + "# Tag: " + getProject().getTag() + LF + "# User: " + PlatformHelper.username() + LF
+				        + "# Machine: " + PlatformHelper.hostname() + LF + "# Do not edit this file manually" + LF);
 			}
 			if (getProject().getPropertys() != null) {
-				final EscapeMap escapeMap = new EscapeMap(new String[] {
-						"\\", "\\\\",
-						"=", "\\=",
-						": ", "\\:"
-				});
+				final EscapeMap escapeMap = new EscapeMap(new String[] { "\\", "\\\\", "=", "\\=", ": ", "\\:" });
 				switch (PlatformHelper.getOs()) {
 				case windows:
-					wrCmd.write("set RAPID_ENV_HOME="
-							+ System.getenv("RAPID_ENV_HOME") + LF);
+					wrCmd.write("set RAPID_ENV_HOME=" + System.getenv("RAPID_ENV_HOME") + LF);
 					break;
 				default:
-					wrCmd.write("export RAPID_ENV_HOME=\""
-							+ System.getenv("RAPID_ENV_HOME") + "\"" + LF);
+					wrCmd.write("export RAPID_ENV_HOME=\"" + System.getenv("RAPID_ENV_HOME") + "\"" + LF);
 					break;
-				}                
+				}
 				for (final Property prop : getProject().getPropertys()) {
 					final String propName = prop.getFullyQualifiedName();
 					final String propValue = getPropertyValue(propName);
 					if (propValue != null) {
-						wrProps.write(prop.getFullyQualifiedName() + "="
-								+ StringHelper.escape(propValue, escapeMap)
-								+ LF);
+						wrProps.write(prop.getFullyQualifiedName() + "=" + StringHelper.escape(propValue, escapeMap)
+						        + LF);
 						final Environment environmentVar = prop.getEnvironment(PlatformHelper.getOs());
 						if (environmentVar != null) {
 							switch (PlatformHelper.getOs()) {
 							case windows:
-								wrCmd.write("set " + environmentVar.getName() + "="
-										+ propValue + LF);
+								wrCmd.write("set " + environmentVar.getName() + "=" + propValue + LF);
 								break;
 							default:
-								wrCmd.write("export " + environmentVar.getName() + "=\""
-										+ propValue + "\"" + LF);
+								wrCmd.write("export " + environmentVar.getName() + "=\"" + propValue + "\"" + LF);
 								break;
 							}
 						}
@@ -1358,25 +1261,20 @@ public class RapidEnvInterpreter {
 
 	private void deleteProfile() {
 		final File profileDir = getProject().getProfiledir();
-		final File profileFileProps = new File(profileDir,
-				"renv_" + PlatformHelper.username() + "_"
-						+ PlatformHelper.hostname() + ".properties");
+		final File profileFileProps = new File(profileDir, "renv_" + PlatformHelper.username() + "_"
+		        + PlatformHelper.hostname() + ".properties");
 		File profileFileCmd = null;
 		switch (PlatformHelper.getOs()) {
 		case windows:
-			profileFileCmd = new File(profileDir,
-					"renv_" + PlatformHelper.username() + "_"
-							+ PlatformHelper.hostname() + ".cmd");
+			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
+			        + ".cmd");
 			break;
 		case linux:
-			profileFileCmd = new File(profileDir,
-					"renv_" + PlatformHelper.username() + "_"
-							+ PlatformHelper.hostname() + ".sh");
+			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
+			        + ".sh");
 			break;
 		default:
-			throw new RapidEnvException("OS platform \""
-					+ PlatformHelper.getOsName()
-					+ "\" not yet supported");
+			throw new RapidEnvException("OS platform \"" + PlatformHelper.getOsName() + "\" not yet supported");
 		}
 		out.println("Deleting RapidEnv user profile " + profileFileProps.getAbsolutePath() + "...");
 		profileFileProps.delete();
@@ -1386,8 +1284,9 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * The constructor.
-	 *
-	 * @param cmd the command to execute.
+	 * 
+	 * @param cmd
+	 *            the command to execute.
 	 */
 	public RapidEnvInterpreter(final CmdRenv cmd) {
 		init(cmd);
@@ -1408,6 +1307,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * For test reasons create with changed ant gateway.
+	 * 
 	 * @param cmd
 	 *            the command to execute
 	 * @param ant
@@ -1431,13 +1331,11 @@ public class RapidEnvInterpreter {
 		this.command = cmd.getCommand();
 		this.options = cmd.getOptions();
 
-		if (this.command == CmdRenvCommand.version
-				|| this.command == CmdRenvCommand.help) {
+		if (this.command == CmdRenvCommand.version || this.command == CmdRenvCommand.help) {
 			return;
 		}
 
-		if (this.runMode == RunMode.command
-				&& this.options.get(CmdRenvOption.yes) != null) {
+		if (this.runMode == RunMode.command && this.options.get(CmdRenvOption.yes) != null) {
 			this.runMode = RunMode.batch;
 		}
 
@@ -1454,27 +1352,25 @@ public class RapidEnvInterpreter {
 		final File configfile = cmd.getConfigfile();
 		TypeRapidBean.forName(Project.class.getName());
 		try {
-			this.configDoc = new Document(TypeRapidBean.forName(
-					"org.rapidbeans.rapidenv.config.Project"), configfile);
+			this.configDoc = new Document(TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project"), configfile);
 			singleInstance = this;
 			getProject().checkSemantics();
 			getProject().updateToolMap();
 		} catch (ValidationInstanceAssocTwiceException e) {
-			evalException((ValidationInstanceAssocTwiceException) e);
+			evalException(e);
 		} catch (RapidBeansRuntimeException e) {
 			if (e.getCause() instanceof ValidationInstanceAssocTwiceException) {
 				evalException((ValidationInstanceAssocTwiceException) e.getCause());
-			} else if (e.getCause() != null
-					&& e.getCause().getCause() != null
-					&& e.getCause().getCause() instanceof FileNotFoundException) {
+			} else if (e.getCause() != null && e.getCause().getCause() != null
+			        && e.getCause().getCause() instanceof FileNotFoundException) {
 				final String notFoundPath = StringHelper.splitFirst(e.getCause().getCause().getMessage());
 				if (notFoundPath != null && notFoundPath.length() > 0
-						&& (notFoundPath.endsWith(".dtd") || notFoundPath.endsWith(".xsd"))) {
+				        && (notFoundPath.endsWith(".dtd") || notFoundPath.endsWith(".xsd"))) {
 					throw new RapidEnvConfigurationException("Syntax definition for RapidEnv configuration file \""
-							+ notFoundPath + "\" not found", e);
+					        + notFoundPath + "\" not found", e);
 				} else {
 					throw new RapidEnvConfigurationException("RapidEnv configuration file \""
-							+ configfile.getAbsolutePath() + "\" not found", e);
+					        + configfile.getAbsolutePath() + "\" not found", e);
 				}
 			} else {
 				throw e;
@@ -1493,20 +1389,17 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Evaluate a ValidationInstanceAssocTwiceException.
-	 *
-	 * @param e the exception to evaluate.
+	 * 
+	 * @param e
+	 *            the exception to evaluate.
 	 */
 	private void evalException(ValidationInstanceAssocTwiceException e) {
 		if (e.getInstance() instanceof Installunit) {
-			throw new RapidEnvConfigurationException(
-					"Tool \""
-							+ ((Installunit) e.getInstance()).getFullyQualifiedName()
-							+ "\" specified twice", e);
+			throw new RapidEnvConfigurationException("Tool \""
+			        + ((Installunit) e.getInstance()).getFullyQualifiedName() + "\" specified twice", e);
 		} else if (e.getInstance() instanceof Property) {
-			throw new RapidEnvConfigurationException(
-					"Property \""
-							+ ((Property) e.getInstance()).getFullyQualifiedName()
-							+ "\" specified twice", e);
+			throw new RapidEnvConfigurationException("Property \""
+			        + ((Property) e.getInstance()).getFullyQualifiedName() + "\" specified twice", e);
 		} else {
 			throw e;
 		}
@@ -1514,15 +1407,14 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Needed privately and for testing.
-	 *
+	 * 
 	 * @parameter command the command issued
 	 */
 	protected void initPropertiesAndInstallunitsToProcess(final CmdRenvCommand command) {
 
 		// collect install unit names from command
 		Collection<String> installUnitOrPropertyNames = this.renvCommand.getInstallunitOrPropertyNames();
-		if (installUnitOrPropertyNames == null
-				|| installUnitOrPropertyNames.size() == 0) {
+		if (installUnitOrPropertyNames == null || installUnitOrPropertyNames.size() == 0) {
 			// or take all top level install units configured
 			// if no specific install units are defined with the command
 			this.installUnitOrPropertyNamesExplicitelySpecified = false;
@@ -1531,12 +1423,14 @@ public class RapidEnvInterpreter {
 				if (getProject().getPropertys() != null) {
 					for (final Property property : getProject().getPropertys()) {
 						if (property.getParentInstallunit() == null
-								|| (property.getParentInstallunit().getInstallationStatus(command) != InstallStatus.notinstalled
-								&& property.getParentInstallunit().getInstallationStatus(command) != InstallStatus.deinstallrequired)) {
-							//                                || property.getParentInstallunit().getInstallcontrol()
-							//                                    == InstallControl.normal) {
-							//                                || property.getParentInstallunit().getInstallcontrol()
-							//                                    == InstallControl.optional) {
+						        || (property.getParentInstallunit().getInstallationStatus(command) != InstallStatus.notinstalled && property
+						                .getParentInstallunit().getInstallationStatus(command) != InstallStatus.deinstallrequired)) {
+							// ||
+							// property.getParentInstallunit().getInstallcontrol()
+							// == InstallControl.normal) {
+							// ||
+							// property.getParentInstallunit().getInstallcontrol()
+							// == InstallControl.optional) {
 							installUnitOrPropertyNames.add(property.getFullyQualifiedName());
 						}
 					}
@@ -1551,23 +1445,23 @@ public class RapidEnvInterpreter {
 			this.installUnitOrPropertyNamesExplicitelySpecified = true;
 		}
 
-		final InstallunitsAndProperties entitiesToProcess =
-				determineInstallunitsAndPropertiesToProcess(installUnitOrPropertyNames, this.renvCommand.getConfigfile().getAbsolutePath());
+		final InstallunitsAndProperties entitiesToProcess = determineInstallunitsAndPropertiesToProcess(
+		        installUnitOrPropertyNames, this.renvCommand.getConfigfile().getAbsolutePath());
 
 		this.propertiesToProcess = entitiesToProcess.properties;
 		final List<Installunit> installUnitsToProc1 = entitiesToProcess.installunits;
 		final CmdRenvCommand cmd = this.renvCommand.getCommand();
 		List<Installunit> installUnitsToProc2;
-		if (cmd == CmdRenvCommand.install
-				|| cmd == CmdRenvCommand.deinstall
-				|| cmd == CmdRenvCommand.update) {
+		if (cmd == CmdRenvCommand.install || cmd == CmdRenvCommand.deinstall || cmd == CmdRenvCommand.update) {
 			installUnitsToProc2 = sortAccordingToDependencies(installUnitsToProc1, this.renvCommand.getCommand());
 		} else {
 			installUnitsToProc2 = installUnitsToProc1;
 		}
-		this.installUnitsToProcess = completeAndSortInstallunitsToProcess(installUnitsToProc2, this.renvCommand.getCommand());
+		this.installUnitsToProcess = completeAndSortInstallunitsToProcess(installUnitsToProc2,
+		        this.renvCommand.getCommand());
 		// process all properties whenever at least one installunit is specified
-		// TODO: later on replace this by only taking used (includes also transitively used) properties.
+		// TODO: later on replace this by only taking used (includes also
+		// transitively used) properties.
 		if (this.installUnitsToProcess.size() > 0) {
 			for (final Property prop : getProject().getPropertys()) {
 				if (!this.propertiesToProcess.contains(prop)) {
@@ -1579,11 +1473,10 @@ public class RapidEnvInterpreter {
 		checkDependencies(this.installUnitsToProcess, this.renvCommand.getCommand());
 	}
 
-	protected List<Installunit> sortAccordingToDependencies(
-			final List<Installunit> installUnitsToProc, final CmdRenvCommand command) {
-		if (command != CmdRenvCommand.install
-				&& command != CmdRenvCommand.deinstall
-				&& command != CmdRenvCommand.update) {
+	protected List<Installunit> sortAccordingToDependencies(final List<Installunit> installUnitsToProc,
+	        final CmdRenvCommand command) {
+		if (command != CmdRenvCommand.install && command != CmdRenvCommand.deinstall
+		        && command != CmdRenvCommand.update) {
 			return installUnitsToProc;
 		}
 		final List<Installunit> installunits = new ArrayList<Installunit>();
@@ -1635,17 +1528,16 @@ public class RapidEnvInterpreter {
 					if (unit.getInstallationStatus(command) != null) {
 						switch (unit.getParentUnit().getInstallationStatus(command)) {
 						case notinstalled:
-							throw new RapidEnvCmdException("Can not install unit \""
-									+ unit.getFullyQualifiedName() + "\" because parent unit \""
-									+ unit.getParentUnit() + "\" is not installed.");
+							throw new RapidEnvCmdException("Can not install unit \"" + unit.getFullyQualifiedName()
+							        + "\" because parent unit \"" + unit.getParentUnit() + "\" is not installed.");
 						case upgraderequired:
-							throw new RapidEnvCmdException("Can not install unit \""
-									+ unit.getFullyQualifiedName() + "\" because parent unit \""
-									+ unit.getParentUnit() + "\" is not up to date (upgrade is required).");
+							throw new RapidEnvCmdException("Can not install unit \"" + unit.getFullyQualifiedName()
+							        + "\" because parent unit \"" + unit.getParentUnit()
+							        + "\" is not up to date (upgrade is required).");
 						case downgraderequired:
-							throw new RapidEnvCmdException("Can not install unit \""
-									+ unit.getFullyQualifiedName() + "\" because parent unit \""
-									+ unit.getParentUnit() + "\" is not up to date (downgrade is required).");
+							throw new RapidEnvCmdException("Can not install unit \"" + unit.getFullyQualifiedName()
+							        + "\" because parent unit \"" + unit.getParentUnit()
+							        + "\" is not up to date (downgrade is required).");
 						}
 					}
 				}
@@ -1662,9 +1554,8 @@ public class RapidEnvInterpreter {
 							case configurationrequired:
 							case downgraderequired:
 								throw new RapidEnvCmdException("Can not deinstall unit \""
-										+ unit.getFullyQualifiedName()
-										+ "\" because it is required by unit \""
-										+ unit1.getFullyQualifiedName() + "\" which is installed.");
+								        + unit.getFullyQualifiedName() + "\" because it is required by unit \""
+								        + unit1.getFullyQualifiedName() + "\" which is installed.");
 							}
 						}
 					}
@@ -1685,8 +1576,7 @@ public class RapidEnvInterpreter {
 		checkDependencyCyclyesForSubunitNode(getProject().getInstallunits());
 	}
 
-	private void checkDependenciesBetweenSubunitTreeNodes(
-			final List<Installunit> units) {
+	private void checkDependenciesBetweenSubunitTreeNodes(final List<Installunit> units) {
 
 		// iterate over units
 		if (units != null) {
@@ -1695,53 +1585,47 @@ public class RapidEnvInterpreter {
 					for (final Installunit depunit : unit.getDepends()) {
 						if (!units.contains(depunit)) {
 							throw new RapidEnvConfigurationException(
-									"Invalid dependency defined between install unit \""
-											+ unit.getFullyQualifiedName() + "\" and install unit \""
-											+ depunit.getFullyQualifiedName() + "\""
-											+ " because these install units are defined "
-											+ " on different subunit tree node levels.");
+							        "Invalid dependency defined between install unit \"" + unit.getFullyQualifiedName()
+							                + "\" and install unit \"" + depunit.getFullyQualifiedName() + "\""
+							                + " because these install units are defined "
+							                + " on different subunit tree node levels.");
 						}
 					}
 				}
 
 				// recurse over subunits
-				if (unit.getSubunits()!= null
-						&& unit.getSubunits().size() > 0) {
+				if (unit.getSubunits() != null && unit.getSubunits().size() > 0) {
 					checkDependenciesBetweenSubunitTreeNodes(unit.getSubunits());
 				}
 			}
 		}
 	}
 
-	private void checkDependencyCyclyesForSubunitNode(
-			final List<Installunit> units) {
+	private void checkDependencyCyclyesForSubunitNode(final List<Installunit> units) {
 
 		// iterate over units of one subunit node
 		if (units != null) {
 			for (final Installunit unit : units) {
-				if (unit.getDepends() != null
-						&& unit.getDepends().size() > 0) {
+				if (unit.getDepends() != null && unit.getDepends().size() > 0) {
 					final List<Installunit> visited = new ArrayList<Installunit>();
 					checkDependencyCyclyes(unit, visited);
 				}
 
 				// recurse over subunits
-				if (unit.getSubunits()!= null
-						&& unit.getSubunits().size() > 0) {
+				if (unit.getSubunits() != null && unit.getSubunits().size() > 0) {
 					checkDependencyCyclyesForSubunitNode(unit.getSubunits());
 				}
 			}
 		}
 	}
 
-	private void checkDependencyCyclyes(final Installunit unit,
-			final List<Installunit> visited) {
+	private void checkDependencyCyclyes(final Installunit unit, final List<Installunit> visited) {
 		visited.add(unit);
 		if (unit.getDepends() != null) {
 			for (final Installunit depunit : unit.getDepends()) {
 				if (depunit.equals(unit)) {
-					throw new RapidEnvConfigurationException("Invalid self dependency "
-							+ "defined for install unit \"" + unit.getFullyQualifiedName() + "\"");
+					throw new RapidEnvConfigurationException("Invalid self dependency " + "defined for install unit \""
+					        + unit.getFullyQualifiedName() + "\"");
 				}
 				if (visited.contains(depunit)) {
 					final StringBuffer cycle = new StringBuffer();
@@ -1757,8 +1641,8 @@ public class RapidEnvInterpreter {
 							found = true;
 						}
 					}
-					throw new RapidEnvConfigurationException("Invalid dependency cycle "
-							+ "defined for install units " + cycle.toString());
+					throw new RapidEnvConfigurationException("Invalid dependency cycle " + "defined for install units "
+					        + cycle.toString());
 				}
 				checkDependencyCyclyes(depunit, visited);
 			}
@@ -1769,15 +1653,16 @@ public class RapidEnvInterpreter {
 	/**
 	 * Complete install units to process according to the command, the subunits,
 	 * and the dependencies.
-	 *
-	 * @param installUnitsToProc the install units to process
-	 * @param cmd the command
-	 *
+	 * 
+	 * @param installUnitsToProc
+	 *            the install units to process
+	 * @param cmd
+	 *            the command
+	 * 
 	 * @return the completed and sorted list
 	 */
-	protected List<Installunit> completeAndSortInstallunitsToProcess(
-			final List<Installunit> installUnitsToProc,
-			final CmdRenvCommand cmd) {
+	protected List<Installunit> completeAndSortInstallunitsToProcess(final List<Installunit> installUnitsToProc,
+	        final CmdRenvCommand cmd) {
 
 		// take top level units and subunits in defined order
 		final List<Installunit> installUnitsToProc2 = new ArrayList<Installunit>();
@@ -1799,14 +1684,12 @@ public class RapidEnvInterpreter {
 		return false;
 	}
 
-	protected void addSubunitsRecursively(final Installunit unit,
-			final List<Installunit> installUnitsToProc,
-			final CmdRenvCommand cmd) {
+	protected void addSubunitsRecursively(final Installunit unit, final List<Installunit> installUnitsToProc,
+	        final CmdRenvCommand cmd) {
 		switch (cmd) {
 		case deinstall:
 			if (unit.getSubunits() != null) {
-				final List<Installunit> subunits =
-						sortAccordingToDependencies(unit.getSubunits(), cmd);
+				final List<Installunit> subunits = sortAccordingToDependencies(unit.getSubunits(), cmd);
 				for (final Installunit subunit : subunits) {
 					addSubunitsRecursively(subunit, installUnitsToProc, cmd);
 				}
@@ -1816,8 +1699,7 @@ public class RapidEnvInterpreter {
 		default:
 			installUnitsToProc.add(unit);
 			if (unit.getSubunits() != null) {
-				final List<Installunit> subunits =
-						sortAccordingToDependencies(unit.getSubunits(), cmd);
+				final List<Installunit> subunits = sortAccordingToDependencies(unit.getSubunits(), cmd);
 				for (final Installunit subunit : subunits) {
 					addSubunitsRecursively(subunit, installUnitsToProc, cmd);
 				}
@@ -1828,7 +1710,9 @@ public class RapidEnvInterpreter {
 
 	private class InstallunitsAndProperties {
 		protected List<Property> properties = null;
+
 		protected List<Installunit> installunits = null;
+
 		public InstallunitsAndProperties() {
 			this.properties = new ArrayList<Property>();
 			this.installunits = new ArrayList<Installunit>();
@@ -1836,13 +1720,14 @@ public class RapidEnvInterpreter {
 	}
 
 	/**
-	 * @param installUnitOrPropertyNames then names to process
-	 * @param configFilePath path of the configuration file
+	 * @param installUnitOrPropertyNames
+	 *            then names to process
+	 * @param configFilePath
+	 *            path of the configuration file
 	 * @return all install units and properties to process
 	 */
 	protected InstallunitsAndProperties determineInstallunitsAndPropertiesToProcess(
-			Collection<String> installUnitOrPropertyNames,
-			final String configFilePath) {
+	        Collection<String> installUnitOrPropertyNames, final String configFilePath) {
 
 		final InstallunitsAndProperties result = new InstallunitsAndProperties();
 		final Map<String, Installunit> installUnitsToProcMap = new HashMap<String, Installunit>();
@@ -1858,31 +1743,26 @@ public class RapidEnvInterpreter {
 			} catch (RapidEnvConfigurationException e) {
 				if (e.getMessage().startsWith("Ambigouus tool name ")) {
 					throw new RapidEnvCmdException("Ambigouus tool name \"" + installUnitOrPropertyName
-							+ "\" has been specified with the command");
+					        + "\" has been specified with the command");
 				} else {
 					throw e;
 				}
 			}
 			if (unit == null && property == null) {
-				throw new RapidEnvCmdException(
-						"No install unit or property \"" + installUnitOrPropertyName
-						+ "\"\n  is defined in RapidEnv environment configuration file\n  \""
-						+ configFilePath + "\"",
-						ExceptionMap.ERRORCODE_UNKNOWN_PROP_OR_UNIT);
+				throw new RapidEnvCmdException("No install unit or property \"" + installUnitOrPropertyName
+				        + "\"\n  is defined in RapidEnv environment configuration file\n  \"" + configFilePath + "\"",
+				        ExceptionMap.ERRORCODE_UNKNOWN_PROP_OR_UNIT);
 			} else if (unit != null && property != null) {
-				throw new RapidEnvCmdException(
-						"Ambigouus install unit / property name \""
-								+ installUnitOrPropertyName
-								+ "\" defined in RapidEnv environment configuration file \""
-								+ configFilePath + "\"",
-								ExceptionMap.ERRORCODE_AMBIGOUUS_NAME);
+				throw new RapidEnvCmdException("Ambigouus install unit / property name \"" + installUnitOrPropertyName
+				        + "\" defined in RapidEnv environment configuration file \"" + configFilePath + "\"",
+				        ExceptionMap.ERRORCODE_AMBIGOUUS_NAME);
 			} else if (unit != null && property == null) {
 				if (installUnitsToProcMap.get(unit.getFullyQualifiedName()) == null) {
 					installUnitsToProcMap.put(unit.getFullyQualifiedName(), unit);
 					result.installunits.add(unit);
 				} else {
 					logger.warning("Install unit \"" + unit.getFullyQualifiedName()
-							+ "\" has been specified for one command multiple times");
+					        + "\" has been specified for one command multiple times");
 				}
 			} else if (unit == null && property != null) {
 				if (propertiesToProcMap.get(property.getFullyQualifiedName()) == null) {
@@ -1890,7 +1770,7 @@ public class RapidEnvInterpreter {
 					result.properties.add(property);
 				} else {
 					logger.warning("Property \"" + property.getFullyQualifiedName()
-							+ "\" has been specified for one command multiple times");
+					        + "\" has been specified for one command multiple times");
 				}
 			} else {
 				throw new AssertionError("What???");
@@ -1903,58 +1783,42 @@ public class RapidEnvInterpreter {
 		final File profileDir = getProject().getProfiledir();
 		switch (PlatformHelper.getOs()) {
 		case windows:
-			return new File(profileDir,
-					"renv_" + PlatformHelper.username() + "_"
-							+ PlatformHelper.hostname() + ".cmd");
+			return new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname() + ".cmd");
 		case linux:
-			return new File(profileDir,
-					"renv_" + PlatformHelper.username() + "_"
-							+ PlatformHelper.hostname() + ".sh");
+			return new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname() + ".sh");
 		default:
-			throw new RapidEnvException("OS platform \""
-					+ PlatformHelper.getOsName()
-					+ "\" not yet supported");
+			throw new RapidEnvException("OS platform \"" + PlatformHelper.getOsName() + "\" not yet supported");
 		}
 	}
 
 	public File getProfileProps() {
 		final File profileDir = getProject().getProfiledir();
-		final File profile = new File(profileDir,
-				"renv_" + PlatformHelper.username() + "_"
-						+ PlatformHelper.hostname() + ".properties");
+		final File profile = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
+		        + ".properties");
 		return profile;
 	}
 
-	public static String interpretStat(
-			final Installunit enclosingUnit,
-			final Property enclosingProperty,
-			final String string) {
+	public static String interpretStat(final Installunit enclosingUnit, final Property enclosingProperty,
+	        final String string) {
 		final RapidEnvInterpreter interpreter = getInstance();
 		if (interpreter == null || string == null) {
 			return string;
 		}
-		final String interpreted = interpreter.interpret(
-				enclosingUnit, enclosingProperty, string);
-		RapidEnvInterpreter.log(Level.FINER, "Interpreted string \""
-				+ string + "\" to\n  \"" + interpreted + "\".");
+		final String interpreted = interpreter.interpret(enclosingUnit, enclosingProperty, string);
+		RapidEnvInterpreter.log(Level.FINER, "Interpreted string \"" + string + "\" to\n  \"" + interpreted + "\".");
 		return interpreted;
 	}
 
 	/**
 	 * Print out the statistics
-	 *
+	 * 
 	 * @return the statistics string
 	 */
 	public String getStatisicsAsString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Started at: "
-				+ DateFormat.getInstance().format(this.timeStart)
-				+ PlatformHelper.getLineFeed());
-		sb.append("Finished at: "
-				+ DateFormat.getInstance().format(this.timeEnd)
-				+ PlatformHelper.getLineFeed());
-		sb.append("Total time: " + formatHhmm(getExecutionTime())
-				+ " minutes:seconds" + PlatformHelper.getLineFeed());
+		sb.append("Started at: " + DateFormat.getInstance().format(this.timeStart) + PlatformHelper.getLineFeed());
+		sb.append("Finished at: " + DateFormat.getInstance().format(this.timeEnd) + PlatformHelper.getLineFeed());
+		sb.append("Total time: " + formatHhmm(getExecutionTime()) + " minutes:seconds" + PlatformHelper.getLineFeed());
 		return sb.toString();
 	}
 
@@ -1967,8 +1831,7 @@ public class RapidEnvInterpreter {
 	}
 
 	protected static String formatHhmm(final long time) {
-		return StringHelper.fillUp(Long.toString(time / 60000), 2, '0', FillMode.left)
-				+ ":"
-				+ StringHelper.fillUp(Long.toString((time / 1000) % 60), 2, '0', FillMode.left);
+		return StringHelper.fillUp(Long.toString(time / 60000), 2, '0', FillMode.left) + ":"
+		        + StringHelper.fillUp(Long.toString((time / 1000) % 60), 2, '0', FillMode.left);
 	}
 }

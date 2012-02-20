@@ -28,9 +28,9 @@ import org.rapidbeans.rapidenv.config.Property;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
- * Determines the platform processor architecture
- * using the RapidBeans frameworks platform helper.
- *
+ * Determines the platform processor architecture using the RapidBeans
+ * frameworks platform helper.
+ * 
  * @author Martin Bluemel
  */
 public class ConfigExprFunctionArchitecture extends RapidBeanBaseConfigExprFunctionArchitecture {
@@ -38,66 +38,67 @@ public class ConfigExprFunctionArchitecture extends RapidBeanBaseConfigExprFunct
 	/**
 	 * The interpreter function.
 	 */
-    public String interpret() {
-        final HashMap<String, String> conversionMap = new HashMap<String, String>();
-        if (this.getArgs().size() > 0) {
-            final String conversionMapString = this.getArgs().get(0).interpret();
-            for (final String conversionMapEntry : StringHelper.split(conversionMapString, ";")) {
-                final List<String> splitEntry = StringHelper.split(conversionMapEntry, "=");
-                switch (splitEntry.size()) {
-                case 0:
-                    throw new RapidEnvConfigurationException("Error evaluating entry \""
-                            + conversionMapEntry + "\" from conversion map: \"" + conversionMapString + "\"\n"
-                            + "No separator '=' specified.");
-                case 1:
-                    conversionMap.put(splitEntry.get(0), "");
-                    break;
-                case 2:
-                    conversionMap.put(splitEntry.get(0), splitEntry.get(1));
-                    break;
-                default:
-                    throw new RapidEnvConfigurationException("Error evaluating entry \""
-                            + conversionMapEntry + "\" from conversion map: \"" + conversionMapString + "\"\n"
-                            + "More than one separator '=' specified.");
-                }
-            }
-        }
-        final String archname = PlatformHelper.getArchName();
-        final String converted = conversionMap.get(archname);
-        if (converted != null) {
-            return converted;
-        } else {
-            return archname;
-        }
-    }
+	public String interpret() {
+		final HashMap<String, String> conversionMap = new HashMap<String, String>();
+		if (this.getArgs().size() > 0) {
+			final String conversionMapString = this.getArgs().get(0).interpret();
+			for (final String conversionMapEntry : StringHelper.split(conversionMapString, ";")) {
+				final List<String> splitEntry = StringHelper.split(conversionMapEntry, "=");
+				switch (splitEntry.size()) {
+				case 0:
+					throw new RapidEnvConfigurationException("Error evaluating entry \"" + conversionMapEntry
+					        + "\" from conversion map: \"" + conversionMapString + "\"\n"
+					        + "No separator '=' specified.");
+				case 1:
+					conversionMap.put(splitEntry.get(0), "");
+					break;
+				case 2:
+					conversionMap.put(splitEntry.get(0), splitEntry.get(1));
+					break;
+				default:
+					throw new RapidEnvConfigurationException("Error evaluating entry \"" + conversionMapEntry
+					        + "\" from conversion map: \"" + conversionMapString + "\"\n"
+					        + "More than one separator '=' specified.");
+				}
+			}
+		}
+		final String archname = PlatformHelper.getArchName();
+		final String converted = conversionMap.get(archname);
+		if (converted != null) {
+			return converted;
+		} else {
+			return archname;
+		}
+	}
 
-    /**
-     * The constructor for the architecture Function Expression.
-     * 
-     * @param enclosingUnit the enclosing install unit
-     * @param enclosingProp the enclosing property
-     * @param funcContent must be empty for Architecture function expressions.
-     * @param escapeLiterals if escaping literals is desired or not
-     */
-    public ConfigExprFunctionArchitecture(
-            final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-            final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
-    }
+	/**
+	 * The constructor for the architecture Function Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            must be empty for Architecture function expressions.
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionArchitecture(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionArchitecture.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionArchitecture.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

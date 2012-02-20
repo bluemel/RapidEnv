@@ -32,175 +32,174 @@ import org.rapidbeans.rapidenv.config.cmd.CommandExecutionResult;
 
 /**
  * represents an executable system command.
- *
+ * 
  * @author Martin Bluemel
  */
 public class CommandExecutor {
 
-    /**
-     * the working directory to execute the commandline in.
-     */
-    protected File dir = null;
+	/**
+	 * the working directory to execute the commandline in.
+	 */
+	protected File dir = null;
 
-    /**
-     * the command line.
-     */
-    protected String cmd = null;
+	/**
+	 * the command line.
+	 */
+	protected String cmd = null;
 
-    /**
-     * the operation system family.
-     */
-    protected String osfamily = null;
+	/**
+	 * the operation system family.
+	 */
+	protected String osfamily = null;
 
-    /**
-     * the message.
-     */
-    protected String message = null;
+	/**
+	 * the message.
+	 */
+	protected String message = null;
 
-    /**
-     * console output flag.
-     */
-    private boolean consoleOutput = true;
+	/**
+	 * console output flag.
+	 */
+	private boolean consoleOutput = true;
 
-    /**
-     * async flag.
-     */
-    private boolean asynchronous = false;
+	/**
+	 * async flag.
+	 */
+	private final boolean asynchronous = false;
 
-    /**
-     * Runs the command in the OS environment.
-     * 
-     * @return the result containing the return value, stdout and stderr
-     */
-    public CommandExecutionResult execute() {
+	/**
+	 * Runs the command in the OS environment.
+	 * 
+	 * @return the result containing the return value, stdout and stderr
+	 */
+	public CommandExecutionResult execute() {
 
-        final StringBuffer bufOut = new StringBuffer();
-        final StringBuffer bufErr = new StringBuffer();
-        String cmdline = null;
+		final StringBuffer bufOut = new StringBuffer();
+		final StringBuffer bufErr = new StringBuffer();
+		String cmdline = null;
 
-        switch (PlatformHelper.getOs()) {
-        case windows:
-            String cmdlineWin = "cmd.exe /C ";
-            if (this.dir != null) {
-            	cmdlineWin += "cd /D \"" + this.dir.getAbsolutePath() + "\" & ";
-            }
-            cmdlineWin += this.cmd;
-            cmdline = cmdlineWin;
-            break;
-        case linux:
-            cmdline = this.cmd;
-            break;
-        default:
-            throw new RapidEnvException("ERROR: "
-                    + " system command execution currently not supported"
-                    + " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
-        }
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			String cmdlineWin = "cmd.exe /C ";
+			if (this.dir != null) {
+				cmdlineWin += "cd /D \"" + this.dir.getAbsolutePath() + "\" & ";
+			}
+			cmdlineWin += this.cmd;
+			cmdline = cmdlineWin;
+			break;
+		case linux:
+			cmdline = this.cmd;
+			break;
+		default:
+			throw new RapidEnvException("ERROR: " + " system command execution currently not supported"
+			        + " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
+		}
 
-//        ToolDbStandalone dbTool = null;
-//        if (this.dbServerRequired) {
-//            dbTool = (ToolDbStandalone) this.tool;
-//            dbTool.startDbms(false);
-//        }
+		// ToolDbStandalone dbTool = null;
+		// if (this.dbServerRequired) {
+		// dbTool = (ToolDbStandalone) this.tool;
+		// dbTool.startDbms(false);
+		// }
 
-        int ret = 0;
+		int ret = 0;
 
-        try {
-        	RapidEnvInterpreter.log(Level.FINE, "executing system command: " + cmdline);
-        	final Process proc = Runtime.getRuntime().exec(cmdline, null, dir);       	
-        	
-            if (!this.asynchronous) {
-                final CommandStreamReader rdOut = new CommandStreamReader(
-                        cmdline, proc.getInputStream(), System.out, bufOut);
-                final CommandStreamReader rdErr = new CommandStreamReader(
-                        cmdline, proc.getErrorStream(), System.err, bufErr);
-                rdOut.start();
-                rdErr.start();
-                ret = proc.waitFor();
-                while (rdOut.isAlive() || rdErr.isAlive()) {
-                    Thread.sleep(100);
-                }
-            }
+		try {
+			RapidEnvInterpreter.log(Level.FINE, "executing system command: " + cmdline);
+			final Process proc = Runtime.getRuntime().exec(cmdline, null, dir);
 
-//            if (this.dbServerRequired) {
-//                dbTool = (ToolDbStandalone) this.tool;
-//                dbTool.stopDbms(false);
-//            }
+			if (!this.asynchronous) {
+				final CommandStreamReader rdOut = new CommandStreamReader(cmdline, proc.getInputStream(), System.out,
+				        bufOut);
+				final CommandStreamReader rdErr = new CommandStreamReader(cmdline, proc.getErrorStream(), System.err,
+				        bufErr);
+				rdOut.start();
+				rdErr.start();
+				ret = proc.waitFor();
+				while (rdOut.isAlive() || rdErr.isAlive()) {
+					Thread.sleep(100);
+				}
+			}
 
-        } catch (InterruptedException e) {
-            throw new RapidEnvException("Exception during execution of"
-                    + " system command \"" + cmdline + "\"", e);
-        } catch (IOException e) {
-            throw new RapidEnvException("Exception during execution of"
-                    + " system command \"" + cmdline + "\"", e);
-        }
-        return new CommandExecutionResult(bufOut.toString(),
-                bufErr.toString(), ret);
-    }
+			// if (this.dbServerRequired) {
+			// dbTool = (ToolDbStandalone) this.tool;
+			// dbTool.stopDbms(false);
+			// }
 
-    /**
-     * Helper class for command line execution.
-     *
-     * @author Martin Bluemel
-     */
-    class CommandStreamReader extends Thread {
+		} catch (InterruptedException e) {
+			throw new RapidEnvException("Exception during execution of" + " system command \"" + cmdline + "\"", e);
+		} catch (IOException e) {
+			throw new RapidEnvException("Exception during execution of" + " system command \"" + cmdline + "\"", e);
+		}
+		return new CommandExecutionResult(bufOut.toString(), bufErr.toString(), ret);
+	}
 
-        private String cmdline = null;
+	/**
+	 * Helper class for command line execution.
+	 * 
+	 * @author Martin Bluemel
+	 */
+	class CommandStreamReader extends Thread {
 
-        private LineNumberReader reader = null;
+		private String cmdline = null;
 
-        private PrintStream outstream = null;
+		private LineNumberReader reader = null;
 
-        private StringBuffer outbuf = null;
+		private PrintStream outstream = null;
 
-        /**
-         * constructor.
-         *
-         * @param cmdl the command line
-         * @param is the input stream
-         * @param outs the output stream
-         * @param outb the buffer
-         */
-        public CommandStreamReader(final String cmdl, final InputStream is,
-                final PrintStream outs, final StringBuffer outb) {  
-            this.cmdline = cmdl;
-            this.reader = new LineNumberReader(new InputStreamReader(is));
-            this.outstream = outs;
-            this.outbuf = outb;
-        }
+		private StringBuffer outbuf = null;
 
-        /**
-         * run the reader.
-         */
-        public void run() {
-            try {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (consoleOutput) {
-                        outstream.println(line);
-                    }
-                    outbuf.append(line);
-                    outbuf.append('\n');
-                }
-             } catch (IOException e) {
-                throw new RapidEnvException(
-                        "Exception during execution of "
-                        + " system command \"" + cmdline + "\"", e);
-            } finally {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    throw new RapidEnvException(
-                            "Exception during closing reader after execution "
-                            + " of system command \"" + cmdline + "\"", e);
-                }
-            }
-        }
-    }
+		/**
+		 * constructor.
+		 * 
+		 * @param cmdl
+		 *            the command line
+		 * @param is
+		 *            the input stream
+		 * @param outs
+		 *            the output stream
+		 * @param outb
+		 *            the buffer
+		 */
+		public CommandStreamReader(final String cmdl, final InputStream is, final PrintStream outs,
+		        final StringBuffer outb) {
+			this.cmdline = cmdl;
+			this.reader = new LineNumberReader(new InputStreamReader(is));
+			this.outstream = outs;
+			this.outbuf = outb;
+		}
 
-    /**
-     * @param consoleOutput the consoleOutput to set
-     */
-    public void setConsoleOutput(final boolean consoleOutput) {
-        this.consoleOutput = consoleOutput;
-    }
+		/**
+		 * run the reader.
+		 */
+		@Override
+		public void run() {
+			try {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					if (consoleOutput) {
+						outstream.println(line);
+					}
+					outbuf.append(line);
+					outbuf.append('\n');
+				}
+			} catch (IOException e) {
+				throw new RapidEnvException("Exception during execution of " + " system command \"" + cmdline + "\"", e);
+			} finally {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					throw new RapidEnvException("Exception during closing reader after execution "
+					        + " of system command \"" + cmdline + "\"", e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param consoleOutput
+	 *            the consoleOutput to set
+	 */
+	public void setConsoleOutput(final boolean consoleOutput) {
+		this.consoleOutput = consoleOutput;
+	}
 }

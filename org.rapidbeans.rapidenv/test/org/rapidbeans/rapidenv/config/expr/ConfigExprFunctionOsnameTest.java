@@ -27,53 +27,44 @@ public class ConfigExprFunctionOsnameTest {
 
 	@Test
 	public void testInterpret() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null, "xxx osname()yyy", false);
-		Assert.assertEquals("xxx " + PlatformHelper.getOs().name() + "yyy", expr
-				.interpret());
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx osname()yyy", false);
+		Assert.assertEquals("xxx " + PlatformHelper.getOs().name() + "yyy", expr.interpret());
 	}
 
 	@Test
 	public void testExprFunctionOSnameSepWithLiteral() {
 		Installunit jdk = new Installunit("jdk");
 		jdk.setVersion(new Version("1.2.3"));
-		Assert.assertEquals("xxx-" + PlatformHelper.getOs().name() + "-"
-				+ PlatformHelper.getArchName() + "yyy", ConfigExpr.expand(
-				        jdk, null, "xxx-''osname()-''architecture()yyy", false));
+		Assert.assertEquals("xxx-" + PlatformHelper.getOs().name() + "-" + PlatformHelper.getArchName() + "yyy",
+		        ConfigExpr.expand(jdk, null, "xxx-''osname()-''architecture()yyy", false));
 	}
 
 	@Test
 	public void testConversionMap() {
-        Installunit eclipse = new Installunit("eclipse");
-        eclipse.setVersion(new Version("3.7.0"));
-        switch (PlatformHelper.getOs()) {
-            case windows:
-                if (PlatformHelper.getArchName().equals("x86")) {
-                    Assert.assertEquals("eclipse-modeling-indigo-win32.zip",
-                            ConfigExpr.expand(eclipse, null,
-                                    "eclipse-modeling-indigo-"
-                                    + "''osname('windows=win32;linux=linux-gtk')"
-                                    + "''architecture('x86=;x86_64=-x86_64')"
-                                    + ".zip", false));
-                } else {
-                    Assert.fail("Architecture \"" + PlatformHelper.getArchName() + "\" not yet tested");
-                }
-                break;
-            case linux:
-                if (PlatformHelper.getArchName().equals("i386")) {
-                    Assert.assertEquals("eclipse-modeling-indigo-linux-gtk.zip",
-                            ConfigExpr.expand(eclipse, null,
-                                    "eclipse-modeling-indigo-"
-                                    + "''osname('windows=win32;linux=linux-gtk')"
-                                    + "''architecture('i386=;x86_64=-x86_64')"
-                                    + ".zip", false));
-                } else {
-                    Assert.fail("Architecture \"" + PlatformHelper.getArchName() + "\" not yet tested");
-                }
-                break;
-            default:
-                Assert.fail("OS Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
-                break;
-        }
+		Installunit eclipse = new Installunit("eclipse");
+		eclipse.setVersion(new Version("3.7.0"));
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			if (PlatformHelper.getArchName().equals("x86")) {
+				Assert.assertEquals("eclipse-modeling-indigo-win32.zip", ConfigExpr.expand(eclipse, null,
+				        "eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
+				                + "''architecture('x86=;x86_64=-x86_64')" + ".zip", false));
+			} else {
+				Assert.fail("Architecture \"" + PlatformHelper.getArchName() + "\" not yet tested");
+			}
+			break;
+		case linux:
+			if (PlatformHelper.getArchName().equals("i386")) {
+				Assert.assertEquals("eclipse-modeling-indigo-linux-gtk.zip", ConfigExpr.expand(eclipse, null,
+				        "eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
+				                + "''architecture('i386=;x86_64=-x86_64')" + ".zip", false));
+			} else {
+				Assert.fail("Architecture \"" + PlatformHelper.getArchName() + "\" not yet tested");
+			}
+			break;
+		default:
+			Assert.fail("OS Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
+			break;
+		}
 	}
 }

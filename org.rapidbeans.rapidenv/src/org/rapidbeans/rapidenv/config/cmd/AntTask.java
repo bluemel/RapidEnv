@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.cmd;
 
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +30,6 @@ import org.rapidbeans.core.util.ClassHelper;
 import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
-
 
 /**
  * A system command to execute.
@@ -50,6 +48,7 @@ public class AntTask extends RapidBeanBaseAntTask {
 		return anttaskclass;
 	}
 
+	@Override
 	public void setAnttaskname(final String name) {
 		updateAnttakclass(name);
 		super.setAnttaskname(name);
@@ -68,48 +67,39 @@ public class AntTask extends RapidBeanBaseAntTask {
 				this.anttaskclass = (Class<Task>) clazz;
 			} catch (ClassNotFoundException e) {
 				throw new RapidEnvException("Ant task class \"" + fullyClassname + "\" not found");
-			}			
+			}
 		}
 	}
 
-	private void setTaskProperty(final Task task, final String name,
-			final String value, final Argtype valuetype) {
-		final String setterMethodName = "set"
-				+ StringHelper.upperFirstCharacter(name);
+	private void setTaskProperty(final Task task, final String name, final String value, final Argtype valuetype) {
+		final String setterMethodName = "set" + StringHelper.upperFirstCharacter(name);
 		try {
 			Method setterMethod = null;
 			switch (valuetype) {
 			case string:
-				setterMethod = task.getClass().getMethod(
-						setterMethodName, new Class[] {String.class});
+				setterMethod = task.getClass().getMethod(setterMethodName, new Class[] { String.class });
 				break;
 			case bool:
-				setterMethod = task.getClass().getMethod(
-						setterMethodName, new Class[] {Boolean.class});
+				setterMethod = task.getClass().getMethod(setterMethodName, new Class[] { Boolean.class });
 				break;
 			case file:
-				setterMethod = task.getClass().getMethod(
-						setterMethodName, new Class[] {File.class});
+				setterMethod = task.getClass().getMethod(setterMethodName, new Class[] { File.class });
 				break;
 			default:
-				throw new RapidEnvException(
-						"Argument value type \"" + valuetype.name()
-						+ "\" not yet supported.");
+				throw new RapidEnvException("Argument value type \"" + valuetype.name() + "\" not yet supported.");
 			}
 			switch (valuetype) {
 			case string:
-				setterMethod.invoke(task, new Object[] {value});
+				setterMethod.invoke(task, new Object[] { value });
 				break;
 			case bool:
-				setterMethod.invoke(task, new Object[] {Boolean.getBoolean(value)});
+				setterMethod.invoke(task, new Object[] { Boolean.getBoolean(value) });
 				break;
 			case file:
-				setterMethod.invoke(task, new Object[] {new File(value)});
+				setterMethod.invoke(task, new Object[] { new File(value) });
 				break;
 			default:
-				throw new RapidEnvException(
-						"Argument value type \"" + valuetype.name()
-						+ "\" not yet supported.");
+				throw new RapidEnvException("Argument value type \"" + valuetype.name() + "\" not yet supported.");
 			}
 		} catch (SecurityException e) {
 			throw new RapidEnvException(e);
@@ -129,6 +119,7 @@ public class AntTask extends RapidBeanBaseAntTask {
 	 * 
 	 * @return the result containing the return value, stdout and stderr
 	 */
+	@Override
 	public CommandExecutionResult execute() {
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
 		try {
@@ -143,24 +134,26 @@ public class AntTask extends RapidBeanBaseAntTask {
 					setTaskProperty(task, arg.getName(), arg.getValue(), arg.getValuetype());
 				}
 			}
-			if (interpreter != null
-					&& interpreter.getOut() != null) {
-				interpreter.getOut().println("Executing Ant task \""
-						+ getAnttaskname() + "\"...");
+			if (interpreter != null && interpreter.getOut() != null) {
+				interpreter.getOut().println("Executing Ant task \"" + getAnttaskname() + "\"...");
 			}
-			project.addBuildListener(new BuildListener() {				
+			project.addBuildListener(new BuildListener() {
 				@Override
 				public void taskStarted(BuildEvent event) {
-				}				
+				}
+
 				@Override
 				public void taskFinished(BuildEvent event) {
 				}
+
 				@Override
 				public void targetStarted(BuildEvent event) {
-				}				
+				}
+
 				@Override
 				public void targetFinished(BuildEvent event) {
 				}
+
 				@Override
 				public void messageLogged(BuildEvent event) {
 					if (interpreter == null) {
@@ -170,9 +163,11 @@ public class AntTask extends RapidBeanBaseAntTask {
 						interpreter.getOut().println(event.getMessage());
 					}
 				}
+
 				@Override
-				public void buildStarted(BuildEvent event) {	
+				public void buildStarted(BuildEvent event) {
 				}
+
 				@Override
 				public void buildFinished(BuildEvent event) {
 				}
@@ -183,8 +178,7 @@ public class AntTask extends RapidBeanBaseAntTask {
 		} catch (IllegalAccessException e) {
 			throw new RapidEnvException(e);
 		}
-		return new CommandExecutionResult(
-				"", "", 0);
+		return new CommandExecutionResult("", "", 0);
 	}
 
 	/**
@@ -196,7 +190,9 @@ public class AntTask extends RapidBeanBaseAntTask {
 
 	/**
 	 * constructor out of a string.
-	 * @param s the string
+	 * 
+	 * @param s
+	 *            the string
 	 */
 	public AntTask(final String s) {
 		super(s);
@@ -204,7 +200,9 @@ public class AntTask extends RapidBeanBaseAntTask {
 
 	/**
 	 * constructor out of a string array.
-	 * @param sa the string array
+	 * 
+	 * @param sa
+	 *            the string array
 	 */
 	public AntTask(final String[] sa) {
 		super(sa);
@@ -218,6 +216,7 @@ public class AntTask extends RapidBeanBaseAntTask {
 	/**
 	 * @return the RapidBean's type
 	 */
+	@Override
 	public TypeRapidBean getType() {
 		return type;
 	}

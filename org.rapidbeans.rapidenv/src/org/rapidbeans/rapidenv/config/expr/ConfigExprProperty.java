@@ -38,26 +38,24 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 	// the environment variable's name
 	private ConfigExpr childExpression = null;
 
-    /**
-     * constructor for an Environment Variable Expression.
-     * 
-     * @param enclosingUnit
-     *            this enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param childExpression
-     *            the child expression to interpret
-     * @param escapeLiterals
-     *            if literals should be escaped or not
-     */
-	public ConfigExprProperty(final Installunit enclosingUnit,
-	        final Property enclosingProp,
-			final ConfigExpr childExpression,
-			final boolean escapeLiterals) {
+	/**
+	 * constructor for an Environment Variable Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            this enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param childExpression
+	 *            the child expression to interpret
+	 * @param escapeLiterals
+	 *            if literals should be escaped or not
+	 */
+	public ConfigExprProperty(final Installunit enclosingUnit, final Property enclosingProp,
+	        final ConfigExpr childExpression, final boolean escapeLiterals) {
 		super();
 		setEnclosingInstallUnit(enclosingUnit);
-        setEnclosingProperty(enclosingProp);
-        setEscapeLitrals(escapeLiterals);
+		setEnclosingProperty(enclosingProp);
+		setEscapeLitrals(escapeLiterals);
 		this.addChild(childExpression);
 	}
 
@@ -85,7 +83,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 		}
 		if (value == null) {
 			value = defaultReturnValue;
-		} 
+		}
 		return value;
 	}
 
@@ -102,16 +100,16 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 		this.childExpression = child;
 	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprProperty.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprProperty.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

@@ -28,8 +28,9 @@ public class RapidEnvConfigurationException extends RapidEnvException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public RapidEnvConfigurationException(final String message) {
 		super(message);
@@ -37,9 +38,11 @@ public class RapidEnvConfigurationException extends RapidEnvException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public RapidEnvConfigurationException(final String message, final Throwable cause) {
 		super(message, cause);

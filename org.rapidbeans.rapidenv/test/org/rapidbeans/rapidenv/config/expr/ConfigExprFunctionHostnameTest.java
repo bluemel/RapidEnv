@@ -37,28 +37,24 @@ public class ConfigExprFunctionHostnameTest {
 
 	@AfterClass
 	public static void tearDownClass() {
-	    FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 	}
 
 	@Test
 	public void testInterpret() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null, "xxx hostname()yyy", false);
-		Assert.assertEquals("xxx " + PlatformHelper.hostname() + "yyy", expr
-				.interpret());
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx hostname()yyy", false);
+		Assert.assertEquals("xxx " + PlatformHelper.hostname() + "yyy", expr.interpret());
 	}
 
 	@Test
 	public void testExprFunctionHostname() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null, "xxx hostname()yyy", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx hostname()yyy", false);
 		Assert.assertEquals(3, expr.getChilds().size());
 		Assert.assertSame(ConfigExprStringLiteral.class, expr.getChilds().get(0).getClass());
-		Assert.assertSame(ConfigExprFunctionHostname.class, expr.getChilds().get(1)
-				.getClass());
+		Assert.assertSame(ConfigExprFunctionHostname.class, expr.getChilds().get(1).getClass());
 		Assert.assertSame(ConfigExprStringLiteral.class, expr.getChilds().get(2).getClass());
-		Assert.assertEquals("xxx " + PlatformHelper.hostname() + "yyy", ConfigExpr
-				.expand(null, null, "xxx hostname()yyy", false));
+		Assert.assertEquals("xxx " + PlatformHelper.hostname() + "yyy",
+		        ConfigExpr.expand(null, null, "xxx hostname()yyy", false));
 	}
 }

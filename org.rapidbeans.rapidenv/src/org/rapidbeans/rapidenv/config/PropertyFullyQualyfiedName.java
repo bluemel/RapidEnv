@@ -6,11 +6,12 @@ import org.rapidbeans.core.type.TypeProperty;
 
 public class PropertyFullyQualyfiedName extends PropertyString {
 
-    public PropertyFullyQualyfiedName(TypeProperty type, RapidBean parentBean) {
-        super(type, parentBean);
-    }
+	public PropertyFullyQualyfiedName(TypeProperty type, RapidBean parentBean) {
+		super(type, parentBean);
+	}
 
-    public String getValue() {
-        return ((Property) getBean()).getFullyQualifiedName();
-    }
+	@Override
+	public String getValue() {
+		return ((Property) getBean()).getFullyQualifiedName();
+	}
 }

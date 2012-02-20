@@ -44,107 +44,108 @@ public abstract class ConfigExpr extends RapidBeanBaseConfigExpr {
 	}
 
 	/**
-	 * @param escapeLitrals the escapeLitrals to set
+	 * @param escapeLitrals
+	 *            the escapeLitrals to set
 	 */
 	public void setEscapeLitrals(boolean escapeLitrals) {
 		this.escapeLitrals = escapeLitrals;
 	}
 
-    /**
-     * The interpreter method of every ConfigfileChange Expression.
-     * 
-     * @return the resulting expanded string
-     */
-    public abstract String interpret();
+	/**
+	 * The interpreter method of every ConfigfileChange Expression.
+	 * 
+	 * @return the resulting expanded string
+	 */
+	public abstract String interpret();
 
-    /**
-     * interprets the ConfigfileChange Expression's child expressions.
-     * 
-     * @return the interpreted string
-     */
-    protected final String interpretChildExpressions() {
-        StringBuffer buf = new StringBuffer();
-        final List<ConfigExpr> childs = this.getChilds();
-        if (childs != null) {
-            for (int i = 0; i < childs.size(); i++) {
-                buf.append(childs.get(i).interpret());
-            }
-        }
-        return buf.toString();
-    }
+	/**
+	 * interprets the ConfigfileChange Expression's child expressions.
+	 * 
+	 * @return the interpreted string
+	 */
+	protected final String interpretChildExpressions() {
+		StringBuffer buf = new StringBuffer();
+		final List<ConfigExpr> childs = this.getChilds();
+		if (childs != null) {
+			for (int i = 0; i < childs.size(); i++) {
+				buf.append(childs.get(i).interpret());
+			}
+		}
+		return buf.toString();
+	}
 
-    /**
-     * Convenient interface that builds and evaluates a Configuation Expression
-     * in one step.
-     * 
-     * Expands environment variables in a String and additionally interprets
-     * some functions like hostname() or pathconvert().
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * 
-     * @param enclosingProp
-     *            the enclosing property
-     * @param s
-     *            the string to expand
-     * @param escapeLiterals
-     *            if literals should be escaped
-     * @return the expanded string
-     */
-    public static String expand(
-            final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String s,
-            final boolean escapeLiterals) {
-        String s1 = s;
-        if (enclosingUnit != null) {
-            s1 = s.replaceAll("\\$\\{version\\}",
-                    enclosingUnit.getVersion().toString());
-        }
-        return new ConfigExprTopLevel(enclosingUnit, enclosingProp, s1, escapeLiterals).interpret();
-    }
+	/**
+	 * Convenient interface that builds and evaluates a Configuation Expression
+	 * in one step.
+	 * 
+	 * Expands environment variables in a String and additionally interprets
+	 * some functions like hostname() or pathconvert().
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * 
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param s
+	 *            the string to expand
+	 * @param escapeLiterals
+	 *            if literals should be escaped
+	 * @return the expanded string
+	 */
+	public static String expand(final Installunit enclosingUnit, final Property enclosingProp, final String s,
+	        final boolean escapeLiterals) {
+		String s1 = s;
+		if (enclosingUnit != null) {
+			s1 = s.replaceAll("\\$\\{version\\}", enclosingUnit.getVersion().toString());
+		}
+		return new ConfigExprTopLevel(enclosingUnit, enclosingProp, s1, escapeLiterals).interpret();
+	}
 
-    /**
-     * property references initialization.
-     */
-    protected void initProperties() {
-        super.initProperties();
-    }
+	/**
+	 * property references initialization.
+	 */
+	protected void initProperties() {
+		super.initProperties();
+	}
 
-    public Installunit getNextEnclosingInstallUnit() {
-        if (getEnclosingInstallUnit() != null) {
-            if (this instanceof ConfigExpr)
-            return getEnclosingInstallUnit();
-        }
-        final RapidBean parentBean = this.getParentBean();
-        if (parentBean != null) {
-            if (parentBean instanceof ConfigExpr) {
-                return ((ConfigExpr) this.getParentBean()).getNextEnclosingInstallUnit();
-            }
-        }
-        return null;
-    }
+	public Installunit getNextEnclosingInstallUnit() {
+		if (getEnclosingInstallUnit() != null) {
+			if (this instanceof ConfigExpr)
+				return getEnclosingInstallUnit();
+		}
+		final RapidBean parentBean = this.getParentBean();
+		if (parentBean != null) {
+			if (parentBean instanceof ConfigExpr) {
+				return ((ConfigExpr) this.getParentBean()).getNextEnclosingInstallUnit();
+			}
+		}
+		return null;
+	}
 
-    /**
-     * default constructor.
-     */
-    public ConfigExpr() {
-        super();
-    }
+	/**
+	 * default constructor.
+	 */
+	public ConfigExpr() {
+		super();
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public ConfigExpr(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public ConfigExpr(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public ConfigExpr(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public ConfigExpr(final String[] sa) {
+		super(sa);
+	}
 }

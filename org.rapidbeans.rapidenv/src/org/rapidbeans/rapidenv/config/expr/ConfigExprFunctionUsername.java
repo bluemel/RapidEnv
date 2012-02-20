@@ -24,47 +24,46 @@ import org.rapidbeans.rapidenv.config.Property;
 
 public class ConfigExprFunctionUsername extends RapidBeanBaseConfigExprFunctionUsername {
 
-    /**
-    * The interpreting method determines the user name platform independently.<br>
-    * The user name determination is done by over Java system property user.name
-    * 
-    * @return username as string
-    */
-    public String interpret() {
-        return PlatformHelper.username();
-    }
-    
-    /**
-     * The constructor for the Hostname Function Expression.
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param funcContent function parameter list. Must be empty for Hostname
-     *            Function Expressions.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-    public ConfigExprFunctionUsername(
-            final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
-    }
+	/**
+	 * The interpreting method determines the user name platform independently.<br>
+	 * The user name determination is done by over Java system property
+	 * user.name
+	 * 
+	 * @return username as string
+	 */
+	public String interpret() {
+		return PlatformHelper.username();
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionUsername.class);
+	/**
+	 * The constructor for the Hostname Function Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            function parameter list. Must be empty for Hostname Function
+	 *            Expressions.
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionUsername(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionUsername.class);
+
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

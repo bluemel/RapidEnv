@@ -23,56 +23,54 @@ import org.rapidbeans.rapidenv.config.Property;
 
 /**
  * The Top Level ConfigfileChange Expression just serves as a root node for the
- * whole expression tree<BR>.
- * It just has a list of child expessions - nothing more.
+ * whole expression tree<BR>
+ * . It just has a list of child expessions - nothing more.
  * 
  * @author Martin Bluemel
  */
 public class ConfigExprTopLevel extends RapidBeanBaseConfigExprTopLevel {
 
-    /**
-     * The constructor for a Top Level ConfigfileChange Expression takes the
-     * whole expression to interpret as an argument.
-     * 
-     * @param enclosingUnit
-     *            this enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param experssionString
-     *            the expression string to interpret
-     * @param escapeLiterals
-     *            determine if literals should be escaped or not
-     */
-    public ConfigExprTopLevel(final Installunit enclosingUnit,
-            final Property enclosingProp, final String experssionString,
-            final boolean escapeLiterals) {
-        super();
-        setEnclosingInstallUnit(enclosingUnit);
-        setEnclosingProperty(enclosingProp);
-        ConfigExprParser.parse(this, enclosingUnit,
-        		enclosingProp, experssionString, escapeLiterals);
-    }
+	/**
+	 * The constructor for a Top Level ConfigfileChange Expression takes the
+	 * whole expression to interpret as an argument.
+	 * 
+	 * @param enclosingUnit
+	 *            this enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param experssionString
+	 *            the expression string to interpret
+	 * @param escapeLiterals
+	 *            determine if literals should be escaped or not
+	 */
+	public ConfigExprTopLevel(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String experssionString, final boolean escapeLiterals) {
+		super();
+		setEnclosingInstallUnit(enclosingUnit);
+		setEnclosingProperty(enclosingProp);
+		ConfigExprParser.parse(this, enclosingUnit, enclosingProp, experssionString, escapeLiterals);
+	}
 
-    /**
-     * The interpreting method just concatenates the interpretations of all
-     * child expressions.
-     * 
-     * @return hostname as string
-     */
-    public final String interpret() {
-        return this.interpretChildExpressions();
-    }
+	/**
+	 * The interpreting method just concatenates the interpretations of all
+	 * child expressions.
+	 * 
+	 * @return hostname as string
+	 */
+	public final String interpret() {
+		return this.interpretChildExpressions();
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprTopLevel.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprTopLevel.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

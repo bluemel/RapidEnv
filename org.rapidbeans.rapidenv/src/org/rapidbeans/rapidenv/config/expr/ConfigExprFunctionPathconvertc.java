@@ -26,68 +26,67 @@ import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Property;
 
 /**
- * Function Expression to determine a platform specific
- * canonical (absolute and normalized) path.<br>
+ * Function Expression to determine a platform specific canonical (absolute and
+ * normalized) path.<br>
  * 
  * @author Martin Bluemel
  */
 public class ConfigExprFunctionPathconvertc extends RapidBeanBaseConfigExprFunctionPathconvertc {
 
-    /**
-     * The interpreting method determines the canonical path.<br>
-     *
-     * @return the canonical path
-     */
-    public final String interpret() {
-    	final String path = getArgs().get(0).interpret();
-        return pathconvert(path);
-    }
+	/**
+	 * The interpreting method determines the canonical path.<br>
+	 * 
+	 * @return the canonical path
+	 */
+	public final String interpret() {
+		final String path = getArgs().get(0).interpret();
+		return pathconvert(path);
+	}
 
-    /**
-     * The constructor for canonical Function Expressions.
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param funcContent the function's parameter list. Potential arguments:<br>
-     *            <code>&lt;path to convert&gt;</code><br>
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-    public ConfigExprFunctionPathconvertc(
-            final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent,escapeLiterals);
-    }
+	/**
+	 * The constructor for canonical Function Expressions.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            the function's parameter list. Potential arguments:<br>
+	 *            <code>&lt;path to convert&gt;</code><br>
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionPathconvertc(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * The path converting method. 
-     * Simply applies Java getCanonocatPath method.
-     * 
-     * @param s the string with the path to convert
-     * @return a string containing the converted path
-     */
-    private String pathconvert(final String s) {
-        try {
-            return new File(s.replace("file:", "")).getCanonicalPath();
-        } catch (IOException e) {
-            throw new RapidEnvException(e);
-        }
-    }
+	/**
+	 * The path converting method. Simply applies Java getCanonocatPath method.
+	 * 
+	 * @param s
+	 *            the string with the path to convert
+	 * @return a string containing the converted path
+	 */
+	private String pathconvert(final String s) {
+		try {
+			return new File(s.replace("file:", "")).getCanonicalPath();
+		} catch (IOException e) {
+			throw new RapidEnvException(e);
+		}
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionPathconvertc.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionPathconvertc.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

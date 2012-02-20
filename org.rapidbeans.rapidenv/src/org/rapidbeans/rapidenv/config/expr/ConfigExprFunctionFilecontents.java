@@ -35,151 +35,148 @@ import org.rapidbeans.rapidenv.config.Property;
  */
 public class ConfigExprFunctionFilecontents extends RapidBeanBaseConfigExprFunctionFilecontents {
 
-    /**
-     * The constructor for filecontents function expressions.
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param funcContent
-     *            the function's parameter list. arguments: <br>
-     *            <code>&lt;path to file&gt;</code><br>
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-    public ConfigExprFunctionFilecontents(
-    		final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-            final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
-    }
+	/**
+	 * The constructor for filecontents function expressions.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            the function's parameter list. arguments: <br>
+	 *            <code>&lt;path to file&gt;</code><br>
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionFilecontents(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * The interpreting method determines the contents of the given file
-     * 
-     * @return contents of the given file
-     */
-    public final String interpret() {
+	/**
+	 * The interpreting method determines the contents of the given file
+	 * 
+	 * @return contents of the given file
+	 */
+	public final String interpret() {
 
-        final String filename = this.getArgs().get(0).interpret();
-        final File file = new File(filename);
-        if (!file.exists()) {
-            throw new RapidEnvException("File \"" + file.getAbsolutePath() + "\" does not exist.");
-        }
+		final String filename = this.getArgs().get(0).interpret();
+		final File file = new File(filename);
+		if (!file.exists()) {
+			throw new RapidEnvException("File \"" + file.getAbsolutePath() + "\" does not exist.");
+		}
 
-        String charsToEscape = null;
-        if (this.getArgs().size() > 1 && this.getArgs().get(1) != null) {
-            charsToEscape = this.getArgs().get(1).interpret();
-        }
-        final List<Character> caToEscape = new ArrayList<Character>();
-        if (charsToEscape != null) {
-            final int len = charsToEscape.length();
-            char c1;
-            for (int i = 0; i < len; i++) {
-                c1 = charsToEscape.charAt(i);
-                if (c1 == '\\') {
-                    if ((i + 1) == len) {
-                        throw new RapidEnvException("Problems with argument 1 (characters to excape):"
-                                + " unecpected end of string after escaping character '\\'");
-                    }
-                    c1 = charsToEscape.charAt(++i);
-                    switch (c1) {
-                    case 'n':
-                        caToEscape.add('\n');
-                        break;
-                    case 'r':
-                        caToEscape.add('\r');
-                        break;
-                    case 't':
-                        caToEscape.add('\t');
-                        break;
-                    case '\\':
-                        caToEscape.add('\\');
-                        break;
-                    default:
-                        throw new RapidEnvException("Problems with argument 1 (characters to excape):"
-                                + " unecpected escaped character '" + c1 + "'");
-                    }
-                } else {
-                    caToEscape.add(c1);
-                }
-            }
-        }
+		String charsToEscape = null;
+		if (this.getArgs().size() > 1 && this.getArgs().get(1) != null) {
+			charsToEscape = this.getArgs().get(1).interpret();
+		}
+		final List<Character> caToEscape = new ArrayList<Character>();
+		if (charsToEscape != null) {
+			final int len = charsToEscape.length();
+			char c1;
+			for (int i = 0; i < len; i++) {
+				c1 = charsToEscape.charAt(i);
+				if (c1 == '\\') {
+					if ((i + 1) == len) {
+						throw new RapidEnvException("Problems with argument 1 (characters to excape):"
+						        + " unecpected end of string after escaping character '\\'");
+					}
+					c1 = charsToEscape.charAt(++i);
+					switch (c1) {
+					case 'n':
+						caToEscape.add('\n');
+						break;
+					case 'r':
+						caToEscape.add('\r');
+						break;
+					case 't':
+						caToEscape.add('\t');
+						break;
+					case '\\':
+						caToEscape.add('\\');
+						break;
+					default:
+						throw new RapidEnvException("Problems with argument 1 (characters to excape):"
+						        + " unecpected escaped character '" + c1 + "'");
+					}
+				} else {
+					caToEscape.add(c1);
+				}
+			}
+		}
 
-        // preserve: take the line feed from the file
-        // platform: always use the platform specific line feed
-        // normalize: always use \n as line feed
-        LinefeedControl linefeedControl = LinefeedControl.preserve;
-        if (this.getArgs().size() > 2 && this.getArgs().get(2) != null) {
-            linefeedControl = LinefeedControl.valueOf(this.getArgs().get(2).interpret());
-        }
+		// preserve: take the line feed from the file
+		// platform: always use the platform specific line feed
+		// normalize: always use \n as line feed
+		LinefeedControl linefeedControl = LinefeedControl.preserve;
+		if (this.getArgs().size() > 2 && this.getArgs().get(2) != null) {
+			linefeedControl = LinefeedControl.valueOf(this.getArgs().get(2).interpret());
+		}
 
-        InputStreamReader reader = null;
-        try {
-            final StringBuffer buf = new StringBuffer();
-            reader = new LinefeedControlInputStreamReader(file, linefeedControl);
-            int i;
-            if (caToEscape.size() == 0) {
-                while ((i = reader.read()) != -1) {
-                    buf.append((char) i);
-                }
-            } else {
-                char c2;
-                boolean translated = false;
-                final int size = caToEscape.size();
-                while ((i = reader.read()) != -1) {
-                    c2 = (char) i;
-                    for (int i2 = 0; i2 < size; i2++) {
-                        if (c2 == caToEscape.get(i2).charValue()) {
-                            switch (c2) {
-                            case '\n':
-                                c2 = 'n';
-                                break;
-                            case '\r':
-                                c2 = 'r';
-                                break;
-                            case '\t':
-                                c2 = 't';
-                                break;
-                            default: // do nothing
-                                break;
-                            }
-                            buf.append('\\');
-                            break;
-                        }
-                    }
-                    if (!translated) {
-                        buf.append(c2);
-                    }
-                }
-            }
-            return buf.toString();
-        } catch (IOException e) {
-            throw new RapidEnvException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    throw new RapidEnvException(e);
-                }
-            }
-        }
-    }
+		InputStreamReader reader = null;
+		try {
+			final StringBuffer buf = new StringBuffer();
+			reader = new LinefeedControlInputStreamReader(file, linefeedControl);
+			int i;
+			if (caToEscape.size() == 0) {
+				while ((i = reader.read()) != -1) {
+					buf.append((char) i);
+				}
+			} else {
+				char c2;
+				boolean translated = false;
+				final int size = caToEscape.size();
+				while ((i = reader.read()) != -1) {
+					c2 = (char) i;
+					for (int i2 = 0; i2 < size; i2++) {
+						if (c2 == caToEscape.get(i2).charValue()) {
+							switch (c2) {
+							case '\n':
+								c2 = 'n';
+								break;
+							case '\r':
+								c2 = 'r';
+								break;
+							case '\t':
+								c2 = 't';
+								break;
+							default: // do nothing
+								break;
+							}
+							buf.append('\\');
+							break;
+						}
+					}
+					if (!translated) {
+						buf.append(c2);
+					}
+				}
+			}
+			return buf.toString();
+		} catch (IOException e) {
+			throw new RapidEnvException(e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					throw new RapidEnvException(e);
+				}
+			}
+		}
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionFilecontents.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionFilecontents.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

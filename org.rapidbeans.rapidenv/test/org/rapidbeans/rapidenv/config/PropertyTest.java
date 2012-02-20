@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config;
 
-
 import java.io.File;
 
 import junit.framework.Assert;
@@ -41,12 +40,9 @@ public class PropertyTest {
 		}
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
-		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
-				"project", "org.rapidbeans.rapidenv.config.Project", true);
-		CmdRenv cmd = new CmdRenv(new String[]{
-				"-env",
-				"testdata/env/env.xml"
-		});
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
+		        "org.rapidbeans.rapidenv.config.Project", true);
+		CmdRenv cmd = new CmdRenv(new String[] { "-env", "testdata/env/env.xml" });
 		new RapidEnvInterpreter(cmd);
 	}
 
@@ -65,13 +61,11 @@ public class PropertyTest {
 		Assert.assertEquals(2, cmdPath.getSpecificvalues().size());
 		switch (PlatformHelper.getOs()) {
 		case windows:
-			Assert.assertTrue(cmdPath.getValue(),
-					cmdPath.getValue().startsWith("D:\\h\\opt\\maven\\bin;"));
+			Assert.assertTrue(cmdPath.getValue(), cmdPath.getValue().startsWith("D:\\h\\opt\\maven\\bin;"));
 			break;
 		case linux:
 			String expected = cmdPath.getValue();
-			Assert.assertTrue(expected,
-					expected.startsWith("/h/opt/maven/bin:"));
+			Assert.assertTrue(expected, expected.startsWith("/h/opt/maven/bin:"));
 			break;
 		}
 	}

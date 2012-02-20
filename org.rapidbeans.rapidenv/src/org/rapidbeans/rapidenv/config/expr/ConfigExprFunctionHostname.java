@@ -29,50 +29,47 @@ import org.rapidbeans.rapidenv.config.Property;
  */
 public class ConfigExprFunctionHostname extends RapidBeanBaseConfigExprFunctionHostname {
 
-    /**
-     * The interpreting method determines the hostname platform indepently.<br>
-     * The hostname determination is delegated to
-     * <code><a href='UtilsPlatform.html#hostname()'>
-     * UtilsPlatform.hostname()</a></code>
-     * 
-     * @return hostname as string
-     */
-    public final String interpret() {
-        return PlatformHelper.hostname();
-    }
+	/**
+	 * The interpreting method determines the hostname platform indepently.<br>
+	 * The hostname determination is delegated to
+	 * <code><a href='UtilsPlatform.html#hostname()'>
+	 * UtilsPlatform.hostname()</a></code>
+	 * 
+	 * @return hostname as string
+	 */
+	public final String interpret() {
+		return PlatformHelper.hostname();
+	}
 
-    /**
-     * The constructor for the "hostname" function expression.
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param funcContent
-     *            function parameter list. Must be empty for "hostname"
-     *            function expressions.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-    public ConfigExprFunctionHostname(
-            final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
-    }
+	/**
+	 * The constructor for the "hostname" function expression.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            function parameter list. Must be empty for "hostname" function
+	 *            expressions.
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionHostname(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHostname.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHostname.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

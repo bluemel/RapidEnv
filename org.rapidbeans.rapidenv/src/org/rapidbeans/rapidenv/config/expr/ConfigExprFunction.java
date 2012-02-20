@@ -41,22 +41,23 @@ import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
  * Empty parameter lists are also possible:<br>
  * <code>prop.hostname="hostname()"</code><br>
  * <br>
- * Function expressions basically can have sub expressions on any
- * argument value:<br>
+ * Function expressions basically can have sub expressions on any argument
+ * value:<br>
  * <code>source="pathconvert(homedir(), '/')/config.xml"</code><br>
- * Be careful to distinct sub expression from literals by using
- * ' characters to mark literals.
+ * Be careful to distinct sub expression from literals by using ' characters to
+ * mark literals.
  * <p>
- * A function expression must extend this abstract expression class
- * while having a class name according to the following convention:<br>
+ * A function expression must extend this abstract expression class while having
+ * a class name according to the following convention:<br>
  * <code>ConfigExprFunction&lt;function name&gt;</code><br>
  * While the function name in an expression string is lower case the first
  * character should be upper case in the class name.
  * </p>
  * <p>
  * <b>please note:</b><br>
- * In order to recognize function expressions the parser needs function names ether to
- * have a prepending whitespace or another prepending expression e. g.:<br>
+ * In order to recognize function expressions the parser needs function names
+ * ether to have a prepending whitespace or another prepending expression e. g.:
+ * <br>
  * <code>prop.b="${USERNAME}hostname()"</code><br>
  * <br>
  * The following Function Expression can't be recognized:<br>
@@ -86,163 +87,134 @@ public abstract class ConfigExprFunction extends RapidBeanBaseConfigExprFunction
 		return this.args;
 	}
 
-    /**
-     * the constructor of a function expression.
-     *
-     * @param enclosingUnit
-     *            - the enclosing install unit
-     * @param enclosingProp
-     *            - the enclosing property
-     * @param argumentsString
-     *            - the string containing all the function's arguments.
-     * @param escapeLiterals
-     *            - determines if literals should be escaped or not
-     */
-    protected void init(final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String argumentsString,
-            final boolean escapeLiterals) {
-        setEnclosingInstallUnit(enclosingUnit);
-        setEnclosingProperty(enclosingProp);
-        this.argtypes = determineArgDeclFromModel();
-        int minArgs = 0;
-        int maxArgs = 0;
-        for (final ArgumentDeclaration decl : this.argtypes) {
-            maxArgs++;
-            if (!decl.isOptional()) {
-                minArgs++;
-            }
-        }
-        final List<String> argumentStrings =
-        		splitArguments(argumentsString, getEscapeLitrals());
-        if (argumentStrings.size() < minArgs) {
-            if (getEnclosingInstallUnit() != null) {
-                throw new RapidEnvConfigurationException(
-                        "To less arguments for function \""
-                        + this.getName() + "\" in configuration"
-                        + " of install unit \"" + this.getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n"
-                        + "Need at minimum " + minArgs + " arguments.");
-            } else {
-                throw new RapidEnvConfigurationException(
-                        "To less arguments for function \""
-                        + this.getName() + "\" in configuration"
-                        + " of property \"" + this.getEnclosingProperty().getFullyQualifiedName() + "\".\n"
-                        + "Need at minimum " + minArgs + " arguments.");
-            }
-        }
-        if (argumentStrings.size() > maxArgs) {
-            if (getEnclosingInstallUnit() != null) {
-                throw new RapidEnvConfigurationException(
-                        "To much arguments (" + argumentStrings.size() + ") for function \""
-                        + this.getName() + "\" in configuration"
-                        + " of install unit \"" + getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n"
-                        + "Use at maximum " + maxArgs + " arguments.");
-            } else {
-                throw new RapidEnvConfigurationException(
-                        "To much arguments (" + argumentStrings.size() + ") for function \""
-                        + this.getName() + "\" in configuration"
-                        + " of property \"" + getEnclosingProperty().getFullyQualifiedName() + "\".\n"
-                        + "Use at maximum " + maxArgs + " arguments.");
-            }
-        }
-        for (String argumentString : argumentStrings) {
-            argumentString = argumentString.trim();
-            this.args.add(new ConfigExprTopLevel(enclosingUnit, enclosingProp, argumentString, escapeLiterals));
-        }
-        int i = 0;
-        for (final ConfigExpr expr : this.args) {
-            final String arg = expr.interpret();            
-            final ArgumentDeclaration decl = this.argtypes.get(i++);
-            if (arg.length() < decl.getMinLength()) {
-                if (getEnclosingInstallUnit() != null) {
-                    throw new RapidEnvConfigurationException(
-                            "Too short value for argument \"" + decl.getName()
-                            + "\" of function \"" + this.getName()
-                            + "\" in configuration of install unit \""
-                            + getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n"
-                            + "The value has to be at least " + decl.getMinLength()
-                            + " characters long.");
-                } else if (getEnclosingProperty() != null) {
-                    throw new RapidEnvConfigurationException(
-                            "Too short value for argument \"" + decl.getName()
-                            + "\" of function \"" + this.getName()
-                            + "\" in configuration of install unit \""
-                            + getEnclosingProperty().getFullyQualifiedName() + "\".\n"
-                            + "The value has to be at least " + decl.getMinLength()
-                            + " characters long.");
-                } else {
-                    throw new RapidEnvConfigurationException(
-                            "Too short value for argument \"" + decl.getName()
-                            + "\" of function \"" + this.getName() + "\".\n"
-                            + "The value has to be at least " + decl.getMinLength()
-                            + " characters long.");
-                }
-            }
-            if (decl.getMaxLength() != ArgumentDeclaration.UNLIMITED
-                    && arg.length() > decl.getMaxLength()) {
-                if (getEnclosingInstallUnit() != null) {
-                    throw new RapidEnvConfigurationException(
-                            "Too short value for argument \"" + decl.getName()
-                            + "\" of function \"" + this.getName()
-                            + "\" in configuration of install unit \""
-                            + getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n"
-                            + "The value may not be more than " + decl.getMaxLength()
-                            + " characters long.");
-                } else {
-                	if (getEnclosingProperty() != null) {
-                		throw new RapidEnvConfigurationException(
-                				"Too short value for argument \"" + decl.getName()
-                				+ "\" of function \"" + this.getName()
-                				+ "\" in configuration of install unit \""
-                				+ getEnclosingProperty().getFullyQualifiedName() + "\".\n"
-                				+ "The value may not be more than " + decl.getMaxLength()
-                				+ " characters long.");
-                	} else {
-                		throw new RapidEnvConfigurationException(
-                				"Too short value for argument \"" + decl.getName()
-                				+ "\" of function \"" + this.getName()
-                				+ "\" in configuration.\n"
-                				+ "The value may not be more than " + decl.getMaxLength()
-                				+ " characters long.");
-                	}
-                }
-            }
-        }
-    }
+	/**
+	 * the constructor of a function expression.
+	 * 
+	 * @param enclosingUnit
+	 *            - the enclosing install unit
+	 * @param enclosingProp
+	 *            - the enclosing property
+	 * @param argumentsString
+	 *            - the string containing all the function's arguments.
+	 * @param escapeLiterals
+	 *            - determines if literals should be escaped or not
+	 */
+	protected void init(final Installunit enclosingUnit, final Property enclosingProp, final String argumentsString,
+	        final boolean escapeLiterals) {
+		setEnclosingInstallUnit(enclosingUnit);
+		setEnclosingProperty(enclosingProp);
+		this.argtypes = determineArgDeclFromModel();
+		int minArgs = 0;
+		int maxArgs = 0;
+		for (final ArgumentDeclaration decl : this.argtypes) {
+			maxArgs++;
+			if (!decl.isOptional()) {
+				minArgs++;
+			}
+		}
+		final List<String> argumentStrings = splitArguments(argumentsString, getEscapeLitrals());
+		if (argumentStrings.size() < minArgs) {
+			if (getEnclosingInstallUnit() != null) {
+				throw new RapidEnvConfigurationException("To less arguments for function \"" + this.getName()
+				        + "\" in configuration" + " of install unit \""
+				        + this.getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n" + "Need at minimum "
+				        + minArgs + " arguments.");
+			} else {
+				throw new RapidEnvConfigurationException("To less arguments for function \"" + this.getName()
+				        + "\" in configuration" + " of property \""
+				        + this.getEnclosingProperty().getFullyQualifiedName() + "\".\n" + "Need at minimum " + minArgs
+				        + " arguments.");
+			}
+		}
+		if (argumentStrings.size() > maxArgs) {
+			if (getEnclosingInstallUnit() != null) {
+				throw new RapidEnvConfigurationException("To much arguments (" + argumentStrings.size()
+				        + ") for function \"" + this.getName() + "\" in configuration" + " of install unit \""
+				        + getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n" + "Use at maximum " + maxArgs
+				        + " arguments.");
+			} else {
+				throw new RapidEnvConfigurationException("To much arguments (" + argumentStrings.size()
+				        + ") for function \"" + this.getName() + "\" in configuration" + " of property \""
+				        + getEnclosingProperty().getFullyQualifiedName() + "\".\n" + "Use at maximum " + maxArgs
+				        + " arguments.");
+			}
+		}
+		for (String argumentString : argumentStrings) {
+			argumentString = argumentString.trim();
+			this.args.add(new ConfigExprTopLevel(enclosingUnit, enclosingProp, argumentString, escapeLiterals));
+		}
+		int i = 0;
+		for (final ConfigExpr expr : this.args) {
+			final String arg = expr.interpret();
+			final ArgumentDeclaration decl = this.argtypes.get(i++);
+			if (arg.length() < decl.getMinLength()) {
+				if (getEnclosingInstallUnit() != null) {
+					throw new RapidEnvConfigurationException("Too short value for argument \"" + decl.getName()
+					        + "\" of function \"" + this.getName() + "\" in configuration of install unit \""
+					        + getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n"
+					        + "The value has to be at least " + decl.getMinLength() + " characters long.");
+				} else if (getEnclosingProperty() != null) {
+					throw new RapidEnvConfigurationException("Too short value for argument \"" + decl.getName()
+					        + "\" of function \"" + this.getName() + "\" in configuration of install unit \""
+					        + getEnclosingProperty().getFullyQualifiedName() + "\".\n"
+					        + "The value has to be at least " + decl.getMinLength() + " characters long.");
+				} else {
+					throw new RapidEnvConfigurationException("Too short value for argument \"" + decl.getName()
+					        + "\" of function \"" + this.getName() + "\".\n" + "The value has to be at least "
+					        + decl.getMinLength() + " characters long.");
+				}
+			}
+			if (decl.getMaxLength() != ArgumentDeclaration.UNLIMITED && arg.length() > decl.getMaxLength()) {
+				if (getEnclosingInstallUnit() != null) {
+					throw new RapidEnvConfigurationException("Too short value for argument \"" + decl.getName()
+					        + "\" of function \"" + this.getName() + "\" in configuration of install unit \""
+					        + getEnclosingInstallUnit().getFullyQualifiedName() + "\".\n"
+					        + "The value may not be more than " + decl.getMaxLength() + " characters long.");
+				} else {
+					if (getEnclosingProperty() != null) {
+						throw new RapidEnvConfigurationException("Too short value for argument \"" + decl.getName()
+						        + "\" of function \"" + this.getName() + "\" in configuration of install unit \""
+						        + getEnclosingProperty().getFullyQualifiedName() + "\".\n"
+						        + "The value may not be more than " + decl.getMaxLength() + " characters long.");
+					} else {
+						throw new RapidEnvConfigurationException("Too short value for argument \"" + decl.getName()
+						        + "\" of function \"" + this.getName() + "\" in configuration.\n"
+						        + "The value may not be more than " + decl.getMaxLength() + " characters long.");
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * Scan all model properties != "installUnit", "childs", "returnval"
-     * and build up the argument declaration list from them.
-     *
-     * @return the argument declaration list
-     */
-    private List<ArgumentDeclaration> determineArgDeclFromModel() {
-        final List<ArgumentDeclaration> argDeclList = new ArrayList<ArgumentDeclaration>();
-        for (final org.rapidbeans.core.basic.Property prop : this.getPropertyList()) {
-            if (!prop.getName().equals("enclosingInstallUnit")
-                    && !prop.getName().equals("enclosingProperty")
-                    && !prop.getName().equals("childs")
-                    && !prop.getName().equals("returnval")) {
-                final TypeProperty proptype = prop.getType();
-                final boolean optional = !proptype.getMandatory();
-                if (proptype instanceof TypePropertyString) {
-                    final TypePropertyString stringtype = (TypePropertyString) proptype;
-                    final int minlen = stringtype.getMinLength();
-                    final int maxlen = stringtype.getMaxLength();
-                    final ArgumentDeclaration argdecl = new ArgumentDeclaration(
-                            prop.getName(), optional, minlen, maxlen);
-                    argDeclList.add(argdecl);
-                } else {
-                    throw new RapidEnvException("Invalid type \""
-                            + proptype.getClass().getName()
-                            + "\"for property \""
-                            + prop.getName() + "\" for function declaration type \""
-                            + prop.getBean().getType().getName() + "\": only string is a valid type.");
-                }
-            }
-        }
-        return argDeclList;
-    }
+	/**
+	 * Scan all model properties != "installUnit", "childs", "returnval" and
+	 * build up the argument declaration list from them.
+	 * 
+	 * @return the argument declaration list
+	 */
+	private List<ArgumentDeclaration> determineArgDeclFromModel() {
+		final List<ArgumentDeclaration> argDeclList = new ArrayList<ArgumentDeclaration>();
+		for (final org.rapidbeans.core.basic.Property prop : this.getPropertyList()) {
+			if (!prop.getName().equals("enclosingInstallUnit") && !prop.getName().equals("enclosingProperty")
+			        && !prop.getName().equals("childs") && !prop.getName().equals("returnval")) {
+				final TypeProperty proptype = prop.getType();
+				final boolean optional = !proptype.getMandatory();
+				if (proptype instanceof TypePropertyString) {
+					final TypePropertyString stringtype = (TypePropertyString) proptype;
+					final int minlen = stringtype.getMinLength();
+					final int maxlen = stringtype.getMaxLength();
+					final ArgumentDeclaration argdecl = new ArgumentDeclaration(prop.getName(), optional, minlen,
+					        maxlen);
+					argDeclList.add(argdecl);
+				} else {
+					throw new RapidEnvException("Invalid type \"" + proptype.getClass().getName() + "\"for property \""
+					        + prop.getName() + "\" for function declaration type \""
+					        + prop.getBean().getType().getName() + "\": only string is a valid type.");
+				}
+			}
+		}
+		return argDeclList;
+	}
 
 	/**
 	 * the factory method for a Function Expression instance.
@@ -255,26 +227,19 @@ public abstract class ConfigExprFunction extends RapidBeanBaseConfigExprFunction
 	 *            the function's name.
 	 * @param funcContent
 	 *            the string containing the function's arguments
-     * @param escapeLiterals if escaping literals is desired or not
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
 	 * @return the created Function Expression instance.
 	 */
-	public static ConfigExprFunction createInstance(
-			final Installunit enclosingUnit,
-			final Property enclosingProp,
-			final String funcName,
-			final String funcContent,
-			final boolean escapeLiterals) {
+	public static ConfigExprFunction createInstance(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcName, final String funcContent, final boolean escapeLiterals) {
 		try {
-			final Class<?> configClass = Class
-					.forName("org.rapidbeans.rapidenv.config.expr.ConfigExprFunction"
-							+ StringHelper.upperFirstCharacter(funcName));
-			final Class<?>[] constructorArgTypes = {
-			        Installunit.class, Property.class, String.class, Boolean.class };
-			final Constructor<?> constructor = configClass
-					.getConstructor(constructorArgTypes);
+			final Class<?> configClass = Class.forName("org.rapidbeans.rapidenv.config.expr.ConfigExprFunction"
+			        + StringHelper.upperFirstCharacter(funcName));
+			final Class<?>[] constructorArgTypes = { Installunit.class, Property.class, String.class, Boolean.class };
+			final Constructor<?> constructor = configClass.getConstructor(constructorArgTypes);
 			final Object[] constructorArgs = { enclosingUnit, enclosingProp, funcContent, escapeLiterals };
-			final ConfigExprFunction instance = (ConfigExprFunction)
-				constructor.newInstance(constructorArgs);
+			final ConfigExprFunction instance = (ConfigExprFunction) constructor.newInstance(constructorArgs);
 			return instance;
 		} catch (ClassNotFoundException e) {
 			throw new RapidEnvException(e);
@@ -289,145 +254,143 @@ public abstract class ConfigExprFunction extends RapidBeanBaseConfigExprFunction
 		}
 	}
 
-    /**
-     * Splitting argument values from function content is not trivial
-     * because each argument values could also contain ',' characters.
-     * Rules:
-     * - leave together string literals ' (obey escaping)
-     * - leave together sub function content (count braces)
-     * - filter whitespace after argument separating ',' characters
-     *
-     * @param string the function content string that will be split
-     *
-     * @return a list with split argument values
-     */
-    public static List<String> splitArguments(final String string,
-    		final boolean escapeLiterals) {
-        final List<String> list = new ArrayList<String>();
-        final StringBuffer buffer = new StringBuffer();
-        int state = 0;
-        int braceCount = 0;
-        final int len = string.length();
-        for (int i = 0; i < len; i++) {
-            final char c = string.charAt(i);
-            switch (state) {
+	/**
+	 * Splitting argument values from function content is not trivial because
+	 * each argument values could also contain ',' characters. Rules: - leave
+	 * together string literals ' (obey escaping) - leave together sub function
+	 * content (count braces) - filter whitespace after argument separating ','
+	 * characters
+	 * 
+	 * @param string
+	 *            the function content string that will be split
+	 * 
+	 * @return a list with split argument values
+	 */
+	public static List<String> splitArguments(final String string, final boolean escapeLiterals) {
+		final List<String> list = new ArrayList<String>();
+		final StringBuffer buffer = new StringBuffer();
+		int state = 0;
+		int braceCount = 0;
+		final int len = string.length();
+		for (int i = 0; i < len; i++) {
+			final char c = string.charAt(i);
+			switch (state) {
 
-            // between argument values
-            // ignore leading whitespace(s)
-            case 0:
-                switch (c) {
-                case ' ':
-                case '\t':
-                case '\n':
-                    // state stays 0
-                    break;
-                case '\'':
-                    buffer.append(c);
-                    state = 2;
-                    break;
-                default:
-                    buffer.append(c);
-                    state = 1;
-                }
-                break;
+			// between argument values
+			// ignore leading whitespace(s)
+			case 0:
+				switch (c) {
+				case ' ':
+				case '\t':
+				case '\n':
+					// state stays 0
+					break;
+				case '\'':
+					buffer.append(c);
+					state = 2;
+					break;
+				default:
+					buffer.append(c);
+					state = 1;
+				}
+				break;
 
-            // within unquoted argument value
-            case 1:
-                switch (c) {
-                case ',':
-                    list.add(buffer.toString());
-                    buffer.setLength(0);
-                    state = 0;
-                    break;
-                case '\'':
-                    buffer.append(c);
-                    state = 2;
-                    break;
-                case '(':
-                    buffer.append(c);
-                    braceCount = 0;
-                    state = 4;
-                    break;
-                default:
-                    buffer.append(c);
-                    state = 1;
-                }
-                break;
+			// within unquoted argument value
+			case 1:
+				switch (c) {
+				case ',':
+					list.add(buffer.toString());
+					buffer.setLength(0);
+					state = 0;
+					break;
+				case '\'':
+					buffer.append(c);
+					state = 2;
+					break;
+				case '(':
+					buffer.append(c);
+					braceCount = 0;
+					state = 4;
+					break;
+				default:
+					buffer.append(c);
+					state = 1;
+				}
+				break;
 
-            // within quoted token
-            case 2:
-                switch (c) {
-                case '\\':
-                	if (escapeLiterals) {
-                		state = 3;
-                	} else {
-                        buffer.append(c);
-                	}
-                    break;
-                case '\'':
-                    buffer.append(c);
-                    state = 1;
-                    break;
-                default:
-                    buffer.append(c);
-                break;
-                }
-                break;
+			// within quoted token
+			case 2:
+				switch (c) {
+				case '\\':
+					if (escapeLiterals) {
+						state = 3;
+					} else {
+						buffer.append(c);
+					}
+					break;
+				case '\'':
+					buffer.append(c);
+					state = 1;
+					break;
+				default:
+					buffer.append(c);
+					break;
+				}
+				break;
 
-            // within quoted token after \
-            case 3:
-                switch (c) {
-                case '\\':
-                    buffer.append('\\');
-                    state = 2;
-                    break;
-                case '\'':
-                    buffer.append('\'');
-                    state = 2;
-                    break;
-                default:
-                	buffer.append('\\');
-                    buffer.append(c);
-                    state = 2;
-                    break;
-                }
-                break;
+			// within quoted token after \
+			case 3:
+				switch (c) {
+				case '\\':
+					buffer.append('\\');
+					state = 2;
+					break;
+				case '\'':
+					buffer.append('\'');
+					state = 2;
+					break;
+				default:
+					buffer.append('\\');
+					buffer.append(c);
+					state = 2;
+					break;
+				}
+				break;
 
-                // within quoted token
-                case 4:
-                    switch (c) {
-                    case ')':
-                        buffer.append(c);
-                    	if (braceCount == 0) {
-                    		state = 1;
-                    	} else {
-                    		braceCount--;
-                    	}
-                        break;
-                    default:
-                        buffer.append(c);
-                    break;
-                    }
-                    break;
+			// within quoted token
+			case 4:
+				switch (c) {
+				case ')':
+					buffer.append(c);
+					if (braceCount == 0) {
+						state = 1;
+					} else {
+						braceCount--;
+					}
+					break;
+				default:
+					buffer.append(c);
+					break;
+				}
+				break;
 
-            default:
-                throw new UtilException("wrong state " + state);
-            }
-        }
+			default:
+				throw new UtilException("wrong state " + state);
+			}
+		}
 
-        switch (state) {
-        case 0:
-            break;
-        case 1:
-            list.add(buffer.toString());
-            break;
-        case 2:
-            throw new UtilException("Missing qouote at the end of string\""
-                    + string + "\"");
-        }
+		switch (state) {
+		case 0:
+			break;
+		case 1:
+			list.add(buffer.toString());
+			break;
+		case 2:
+			throw new UtilException("Missing qouote at the end of string\"" + string + "\"");
+		}
 
-        return list;
-    }
+		return list;
+	}
 
 	/**
 	 * adding child expressions to a Function Expression accomplishes building
@@ -447,26 +410,30 @@ public abstract class ConfigExprFunction extends RapidBeanBaseConfigExprFunction
 		return name;
 	}
 
-    /**
-     * default constructor.
-     */
-    public ConfigExprFunction() {
-        super();
-    }
+	/**
+	 * default constructor.
+	 */
+	public ConfigExprFunction() {
+		super();
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public ConfigExprFunction(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public ConfigExprFunction(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public ConfigExprFunction(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public ConfigExprFunction(final String[] sa) {
+		super(sa);
+	}
 }

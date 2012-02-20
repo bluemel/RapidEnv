@@ -19,7 +19,7 @@ package org.rapidbeans.rapidenv;
 
 /**
  * The root exception for all RapidEnv exceptions.
- *
+ * 
  * @author Martin Bluemel
  */
 public class RapidEnvException extends RuntimeException {
@@ -40,8 +40,9 @@ public class RapidEnvException extends RuntimeException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public RapidEnvException(final String message) {
 		super(message);
@@ -49,9 +50,11 @@ public class RapidEnvException extends RuntimeException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
-	 * @param errorcode the error code
+	 * 
+	 * @param message
+	 *            the message
+	 * @param errorcode
+	 *            the error code
 	 */
 	public RapidEnvException(final String message, final int errorcode) {
 		super(message);
@@ -60,8 +63,9 @@ public class RapidEnvException extends RuntimeException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param cause the cause
+	 * 
+	 * @param cause
+	 *            the cause
 	 */
 	public RapidEnvException(final Throwable cause) {
 		super(cause);
@@ -69,9 +73,11 @@ public class RapidEnvException extends RuntimeException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param cause the cause
-	 * @param errorcode the error code
+	 * 
+	 * @param cause
+	 *            the cause
+	 * @param errorcode
+	 *            the error code
 	 */
 	public RapidEnvException(final Throwable cause, final int errorcode) {
 		super(cause);
@@ -80,9 +86,11 @@ public class RapidEnvException extends RuntimeException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public RapidEnvException(final String message, final Throwable cause) {
 		super(message, cause);
@@ -90,10 +98,13 @@ public class RapidEnvException extends RuntimeException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param errorcode the error code
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param errorcode
+	 *            the error code
 	 */
 	public RapidEnvException(final String message, final Throwable cause, final int errorcode) {
 		super(message, cause);

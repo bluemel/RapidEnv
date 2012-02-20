@@ -39,14 +39,13 @@ public class ConfigExprFunctionPathconvertcTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"})).setPropertyValue(
-				"test.dir", "/home/martin");
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" })).setPropertyValue(
+		        "test.dir", "/home/martin");
 	}
 
 	@AfterClass
@@ -61,31 +60,21 @@ public class ConfigExprFunctionPathconvertcTest {
 	 */
 	@Test
 	public void interpretAbsolute() {
-	    switch (PlatformHelper.getOs()) {
-	    case windows:
-	        ConfigExprTopLevel exprWin = new ConfigExprTopLevel(
-	        		null, null,
-	                "a pathconvertc('C:\\a\\b\\c')",
-	                false);
-	        Assert.assertEquals("a C:" + File.separator + "a"
-	                + File.separator + "b" + File.separator + "c",
-	                exprWin.interpret());
-	        break;
-	    case linux:
-	        ConfigExprTopLevel exprUnix = new ConfigExprTopLevel(
-	        		null, null,
-	                "a pathconvertc('/tmp/a/b/c')",
-	                false);
-	        Assert.assertEquals("a /tmp" + File.separator + "a"
-	                + File.separator + "b" + File.separator + "c",
-	                exprUnix.interpret());
-	        break;
-	    default:
-	        Assert.fail("Operating system \""
-	                + PlatformHelper.getOs().name()
-	                + "\" not yet supported.");
-	        break;
-	    }
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			ConfigExprTopLevel exprWin = new ConfigExprTopLevel(null, null, "a pathconvertc('C:\\a\\b\\c')", false);
+			Assert.assertEquals("a C:" + File.separator + "a" + File.separator + "b" + File.separator + "c",
+			        exprWin.interpret());
+			break;
+		case linux:
+			ConfigExprTopLevel exprUnix = new ConfigExprTopLevel(null, null, "a pathconvertc('/tmp/a/b/c')", false);
+			Assert.assertEquals("a /tmp" + File.separator + "a" + File.separator + "b" + File.separator + "c",
+			        exprUnix.interpret());
+			break;
+		default:
+			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" not yet supported.");
+			break;
+		}
 	}
 
 	/**
@@ -94,27 +83,22 @@ public class ConfigExprFunctionPathconvertcTest {
 	 */
 	@Test
 	public void interpretNormalized() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				null, null,
-				"a pathconvertc('x/../a/b')",
-				false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "a pathconvertc('x/../a/b')", false);
 		String workingDirectory = System.getProperty("user.dir");
-		Assert.assertEquals("a " + workingDirectory + File.separator + "a"
-				+ File.separator + "b",
-				expr.interpret());
+		Assert.assertEquals("a " + workingDirectory + File.separator + "a" + File.separator + "b", expr.interpret());
 	}
 
 	/**
 	 * Test variable expansion within the argument
-	 * @throws IOException in case of IO problems
+	 * 
+	 * @throws IOException
+	 *             in case of IO problems
 	 */
 	@Test
 	public void interpretWithVarExtension() throws IOException {
 		Installunit unit = new Installunit("test");
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(unit, null,
-				"pathconvertc(${test.dir}'/xxx/yyy/zzz.txt')",
-				false);
-		Assert.assertEquals(new File("/home/martin/xxx/yyy/zzz.txt").getCanonicalPath(),
-				expr.interpret());
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(unit, null, "pathconvertc(${test.dir}'/xxx/yyy/zzz.txt')",
+		        false);
+		Assert.assertEquals(new File("/home/martin/xxx/yyy/zzz.txt").getCanonicalPath(), expr.interpret());
 	}
 }

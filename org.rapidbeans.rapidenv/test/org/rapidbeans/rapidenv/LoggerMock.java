@@ -29,9 +29,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
- * Mock class for java.util.Logger.
- * Extends the Logger class and so acts like a logger.
- * Encapsulates an original logger but keeps all log records in memory
+ * Mock class for java.util.Logger. Extends the Logger class and so acts like a
+ * logger. Encapsulates an original logger but keeps all log records in memory
  */
 public class LoggerMock extends Logger {
 
@@ -42,7 +41,8 @@ public class LoggerMock extends Logger {
 	private boolean suppressLogging = true;
 
 	/**
-	 * @param suppressLogging the suppressLogging to set
+	 * @param suppressLogging
+	 *            the suppressLogging to set
 	 */
 	public void setSuppressLogging(boolean suppressLogging) {
 		this.suppressLogging = suppressLogging;
@@ -115,8 +115,7 @@ public class LoggerMock extends Logger {
 	 * @throws NullPointerException
 	 *             if the name is null.
 	 */
-	public static synchronized LoggerMock getLogger(String name,
-			String resourceBundleName) {
+	public static synchronized LoggerMock getLogger(String name, String resourceBundleName) {
 		return new LoggerMock(Logger.getLogger(name, resourceBundleName));
 	}
 
@@ -168,8 +167,7 @@ public class LoggerMock extends Logger {
 	 * @throws MissingResourceException
 	 *             if the named ResourceBundle cannot be found.
 	 */
-	public static synchronized LoggerMock getAnonymousLogger(
-			String resourceBundleName) {
+	public static synchronized LoggerMock getAnonymousLogger(String resourceBundleName) {
 		return new LoggerMock(Logger.getAnonymousLogger(resourceBundleName));
 	}
 
@@ -232,12 +230,11 @@ public class LoggerMock extends Logger {
 	 */
 	public void log(LogRecord record) {
 		if (record.getLevel().intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		synchronized (this) {
-			if (logger.getFilter() != null
-					&& !logger.getFilter().isLoggable(record)) {
+			if (logger.getFilter() != null && !logger.getFilter().isLoggable(record)) {
 				return;
 			}
 		}
@@ -265,7 +262,7 @@ public class LoggerMock extends Logger {
 	 */
 	public void log(Level level, String msg) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -289,7 +286,7 @@ public class LoggerMock extends Logger {
 	 */
 	public void log(Level level, String msg, Object param1) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -315,7 +312,7 @@ public class LoggerMock extends Logger {
 	 */
 	public void log(Level level, String msg, Object params[]) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -345,7 +342,7 @@ public class LoggerMock extends Logger {
 	 */
 	public void log(Level level, String msg, Throwable thrown) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -373,10 +370,9 @@ public class LoggerMock extends Logger {
 	 * @param msg
 	 *            The string message (or a key in the message catalog)
 	 */
-	public void logp(Level level, String sourceClass, String sourceMethod,
-			String msg) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -405,10 +401,9 @@ public class LoggerMock extends Logger {
 	 * @param param1
 	 *            Parameter to the log message.
 	 */
-	public void logp(Level level, String sourceClass, String sourceMethod,
-			String msg, Object param1) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object param1) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -439,10 +434,9 @@ public class LoggerMock extends Logger {
 	 * @param params
 	 *            Array of parameters to the message
 	 */
-	public void logp(Level level, String sourceClass, String sourceMethod,
-			String msg, Object params[]) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object params[]) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -477,10 +471,9 @@ public class LoggerMock extends Logger {
 	 * @param thrown
 	 *            Throwable associated with log message.
 	 */
-	public void logp(Level level, String sourceClass, String sourceMethod,
-			String msg, Throwable thrown) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -518,10 +511,9 @@ public class LoggerMock extends Logger {
 	 *            The string message (or a key in the message catalog)
 	 */
 
-	public void logrb(Level level, String sourceClass, String sourceMethod,
-			String bundleName, String msg) {
+	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -556,10 +548,9 @@ public class LoggerMock extends Logger {
 	 * @param param1
 	 *            Parameter to the log message.
 	 */
-	public void logrb(Level level, String sourceClass, String sourceMethod,
-			String bundleName, String msg, Object param1) {
+	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object param1) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -596,10 +587,10 @@ public class LoggerMock extends Logger {
 	 * @param params
 	 *            Array of parameters to the message
 	 */
-	public void logrb(Level level, String sourceClass, String sourceMethod,
-			String bundleName, String msg, Object params[]) {
+	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg,
+	        Object params[]) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -640,10 +631,10 @@ public class LoggerMock extends Logger {
 	 * @param thrown
 	 *            Throwable associated with log message.
 	 */
-	public void logrb(Level level, String sourceClass, String sourceMethod,
-			String bundleName, String msg, Throwable thrown) {
+	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg,
+	        Throwable thrown) {
 		if (level.intValue() < this.logger.getLevel().intValue()
-				|| this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(level, msg);
@@ -716,8 +707,7 @@ public class LoggerMock extends Logger {
 	 * @param params
 	 *            array of parameters to the method being entered
 	 */
-	public void entering(String sourceClass, String sourceMethod,
-			Object params[]) {
+	public void entering(String sourceClass, String sourceMethod, Object params[]) {
 		if (Level.FINER.intValue() < this.logger.getLevel().intValue()) {
 			return;
 		}
@@ -797,9 +787,9 @@ public class LoggerMock extends Logger {
 	 * @param thrown
 	 *            The Throwable that is being thrown.
 	 */
-	public void throwing(String sourceClass, String sourceMethod,
-			Throwable thrown) {
-		if (Level.FINER.intValue() < this.logger.getLevel().intValue() || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
+	public void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
+		if (Level.FINER.intValue() < this.logger.getLevel().intValue()
+		        || this.logger.getLevel().intValue() == Level.OFF.intValue()) {
 			return;
 		}
 		LogRecord lr = new LogRecord(Level.FINER, "THROW");
@@ -1000,8 +990,7 @@ public class LoggerMock extends Logger {
 	 *                if a security manager exists and if the caller does not
 	 *                have LoggingPermission("control").
 	 */
-	public synchronized void addHandler(final Handler handler)
-			throws SecurityException {
+	public synchronized void addHandler(final Handler handler) throws SecurityException {
 		logger.addHandler(handler);
 	}
 
@@ -1016,8 +1005,7 @@ public class LoggerMock extends Logger {
 	 *                if a security manager exists and if the caller does not
 	 *                have LoggingPermission("control").
 	 */
-	public synchronized void removeHandler(Handler handler)
-			throws SecurityException {
+	public synchronized void removeHandler(Handler handler) throws SecurityException {
 	}
 
 	/**
@@ -1122,7 +1110,9 @@ public class LoggerMock extends Logger {
 	// there is no suitable previous cached value.
 
 	private ResourceBundle catalog; // Cached resource bundle
+
 	private String catalogName; // name associated with catalog
+
 	private Locale catalogLocale; // locale associated with catalog
 
 	private synchronized ResourceBundle findResourceBundle(String name) {
@@ -1136,8 +1126,7 @@ public class LoggerMock extends Logger {
 		Locale currentLocale = Locale.getDefault();
 
 		// Normally we should hit on our simple one entry cache.
-		if (catalog != null && currentLocale == catalogLocale
-				&& name == catalogName) {
+		if (catalog != null && currentLocale == catalogLocale && name == catalogName) {
 			return catalog;
 		}
 

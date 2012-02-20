@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.security;
 
-
 import java.io.File;
 
 import junit.framework.Assert;
@@ -39,16 +38,12 @@ public class ConfigFileTest {
 	@Test
 	public void testHashMD5() {
 		Assert.assertEquals("a47d3912f1eaab08af5d01f6f6a5af46",
-				Verifyer.hashValue(
-						new File("testdata/unpack/test1.zip"),
-						Hashalgorithm.MD5));
+		        Verifyer.hashValue(new File("testdata/unpack/test1.zip"), Hashalgorithm.MD5));
 	}
 
 	@Test
 	public void testHashSHA1() {
 		Assert.assertEquals("364e173ff53f823d1f152403ed004c73abaae9c4",
-				Verifyer.hashValue(
-						new File("testdata/unpack/test1.zip"),
-						Hashalgorithm.SHA1));
+		        Verifyer.hashValue(new File("testdata/unpack/test1.zip"), Hashalgorithm.SHA1));
 	}
 }

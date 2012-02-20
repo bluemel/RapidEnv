@@ -26,15 +26,9 @@ public class ConfigExprTopLevelTest {
 
 	@Test
 	public void testInterpret() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null,
-				"xxx''osname()yyy''pathconvert('\\a/b\\c', '/')zzz",
-				false);
-		Assert.assertEquals("xxx"
-		        + PlatformHelper.getOs().name()
-		        + "yyy"
-		        + "/a/b/c"
-		        + "zzz", expr.interpret());
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null,
+		        "xxx''osname()yyy''pathconvert('\\a/b\\c', '/')zzz", false);
+		Assert.assertEquals("xxx" + PlatformHelper.getOs().name() + "yyy" + "/a/b/c" + "zzz", expr.interpret());
 	}
 
 	private static final int I5 = 5;
@@ -44,10 +38,9 @@ public class ConfigExprTopLevelTest {
 	 */
 	@Test
 	public final void testExprTopLevelStringEnvvar() {
-//		AntGateway ant = new AntGateway(new File("testdata/ant/ant_win.properties"));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null,
-				"xxx${V1}yyy${V2}zzz", false);
+		// AntGateway ant = new AntGateway(new
+		// File("testdata/ant/ant_win.properties"));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx${V1}yyy${V2}zzz", false);
 		Assert.assertEquals(I5, expr.getChilds().size());
 		Assert.assertSame(ConfigExprStringLiteral.class, expr.getChilds().get(0).getClass());
 		Assert.assertSame(ConfigExprProperty.class, expr.getChilds().get(1).getClass());
@@ -58,24 +51,23 @@ public class ConfigExprTopLevelTest {
 	 */
 	@Test
 	public final void testExprTopLevelPathcovertString() {
-//		AntGateway ant = new AntGateway(new File("testdata/ant/ant_win.properties"));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null,
-				"pathconvert('C:\\a\\b\\c')b", false);
+		// AntGateway ant = new AntGateway(new
+		// File("testdata/ant/ant_win.properties"));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "pathconvert('C:\\a\\b\\c')b",
+		        false);
 		Assert.assertEquals(2, expr.getChilds().size());
-		Assert.assertSame(ConfigExprFunctionPathconvert.class, expr.getChilds().get(0)
-				.getClass());
+		Assert.assertSame(ConfigExprFunctionPathconvert.class, expr.getChilds().get(0).getClass());
 		Assert.assertSame(ConfigExprStringLiteral.class, expr.getChilds().get(1).getClass());
 	}
 
-    /**
-     * Test expansion of unknown property.
-     */
-    @Test
-    public void interpretUnknownFunction() {
-//        AntGateway ant = new AntGateway(new File("testdata/ant/ant_win.properties"));
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                null, null, "123 func(x) 456", false);
-        Assert.assertEquals("123 func(x) 456", expr.interpret());
-    }
+	/**
+	 * Test expansion of unknown property.
+	 */
+	@Test
+	public void interpretUnknownFunction() {
+		// AntGateway ant = new AntGateway(new
+		// File("testdata/ant/ant_win.properties"));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "123 func(x) 456", false);
+		Assert.assertEquals("123 func(x) 456", expr.interpret());
+	}
 }

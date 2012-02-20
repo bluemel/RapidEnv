@@ -26,15 +26,14 @@ import org.rapidbeans.rapidenv.config.Installunit;
 
 public class ConfigExprFunctionUsernameTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        TypePropertyCollection.setDefaultCharSeparator(',');
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		TypePropertyCollection.setDefaultCharSeparator(',');
+	}
 
 	@Test
 	public void testInterpret() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null, "username()", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "username()", false);
 		Assert.assertEquals(PlatformHelper.username(), expr.interpret());
 	}
 }

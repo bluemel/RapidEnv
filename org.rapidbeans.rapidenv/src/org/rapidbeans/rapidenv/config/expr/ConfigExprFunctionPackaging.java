@@ -35,83 +35,81 @@ import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 public class ConfigExprFunctionPackaging extends RapidBeanBaseConfigExprFunctionOsname {
 
 	/**
-	 * The interpreting method determines the operating system (family) specific packaging.
-	 *
+	 * The interpreting method determines the operating system (family) specific
+	 * packaging.
+	 * 
 	 * @return packaging (extension) as string
 	 */
 	public String interpret() {
-	    final HashMap<String, String> conversionMap = new HashMap<String, String>();
-	    if (this.getArgs().size() > 0) {
-	        final String conversionMapString = this.getArgs().get(0).interpret();
-	        for (final String conversionMapEntry : StringHelper.split(conversionMapString, ";")) {
-	            final List<String> splitEntry = StringHelper.split(conversionMapEntry, "=");
-	            switch (splitEntry.size()) {
-	            case 0:
-	                throw new RapidEnvConfigurationException("Error evaluating entry \""
-	                        + conversionMapEntry + "\" from conversion map: \"" + conversionMapString + "\"\n"
-	                        + "No separator '=' specified.");
-	            case 1:
-	                conversionMap.put(splitEntry.get(0), "");
-	                break;
-                case 2:
-                    conversionMap.put(splitEntry.get(0), splitEntry.get(1));
-                    break;
-                default:
-                    throw new RapidEnvConfigurationException("Error evaluating entry \""
-                            + conversionMapEntry + "\" from conversion map: \"" + conversionMapString + "\"\n"
-                            + "More than one separator '=' specified.");
-	            }
-	        }
-	    }
+		final HashMap<String, String> conversionMap = new HashMap<String, String>();
+		if (this.getArgs().size() > 0) {
+			final String conversionMapString = this.getArgs().get(0).interpret();
+			for (final String conversionMapEntry : StringHelper.split(conversionMapString, ";")) {
+				final List<String> splitEntry = StringHelper.split(conversionMapEntry, "=");
+				switch (splitEntry.size()) {
+				case 0:
+					throw new RapidEnvConfigurationException("Error evaluating entry \"" + conversionMapEntry
+					        + "\" from conversion map: \"" + conversionMapString + "\"\n"
+					        + "No separator '=' specified.");
+				case 1:
+					conversionMap.put(splitEntry.get(0), "");
+					break;
+				case 2:
+					conversionMap.put(splitEntry.get(0), splitEntry.get(1));
+					break;
+				default:
+					throw new RapidEnvConfigurationException("Error evaluating entry \"" + conversionMapEntry
+					        + "\" from conversion map: \"" + conversionMapString + "\"\n"
+					        + "More than one separator '=' specified.");
+				}
+			}
+		}
 		String defaultPackaging = null;
 		switch (PlatformHelper.getOs()) {
 		case linux:
-		    defaultPackaging = "tar.gz";
-		    break;
+			defaultPackaging = "tar.gz";
+			break;
 		default:
-		    defaultPackaging = "zip";
-		    break;
+			defaultPackaging = "zip";
+			break;
 		}
 		final String converted = conversionMap.get(PlatformHelper.getOs().name());
 		if (converted != null) {
-		    return converted;
+			return converted;
 		} else {
-		    return defaultPackaging;
+			return defaultPackaging;
 		}
 	}
 
 	/**
 	 * The constructor for the Function Expression.
 	 * 
-    * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
 	 * @param funcContent
 	 *            function parameter list. Must be empty for Hostname Function
 	 *            Expressions.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionPackaging(
-	        final Installunit enclosingUnit,
-            final Property enclosingProp,
-			final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	public ConfigExprFunctionPackaging(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
 	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionPackaging.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionPackaging.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

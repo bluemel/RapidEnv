@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,562 +38,550 @@ import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.cmd.CmdLineInteractions;
 
-
 /**
  * A RapidEnv environment property definition.
  */
 public class Property extends RapidBeanBaseProperty {
 
-    private PropertyValue specificValueCommon = null;
-    private Map<OperatingSystem, PropertyValue> specificvaluesOsSpecific = null;
+	private PropertyValue specificValueCommon = null;
 
-    private Environment environmentCommon = null;
-    private Map<OperatingSystem, Environment> environmentsOsSpecific = null;
+	private Map<OperatingSystem, PropertyValue> specificvaluesOsSpecific = null;
 
-    public synchronized Id getId() {
-        if (super.getId() == null
-                || (!super.getId().toString().equals(getFullyQualifiedName()))) {
-            super.setId(new IdKeyprops(this, getFullyQualifiedName()));
-        }
-        return super.getId();
-    }
+	private Environment environmentCommon = null;
 
-    public final String getIdString() {
-        return getFullyQualifiedName();
-    }
+	private Map<OperatingSystem, Environment> environmentsOsSpecific = null;
 
-    public String getFullyQualifiedName() {
-        return getFullyQualifiedName(true);
-    }
+	@Override
+	public synchronized Id getId() {
+		if (super.getId() == null || (!super.getId().toString().equals(getFullyQualifiedName()))) {
+			super.setId(new IdKeyprops(this, getFullyQualifiedName()));
+		}
+		return super.getId();
+	}
 
-    public String getFullyQualifiedName(final boolean withParentUnits) {
-        final StringBuffer fqName = new StringBuffer();
-        if (getParentInstallunit() != null) {
-            fqName.append(getParentInstallunit().getFullyQualifiedName(false));
-            fqName.append('.');
-        }
-        fqName.append(getName());
-        return fqName.toString();
-    }
+	@Override
+	public final String getIdString() {
+		return getFullyQualifiedName();
+	}
 
-    public String getValue() {
-        final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+	@Override
+	public String getFullyQualifiedName() {
+		return getFullyQualifiedName(true);
+	}
 
-        // take value or specific value
-        String currentValue = "";
-        final PropertyValue specificValue = getSpecificvalue(PlatformHelper.getOs());
-        if (specificValue != null && specificValue.getValue() != null) {
-            currentValue = interpret(specificValue.getValue());
-        } else {
-            if (super.getValue() != null && super.getValue().length() > 0) {
-                currentValue = interpret(super.getValue());
-            }
-        }
+	public String getFullyQualifiedName(final boolean withParentUnits) {
+		final StringBuffer fqName = new StringBuffer();
+		if (getParentInstallunit() != null) {
+			fqName.append(getParentInstallunit().getFullyQualifiedName(false));
+			fqName.append('.');
+		}
+		fqName.append(getName());
+		return fqName.toString();
+	}
 
-        final StringBuffer sb = new StringBuffer();
+	@Override
+	public String getValue() {
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
 
-        if (getValuetype() == PropertyValueType.path) {
-            final List<String> pathComponents = StringHelper.split(currentValue, File.pathSeparator);
-            if (getExtensions() != null) {
-                // remove path extensions to be removed
-                final ReadonlyListCollection<PropertyExtension> extensions = getExtensions();
-                final int size = extensions.size();
-                for (int i = size - 1; i >= 0; i--) {
-                    final PropertyExtension ext = extensions.get(i);
-                    if (ext.getPropextmode() == PropertyExtensionMode.remove) {
-                        removePathExtension(pathComponents, ext.getPropextmode(), normalize(interpret(ext.getValue())));
-                    } else {
-                        if (ext.getPropextmode() == PropertyExtensionMode.prepend) {
-                            addPathExtension(pathComponents, ext.getPropextmode(), normalize(interpret(ext.getValue())));
-                        }
-                    }
-                }
-                for (int i = 0; i < size; i++) {
-                    final PropertyExtension ext = extensions.get(i);
-                    if (ext.getPropextmode() == PropertyExtensionMode.append) {
-                        addPathExtension(pathComponents, ext.getPropextmode(), normalize(interpret(ext.getValue())));
-                    }
-                }
-            }
-            if (getInstallunitextensions() != null) {
-                final ReadonlyListCollection<PropertyExtensionFromInstallUnit> extfus = getInstallunitextensions();
-                final int size = extfus.size();
-                for (int i = size - 1; i >= 0; i--) {
-                    final PropertyExtensionFromInstallUnit extfu = extfus.get(i);
-                    // interpret path extension in the context of its parent install unit
-                    final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
-                    final String value = normalize(interpret(extfu.getValue(), parentInstallUnit));
-                    final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit.getInstallationStatus(CmdRenvCommand.stat);
-                    switch (parentInstallUnitInstallStatus) {
-                    case deinstallrequired:
-                        removePathExtension(pathComponents, extfu.getPropextmode(), value);
-                        break;
-                    default:
-                        if (interpreter != null
-                                && (interpreter.getCommand() == CmdRenvCommand.install
-                                        || parentInstallUnit.getInstallcontrol() == InstallControl.normal)) {
-                            // add path extension
-                            if (extfu.getPropextmode() == PropertyExtensionMode.prepend) {
-                                addPathExtension(pathComponents, extfu.getPropextmode(), value);
-                            }
-                        }
-                        break;
-                    }
-                }
-                for (int i = 0; i < size; i++) {
-                    final PropertyExtensionFromInstallUnit extfu = extfus.get(i);
-                    // interpret path extension in the context of its parent install unit
-                    final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
-                    final String value = normalize(interpret(extfu.getValue(), parentInstallUnit));
-                    final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit.getInstallationStatus(CmdRenvCommand.install);
-                    switch (parentInstallUnitInstallStatus) {
-                    case deinstallrequired:
-                        break;
-                    default:
-                        if (interpreter != null
-                                && (interpreter.getCommand() == CmdRenvCommand.install
-                                        || parentInstallUnit.getInstallcontrol() == InstallControl.normal)) {
-                            // add path extension
-                            if (extfu.getPropextmode() == PropertyExtensionMode.append) {
-                                addPathExtension(pathComponents, extfu.getPropextmode(), value);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            int i = 0;
-            for (final String pc : pathComponents) {
-                if (i > 0) {
-                    sb.append(File.pathSeparator);
-                }
-                sb.append(pc);
-                i++;
-            }
-        } else {
-            sb.append(currentValue);
-        }
+		// take value or specific value
+		String currentValue = "";
+		final PropertyValue specificValue = getSpecificvalue(PlatformHelper.getOs());
+		if (specificValue != null && specificValue.getValue() != null) {
+			currentValue = interpret(specificValue.getValue());
+		} else {
+			if (super.getValue() != null && super.getValue().length() > 0) {
+				currentValue = interpret(super.getValue());
+			}
+		}
 
-        // add extensions
-        if (getValuetype() == PropertyValueType.path) {
-        }
+		final StringBuffer sb = new StringBuffer();
 
-        // interpret
-        final String interpreted = interpret(sb.toString());
+		if (getValuetype() == PropertyValueType.path) {
+			final List<String> pathComponents = StringHelper.split(currentValue, File.pathSeparator);
+			if (getExtensions() != null) {
+				// remove path extensions to be removed
+				final ReadonlyListCollection<PropertyExtension> extensions = getExtensions();
+				final int size = extensions.size();
+				for (int i = size - 1; i >= 0; i--) {
+					final PropertyExtension ext = extensions.get(i);
+					if (ext.getPropextmode() == PropertyExtensionMode.remove) {
+						removePathExtension(pathComponents, ext.getPropextmode(), normalize(interpret(ext.getValue())));
+					} else {
+						if (ext.getPropextmode() == PropertyExtensionMode.prepend) {
+							addPathExtension(pathComponents, ext.getPropextmode(), normalize(interpret(ext.getValue())));
+						}
+					}
+				}
+				for (int i = 0; i < size; i++) {
+					final PropertyExtension ext = extensions.get(i);
+					if (ext.getPropextmode() == PropertyExtensionMode.append) {
+						addPathExtension(pathComponents, ext.getPropextmode(), normalize(interpret(ext.getValue())));
+					}
+				}
+			}
+			if (getInstallunitextensions() != null) {
+				final ReadonlyListCollection<PropertyExtensionFromInstallUnit> extfus = getInstallunitextensions();
+				final int size = extfus.size();
+				for (int i = size - 1; i >= 0; i--) {
+					final PropertyExtensionFromInstallUnit extfu = extfus.get(i);
+					// interpret path extension in the context of its parent
+					// install unit
+					final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
+					final String value = normalize(interpret(extfu.getValue(), parentInstallUnit));
+					final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit
+					        .getInstallationStatus(CmdRenvCommand.stat);
+					switch (parentInstallUnitInstallStatus) {
+					case deinstallrequired:
+						removePathExtension(pathComponents, extfu.getPropextmode(), value);
+						break;
+					default:
+						if (interpreter != null
+						        && (interpreter.getCommand() == CmdRenvCommand.install || parentInstallUnit
+						                .getInstallcontrol() == InstallControl.normal)) {
+							// add path extension
+							if (extfu.getPropextmode() == PropertyExtensionMode.prepend) {
+								addPathExtension(pathComponents, extfu.getPropextmode(), value);
+							}
+						}
+						break;
+					}
+				}
+				for (int i = 0; i < size; i++) {
+					final PropertyExtensionFromInstallUnit extfu = extfus.get(i);
+					// interpret path extension in the context of its parent
+					// install unit
+					final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
+					final String value = normalize(interpret(extfu.getValue(), parentInstallUnit));
+					final InstallStatus parentInstallUnitInstallStatus = parentInstallUnit
+					        .getInstallationStatus(CmdRenvCommand.install);
+					switch (parentInstallUnitInstallStatus) {
+					case deinstallrequired:
+						break;
+					default:
+						if (interpreter != null
+						        && (interpreter.getCommand() == CmdRenvCommand.install || parentInstallUnit
+						                .getInstallcontrol() == InstallControl.normal)) {
+							// add path extension
+							if (extfu.getPropextmode() == PropertyExtensionMode.append) {
+								addPathExtension(pathComponents, extfu.getPropextmode(), value);
+							}
+						}
+						break;
+					}
+				}
+			}
+			int i = 0;
+			for (final String pc : pathComponents) {
+				if (i > 0) {
+					sb.append(File.pathSeparator);
+				}
+				sb.append(pc);
+				i++;
+			}
+		} else {
+			sb.append(currentValue);
+		}
 
-        // normalize
-        final String normalized = normalize(interpreted);
+		// add extensions
+		if (getValuetype() == PropertyValueType.path) {
+		}
 
-        return normalized;
-    }
+		// interpret
+		final String interpreted = interpret(sb.toString());
 
-    public Installunit getParentInstallunit() {
-        Installunit installunit = null;
-        if (this.getParentBean() instanceof Installunit) {
-            installunit = (Installunit) this.getParentBean();
-        }
-        return installunit;
-    }
+		// normalize
+		final String normalized = normalize(interpreted);
 
-    private void removePathExtension(final List<String> pathComponents,
-            final PropertyExtensionMode extMode,
-            final String extvalue) {
-        final int index = pathComponents.indexOf(extvalue);
-        if (index != -1) {
-            pathComponents.remove(index);
-        }
-    }
+		return normalized;
+	}
 
-    private void addPathExtension(final List<String> pathComponents,
-            final PropertyExtensionMode extMode,
-            final String extvalue) throws AssertionError {
-        switch (extMode) {
-        case append:
-            pathComponents.add(extvalue);
-            break;
-        case prepend:
-            // important in case the extension is a function to interpret
-            pathComponents.add(0, extvalue);
-            break;
-        case remove:
-            // do nothing
-            break;
-        default:
-            throw new AssertionError("Unexpected property extension mode \"" + extMode.name() + "\"");
-        }
-    }
+	public Installunit getParentInstallunit() {
+		Installunit installunit = null;
+		if (this.getParentBean() instanceof Installunit) {
+			installunit = (Installunit) this.getParentBean();
+		}
+		return installunit;
+	}
 
-    private String interpret(final String s) {
-        return interpret(s, getParentInstallunit());
-    }
+	private void removePathExtension(final List<String> pathComponents, final PropertyExtensionMode extMode,
+	        final String extvalue) {
+		final int index = pathComponents.indexOf(extvalue);
+		if (index != -1) {
+			pathComponents.remove(index);
+		}
+	}
 
-    private String interpret(final String s, final Installunit enclosingUnit) {
-        try {
-            final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-            if (interpreter == null) {
-                return s;
-            } else {
-                return interpreter.interpret(enclosingUnit, this, s);
-            }
-        } catch (RapidEnvException e) {
-            if (e.getCause() != null
-                    && e.getCause().getCause() != null
-                    && e.getCause().getCause() instanceof ClassNotFoundException) {
-                String funcname = e.getCause().getCause().getMessage();
-                final String msg = e.getCause().getMessage();
-                final int pos = msg.indexOf("ConfigExprFunction");
-                if (pos != -1) {
-                    funcname = msg.substring(pos + "ConfigExprFunction".length());
-                }
-                throw new RapidEnvConfigurationException(
-                        "Problem while interpreting value\n"
-                        + "  \"" + s + "\"\n"
-                        + "  for property \"" + getFullyQualifiedName() + "\":\n"
-                        + "  No interpreter class found for function \""
-                        + funcname + "()\".", e);
-            }
-            throw new RapidEnvConfigurationException(
-                    "Problem while interpreting value\n"
-                    + "  \"" + s + "\"\n  for property \"" + getFullyQualifiedName() + "\"", e);
-        }
-    }
+	private void addPathExtension(final List<String> pathComponents, final PropertyExtensionMode extMode,
+	        final String extvalue) throws AssertionError {
+		switch (extMode) {
+		case append:
+			pathComponents.add(extvalue);
+			break;
+		case prepend:
+			// important in case the extension is a function to interpret
+			pathComponents.add(0, extvalue);
+			break;
+		case remove:
+			// do nothing
+			break;
+		default:
+			throw new AssertionError("Unexpected property extension mode \"" + extMode.name() + "\"");
+		}
+	}
 
-    public String normalize(final String s) {
-        if (!getNormalize()) {
-            return s;
-        }
-        final StringBuffer sb = new StringBuffer();
-        try {
-            switch (getValuetype()) {
-            case file:
-                final File file = new File(s);
-                if (file.exists()) {
-                    sb.append(file.getCanonicalPath());
-                } else {
-                    sb.append(s.replace('/', File.separatorChar).replace('\\', File.separatorChar));
-                }
-                break;
-            case path:
-                final List<String> list = new ArrayList<String>();
-                final Map<String, File> map = new HashMap<String, File>();
-                int i = 0;
-                for (final String sPath : StringHelper.split(s, File.pathSeparator)) {
-                    final File pathfile = new File(sPath);
-                    if (pathfile.exists()) {
-                        if (sPath.equals(".")) {
-                            if (map.get(sPath) == null) {
-                                list.add(sPath);
-                                map.put(sPath, pathfile);
-                            }
-                        } else if (sPath.equals("." + File.separator)) {
-                            if (map.get(sPath) == null) {
-                                list.add(sPath);
-                                map.put(sPath, pathfile);
-                            }
-                        } else {
-                            final String scPath = pathfile.getCanonicalPath();
-                            if (map.get(scPath) == null) {
-                                list.add(scPath);
-                                map.put(scPath, pathfile);
-                            }
-                        }
-                    } else {
-                        final String sPathnorm = sPath.replace('/', File.separatorChar).replace('\\', File.separatorChar);
-                        if (map.get(sPathnorm) == null) {
-                            list.add(sPathnorm);
-                            map.put(sPathnorm, pathfile);                    
-                        }
-                    }
-                }
-                for (final String scPath : list) {
-                    if (i > 0) {
-                        sb.append(File.pathSeparator);
-                    }
-                    sb.append(scPath);
-                    i++;
-                }
-                break;
-            default:
-                sb.append(s);
-                break;
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            throw new RapidEnvException(e);
-        }
-    }
+	private String interpret(final String s) {
+		return interpret(s, getParentInstallunit());
+	}
 
-    /**
-     * @param os defines a specific operation system (family).
-     *
-     * @return the specific value for the given operation system
-     */
-    public synchronized PropertyValue getSpecificvalue(final OperatingSystem os) {
-        if (this.specificValueCommon == null) {
-            initSpecificvalue();
-        }
-        if (this.specificvaluesOsSpecific.get(os) != null) {
-            return this.specificvaluesOsSpecific.get(os);
-        }
-        return this.specificValueCommon;
-    }
+	private String interpret(final String s, final Installunit enclosingUnit) {
+		try {
+			final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+			if (interpreter == null) {
+				return s;
+			} else {
+				return interpreter.interpret(enclosingUnit, this, s);
+			}
+		} catch (RapidEnvException e) {
+			if (e.getCause() != null && e.getCause().getCause() != null
+			        && e.getCause().getCause() instanceof ClassNotFoundException) {
+				String funcname = e.getCause().getCause().getMessage();
+				final String msg = e.getCause().getMessage();
+				final int pos = msg.indexOf("ConfigExprFunction");
+				if (pos != -1) {
+					funcname = msg.substring(pos + "ConfigExprFunction".length());
+				}
+				throw new RapidEnvConfigurationException("Problem while interpreting value\n" + "  \"" + s + "\"\n"
+				        + "  for property \"" + getFullyQualifiedName() + "\":\n"
+				        + "  No interpreter class found for function \"" + funcname + "()\".", e);
+			}
+			throw new RapidEnvConfigurationException("Problem while interpreting value\n" + "  \"" + s
+			        + "\"\n  for property \"" + getFullyQualifiedName() + "\"", e);
+		}
+	}
 
-    /**
-     * @param os defines a specific operation system (family).
-     *
-     * @return the environment variable definitions associated to this property
-     */
-    public synchronized Environment getEnvironment(final OperatingSystem os) {
-        if (this.environmentsOsSpecific == null) {
-            initEnvironment();
-        }
-        if (this.environmentsOsSpecific.get(os) != null) {
-            return this.environmentsOsSpecific.get(os);
-        }
-        return this.environmentCommon;
-    }
+	public String normalize(final String s) {
+		if (!getNormalize()) {
+			return s;
+		}
+		final StringBuffer sb = new StringBuffer();
+		try {
+			switch (getValuetype()) {
+			case file:
+				final File file = new File(s);
+				if (file.exists()) {
+					sb.append(file.getCanonicalPath());
+				} else {
+					sb.append(s.replace('/', File.separatorChar).replace('\\', File.separatorChar));
+				}
+				break;
+			case path:
+				final List<String> list = new ArrayList<String>();
+				final Map<String, File> map = new HashMap<String, File>();
+				int i = 0;
+				for (final String sPath : StringHelper.split(s, File.pathSeparator)) {
+					final File pathfile = new File(sPath);
+					if (pathfile.exists()) {
+						if (sPath.equals(".")) {
+							if (map.get(sPath) == null) {
+								list.add(sPath);
+								map.put(sPath, pathfile);
+							}
+						} else if (sPath.equals("." + File.separator)) {
+							if (map.get(sPath) == null) {
+								list.add(sPath);
+								map.put(sPath, pathfile);
+							}
+						} else {
+							final String scPath = pathfile.getCanonicalPath();
+							if (map.get(scPath) == null) {
+								list.add(scPath);
+								map.put(scPath, pathfile);
+							}
+						}
+					} else {
+						final String sPathnorm = sPath.replace('/', File.separatorChar).replace('\\',
+						        File.separatorChar);
+						if (map.get(sPathnorm) == null) {
+							list.add(sPathnorm);
+							map.put(sPathnorm, pathfile);
+						}
+					}
+				}
+				for (final String scPath : list) {
+					if (i > 0) {
+						sb.append(File.pathSeparator);
+					}
+					sb.append(scPath);
+					i++;
+				}
+				break;
+			default:
+				sb.append(s);
+				break;
+			}
+			return sb.toString();
+		} catch (IOException e) {
+			throw new RapidEnvException(e);
+		}
+	}
 
-    /**
-     * (Lazy) initialization of the environment map and common.
-     */
-    private void initEnvironment() {
-        this.environmentsOsSpecific = new HashMap<OperatingSystem, Environment>();
-        if (this.getEnvironments() == null) {
-            this.setEnvironments(new ArrayList<Environment>());
-        }
-        for (final Environment env : this.getEnvironments()) {
-            if (env.getOsfamily() == null) {
-                if (this.environmentCommon != null) {
-                    throw new RapidEnvConfigurationException(
-                            "More than one general (OS independent) environment definition"
-                            + " for property \"" + getFullyQualifiedName() + "\"");
-                }
-                this.environmentCommon = env;
-            } else {
-                if (this.environmentsOsSpecific.get(env.getOsfamily()) != null) {
-                    throw new RapidEnvConfigurationException(
-                            "More than one OS specific environment definition"
-                            + " for property \"" + getFullyQualifiedName() + "\""
-                            + " for OS (familiy) \"" + env.getOsfamily() + "\"");                    
-                }
-                this.environmentsOsSpecific.put(env.getOsfamily(), env);
-            }
-        }
-    }
+	/**
+	 * @param os
+	 *            defines a specific operation system (family).
+	 * 
+	 * @return the specific value for the given operation system
+	 */
+	public synchronized PropertyValue getSpecificvalue(final OperatingSystem os) {
+		if (this.specificValueCommon == null) {
+			initSpecificvalue();
+		}
+		if (this.specificvaluesOsSpecific.get(os) != null) {
+			return this.specificvaluesOsSpecific.get(os);
+		}
+		return this.specificValueCommon;
+	}
 
-    /**
-     * (Lazy) initialization of the specific value map and common.
-     */
-    private void initSpecificvalue() {
-        this.specificvaluesOsSpecific = new HashMap<OperatingSystem, PropertyValue>();
-        if (getSpecificvalues() != null) {
-            for (final PropertyValue value : this.getSpecificvalues()) {
-                if (value.getOsfamily() == null) {
-                    if (this.specificValueCommon != null) {
-                        throw new RapidEnvConfigurationException(
-                                "More than one general (OS independent) specific value definition"
-                                + " for property \"" + getFullyQualifiedName() + "\"");
-                    }
-                    this.specificValueCommon = value;
-                } else {
-                    if (this.specificvaluesOsSpecific.get(value.getOsfamily()) != null) {
-                        throw new RapidEnvConfigurationException(
-                                "More than one OS specific value definition"
-                                + " for property \"" + getFullyQualifiedName() + "\""
-                                + " for OS (familiy) \"" + value.getOsfamily() + "\"");                    
-                    }
-                    this.specificvaluesOsSpecific.put(value.getOsfamily(), value);
-                }
-            }
-        }
-    }
+	/**
+	 * @param os
+	 *            defines a specific operation system (family).
+	 * 
+	 * @return the environment variable definitions associated to this property
+	 */
+	public synchronized Environment getEnvironment(final OperatingSystem os) {
+		if (this.environmentsOsSpecific == null) {
+			initEnvironment();
+		}
+		if (this.environmentsOsSpecific.get(os) != null) {
+			return this.environmentsOsSpecific.get(os);
+		}
+		return this.environmentCommon;
+	}
 
-    /**
-     * default constructor.
-     */
-    public Property() {
-        super();
-    }
+	/**
+	 * (Lazy) initialization of the environment map and common.
+	 */
+	private void initEnvironment() {
+		this.environmentsOsSpecific = new HashMap<OperatingSystem, Environment>();
+		if (this.getEnvironments() == null) {
+			this.setEnvironments(new ArrayList<Environment>());
+		}
+		for (final Environment env : this.getEnvironments()) {
+			if (env.getOsfamily() == null) {
+				if (this.environmentCommon != null) {
+					throw new RapidEnvConfigurationException(
+					        "More than one general (OS independent) environment definition" + " for property \""
+					                + getFullyQualifiedName() + "\"");
+				}
+				this.environmentCommon = env;
+			} else {
+				if (this.environmentsOsSpecific.get(env.getOsfamily()) != null) {
+					throw new RapidEnvConfigurationException("More than one OS specific environment definition"
+					        + " for property \"" + getFullyQualifiedName() + "\"" + " for OS (familiy) \""
+					        + env.getOsfamily() + "\"");
+				}
+				this.environmentsOsSpecific.put(env.getOsfamily(), env);
+			}
+		}
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public Property(final String s) {
-        super(s);
-    }
+	/**
+	 * (Lazy) initialization of the specific value map and common.
+	 */
+	private void initSpecificvalue() {
+		this.specificvaluesOsSpecific = new HashMap<OperatingSystem, PropertyValue>();
+		if (getSpecificvalues() != null) {
+			for (final PropertyValue value : this.getSpecificvalues()) {
+				if (value.getOsfamily() == null) {
+					if (this.specificValueCommon != null) {
+						throw new RapidEnvConfigurationException(
+						        "More than one general (OS independent) specific value definition" + " for property \""
+						                + getFullyQualifiedName() + "\"");
+					}
+					this.specificValueCommon = value;
+				} else {
+					if (this.specificvaluesOsSpecific.get(value.getOsfamily()) != null) {
+						throw new RapidEnvConfigurationException("More than one OS specific value definition"
+						        + " for property \"" + getFullyQualifiedName() + "\"" + " for OS (familiy) \""
+						        + value.getOsfamily() + "\"");
+					}
+					this.specificvaluesOsSpecific.put(value.getOsfamily(), value);
+				}
+			}
+		}
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public Property(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * default constructor.
+	 */
+	public Property() {
+		super();
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(Property.class);
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public Property(final String s) {
+		super(s);
+	}
 
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public Property(final String[] sa) {
+		super(sa);
+	}
 
-    /**
-     * Display the given property's status.
-     */
-    public void stat() {
-        final String propName = getFullyQualifiedName();
-        String propValue = getValue();
-        if (propValue != null && propValue.length() > 0
-                && getInterpret()) {
-            propValue = interpret(propValue);
-        }
-        final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-        final String propValuePersisted =
-            interpreter.getPropertyValuePersisted(propName);
-        switch (getCategory()) {
-        case common:
-            if (propValuePersisted == null) {
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println(
-                            "  ! " + getPrintName(interpreter) + ": "
-                            + "new common property with value \"" + propValue + "\""
-                            + " should be introduced.");
-                }
-            } else if (!propValuePersisted.equals(propValue)) {
-                if (interpreter.getOut() != null) {
-                    if (propValue.length() > 20) {
-                        interpreter.getOut().println(
-                                "  ! " + getPrintName(interpreter) + ": "
-                                + "value of common property should be changed\n"
-                                + "    from \"" + propValuePersisted
-                                + "\"\n      to \"" + propValue + "\"");
-                    } else {
-                        interpreter.getOut().println(
-                                "  ! " + getPrintName(interpreter) + ": "
-                                + "value of common property should be changed\n"
-                                + "    from \"" + propValuePersisted
-                                + "\"\n      to \"" + propValue + "\"");
-                    }
-                }
-            } else {
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println(
-                            "  = " + getPrintName(interpreter) + " = "
-                            + "\"" + propValue + "\"");
-                }
-            }
-            break;
-        case personal:
-            if (propValuePersisted == null) {
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println(
-                            "  ! " + getPrintName(interpreter) + ": "
-                            + "new personal property needs to be specified");
-                }
-                propValue = null;
-            } else {
-                propValue = propValuePersisted;
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println(
-                            "  p " + getPrintName(interpreter) + " = "
-                            + "\"" + propValue + "\"");
-                }
-            }
-            break;
-        }
-    }
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(Property.class);
 
-    private String getPrintName(final RapidEnvInterpreter interpreter) {
-        final StringBuffer buf = new StringBuffer(getFullyQualifiedName());
-        if (interpreter.getLogLevel().intValue() > Level.INFO.intValue()) {
-            buf.append(" (");
-            buf.append(getCategory().name());
-            buf.append("): ");
-        }
-        return buf.toString();
-    }
+	/**
+	 * @return the RapidBean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 
-    /**
-     * Update / Configure the given property's value.
-     *
-     * @return the new (updated) property value
-     */
-    public String update() {
-        final String propName = getFullyQualifiedName();
-        String propValue = getValue();
-        if (propValue != null && propValue.length() > 0
-                && getInterpret()) {
-            propValue = interpret(propValue);
-        }
-        final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-        final String propValuePersisted =
-                interpreter.getPropertyValuePersisted(propName);
-        if (this.getCategory() == PropertyCategory.personal
-                && propValuePersisted != null) {
-            propValue = propValuePersisted;
-        }
-        switch (getCategory()) {
-        case common:
-            // propValue stays the configured one
-            if (propValuePersisted == null) {
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println("  - introduced property \"" + propName 
-                            + "\" with value \"" + propValue + "\"");
-                }
-            } else if (!propValuePersisted.equals(propValue)) {
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println("  - changed value of property \""
-                            + propName + "\"\n"
-                            + "    from \"" + propValuePersisted + "\"\n"
-                            + "      to \"" + propValue + "\"");
-                }
-            } else {
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println(
-                            "  = " + getPrintName(interpreter) + " = "
-                            + "\"" + propValue + "\"");
-                }
-            }
-            break;
-        case personal:
-            if (propValuePersisted == null
-                || (interpreter.getPropertiesToProcess().size() < interpreter.getProject().getPropertys().size()
-                        && interpreter.getPropertiesToProcess().contains(this))) {
-                switch (interpreter.getCommand()) {
-                case update:
-                case config:
-                    if (interpreter.getInstallUnitOrPropertyNamesExplicitelySpecified()) {
-                        propValue = CmdLineInteractions.enterValue(
-                                interpreter.getIn(), interpreter.getOut(), this, propValue);
-                    } else {
-                        if (interpreter.getOut() != null) {
-                            interpreter.getOut().println(
-                                    "  = " + getPrintName(interpreter) + " = "
-                                    + "\"" + propValue + "\"");
-                        }                        
-                    }
-                    break;
-                default:
-                    propValue = CmdLineInteractions.enterValue(
-                            interpreter.getIn(), interpreter.getOut(), this, propValue);
-                    break;
-                }
-            } else {
-                propValue = propValuePersisted;
-                if (interpreter.getOut() != null) {
-                    interpreter.getOut().println(
-                            "  p " + getPrintName(interpreter) + " = "
-                            + "\"" + propValue + "\"");
-                }
-            }
-            break;
-        }
-        return propValue;
-    }
+	/**
+	 * Display the given property's status.
+	 */
+	public void stat() {
+		final String propName = getFullyQualifiedName();
+		String propValue = getValue();
+		if (propValue != null && propValue.length() > 0 && getInterpret()) {
+			propValue = interpret(propValue);
+		}
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		final String propValuePersisted = interpreter.getPropertyValuePersisted(propName);
+		switch (getCategory()) {
+		case common:
+			if (propValuePersisted == null) {
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println(
+					        "  ! " + getPrintName(interpreter) + ": " + "new common property with value \"" + propValue
+					                + "\"" + " should be introduced.");
+				}
+			} else if (!propValuePersisted.equals(propValue)) {
+				if (interpreter.getOut() != null) {
+					if (propValue.length() > 20) {
+						interpreter.getOut().println(
+						        "  ! " + getPrintName(interpreter) + ": "
+						                + "value of common property should be changed\n" + "    from \""
+						                + propValuePersisted + "\"\n      to \"" + propValue + "\"");
+					} else {
+						interpreter.getOut().println(
+						        "  ! " + getPrintName(interpreter) + ": "
+						                + "value of common property should be changed\n" + "    from \""
+						                + propValuePersisted + "\"\n      to \"" + propValue + "\"");
+					}
+				}
+			} else {
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println("  = " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
+				}
+			}
+			break;
+		case personal:
+			if (propValuePersisted == null) {
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println(
+					        "  ! " + getPrintName(interpreter) + ": " + "new personal property needs to be specified");
+				}
+				propValue = null;
+			} else {
+				propValue = propValuePersisted;
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println("  p " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
+				}
+			}
+			break;
+		}
+	}
+
+	private String getPrintName(final RapidEnvInterpreter interpreter) {
+		final StringBuffer buf = new StringBuffer(getFullyQualifiedName());
+		if (interpreter.getLogLevel().intValue() > Level.INFO.intValue()) {
+			buf.append(" (");
+			buf.append(getCategory().name());
+			buf.append("): ");
+		}
+		return buf.toString();
+	}
+
+	/**
+	 * Update / Configure the given property's value.
+	 * 
+	 * @return the new (updated) property value
+	 */
+	public String update() {
+		final String propName = getFullyQualifiedName();
+		String propValue = getValue();
+		if (propValue != null && propValue.length() > 0 && getInterpret()) {
+			propValue = interpret(propValue);
+		}
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		final String propValuePersisted = interpreter.getPropertyValuePersisted(propName);
+		if (this.getCategory() == PropertyCategory.personal && propValuePersisted != null) {
+			propValue = propValuePersisted;
+		}
+		switch (getCategory()) {
+		case common:
+			// propValue stays the configured one
+			if (propValuePersisted == null) {
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println(
+					        "  - introduced property \"" + propName + "\" with value \"" + propValue + "\"");
+				}
+			} else if (!propValuePersisted.equals(propValue)) {
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println(
+					        "  - changed value of property \"" + propName + "\"\n" + "    from \"" + propValuePersisted
+					                + "\"\n" + "      to \"" + propValue + "\"");
+				}
+			} else {
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println("  = " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
+				}
+			}
+			break;
+		case personal:
+			if (propValuePersisted == null
+			        || (interpreter.getPropertiesToProcess().size() < interpreter.getProject().getPropertys().size() && interpreter
+			                .getPropertiesToProcess().contains(this))) {
+				switch (interpreter.getCommand()) {
+				case update:
+				case config:
+					if (interpreter.getInstallUnitOrPropertyNamesExplicitelySpecified()) {
+						propValue = CmdLineInteractions.enterValue(interpreter.getIn(), interpreter.getOut(), this,
+						        propValue);
+					} else {
+						if (interpreter.getOut() != null) {
+							interpreter.getOut().println(
+							        "  = " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
+						}
+					}
+					break;
+				default:
+					propValue = CmdLineInteractions.enterValue(interpreter.getIn(), interpreter.getOut(), this,
+					        propValue);
+					break;
+				}
+			} else {
+				propValue = propValuePersisted;
+				if (interpreter.getOut() != null) {
+					interpreter.getOut().println("  p " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
+				}
+			}
+			break;
+		}
+		return propValue;
+	}
 }

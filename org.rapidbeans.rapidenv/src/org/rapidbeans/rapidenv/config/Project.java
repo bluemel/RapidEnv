@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config;
 
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,7 +31,6 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.expr.ConfigExprTopLevel;
 
-
 /**
  * The root of all evil.
  */
@@ -42,51 +40,50 @@ public class Project extends RapidBeanBaseProject {
 
 	private Map<String, Installunit> installunitMap = null;
 
-    /**
-     * @return value of Property 'propertys'
-     */
-    public ReadonlyListCollection<Property> getPropertys() {
-        final List<Property> props = new ArrayList<Property>();
-        if (super.getPropertys() != null) {
-            for (final Property prop : super.getPropertys()) {
-                props.add(prop);
-            }
-        }
-        if (getInstallunits() != null) {
-            for (final Installunit installunit : this.getInstallunits()) {
-                addLocalProps(props, installunit);
-            }
-        }
-        return new ReadonlyListCollection<Property>(props,
-                this.getType().getPropertyType("properties"));
-    }
-
-	private void addLocalProps(final List<Property> props,
-	        final Installunit installunit) {
-	    if (installunit == null || installunit.getPropertys() == null) {
-	        return;
-	    }
-	    for (final Property prop : installunit.getPropertys()) {
-	        props.add(prop);
-	    }
-	    if (installunit.getSubunits() != null) {
-	        for (final Installunit subunit : installunit.getSubunits()) {
-	            addLocalProps(props, subunit);
-	        }
-	    }
+	/**
+	 * @return value of Property 'propertys'
+	 */
+	@Override
+	public ReadonlyListCollection<Property> getPropertys() {
+		final List<Property> props = new ArrayList<Property>();
+		if (super.getPropertys() != null) {
+			for (final Property prop : super.getPropertys()) {
+				props.add(prop);
+			}
+		}
+		if (getInstallunits() != null) {
+			for (final Installunit installunit : this.getInstallunits()) {
+				addLocalProps(props, installunit);
+			}
+		}
+		return new ReadonlyListCollection<Property>(props, this.getType().getPropertyType("properties"));
 	}
 
-    /**
-	 * As long as we do not have map properties find a property
-	 * (configuration) this way.
-	 *
-	 * @param propertyName the name of the property to find
-	 *
+	private void addLocalProps(final List<Property> props, final Installunit installunit) {
+		if (installunit == null || installunit.getPropertys() == null) {
+			return;
+		}
+		for (final Property prop : installunit.getPropertys()) {
+			props.add(prop);
+		}
+		if (installunit.getSubunits() != null) {
+			for (final Installunit subunit : installunit.getSubunits()) {
+				addLocalProps(props, subunit);
+			}
+		}
+	}
+
+	/**
+	 * As long as we do not have map properties find a property (configuration)
+	 * this way.
+	 * 
+	 * @param propertyName
+	 *            the name of the property to find
+	 * 
 	 * @return the property configuration with the specified name
 	 */
 	public Property findPropertyConfiguration(final String propertyName) {
-		if (this.propertyMap == null || getPropertys() == null
-		        || this.propertyMap.size() != getPropertys().size()) {
+		if (this.propertyMap == null || getPropertys() == null || this.propertyMap.size() != getPropertys().size()) {
 			updatePropertyMap();
 		}
 		Property found = this.propertyMap.get(propertyName);
@@ -100,9 +97,7 @@ public class Project extends RapidBeanBaseProject {
 				}
 			} else {
 				if (current.getFullyQualifiedName().equals(propertyName)) {
-					throw new RapidEnvConfigurationException(
-							"Ambigouus property name \""
-							+ propertyName + "\"");
+					throw new RapidEnvConfigurationException("Ambigouus property name \"" + propertyName + "\"");
 				}
 			}
 		}
@@ -110,18 +105,20 @@ public class Project extends RapidBeanBaseProject {
 	}
 
 	/**
-	 * Find the tool by it's fully qualified name or by its name only
-	 * as far the name is unique.
-	 *
-	 * @param name the name of the install unit to find
-	 *
+	 * Find the tool by it's fully qualified name or by its name only as far the
+	 * name is unique.
+	 * 
+	 * @param name
+	 *            the name of the install unit to find
+	 * 
 	 * @return the tool with the specified name
 	 */
 	public Installunit findInstallunitConfiguration(final String name) {
 
-	    // first try: find the unit directly from the tool map
-	    // by the fully qualified name.
-	    if (this.installunitMap == null || getInstallunits() == null || this.installunitMap.size() != getInstallunits().size()) {
+		// first try: find the unit directly from the tool map
+		// by the fully qualified name.
+		if (this.installunitMap == null || getInstallunits() == null
+		        || this.installunitMap.size() != getInstallunits().size()) {
 			updateToolMap();
 		}
 		Installunit found = this.installunitMap.get(name);
@@ -129,20 +126,18 @@ public class Project extends RapidBeanBaseProject {
 			return found;
 		}
 
-		// second try: find the unit by name or fully qualified name without parents
+		// second try: find the unit by name or fully qualified name without
+		// parents
 		for (final Installunit current : this.installunitMap.values()) {
 			if (found == null) {
 				if (current.getName().equals(name)
-				        || (current.isSubunit()
-				                && current.getFullyQualifiedName(false).equals(name))) {
+				        || (current.isSubunit() && current.getFullyQualifiedName(false).equals(name))) {
 					found = current;
 				}
 			} else {
 				if (current.getName().equals(name)
-				        || (current.isSubunit()
-                                && current.getFullyQualifiedName(false).equals(name))) {
-					throw new RapidEnvConfigurationException(
-					        "Ambigouus tool name \"" + name + "\"");
+				        || (current.isSubunit() && current.getFullyQualifiedName(false).equals(name))) {
+					throw new RapidEnvConfigurationException("Ambigouus tool name \"" + name + "\"");
 				}
 			}
 		}
@@ -166,115 +161,119 @@ public class Project extends RapidBeanBaseProject {
 	 */
 	public void updateToolMap() {
 		this.installunitMap = new HashMap<String, Installunit>();
-        final List<RapidBean> units = this.getContainer().findBeansByType(
-                "org.rapidbeans.rapidenv.config.Installunit");
-        for (final RapidBean bean : units) {
-            final Installunit unit = (Installunit) bean;
-            this.installunitMap.put(unit.getFullyQualifiedName(), unit);
-        }
+		final List<RapidBean> units = this.getContainer().findBeansByType("org.rapidbeans.rapidenv.config.Installunit");
+		for (final RapidBean bean : units) {
+			final Installunit unit = (Installunit) bean;
+			this.installunitMap.put(unit.getFullyQualifiedName(), unit);
+		}
 	}
 
-    /**
-     * @return if the project has at least one personal property.
-     */
-    public boolean atLeastOnePersonalProperty() {
-        boolean atLeastOneIndiviualProperty = false;
-        if (getPropertys() != null) {
-            for (final Property propCfg : getPropertys()) {
-                if (propCfg.getCategory() == PropertyCategory.personal) {
-                    atLeastOneIndiviualProperty = true;
-                    break;
-                }
-            }
-        }
-        return atLeastOneIndiviualProperty;
-    }
+	/**
+	 * @return if the project has at least one personal property.
+	 */
+	public boolean atLeastOnePersonalProperty() {
+		boolean atLeastOneIndiviualProperty = false;
+		if (getPropertys() != null) {
+			for (final Property propCfg : getPropertys()) {
+				if (propCfg.getCategory() == PropertyCategory.personal) {
+					atLeastOneIndiviualProperty = true;
+					break;
+				}
+			}
+		}
+		return atLeastOneIndiviualProperty;
+	}
 
-    /**
-     * Semantics check for the project
-     */
-    public void checkSemantics() {
-        if (getInstallunits() != null) {
-            for (final Installunit installunit : getInstallunits()) {
-                installunit.checkSemantics();
-            }
-        }
-    }
+	/**
+	 * Semantics check for the project
+	 */
+	public void checkSemantics() {
+		if (getInstallunits() != null) {
+			for (final Installunit installunit : getInstallunits()) {
+				installunit.checkSemantics();
+			}
+		}
+	}
 
-    public URL getInstallsourceurlAsUrl() {
-        String surl = this.getInstallsourceurl();
-        if (surl == null) {
-            return null;
-        }
-        if (RapidEnvInterpreter.getInstance() != null) {
-            surl = RapidEnvInterpreter.getInstance().interpret(null, null, surl);
-        }
-        try {
-            return new URL(surl);
-        } catch (MalformedURLException e) {
-            throw new RapidEnvConfigurationException("Misconfiguration of the project's installsourceurl\n"
-                    + surl + " is no valid URL.");
-        }
-    }
+	public URL getInstallsourceurlAsUrl() {
+		String surl = this.getInstallsourceurl();
+		if (surl == null) {
+			return null;
+		}
+		if (RapidEnvInterpreter.getInstance() != null) {
+			surl = RapidEnvInterpreter.getInstance().interpret(null, null, surl);
+		}
+		try {
+			return new URL(surl);
+		} catch (MalformedURLException e) {
+			throw new RapidEnvConfigurationException("Misconfiguration of the project's installsourceurl\n" + surl
+			        + " is no valid URL.");
+		}
+	}
 
-    public File getInstalltargetdirAsFile() {
-        String path = getInstalltargetdir();
-        if (path == null) {
-            return null;
-        }
-        if (RapidEnvInterpreter.getInstance() != null) {
-            path = RapidEnvInterpreter.getInstance().interpret(null, null, path);
-        }
-        return new File(path);
-    }
+	public File getInstalltargetdirAsFile() {
+		String path = getInstalltargetdir();
+		if (path == null) {
+			return null;
+		}
+		if (RapidEnvInterpreter.getInstance() != null) {
+			path = RapidEnvInterpreter.getInstance().interpret(null, null, path);
+		}
+		return new File(path);
+	}
 
-    /**
-     * Overwrite the getTag with expression interpretation.
-     *
-     * @return value of Property 'tag' interpreted
-     */
-    public String getTag() {
-        final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-        if (interpreter != null) {
-            return new ConfigExprTopLevel(null, null, super.getTag(),
-            		getExpressionLiteralEscaping()).interpret();
-        } else {
-            return super.getTag();
-        }
-    }
+	/**
+	 * Overwrite the getTag with expression interpretation.
+	 * 
+	 * @return value of Property 'tag' interpreted
+	 */
+	@Override
+	public String getTag() {
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		if (interpreter != null) {
+			return new ConfigExprTopLevel(null, null, super.getTag(), getExpressionLiteralEscaping()).interpret();
+		} else {
+			return super.getTag();
+		}
+	}
 
-    /**
-     * default constructor.
-     */
-    public Project() {
-        super();
-    }
+	/**
+	 * default constructor.
+	 */
+	public Project() {
+		super();
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public Project(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public Project(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public Project(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public Project(final String[] sa) {
+		super(sa);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(Project.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(Project.class);
 
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the RapidBean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

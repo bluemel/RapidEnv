@@ -68,8 +68,7 @@ public class ArgumentDeclaration {
 		this.optional = optional;
 	}
 
-	public ArgumentDeclaration(final String name, final boolean optional,
-			final int minLength, final int maxLength) {
+	public ArgumentDeclaration(final String name, final boolean optional, final int minLength, final int maxLength) {
 		this.name = name;
 		this.optional = optional;
 		this.minLength = minLength;

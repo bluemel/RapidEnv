@@ -17,12 +17,10 @@
 
 package org.rapidbeans.rapidenv.config.cmd;
 
-
 import java.util.Locale;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
-
 
 /**
  * A single ExceptionMapping.
@@ -42,7 +40,8 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 	}
 
 	/**
-	 * @param mappedException the exception to set
+	 * @param mappedException
+	 *            the exception to set
 	 */
 	protected void setMappedException(RapidEnvException mappedException) {
 		this.mappedException = mappedException;
@@ -50,13 +49,13 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 
 	/**
 	 * Find the message.
-	 *
-	 * @param locale the locale
-	 *
+	 * 
+	 * @param locale
+	 *            the locale
+	 * 
 	 * @return the message with the specified language
 	 */
-	public String getMessage(
-			final Locale locale) {
+	public String getMessage(final Locale locale) {
 		final String slang = locale.getLanguage();
 		if (getErrormessages() == null) {
 			return this.mappedException.getMessage();
@@ -64,20 +63,17 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 			for (final ErrorMessage message : getErrormessages()) {
 				if (message.getLang().equals(slang)) {
 					String messagetext = message.getText();
-					if (messagetext.contains("${cause.cause.message}")
-							&& this.mappedException.getCause() != null
-							&& this.mappedException.getCause().getCause() != null) {
-						messagetext = messagetext.replace(
-							"${cause.cause.message}", this.mappedException.getCause().getCause().getMessage());
+					if (messagetext.contains("${cause.cause.message}") && this.mappedException.getCause() != null
+					        && this.mappedException.getCause().getCause() != null) {
+						messagetext = messagetext.replace("${cause.cause.message}", this.mappedException.getCause()
+						        .getCause().getMessage());
 					}
-					if (messagetext.contains("${cause.message}")
-							&& this.mappedException.getCause() != null) {
-						messagetext = messagetext.replace(
-							"${cause.message}", this.mappedException.getCause().getMessage());
+					if (messagetext.contains("${cause.message}") && this.mappedException.getCause() != null) {
+						messagetext = messagetext.replace("${cause.message}", this.mappedException.getCause()
+						        .getMessage());
 					}
 					if (messagetext.contains("${message}")) {
-						messagetext = messagetext.replace(
-							"${message}", this.mappedException.getMessage());
+						messagetext = messagetext.replace("${message}", this.mappedException.getMessage());
 					}
 					return messagetext;
 				}
@@ -98,8 +94,7 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 			} catch (IllegalAccessException e) {
 				throw new RapidEnvException(e);
 			} catch (NoSuchFieldException e) {
-				throw new RapidEnvException("Unspecified error code \""
-						+ getErrorcode() + "\"", e);
+				throw new RapidEnvException("Unspecified error code \"" + getErrorcode() + "\"", e);
 			}
 		}
 		return errorcode;
@@ -114,7 +109,9 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 
 	/**
 	 * constructor out of a string.
-	 * @param s the string
+	 * 
+	 * @param s
+	 *            the string
 	 */
 	public ExceptionMapping(final String s) {
 		super(s);
@@ -122,7 +119,9 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 
 	/**
 	 * constructor out of a string array.
-	 * @param sa the string array
+	 * 
+	 * @param sa
+	 *            the string array
 	 */
 	public ExceptionMapping(final String[] sa) {
 		super(sa);
@@ -136,6 +135,7 @@ public class ExceptionMapping extends RapidBeanBaseExceptionMapping {
 	/**
 	 * @return the RapidBean's type
 	 */
+	@Override
 	public TypeRapidBean getType() {
 		return type;
 	}

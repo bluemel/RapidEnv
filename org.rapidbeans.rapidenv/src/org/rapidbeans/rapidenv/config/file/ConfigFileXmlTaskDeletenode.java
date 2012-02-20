@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
-
 import java.util.logging.Level;
 
 import org.rapidbeans.core.type.TypeRapidBean;
@@ -27,131 +26,132 @@ import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.expr.ConfigExprTopLevel;
 import org.w3c.dom.Node;
 
-
 /**
  * The root of all evil.
  */
 public class ConfigFileXmlTaskDeletenode extends RapidBeanBaseConfigFileXmlTaskDeletenode {
 
-    /**
-     * Find the node value and delete it.
-     *
-     * @param execute if false only execute the check if the configuration task is necessary
-     *                if true execute the configuration task if necessary
-     * @param silent if to execute silent
-     *
-     * @return if the configuration task as been performed properly or not
-     */
-    @Override
-    public boolean check(final boolean execute, final boolean silent) {
-        boolean ok = true;
-        if (execute) {
-        	ok = false;
-        }
-        final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-        final ConfigFileXml fileCfg = (ConfigFileXml) getParentBean();
-        final ConfigFileEditorXml editor = (ConfigFileEditorXml) fileCfg.getEditor();
-        final Node node = editor.retrieveNode(getPath());
-        if (node == null) {
-            if (execute) {
-                final String msg = "    XML node \"" + getPath() + "\""
-                + " is not existing in file " + fileCfg.getPathAsFile().getAbsolutePath();
-                if (!silent) {
-                    interpreter.getOut().println(msg);
-                }
-                RapidEnvInterpreter.log(Level.FINE, msg);
-                ok = false;
-            } else {
-                final String msg = "    XML node \"" + getPath()
-                		+ "\" is already deleted in file "
-                		+ fileCfg.getPathAsFile().getAbsolutePath();
-                RapidEnvInterpreter.log(Level.FINE, msg);
-                fileCfg.setIssue(msg);
-                ok = true;
-            }
-        } else {
-            if (execute) {
-            	editor.deleteNode(getPath());
-                final String msg = "Deleted XML node \"" + getPath() + "\""
-                		+ " from file " + fileCfg.getPathAsFile().getAbsolutePath();
-                if (!silent) {
-                    interpreter.getOut().println(msg);
-                }
-                RapidEnvInterpreter.log(Level.FINE, msg);
-                ok = true;
-            } else {
-                final String msg = "    XML node \"" + getPath()
-                		+ "\" shoud be deleted deleted in file "
-                		+ fileCfg.getPathAsFile().getAbsolutePath();
-                RapidEnvInterpreter.log(Level.FINE, msg);
-                fileCfg.setIssue(msg);
-                ok = false;
-            }
-        }
-        return ok;
-    }
+	/**
+	 * Find the node value and delete it.
+	 * 
+	 * @param execute
+	 *            if false only execute the check if the configuration task is
+	 *            necessary if true execute the configuration task if necessary
+	 * @param silent
+	 *            if to execute silent
+	 * 
+	 * @return if the configuration task as been performed properly or not
+	 */
+	@Override
+	public boolean check(final boolean execute, final boolean silent) {
+		boolean ok = true;
+		if (execute) {
+			ok = false;
+		}
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		final ConfigFileXml fileCfg = (ConfigFileXml) getParentBean();
+		final ConfigFileEditorXml editor = (ConfigFileEditorXml) fileCfg.getEditor();
+		final Node node = editor.retrieveNode(getPath());
+		if (node == null) {
+			if (execute) {
+				final String msg = "    XML node \"" + getPath() + "\"" + " is not existing in file "
+				        + fileCfg.getPathAsFile().getAbsolutePath();
+				if (!silent) {
+					interpreter.getOut().println(msg);
+				}
+				RapidEnvInterpreter.log(Level.FINE, msg);
+				ok = false;
+			} else {
+				final String msg = "    XML node \"" + getPath() + "\" is already deleted in file "
+				        + fileCfg.getPathAsFile().getAbsolutePath();
+				RapidEnvInterpreter.log(Level.FINE, msg);
+				fileCfg.setIssue(msg);
+				ok = true;
+			}
+		} else {
+			if (execute) {
+				editor.deleteNode(getPath());
+				final String msg = "Deleted XML node \"" + getPath() + "\"" + " from file "
+				        + fileCfg.getPathAsFile().getAbsolutePath();
+				if (!silent) {
+					interpreter.getOut().println(msg);
+				}
+				RapidEnvInterpreter.log(Level.FINE, msg);
+				ok = true;
+			} else {
+				final String msg = "    XML node \"" + getPath() + "\" shoud be deleted deleted in file "
+				        + fileCfg.getPathAsFile().getAbsolutePath();
+				RapidEnvInterpreter.log(Level.FINE, msg);
+				fileCfg.setIssue(msg);
+				ok = false;
+			}
+		}
+		return ok;
+	}
 
-    /**
-     * Tweaked getter with lazy initialization and expression interpretation.
-     */
-    public synchronized String getPath() {
-        String path = super.getPath();
-        if (path == null) {
-            return null;
-        }
-        if (super.getPath() != null) {
-            path = interpret(path);
-        }
-        return path;
-    }
+	/**
+	 * Tweaked getter with lazy initialization and expression interpretation.
+	 */
+	public synchronized String getPath() {
+		String path = super.getPath();
+		if (path == null) {
+			return null;
+		}
+		if (super.getPath() != null) {
+			path = interpret(path);
+		}
+		return path;
+	}
 
+	/**
+	 * Interpret a configuration expression.
+	 * 
+	 * @param expression
+	 *            the configuration expression to interpret
+	 * 
+	 * @return the interpreted (expanded) configuration expression
+	 */
+	private String interpret(final String expression) {
+		return new ConfigExprTopLevel((Installunit) getParentBean().getParentBean(), null, expression,
+		        ((Configuration) getParentBean()).getExpressionliteralescaping()).interpret();
+	}
 
-    /**
-     * Interpret a configuration expression.
-     *
-     * @param expression the configuration expression to interpret
-     *
-     * @return the interpreted (expanded) configuration expression
-     */
-    private String interpret(final String expression) {
-        return new ConfigExprTopLevel(
-        		(Installunit) getParentBean().getParentBean(),
-        		null, expression,
-        		((Configuration) getParentBean()).getExpressionliteralescaping()).interpret();
-    }
+	/**
+	 * default constructor.
+	 */
+	public ConfigFileXmlTaskDeletenode() {
+		super();
+	}
 
-    /**
-     * default constructor.
-     */
-    public ConfigFileXmlTaskDeletenode() {
-        super();
-    }
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public ConfigFileXmlTaskDeletenode(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public ConfigFileXmlTaskDeletenode(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public ConfigFileXmlTaskDeletenode(final String[] sa) {
+		super(sa);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public ConfigFileXmlTaskDeletenode(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileXmlTaskDeletenode.class);
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileXmlTaskDeletenode.class);
-
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the RapidBean's type
+	 */
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

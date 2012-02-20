@@ -35,8 +35,9 @@ public class RapidEnvCmdExecutionException extends RapidEnvException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public RapidEnvCmdExecutionException(final String message) {
 		super(message);
@@ -44,8 +45,9 @@ public class RapidEnvCmdExecutionException extends RapidEnvException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public RapidEnvCmdExecutionException(final String message, final int returnCode) {
 		super(message);

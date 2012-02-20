@@ -38,21 +38,21 @@ public class ConfigExprFunctionHomedir extends RapidBeanBaseConfigExprFunctionHo
 	 * @return home folder of the given tool
 	 */
 	public final String interpret() {
-		
+
 		String installUnitFullyQualifiedName = null;
-        String otherVersion = null;
+		String otherVersion = null;
 
 		if (getArgs().size() > 1) {
-		    otherVersion = getArgs().get(1).interpret();
+			otherVersion = getArgs().get(1).interpret();
 		}
 		if (getArgs().size() > 0) {
 			installUnitFullyQualifiedName = getArgs().get(0).interpret();
-		} else if (getNextEnclosingInstallUnit() != null){
+		} else if (getNextEnclosingInstallUnit() != null) {
 			installUnitFullyQualifiedName = getEnclosingInstallUnit().getFullyQualifiedName();
 		} else {
 			throw new RapidEnvConfigurationException("Error in fuction call homedir()."
-					+ " Need an unambiguous or fully qualified valid install unit name or"
-					+ " must be called in the context of an install unit.");
+			        + " Need an unambiguous or fully qualified valid install unit name or"
+			        + " must be called in the context of an install unit.");
 		}
 		return homeDirOfInstallunit(installUnitFullyQualifiedName, otherVersion);
 	}
@@ -60,48 +60,44 @@ public class ConfigExprFunctionHomedir extends RapidBeanBaseConfigExprFunctionHo
 	/**
 	 * The constructor for "homedir" function expressions.
 	 * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
 	 * @param funcContent
 	 *            should be empty for "homedir" functions.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionHomedir(final Installunit enclosingUnit,
-	        final Property enclosingProp,
-			final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	public ConfigExprFunctionHomedir(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
 	}
 
-	private String homeDirOfInstallunit(final String fullyQualifiedName,
-	        final String otherVersion) {
+	private String homeDirOfInstallunit(final String fullyQualifiedName, final String otherVersion) {
 		final Project project = RapidEnvInterpreter.getInstance().getProject();
 		Installunit unit = project.findInstallunitConfiguration(fullyQualifiedName);
 		if (unit == null) {
-			throw new RapidEnvException("Install unit \"" + fullyQualifiedName
-					+ "\" is not defined.");
+			throw new RapidEnvException("Install unit \"" + fullyQualifiedName + "\" is not defined.");
 		}
 		String homedir = unit.getHomedirAsFile().getAbsolutePath();
 		if (otherVersion != null) {
-		    homedir = homedir.replace(unit.getVersion().toString(), otherVersion);
+			homedir = homedir.replace(unit.getVersion().toString(), otherVersion);
 		}
 		return homedir;
 	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHomedir.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHomedir.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

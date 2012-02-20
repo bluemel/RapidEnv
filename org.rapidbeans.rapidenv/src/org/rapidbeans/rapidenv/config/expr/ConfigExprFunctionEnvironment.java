@@ -35,29 +35,26 @@ public class ConfigExprFunctionEnvironment extends RapidBeanBaseConfigExprFuncti
 	/**
 	 * constructor for an environment function expression.
 	 * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
 	 * @param funcContent
 	 *            the function contents
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionEnvironment(
-	        final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-            final Boolean escapeLiterals) {
-	    super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	public ConfigExprFunctionEnvironment(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
 	}
 
 	/**
 	 * the interpreter method of an Environment Variable Expression.
 	 * 
-	 * @return the resulting expanded string or an empty string
-	 *         in case the environment variable is not defined.
+	 * @return the resulting expanded string or an empty string in case the
+	 *         environment variable is not defined.
 	 */
 	public final String interpret() {
 		final String defaultReturnValue = "";
@@ -70,16 +67,16 @@ public class ConfigExprFunctionEnvironment extends RapidBeanBaseConfigExprFuncti
 		}
 	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHomedir.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHomedir.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

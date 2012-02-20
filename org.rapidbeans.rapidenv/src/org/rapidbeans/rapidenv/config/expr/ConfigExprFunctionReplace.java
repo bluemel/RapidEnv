@@ -44,43 +44,40 @@ public class ConfigExprFunctionReplace extends RapidBeanBaseConfigExprFunctionRe
 	/**
 	 * The constructor for replace Function Expressions.
 	 * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
 	 * @param funcContent
 	 *            the function's parameter list. Potential arguments: <br>
 	 *            <code>&lt;path to convert&gt;</code><br>
 	 *            <code>&lt;path to convert&gt; &lt;separator char&gt;
-     *                    </code><br>
+	 *                    </code><br>
 	 *            <code>&lt;path to convert&gt;</code> the string with the path
 	 *            to convert.<br>
 	 *            <code>&lt;separator char&gt</code> the separator character to
 	 *            use in the converted path<br>
 	 *            If <code>&lt;separator char&gt</code> is not given the
 	 *            platform specific separator char is used.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionReplace(
-	        final Installunit enclosingUnit,
-            final Property enclosingProp,
-		    final String funcContent,
-			final Boolean escapeLiterals) {
-	    super();
+	public ConfigExprFunctionReplace(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
 	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionReplace.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionReplace.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

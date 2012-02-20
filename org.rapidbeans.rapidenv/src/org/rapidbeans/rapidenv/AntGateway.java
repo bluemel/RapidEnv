@@ -25,101 +25,102 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.ant.taskdefs.Property;
 import org.apache.tools.ant.taskdefs.Untar;
-import org.apache.tools.ant.taskdefs.Zip;
 import org.apache.tools.ant.taskdefs.Untar.UntarCompressionMethod;
+import org.apache.tools.ant.taskdefs.Zip;
 
 /**
- * this class just provides a convenient interface
- * to use this lots of pretty ant components called
- * tasks.
+ * this class just provides a convenient interface to use this lots of pretty
+ * ant components called tasks.
  * 
  * @author Martin Bluemel
  */
 public final class AntGateway {
-	private Project project = new Project();
+	private final Project project = new Project();
+
 	private Properties envProps = null;
 
-    /**
-     * The normal constructor for the Ant gateway.
-     * The Ant Property task member is used for
-     * caching the environment variables are cached
-     * by the Ant Property task.
-     */
-    public AntGateway() {
-        // load environment variables into the
-        // project's propertyValueMap (prefix "env.")
-        Property propTask = new Property();
-        propTask.setProject(this.project);
-        propTask.setEnvironment("env");
-        propTask.execute();
-    }
+	/**
+	 * The normal constructor for the Ant gateway. The Ant Property task member
+	 * is used for caching the environment variables are cached by the Ant
+	 * Property task.
+	 */
+	public AntGateway() {
+		// load environment variables into the
+		// project's propertyValueMap (prefix "env.")
+		Property propTask = new Property();
+		propTask.setProject(this.project);
+		propTask.setEnvironment("env");
+		propTask.execute();
+	}
 
-    /**
-     * A constructor only for testing reasons.
-     * You can initialize the environment by
-     * means of a propertyValueMap file.
-     * 
-     * @param envProps - the file withe the environment varibles
-     *                   defined as propertyValueMap.
-     */
-    public AntGateway(final File envProps) {
-        this();
-        this.envProps = new Properties();
-        try {
-            this.envProps.load(new FileInputStream(envProps));
-        } catch (IOException e) {
-            throw new RapidEnvException(e);
-        }
-    }
+	/**
+	 * A constructor only for testing reasons. You can initialize the
+	 * environment by means of a propertyValueMap file.
+	 * 
+	 * @param envProps
+	 *            the file with the environment variables defined as
+	 *            propertyValueMap.
+	 */
+	public AntGateway(final File envProps) {
+		this();
+		this.envProps = new Properties();
+		try {
+			this.envProps.load(new FileInputStream(envProps));
+		} catch (IOException e) {
+			throw new RapidEnvException(e);
+		}
+	}
 
-    /**
-     * Unpacks a zip, jar, war archive file
-     * by means of the Ant Expand task. 
-     * 
-     * @param packedFile - the source archive file.
-     * @param dest - the destination directory.
-     */
-    public void expand(final File packedFile, final File dest) {
-        final Expand task = new Expand();
-        task.setProject(this.project);
-        task.setSrc(packedFile);
-        task.setDest(dest);
-        task.execute();
-    }
+	/**
+	 * Unpacks a zip, jar, war archive file by means of the Ant Expand task.
+	 * 
+	 * @param packedFile
+	 *            - the source archive file.
+	 * @param dest
+	 *            - the destination directory.
+	 */
+	public void expand(final File packedFile, final File dest) {
+		final Expand task = new Expand();
+		task.setProject(this.project);
+		task.setSrc(packedFile);
+		task.setDest(dest);
+		task.execute();
+	}
 
-    /**
-     * Unpacks a zip, jar, tar, or war archive file
-     * by means of the Ant Untar task optionally using
-     * compression. 
-     * 
-     * @param packedFile - the source archive file.
-     * @param dest - the destination directory.
-     * @param compressionMethod
-     *     the compression method used
-     *     { 'none' | 'gzip' | 'bzip2' }
-     */
-    public void unpack(final File packedFile, final File dest,
-            final UntarCompressionMethod compressionMethod) {
-        Untar task = new Untar();
-        task.setProject(this.project);
-        task.setSrc(packedFile);
-        task.setDest(dest);
-        task.setCompression(compressionMethod);
-        task.execute();
-    }
+	/**
+	 * Unpacks a zip, jar, tar, or war archive file by means of the Ant Untar
+	 * task optionally using compression.
+	 * 
+	 * @param packedFile
+	 *            - the source archive file.
+	 * @param dest
+	 *            - the destination directory.
+	 * @param compressionMethod
+	 *            the compression method used { 'none' | 'gzip' | 'bzip2' }
+	 */
+	public void unpack(final File packedFile, final File dest, final UntarCompressionMethod compressionMethod) {
+		Untar task = new Untar();
+		task.setProject(this.project);
+		task.setSrc(packedFile);
+		task.setDest(dest);
+		task.setCompression(compressionMethod);
+		task.execute();
+	}
 
-    /**
-     * Packs an archive file by mean of the Ant Expand task.
-     *
-     * @param folder the destination directory.
-     * @param zipfile the source archive file.
-     */
-    public void zip(final File folder, final File zipfile) {
-    	Zip task = new Zip();
-        task.setProject(this.project);
-        task.setTaskName("Zip");
-        task.setBasedir(folder);
-        task.setDestFile(zipfile);
-        task.execute();
-    }
+	/**
+	 * Packs an archive file by mean of the Ant Expand task.
+	 * 
+	 * @param folder
+	 *            the destination directory.
+	 * @param zipfile
+	 *            the source archive file.
+	 */
+	public void zip(final File folder, final File zipfile) {
+		Zip task = new Zip();
+		task.setProject(this.project);
+		task.setTaskName("Zip");
+		task.setBasedir(folder);
+		task.setDestFile(zipfile);
+		task.execute();
+	}
 }

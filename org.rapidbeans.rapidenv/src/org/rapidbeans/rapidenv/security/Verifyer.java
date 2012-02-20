@@ -33,8 +33,7 @@ import org.rapidbeans.rapidenv.config.cmd.ExceptionMap;
  */
 public class Verifyer {
 
-	public static String hashValue(final File file,
-			final Hashalgorithm hashalg) {
+	public static String hashValue(final File file, final Hashalgorithm hashalg) {
 		InputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
@@ -53,9 +52,7 @@ public class Verifyer {
 			}
 			return result.toString();
 		} catch (FileNotFoundException e) {
-			throw new RapidEnvException(
-					e.getMessage(),
-					e, ExceptionMap.ERRORCODE_HASH_FILE_NOT_FOUND);
+			throw new RapidEnvException(e.getMessage(), e, ExceptionMap.ERRORCODE_HASH_FILE_NOT_FOUND);
 		} catch (NoSuchAlgorithmException e) {
 			throw new RapidEnvException(e);
 		} catch (IOException e) {

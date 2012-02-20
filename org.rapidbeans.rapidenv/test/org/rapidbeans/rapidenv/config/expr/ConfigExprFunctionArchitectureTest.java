@@ -52,8 +52,7 @@ public class ConfigExprFunctionArchitectureTest {
 	 */
 	@Test
 	public void testInterpret() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null,
-			"architecture()", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "architecture()", false);
 		Assert.assertEquals(PlatformHelper.getArchName(), expr.interpret());
 	}
 
@@ -63,11 +62,9 @@ public class ConfigExprFunctionArchitectureTest {
 	@Test(expected = RapidEnvException.class)
 	public void testInterpretWithArgs() {
 		try {
-		new ConfigExprTopLevel(new Installunit("xxx"), null,
-				"architecture('xxx', 'yy')", false);
+			new ConfigExprTopLevel(new Installunit("xxx"), null, "architecture('xxx', 'yy')", false);
 		} catch (RapidEnvException e) {
-			Assert.assertTrue(e.getCause().getCause()
-					instanceof RapidEnvConfigurationException);
+			Assert.assertTrue(e.getCause().getCause() instanceof RapidEnvConfigurationException);
 			throw e;
 		}
 	}

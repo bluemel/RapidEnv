@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
-
 import java.io.File;
 import java.io.IOException;
 
@@ -34,82 +33,73 @@ import org.rapidbeans.rapidenv.config.Project;
 
 public class ConfigFilePropertiesTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-        new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
-        RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
-                "project", "org.rapidbeans.rapidenv.config.Project", true);
-     }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
+		        "org.rapidbeans.rapidenv.config.Project", true);
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    @Test
-    public void testReadConfiguration() {
-        Document doc = new Document(new File("testdata/env/envFileProperties01.xml"));
-        Project project = (Project) doc.getRoot();
-        Installunit unit = project.findInstallunitConfiguration("maven");
-        ConfigFileProperties file =
-            (ConfigFileProperties) unit.getConfigurations().get(0);
-        Assert.assertNotNull(file.getTasks());
-        final ConfigFilePropertiesTaskSetpropvalue task0 =
-            (ConfigFilePropertiesTaskSetpropvalue) file.getTasks().get(0);
-        Assert.assertEquals("prop.1", task0.getName());
-        Assert.assertEquals("xyz",task0.getValue());
-    }
+	@Test
+	public void testReadConfiguration() {
+		Document doc = new Document(new File("testdata/env/envFileProperties01.xml"));
+		Project project = (Project) doc.getRoot();
+		Installunit unit = project.findInstallunitConfiguration("maven");
+		ConfigFileProperties file = (ConfigFileProperties) unit.getConfigurations().get(0);
+		Assert.assertNotNull(file.getTasks());
+		final ConfigFilePropertiesTaskSetpropvalue task0 = (ConfigFilePropertiesTaskSetpropvalue) file.getTasks()
+		        .get(0);
+		Assert.assertEquals("prop.1", task0.getName());
+		Assert.assertEquals("xyz", task0.getValue());
+	}
 
-    @Test
-    public void createAndWriteNewPropertiesFile() throws IOException {
-        if (new File("testdata/conf/test.properties").exists()) {
-            Assert.assertTrue(new File("testdata/conf/test.properties").delete());
-        }
-        ConfigFileEditorProperties propedit =
-                new ConfigFileEditorProperties(new ConfigFileProperties(),
-                        new File("testdata/conf/test.properties"));
-        propedit.setCreateIfNotExists(true);
-        propedit.setProperty("[sect1]", "prop1", "val11");
-        propedit.setProperty("[sect1]", "prop2", "val12");
-        propedit.setProperty("[sect2]", "prop1", "val21");
-        propedit.setProperty("[sect2]", "prop2", "val22");
-        propedit.save();
-        Assert.assertTrue(FileHelper.filesEqual(
-                new File("testdata/conf/test.properties"),
-                new File("testdata/conf/testref01.properties"),
-                true, true));
-        Assert.assertTrue(new File("testdata/conf/test.properties").delete());
-    }
+	@Test
+	public void createAndWriteNewPropertiesFile() throws IOException {
+		if (new File("testdata/conf/test.properties").exists()) {
+			Assert.assertTrue(new File("testdata/conf/test.properties").delete());
+		}
+		ConfigFileEditorProperties propedit = new ConfigFileEditorProperties(new ConfigFileProperties(), new File(
+		        "testdata/conf/test.properties"));
+		propedit.setCreateIfNotExists(true);
+		propedit.setProperty("[sect1]", "prop1", "val11");
+		propedit.setProperty("[sect1]", "prop2", "val12");
+		propedit.setProperty("[sect2]", "prop1", "val21");
+		propedit.setProperty("[sect2]", "prop2", "val22");
+		propedit.save();
+		Assert.assertTrue(FileHelper.filesEqual(new File("testdata/conf/test.properties"), new File(
+		        "testdata/conf/testref01.properties"), true, true));
+		Assert.assertTrue(new File("testdata/conf/test.properties").delete());
+	}
 
-    @Test
-    public void readAndChangePropertiesFile() throws IOException {
-        FileHelper.copyFile(
-                new File("testdata/conf/testref01.properties"),
-                new File("testdata/conf/test.properties"));
-        ConfigFileEditorProperties propedit =
-                new ConfigFileEditorProperties(new ConfigFileProperties(),
-                        new File("testdata/conf/test.properties"));
-        Assert.assertEquals("val22", propedit.getProperty("[sect2]", "prop2"));
-        Assert.assertEquals("val11", propedit.getProperty("[sect1]", "prop1"));
-        Assert.assertEquals("val21", propedit.getProperty("[sect2]", "prop1"));
-        Assert.assertEquals("val12", propedit.getProperty("[sect1]", "prop2"));
-        propedit.setProperty("[sect1]", "prop1", "val11a");
-        propedit.setProperty("[sect1]", "prop2", "val12a");
-        propedit.setProperty("[sect2]", "prop1", "val21a");
-        propedit.setProperty("[sect2]", "prop2", "val22a");
-        propedit.setProperty("[sect3]", "prop1", "val31");
-        propedit.setProperty("[sect3]", "prop2", "val32");
-        propedit.save();
-        Assert.assertTrue(FileHelper.filesEqual(
-                new File("testdata/conf/test.properties"),
-                new File("testdata/conf/testref02.properties"),
-                true, true));
-        Assert.assertTrue(new File("testdata/conf/test.properties").delete());
-    }
+	@Test
+	public void readAndChangePropertiesFile() throws IOException {
+		FileHelper.copyFile(new File("testdata/conf/testref01.properties"), new File("testdata/conf/test.properties"));
+		ConfigFileEditorProperties propedit = new ConfigFileEditorProperties(new ConfigFileProperties(), new File(
+		        "testdata/conf/test.properties"));
+		Assert.assertEquals("val22", propedit.getProperty("[sect2]", "prop2"));
+		Assert.assertEquals("val11", propedit.getProperty("[sect1]", "prop1"));
+		Assert.assertEquals("val21", propedit.getProperty("[sect2]", "prop1"));
+		Assert.assertEquals("val12", propedit.getProperty("[sect1]", "prop2"));
+		propedit.setProperty("[sect1]", "prop1", "val11a");
+		propedit.setProperty("[sect1]", "prop2", "val12a");
+		propedit.setProperty("[sect2]", "prop1", "val21a");
+		propedit.setProperty("[sect2]", "prop2", "val22a");
+		propedit.setProperty("[sect3]", "prop1", "val31");
+		propedit.setProperty("[sect3]", "prop2", "val32");
+		propedit.save();
+		Assert.assertTrue(FileHelper.filesEqual(new File("testdata/conf/test.properties"), new File(
+		        "testdata/conf/testref02.properties"), true, true));
+		Assert.assertTrue(new File("testdata/conf/test.properties").delete());
+	}
 }
