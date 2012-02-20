@@ -296,8 +296,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						removeLocalsourcefile = true;
 					}
 					if (!localsourcefile.exists()) {
+						RapidEnvInterpreter.getInstance().getOut().println("@@@@@@@@@@@@@@@@@@@@@@@@@");
+						RapidEnvInterpreter.log(Level.FINE, "Local source file \""
+								+ localsourcefile.getAbsolutePath() + "\" does not yet exist.");
+						
 						switch (this.getDownloadmode()) {
-
 						case automatic:
 							RapidEnvInterpreter.getInstance().getOut().println(
 									"Downloading source URL " + getSourceurl().toString() + "\n"
@@ -1346,17 +1349,21 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			return null;
 		}
 		String url = projectInstallSourceUrl;
-		if (getParentUnit() == null) {
-			for (final String s : StringHelper.split(getSpace(), ".")) {
-				url += '/' + s;
-			}
-			url += '/' + getName()
-					+ '/' + getVersion().toString()
-					+ '/' + getName() + "-" + getVersion() + ".zip";
+		if (this.getSourcefile() != null) {
+			url += '/' + this.getSourcefile();
 		} else {
-			url += '/' + getFullyQualifiedName(true)
-					+ '/' + getVersion().toString()
-					+ '/' + getName() + "-" + getVersion() + ".zip";
+			if (getParentUnit() == null) {
+				for (final String s : StringHelper.split(getSpace(), ".")) {
+					url += '/' + s;
+				}
+				url += '/' + getName()
+						+ '/' + getVersion().toString()
+						+ '/' + getName() + "-" + getVersion() + ".zip";
+			} else {
+				url += '/' + getFullyQualifiedName(true)
+						+ '/' + getVersion().toString()
+						+ '/' + getName() + "-" + getVersion() + ".zip";
+			}
 		}
 		return url;
 	}

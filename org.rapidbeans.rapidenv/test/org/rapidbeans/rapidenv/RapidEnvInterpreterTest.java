@@ -73,6 +73,7 @@ public class RapidEnvInterpreterTest {
 
 	@AfterClass
 	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("profile"));
 		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 	}
@@ -607,6 +608,115 @@ public class RapidEnvInterpreterTest {
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
 
+		} finally {
+			RapidEnvTestHelper.tearDownProfile(env);
+		}
+	}
+
+	/**
+	 * Test the change of tool specific properties.
+	 *
+	 * @throws IOException in case of IO problem
+	 */
+	@Test
+	public void testParsePropertyConfigurationsToolSpecificPropvalchange()
+			throws IOException {
+
+		RapidEnvInterpreter env = new RapidEnvInterpreter(
+				new CmdRenv(new String[] {
+						"-env", "testdata/env/envPropsToolSpecific.xml", "s"}));
+
+		try {
+
+			// boot that thing
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+					"-env", "testdata/env/envPropsToolSpecific02.xml", "b"}));
+			SequenceInputStream sin = new SequenceInputStream(
+					new InputStreamLines(new String[] {
+							"xyz", "n" // do not create the "command prompt here"
+							// explorer menu entry
+					}));
+			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			PrintStream sout = new PrintStream(bStream);
+			env.execute(sin, sout);
+			switch (PlatformHelper.getOs()) {
+			case windows:
+				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootWin.txt"),
+						bStream);
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.properties"),
+						env.getProfileProps());
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
+						env.getProfileCmd());
+				break;
+			case linux:
+				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootLinux.txt"),
+						bStream);
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.properties"),
+						env.getProfileProps());
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
+						env.getProfileCmd());
+				break;
+			default:
+				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
+			}
+
+			// install that stuff
+			sin = new SequenceInputStream(
+					new InputStreamLines(new String[]{"/a/b/c"}));
+			bStream = new ByteArrayOutputStream();
+			sout = new PrintStream(bStream);
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+					"-env", "testdata/env/envPropsToolSpecific02.xml", "i"}));
+			env.execute(sin, sout);
+			switch (PlatformHelper.getOs()) {
+			case windows:
+				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInst02Win.txt"),
+						bStream);
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInst02Win.properties"),
+						env.getProfileProps());
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInst02Win.cmd"),
+						env.getProfileCmd());
+				break;
+			case linux:
+				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstLinux.txt"),
+						bStream);
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinux.properties"),
+						env.getProfileProps());
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinux.cmd"),
+						env.getProfileCmd());
+				break;
+			default:
+				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
+			}
+
+			// update otherapp selectively
+			sin = new SequenceInputStream(
+					new InputStreamLines(new String[]{"/a/b/c"}));
+			bStream = new ByteArrayOutputStream();
+			sout = new PrintStream(bStream);
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+					"-env", "testdata/env/envPropsToolSpecificOtherPropvalCommon.xml", "u", "otherapp"}));
+			env.execute(sin, sout);
+			switch (PlatformHelper.getOs()) {
+			case windows:
+				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificUpdate02Win.txt"),
+						bStream);
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Win.properties"),
+						env.getProfileProps());
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Win.cmd"),
+						env.getProfileCmd());
+				break;
+			case linux:
+				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificUpdate02Linux.txt"),
+						bStream);
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Linux.properties"),
+						env.getProfileProps());
+				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Linux.cmd"),
+						env.getProfileCmd());
+				break;
+			default:
+				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
+			}
 		} finally {
 			RapidEnvTestHelper.tearDownProfile(env);
 		}

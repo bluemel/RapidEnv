@@ -3,13 +3,14 @@
 <!DOCTYPE project SYSTEM "../../env.dtd">
 
 <project name="test"
+	installsourceurl="file:testdata/site"
 	>
 
 	<property name="my_osspecific_path"
-		propmode="common" value="/opt/postgres">
+		category="common" value="/opt/postgres">
 		<specificvalue osfamily="windows">C:\Program Files\Postgres</specificvalue>
 	</property>
-	<property name="jdk_home" propmode="common"
+	<property name="jdk_home" category="common"
 		value="homedir('jdk')">
 		<description>This is a multilined
 description.</description>

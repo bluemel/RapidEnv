@@ -22,6 +22,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.rapidbeans.core.type.TypeRapidBean;
@@ -70,8 +72,8 @@ public class AntTask extends RapidBeanBaseAntTask {
 		}
 	}
 
-    private void setTaskProperty(final Task task, final String name,
-    		final String value, final Argtype valuetype) {
+	private void setTaskProperty(final Task task, final String name,
+			final String value, final Argtype valuetype) {
 		final String setterMethodName = "set"
 				+ StringHelper.upperFirstCharacter(name);
 		try {
@@ -123,70 +125,100 @@ public class AntTask extends RapidBeanBaseAntTask {
 	}
 
 	/**
-     * Runs the command in the OS environment.
-     * 
-     * @return the result containing the return value, stdout and stderr
-     */
-    public CommandExecutionResult execute() {
-    	final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-    	try {
-    		if (this.anttaskclass == null) {
-    			updateAnttakclass(getAnttaskname());
-    		}
-    		final Task task = this.anttaskclass.newInstance();
-    		task.setProject(new Project());
-    		if (this.getArguments() != null) {
-    			for (final Argument arg : this.getArguments()) {
-    				setTaskProperty(task, arg.getName(), arg.getValue(), arg.getValuetype());
-    			}
-    		}
-    		if (interpreter != null
-    				&& interpreter.getOut() != null) {
-    			interpreter.getOut().println("Executing Ant task \""
-    					+ getAnttaskname() + "\"...");
-    		}
-    		task.execute();
-    	} catch (InstantiationException e) {
-    		throw new RapidEnvException(e);
-    	} catch (IllegalAccessException e) {
-    		throw new RapidEnvException(e);
-    	}
-    	return new CommandExecutionResult(
-    			"", "", 0);
-    }
+	 * Runs the command in the OS environment.
+	 * 
+	 * @return the result containing the return value, stdout and stderr
+	 */
+	public CommandExecutionResult execute() {
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		try {
+			if (this.anttaskclass == null) {
+				updateAnttakclass(getAnttaskname());
+			}
+			final Task task = this.anttaskclass.newInstance();
+			final Project project = new Project();
+			task.setProject(project);
+			if (this.getArguments() != null) {
+				for (final Argument arg : this.getArguments()) {
+					setTaskProperty(task, arg.getName(), arg.getValue(), arg.getValuetype());
+				}
+			}
+			if (interpreter != null
+					&& interpreter.getOut() != null) {
+				interpreter.getOut().println("Executing Ant task \""
+						+ getAnttaskname() + "\"...");
+			}
+			project.addBuildListener(new BuildListener() {				
+				@Override
+				public void taskStarted(BuildEvent event) {
+				}				
+				@Override
+				public void taskFinished(BuildEvent event) {
+				}
+				@Override
+				public void targetStarted(BuildEvent event) {
+				}				
+				@Override
+				public void targetFinished(BuildEvent event) {
+				}
+				@Override
+				public void messageLogged(BuildEvent event) {
+					if (interpreter == null) {
+						return;
+					}
+					if ((!getSilent()) && interpreter.getOut() != null) {
+						interpreter.getOut().println(event.getMessage());
+					}
+				}
+				@Override
+				public void buildStarted(BuildEvent event) {	
+				}
+				@Override
+				public void buildFinished(BuildEvent event) {
+				}
+			});
+			task.execute();
+		} catch (InstantiationException e) {
+			throw new RapidEnvException(e);
+		} catch (IllegalAccessException e) {
+			throw new RapidEnvException(e);
+		}
+		return new CommandExecutionResult(
+				"", "", 0);
+	}
 
-    /**
-     * default constructor.
-     */
-    public AntTask() {
-        super();
-    }
+	/**
+	 * default constructor.
+	 */
+	public AntTask() {
+		super();
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public AntTask(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string.
+	 * @param s the string
+	 */
+	public AntTask(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public AntTask(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * constructor out of a string array.
+	 * @param sa the string array
+	 */
+	public AntTask(final String[] sa) {
+		super(sa);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(AntTask.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(AntTask.class);
 
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the RapidBean's type
+	 */
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

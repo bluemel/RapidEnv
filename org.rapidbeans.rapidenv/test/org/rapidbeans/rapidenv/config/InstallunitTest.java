@@ -80,8 +80,10 @@ public class InstallunitTest {
         try {
             jdk.checkSemantics();
         } catch (RapidEnvConfigurationException e) {
-            Assert.assertTrue(e.getMessage().startsWith(
-                    "No home directory defined for installunit"));
+        	if (!e.getMessage().startsWith(
+                    "No home directory defined for installunit")) {
+        		Assert.fail("Unexpected RapidEnvConfigurationException: " + e.getMessage());
+        	}
             throw e;
         }
     }

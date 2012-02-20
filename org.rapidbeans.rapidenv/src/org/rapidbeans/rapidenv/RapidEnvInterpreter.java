@@ -1566,6 +1566,15 @@ public class RapidEnvInterpreter {
 			installUnitsToProc2 = installUnitsToProc1;
 		}
 		this.installUnitsToProcess = completeAndSortInstallunitsToProcess(installUnitsToProc2, this.renvCommand.getCommand());
+		// process all properties whenever at least one installunit is specified
+		// TODO: later on replace this by only taking used (includes also transitively used) properties.
+		if (this.installUnitsToProcess.size() > 0) {
+			for (final Property prop : getProject().getPropertys()) {
+				if (!this.propertiesToProcess.contains(prop)) {
+					this.propertiesToProcess.add(prop);
+				}
+			}
+		}
 		checkDependenciesAll();
 		checkDependencies(this.installUnitsToProcess, this.renvCommand.getCommand());
 	}
@@ -1922,7 +1931,7 @@ public class RapidEnvInterpreter {
 			final String string) {
 		final RapidEnvInterpreter interpreter = getInstance();
 		if (interpreter == null || string == null) {
-			return null;
+			return string;
 		}
 		final String interpreted = interpreter.interpret(
 				enclosingUnit, enclosingProperty, string);

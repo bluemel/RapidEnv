@@ -6,7 +6,7 @@ Properties:
   - introduced property "testprop01" with value "D:\unknown"
   - changed value of property "testprop02"
     from "oldvalue"
-      to "newvalue
+      to "newvalue"
   = testprop03 = "@RAPIDENV_HOME@\testdata\testinstall\jdk\1.6.0"
   = testprop04 = "val4"
   p testprop05 = "newvalue"

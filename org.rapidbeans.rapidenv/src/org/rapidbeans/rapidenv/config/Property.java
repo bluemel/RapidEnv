@@ -552,7 +552,7 @@ public class Property extends RapidBeanBaseProperty {
                     interpreter.getOut().println("  - changed value of property \""
                             + propName + "\"\n"
                             + "    from \"" + propValuePersisted + "\"\n"
-                            + "      to \"" + propValue);
+                            + "      to \"" + propValue + "\"");
                 }
             } else {
                 if (interpreter.getOut() != null) {
