@@ -42,6 +42,7 @@ public class ProjectTest {
 
     @AfterClass
     public static void tearDownClass() {
+    	FileHelper.deleteDeep(new File("profile"));
         FileHelper.deleteDeep(new File("../../env.dtd"));
         FileHelper.deleteDeep(new File("testdata/testinstall"));
     }
