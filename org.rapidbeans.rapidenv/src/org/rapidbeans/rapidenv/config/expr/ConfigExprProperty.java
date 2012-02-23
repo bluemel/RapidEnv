@@ -51,7 +51,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 	 *            if literals should be escaped or not
 	 */
 	public ConfigExprProperty(final Installunit enclosingUnit, final Property enclosingProp,
-	        final ConfigExpr childExpression, final boolean escapeLiterals) {
+			final ConfigExpr childExpression, final boolean escapeLiterals) {
 		super();
 		setEnclosingInstallUnit(enclosingUnit);
 		setEnclosingProperty(enclosingProp);
@@ -64,6 +64,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 	 * 
 	 * @return the resulting expanded string
 	 */
+	@Override
 	public final String interpret() {
 		final String propertyName = this.childExpression.interpret();
 		final String defaultReturnValue = "${" + propertyName + "}";
@@ -78,7 +79,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 		if (value == null) {
 			final Property prop = renv.getProject().findPropertyConfiguration(propertyName);
 			if (prop != null && prop.getValue() != null) {
-				value = renv.interpret(null, getEnclosingProperty(), prop.getValue());
+				value = prop.getValue();
 			}
 		}
 		if (value == null) {
@@ -93,6 +94,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 	 * @param child
 	 *            - the child COnfiguration Expression
 	 */
+	@Override
 	public final void addChild(final ConfigExpr child) {
 		if (this.childExpression != null) {
 			throw new RapidEnvException("not more than one child allowd for ConfigExprProperty");

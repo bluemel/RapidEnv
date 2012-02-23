@@ -17,12 +17,7 @@
 
 package org.rapidbeans.rapidenv.config.cmd;
 
-import java.util.logging.Level;
-
-import org.rapidbeans.core.basic.RapidBean;
 import org.rapidbeans.core.type.TypeRapidBean;
-import org.rapidbeans.rapidenv.RapidEnvInterpreter;
-import org.rapidbeans.rapidenv.config.Installunit;
 
 /**
  * manual code part of Rapid Bean class: Argument.
@@ -42,34 +37,6 @@ public class Argument extends RapidBeanBaseArgument {
 			}
 		}
 		return super.getQuoted();
-	}
-
-	@Override
-	public String getValue() {
-		if (super.getValue() == null) {
-			return null;
-		}
-		final RapidEnvInterpreter env = RapidEnvInterpreter.getInstance();
-		final Installunit parentInstallUnit = getParentInstallUnit();
-		if (env != null) {
-			final String interpreted = env.interpret(parentInstallUnit, null, super.getValue());
-			RapidEnvInterpreter.log(Level.FINER, "Intepreted argument value \"" + super.getValue() + "\" to \""
-			        + interpreted + "\"");
-			return interpreted;
-		} else {
-			return super.getValue();
-		}
-	}
-
-	private Installunit getParentInstallUnit() {
-		RapidBean parentBean = this.getParentBean();
-		while (parentBean != null) {
-			if (parentBean instanceof Installunit) {
-				return (Installunit) parentBean;
-			}
-			parentBean = parentBean.getParentBean();
-		}
-		return null;
 	}
 
 	/**

@@ -29,7 +29,7 @@ the argument or optionally to extend the argument value.</description>
 	<property name="value" type="string"
 		mandatory="true"
 		emptyvalid="true"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The argument value. Can involve the argument name
 using special pseudo property "argument.name"
 e. g with "${argument.name}=((value))"</description>

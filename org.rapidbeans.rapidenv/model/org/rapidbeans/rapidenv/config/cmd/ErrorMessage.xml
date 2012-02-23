@@ -22,7 +22,8 @@
 		<description>The language</description>
 	</property>
 	<property name="text" type="string"
-		multiline="true">
+		multiline="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The message text.</description>
 	</property>
 </beantype>

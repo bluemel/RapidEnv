@@ -116,12 +116,13 @@ public final class TaskGenConfigLangInfo extends Task {
 	/**
 	 * the execute method.
 	 */
+	@Override
 	public void execute() {
 
 		// checks for attributes
 		if (this.type == null) {
 			throw new BuildException("No bean type to analyze defined."
-			        + " Please define value for attribute \"type\".");
+					+ " Please define value for attribute \"type\".");
 		}
 
 		final TypeRapidBean rootType = TypeRapidBean.forName(this.type);
@@ -144,7 +145,7 @@ public final class TaskGenConfigLangInfo extends Task {
 		getProject().log("     [genrefinput]   modelroot: " + this.modelroot, Project.MSG_DEBUG);
 		getProject().log("     [genrefinput]   modelroot path: " + modelrootDir.getPath(), Project.MSG_DEBUG);
 		getProject().log("     [genrefinput]   modelroot absolute path: " + modelrootDir.getAbsolutePath(),
-		        Project.MSG_DEBUG);
+				Project.MSG_DEBUG);
 
 		if (!modelrootDir.exists()) {
 			throw new BuildException("Model root directory \"" + this.modelroot + "\" not found");
@@ -167,8 +168,8 @@ public final class TaskGenConfigLangInfo extends Task {
 				writer.write("<grammar>" + LF);
 
 				this.getProject().log(
-				        "     [genrefinput] Processing bean type " + this.type + " to " + this.out.getAbsolutePath(),
-				        Project.MSG_INFO);
+						"     [genrefinput] Processing bean type " + this.type + " to " + this.out.getAbsolutePath(),
+						Project.MSG_INFO);
 				generateConfLangDescr(rootType, writer, this.getProject());
 				writer.write("</grammar>" + LF);
 			} catch (IOException e) {
@@ -215,7 +216,7 @@ public final class TaskGenConfigLangInfo extends Task {
 	 *            the ant project
 	 */
 	private static void generateConfLangDescr(final TypeRapidBean type, final String xmlname,
-	        final Map<String, Object> alreadydefined, final Writer writer, final Project project) {
+			final Map<String, Object> alreadydefined, final Writer writer, final Project project) {
 
 		try {
 			// write element name
@@ -279,7 +280,7 @@ public final class TaskGenConfigLangInfo extends Task {
 				for (final String subelementname : getSubelementNames(colPropType, type)) {
 					TypeRapidBean targetType = colPropType.getTargetType();
 					if (type.getXmlElementsTypeMap() != null
-					        && type.getXmlElementsTypeMap().get(subelementname) != null) {
+							&& type.getXmlElementsTypeMap().get(subelementname) != null) {
 						targetType = type.getXmlElementsTypeMap().get(subelementname);
 					}
 					if (alreadydefined.get(subelementname) == null) {
@@ -287,12 +288,12 @@ public final class TaskGenConfigLangInfo extends Task {
 					} else if (alreadydefined.get(subelementname) != targetType) {
 						if (alreadydefined.get(subelementname) instanceof TypeRapidBean) {
 							throw new BuildException("XML Element \"" + subelementname
-							        + "\" already used for bean type \""
-							        + ((TypeRapidBean) alreadydefined.get(subelementname)).getName() + "\"");
+									+ "\" already used for bean type \""
+									+ ((TypeRapidBean) alreadydefined.get(subelementname)).getName() + "\"");
 						} else {
 							throw new BuildException("XML Element \"" + subelementname
-							        + "\" already used for property type \""
-							        + ((TypeProperty) alreadydefined.get(subelementname)).getPropName() + "\"");
+									+ "\" already used for property type \""
+									+ ((TypeProperty) alreadydefined.get(subelementname)).getPropName() + "\"");
 						}
 					}
 				}
@@ -316,12 +317,15 @@ public final class TaskGenConfigLangInfo extends Task {
 	 *             if IO fails
 	 */
 	private static void writeAttribute(final TypeProperty proptype, final String propname, final Writer writer)
-	        throws IOException {
+			throws IOException {
 		if (proptype.isTransient() || proptype.getXmlBindingType() == PropertyXmlBindingType.element) {
 			return;
 		}
 		writer.write("\t\t<attribute name=\"" + propname + "\"" + LF);
 		writer.write("\t\t\ttype=\"" + proptype.getProptype().name() + "\"" + LF);
+		if (proptype.getPropClass() != null) {
+			writer.write("\t\t\timplementingclass=\"" + proptype.getPropClass().getName() + "\"");
+		}
 		writer.write("\t\t\tmandatory=\"" + Boolean.toString(proptype.getMandatory()) + "\"" + LF);
 		writer.write("\t\t\ttransient=\"" + Boolean.toString(proptype.isTransient()) + "\"" + LF);
 		if (proptype.getDefaultValue() != null) {
@@ -593,7 +597,7 @@ public final class TaskGenConfigLangInfo extends Task {
 			for (final String subelementname : getSubelementNames(colPropType, type)) {
 				if (type.getXmlElementsTypeMap() != null && type.getXmlElementsTypeMap().get(subelementname) != null) {
 					lastModified = getLatestModificationDirDate(dir, type.getXmlElementsTypeMap().get(subelementname),
-					        lastModified);
+							lastModified);
 				} else if (!(colPropType.getTargetType().equals(type))) {
 					lastModified = getLatestModificationDirDate(dir, colPropType.getTargetType(), lastModified);
 				}

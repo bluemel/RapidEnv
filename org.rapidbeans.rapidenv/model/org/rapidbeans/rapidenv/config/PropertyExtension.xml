@@ -17,15 +17,16 @@
 -->
 
 <beantype name="org.rapidbeans.rapidenv.config.PropertyExtension">
-	<description>A path extension defintion for a RapidEnv property containing any path.
+	<description>A path extension definition for a RapidEnv property containing any path.
 The platform specific path separator is automatically used in order to prepend or append the extension.</description>
 	<property name="propextmode" type="choice"
 		enum="PropertyExtensionMode"
 		default="append">
-		<description>Defines wether to "prepend" or "append" this path extension.</description>
+		<description>Defines weather to "prepend" or "append" this path extension.</description>
 	</property>
 	<property name="value" type="string"
-		mandatory="true">
+		mandatory="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The environment variable's (default) value.
 Could be platform specific when using the "osfamily" attribute.</description>
 	</property>

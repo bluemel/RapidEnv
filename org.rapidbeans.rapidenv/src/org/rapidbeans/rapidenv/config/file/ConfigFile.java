@@ -68,6 +68,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 	 * 
 	 * @return if the configuration has been performed properly or not
 	 */
+	@Override
 	public boolean check(final boolean execute) {
 		final URL url = getSourceurlAsUrl();
 		File sourcefile = null;
@@ -80,20 +81,20 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 				sourcefile = new File(url.getFile());
 				if (!sourcefile.exists()) {
 					throw new RapidEnvConfigurationException("File \"" + sourcefile.getAbsolutePath()
-					        + "\" does not exist.");
+							+ "\" does not exist.");
 				}
 				if (!targetfile.exists()) {
 					if (execute) {
 						if (!targetfile.getParentFile().exists()) {
 							FileHelper.mkdirs(targetfile.getParentFile());
 							final String msg = "    created directory " + targetfile.getParentFile().getAbsolutePath()
-							        + ".";
+									+ ".";
 							interpreter.getOut().println(msg);
 							configured = true;
 						}
 						FileHelper.copyFile(sourcefile, targetfile);
 						final String msg = "    copied " + sourcefile.getAbsolutePath() + " to file "
-						        + targetfile.getAbsolutePath();
+								+ targetfile.getAbsolutePath();
 						interpreter.getOut().println(msg);
 						configured = true;
 					} else {
@@ -105,7 +106,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 				}
 			} else {
 				throw new RapidEnvConfigurationException("Protocol different from file not supported"
-				        + "for file configuration property \"sourceurl\".");
+						+ "for file configuration property \"sourceurl\".");
 			}
 		} else {
 			if (!targetfile.exists()) {
@@ -138,13 +139,13 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 					if (execute) {
 						FileHelper.copyFile(sourcefile, targetfile);
 						final String msg = "    copied " + sourcefile.getAbsolutePath() + " over outdated file "
-						        + targetfile.getAbsolutePath();
+								+ targetfile.getAbsolutePath();
 						RapidEnvInterpreter.log(Level.FINE, msg);
 						interpreter.getOut().println(msg);
 						configured = true;
 					} else {
 						final String msg = "File to configure \"" + targetfile.getAbsolutePath()
-						        + "\" is not up to date.";
+								+ "\" is not up to date.";
 						RapidEnvInterpreter.log(Level.FINE, msg);
 						setIssue(msg);
 						return false;
@@ -183,7 +184,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 					if (execute) {
 						FileHelper.copyFile(sourcefile, targetfile, true);
 						final String msg = "    copied " + sourcefile.getAbsolutePath() + " over different file "
-						        + targetfile.getAbsolutePath();
+								+ targetfile.getAbsolutePath();
 						RapidEnvInterpreter.log(Level.FINE, msg);
 						interpreter.getOut().println(msg);
 						configured = true;
@@ -191,7 +192,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 						String msg;
 						if (this.getTasks() != null && this.getTasks().size() > 0) {
 							msg = "File to configure \"" + targetfile.getAbsolutePath()
-							        + "\" differs from sourcefile including changes.";
+									+ "\" differs from sourcefile including changes.";
 						} else {
 							msg = "File to configure \"" + targetfile.getAbsolutePath() + "\" differs from sourcefile.";
 						}
@@ -207,10 +208,10 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		if (getCanread() && (!targetfile.canRead())) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Add read rights to " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
+						"Add read rights to " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
 				if (!targetfile.setReadable(true)) {
 					throw new RapidEnvException("Adding read rights" + " to configuration file \""
-					        + targetfile.getAbsolutePath() + "\" failed.");
+							+ targetfile.getAbsolutePath() + "\" failed.");
 				} else {
 					configured = true;
 				}
@@ -224,10 +225,10 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		if (getCanwrite() && (!targetfile.canWrite())) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Add write rights to " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
+						"Add write rights to " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
 				if (!targetfile.setWritable(true)) {
 					throw new RapidEnvException("Adding write rights" + " to configuration file \""
-					        + targetfile.getAbsolutePath() + "\" failed.");
+							+ targetfile.getAbsolutePath() + "\" failed.");
 				} else {
 					configured = true;
 				}
@@ -241,10 +242,10 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		if (getCanexecute() && (!targetfile.canExecute())) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Add execution rights to " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
+						"Add execution rights to " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
 				if (!targetfile.setExecutable(true)) {
 					throw new RapidEnvException("Adding execution rights" + " to configuration file \""
-					        + targetfile.getAbsolutePath() + "\" failed.");
+							+ targetfile.getAbsolutePath() + "\" failed.");
 				} else {
 					configured = true;
 				}
@@ -258,16 +259,16 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		if (!getCanread() && targetfile.canRead()) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Remove read rights from " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
+						"Remove read rights from " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
 				if (!targetfile.setReadable(false)) {
 					throw new RapidEnvException("Withdrawing read rights" + " from configuration file \""
-					        + targetfile.getAbsolutePath() + "\" failed.");
+							+ targetfile.getAbsolutePath() + "\" failed.");
 				} else {
 					configured = true;
 				}
 			} else {
 				final String msg = "File to configure \"" + targetfile.getAbsolutePath()
-				        + "\" is readable but should not be.";
+						+ "\" is readable but should not be.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
@@ -276,16 +277,16 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		if (!getCanwrite() && targetfile.canWrite()) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Remove write rights from " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
+						"Remove write rights from " + "file to configure \"" + targetfile.getAbsolutePath() + "\".");
 				if (!targetfile.setWritable(false)) {
 					throw new RapidEnvException("Withdrawing write rights" + " from configuration file \""
-					        + targetfile.getAbsolutePath() + "\" failed.");
+							+ targetfile.getAbsolutePath() + "\" failed.");
 				} else {
 					configured = true;
 				}
 			} else {
 				final String msg = "File to configure \"" + targetfile.getAbsolutePath()
-				        + "\" is writeable but should not be.";
+						+ "\" is writeable but should not be.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
@@ -296,17 +297,17 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 			if (!getCanexecute() && targetfile.canExecute()) {
 				if (execute) {
 					interpreter.getOut().println(
-					        "Remove execution rights from " + "file to configure \"" + targetfile.getAbsolutePath()
-					                + "\".");
+							"Remove execution rights from " + "file to configure \"" + targetfile.getAbsolutePath()
+									+ "\".");
 					if (!targetfile.setExecutable(false)) {
 						throw new RapidEnvException("Withdrawing execution rights" + " from configuration file \""
-						        + targetfile.getAbsolutePath() + "\" failed.");
+								+ targetfile.getAbsolutePath() + "\" failed.");
 					} else {
 						configured = true;
 					}
 				} else {
 					final String msg = "File to configure \"" + targetfile.getAbsolutePath()
-					        + "\" is executeable but should not be.";
+							+ "\" is executeable but should not be.";
 					RapidEnvInterpreter.log(Level.FINE, msg);
 					setIssue(msg);
 					return false;
@@ -369,15 +370,6 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		}
 	}
 
-	public String getPath() {
-		String path = super.getPath();
-		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-		if (interpreter != null) {
-			path = interpreter.interpret(getParentInstallunit(), getParentPropertyRenv(), path);
-		}
-		return path;
-	}
-
 	public File getPathAsFile() {
 		File pathfile = null;
 		final Installunit unit = ((Installunit) getParentBean());
@@ -395,6 +387,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 	/**
 	 * Tweaked getter with lazy initialization and expression interpretation.
 	 */
+	@Override
 	public synchronized String getSourceurl() {
 		if (super.getSourceurl() == null) {
 			return null;
@@ -432,9 +425,9 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 			return new URL(getSourceurl());
 		} catch (MalformedURLException e) {
 			throw new RapidEnvConfigurationException(
-			        "Configuration problem of property \"sourceurl\" in installunit \""
-			                + ((Installunit) this.getParentBean()).getFullyQualifiedName() + "\""
-			                + " in file configuration with sourceurl \"" + getSourceurl() + "\"", e);
+					"Configuration problem of property \"sourceurl\" in installunit \""
+							+ ((Installunit) this.getParentBean()).getFullyQualifiedName() + "\""
+							+ " in file configuration with sourceurl \"" + getSourceurl() + "\"", e);
 		}
 	}
 
@@ -448,7 +441,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 	 */
 	private String interpret(final String expression) {
 		return new ConfigExprTopLevel((Installunit) this.getParentBean(), null, expression,
-		        getExpressionliteralescaping()).interpret();
+				getExpressionliteralescaping()).interpret();
 	}
 
 	/**
@@ -478,6 +471,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		super(sa);
 	}
 
+	@Override
 	public String print() {
 		return this.getPathAsFile().getAbsolutePath();
 	}
@@ -490,6 +484,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 	/**
 	 * @return the RapidBean's type
 	 */
+	@Override
 	public TypeRapidBean getType() {
 		return type;
 	}

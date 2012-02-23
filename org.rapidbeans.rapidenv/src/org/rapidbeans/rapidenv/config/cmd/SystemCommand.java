@@ -44,13 +44,10 @@ import org.rapidbeans.rapidenv.config.Installunit;
 public class SystemCommand extends RapidBeanBaseSystemCommand {
 
 	public static File getExecutableAsFileStat(final String exe, final String pathextension,
-	        final RapidEnvInterpreter interpreter, final Installunit enclosingUnit) {
+			final RapidEnvInterpreter interpreter, final Installunit enclosingUnit) {
 		File file = null;
 		if (exe != null) {
 			String path = exe;
-			if (interpreter != null) {
-				path = interpreter.interpret(enclosingUnit, null, exe);
-			}
 			file = new File(path);
 			String pathEnvvarname = null;
 			switch (PlatformHelper.getOs()) {
@@ -81,7 +78,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			}
 			if (!file.canExecute()) {
 				throw new RapidEnvException("No execution rights" + " for executable file \"" + file.getAbsolutePath()
-				        + "\"");
+						+ "\"");
 			}
 		}
 		return file;
@@ -105,13 +102,13 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				for (final SystemCommand cmd : getVerifycmds()) {
 					try {
 						RapidEnvInterpreter.log(Level.FINER, "Executing verify command " + cmd.getClass().getName()
-						        + "::" + cmd.getCommandline());
+								+ "::" + cmd.getCommandline());
 						cmd.execute();
 						RapidEnvInterpreter.log(Level.FINER, "verify command succeeded: " + cmd.getClass().getName()
-						        + "::" + cmd.getCommandline());
+								+ "::" + cmd.getCommandline());
 					} catch (RuntimeException e) {
 						RapidEnvInterpreter.log(Level.FINER, "verify command failed: " + cmd.getClass().getName()
-						        + "::" + cmd.getCommandline());
+								+ "::" + cmd.getCommandline());
 						ok = false;
 						break;
 					}
@@ -174,9 +171,9 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			}
 			if (!getAsync()) {
 				final CommandStreamReader rdOut = new CommandStreamReader(cmdline, proc.getInputStream(), System.out,
-				        bufOut);
+						bufOut);
 				final CommandStreamReader rdErr = new CommandStreamReader(cmdline, proc.getErrorStream(), System.err,
-				        bufErr);
+						bufErr);
 				rdOut.start();
 				rdErr.start();
 				ret = proc.waitFor();
@@ -242,7 +239,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			}
 			if (!success) {
 				throw new RapidEnvException("ERROR during execution of system command: " + cmdline
-				        + "\n  return code = " + ret);
+						+ "\n  return code = " + ret);
 			}
 		}
 	}
@@ -274,7 +271,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				if (stdCondition.getContainsmatch() != null) {
 					final String regexp = ".*" + stdCondition.getContainsmatch() + ".*";
 					RapidEnvInterpreter.log(Level.FINE, "Checking if stdout = \"" + out + "\" matches \"" + regexp
-					        + "\"");
+							+ "\"");
 					if (out.matches(regexp)) {
 						success = true;
 						break;
@@ -289,7 +286,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			}
 			if (!success) {
 				throw new RapidEnvException("ERROR during execution of system command: " + cmdline + "\n  stdout = \""
-				        + out + "\"");
+						+ out + "\"");
 			}
 		}
 	}
@@ -333,7 +330,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			}
 			if (!success) {
 				throw new RapidEnvException("ERROR during execution of system command: " + cmdline + "\n  stderr = \""
-				        + out + "\"");
+						+ out + "\"");
 			}
 		}
 	}
@@ -364,7 +361,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				break;
 			default:
 				throw new RapidEnvException("ERROR: " + " system command execution currently not supported"
-				        + " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
+						+ " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
 			}
 		}
 
@@ -389,7 +386,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				if (arg.getQuoted()) {
 					cmdline.append('"');
 					final EscapeMap map = new EscapeMap(new String[] { "\b", "\\b", "\n", "\\n", "\r", "\\r", "\t",
-					        "\\t", "\"", "\\\"", "\\", "\\\\" });
+							"\\t", "\"", "\\\"", "\\", "\\\\" });
 					cmdline.append(StringHelper.escape(arg.getValue(), map));
 					cmdline.append('"');
 				} else {
@@ -411,7 +408,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				final String envvarSysdirWin = System.getenv("SystemRoot");
 				if (envvarSysdirWin != null && envvarSysdirWin.length() > 0) {
 					cmdArrayList
-					        .add(envvarSysdirWin + File.separatorChar + "system32" + File.separatorChar + "cmd.exe");
+							.add(envvarSysdirWin + File.separatorChar + "system32" + File.separatorChar + "cmd.exe");
 				} else {
 					cmdArrayList.add("cmd.exe");
 				}
@@ -422,7 +419,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				break;
 			default:
 				throw new RapidEnvException("ERROR: " + " system command execution currently not supported"
-				        + " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
+						+ " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
 			}
 		}
 
@@ -433,7 +430,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 		}
 		if (exeQuoted) {
 			final EscapeMap map = new EscapeMap(new String[] { "\b", "\\b", "\n", "\\n", "\r", "\\r", "\t", "\\t",
-			        "\"", "\\\"", "\\", "\\\\" });
+					"\"", "\\\"", "\\", "\\\\" });
 			cmdArrayList.add(StringHelper.escape(exe, map));
 		} else {
 			cmdArrayList.add(exe);
@@ -441,10 +438,10 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 
 		if (getArguments() != null) {
 			for (final Argument arg : getArguments()) {
-				final String argvalue = this.interpret(arg.getValue());
+				final String argvalue = arg.getValue();
 				if (arg.getQuoted()) {
 					final EscapeMap map = new EscapeMap(new String[] { "\b", "\\b", "\n", "\\n", "\r", "\\r", "\t",
-					        "\\t", "\"", "\\\"", "\\", "\\\\" });
+							"\\t", "\"", "\\\"", "\\", "\\\\" });
 					cmdArrayList.add("\"" + StringHelper.escape(argvalue, map) + "\"");
 				} else {
 					cmdArrayList.add(argvalue);
@@ -487,7 +484,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 		 *            the buffer
 		 */
 		public CommandStreamReader(final String cmdl, final InputStream is, final PrintStream outs,
-		        final StringBuffer outb) {
+				final StringBuffer outb) {
 			this.cmdline = cmdl;
 			InputStreamReader isr;
 			try {
@@ -521,7 +518,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 					reader.close();
 				} catch (IOException e) {
 					throw new RapidEnvException("Exception during closing reader after execution "
-					        + " of system command \"" + cmdline + "\"", e);
+							+ " of system command \"" + cmdline + "\"", e);
 				}
 			}
 		}
@@ -530,8 +527,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 	public File getWorkingdirAsFile() {
 		File file = null;
 		if (getWorkingdir() != null) {
-			final String path = interpret(getWorkingdir());
-			file = new File(path);
+			file = new File(getWorkingdir());
 			if (!file.exists()) {
 				throw new RapidEnvException("Working directory \"" + file.getAbsolutePath() + "\" not found");
 			}
@@ -564,19 +560,6 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 		}
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
 		return getExecutableAsFileStat(getExecutable(), null, interpreter, parentUnit);
-	}
-
-	private String interpret(final String s) {
-		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-		if (interpreter == null) {
-			return s;
-		} else {
-			Installunit parentUnit = null;
-			if (getParentBean() instanceof Installunit) {
-				parentUnit = (Installunit) getParentBean();
-			}
-			return interpreter.interpret(parentUnit, null, s);
-		}
 	}
 
 	@Override

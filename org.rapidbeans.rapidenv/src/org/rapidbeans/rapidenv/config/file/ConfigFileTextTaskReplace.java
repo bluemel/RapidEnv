@@ -21,7 +21,6 @@ import java.util.logging.Level;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
-import org.rapidbeans.rapidenv.config.Installunit;
 
 /**
  * Replaces the given regular expression by the given text.
@@ -52,17 +51,16 @@ public class ConfigFileTextTaskReplace extends RapidBeanBaseConfigFileTextTaskRe
 		final int[] matches = editor.search(getRegexp());
 		if (matches.length > 0) {
 			if (execute) {
-				final String replaceby = interpreter.interpret((Installunit) getParentBean().getParentBean(), null,
-				        getReplaceby());
+				final String replaceby = getReplaceby();
 				editor.replace(getRegexp(), replaceby);
 				String msg1;
 				if (matches.length == 1) {
 					msg1 = "Replaced 1 ocurrence of \"" + getRegexp() + "\"\n    by \"" + replaceby
-					        + "\"\n    in file " + fileCfg.getPathAsFile().getAbsolutePath();
+							+ "\"\n    in file " + fileCfg.getPathAsFile().getAbsolutePath();
 				} else {
 					msg1 = "Replaced " + Integer.toString(matches.length) + " ocurrences of \"" + getRegexp()
-					        + "\"\n    by \"" + replaceby + "\"\n    in file "
-					        + fileCfg.getPathAsFile().getAbsolutePath();
+							+ "\"\n    by \"" + replaceby + "\"\n    in file "
+							+ fileCfg.getPathAsFile().getAbsolutePath();
 				}
 				if (!silent) {
 					interpreter.getOut().println(msg1);
@@ -73,11 +71,11 @@ public class ConfigFileTextTaskReplace extends RapidBeanBaseConfigFileTextTaskRe
 				String msg2;
 				if (matches.length == 1) {
 					msg2 = "1 ocurrence of \"" + getRegexp() + "\"\n    should be replaced by \"" + getReplaceby()
-					        + "\"\n    in file " + fileCfg.getPathAsFile().getAbsolutePath();
+							+ "\"\n    in file " + fileCfg.getPathAsFile().getAbsolutePath();
 				} else {
 					msg2 = Integer.toString(matches.length) + " ocurrences of \"" + getRegexp()
-					        + "\"\n    should be replaced by \"" + getReplaceby() + "\"\n    in file "
-					        + fileCfg.getPathAsFile().getAbsolutePath();
+							+ "\"\n    should be replaced by \"" + getReplaceby() + "\"\n    in file "
+							+ fileCfg.getPathAsFile().getAbsolutePath();
 				}
 				RapidEnvInterpreter.log(Level.FINE, msg2);
 				fileCfg.setIssue(msg2);
@@ -140,6 +138,7 @@ public class ConfigFileTextTaskReplace extends RapidBeanBaseConfigFileTextTaskRe
 	/**
 	 * @return the RapidBean's type
 	 */
+	@Override
 	public TypeRapidBean getType() {
 		return type;
 	}

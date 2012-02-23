@@ -36,7 +36,7 @@ public class ProjectTest {
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-		        "org.rapidbeans.rapidenv.config.Project", true);
+				"org.rapidbeans.rapidenv.config.Project", true);
 	}
 
 	@AfterClass
@@ -48,7 +48,9 @@ public class ProjectTest {
 
 	@Test
 	public void testCheckSemanticsOK() {
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(new File("testdata/env/env.xml"));
+		PropertyInterpretedString.unlockIntepretation();
 		Project project = (Project) doc.getRoot();
 		project.checkSemantics();
 	}

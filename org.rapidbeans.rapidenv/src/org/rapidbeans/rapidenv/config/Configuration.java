@@ -132,9 +132,6 @@ public abstract class Configuration extends RapidBeanBaseConfiguration {
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
 		if (getCleanupfilesonconfig() != null) {
 			for (String filename : StringHelper.split(getCleanupfilesonconfig(), ",")) {
-				if (interpreter != null) {
-					filename = interpreter.interpret(getParentInstallunit(), null, filename);
-				}
 				final File file = new File(filename);
 				if (file.exists()) {
 					if (file.delete()) {
@@ -147,7 +144,7 @@ public abstract class Configuration extends RapidBeanBaseConfiguration {
 				} else {
 					if (interpreter != null) {
 						interpreter.getOut().println(
-						        "    Nothing to do for cleaup of file \"" + file.getAbsolutePath() + "\"");
+								"    Nothing to do for cleaup of file \"" + file.getAbsolutePath() + "\"");
 					}
 				}
 			}

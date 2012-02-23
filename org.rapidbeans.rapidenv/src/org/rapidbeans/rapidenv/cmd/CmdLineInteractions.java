@@ -52,7 +52,7 @@ public class CmdLineInteractions {
 	 * @return the value entered or the default value if nothing is entered
 	 */
 	public static String enterValue(final InputStream in, final PrintStream out, final Property prop,
-	        final String defaultValue) {
+			final String defaultValue) {
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		String newValue = null;
 		RapidEnvInterpreter.log(Level.FINER, "START enterValue for property: " + prop.getFullyQualifiedName());
@@ -72,8 +72,9 @@ public class CmdLineInteractions {
 			try {
 				String defaultPath = null;
 				if (defaultValue != null) {
-					final String interpretedDefaultValue = renv.interpret(null, prop, defaultValue);
-					final File defaultFile = new File(interpretedDefaultValue);
+					// final String interpretedDefaultValue =
+					// renv.interpret(null, prop, defaultValue);
+					final File defaultFile = new File(defaultValue);
 					if (defaultFile.exists()) {
 						defaultPath = defaultFile.getCanonicalPath();
 					} else {
@@ -93,18 +94,18 @@ public class CmdLineInteractions {
 							if (prop.getCreateIfNotExist()) {
 								if (!new File(newValue).exists()) {
 									if (promptYesNo(in, out, prop.getFiletype().name() + " " + newValue
-									        + " does not exist. Create it?", true)) {
+											+ " does not exist. Create it?", true)) {
 										switch (prop.getFiletype()) {
 										case directory:
 											if (!new File(newValue).mkdirs()) {
 												throw new RapidEnvException("Failed to creat directory \"" + newValue
-												        + "\"");
+														+ "\"");
 											}
 											break;
 										case file:
 											if (!new File(newValue).createNewFile()) {
 												throw new RapidEnvException("Failed to create file \"" + newValue
-												        + "\"");
+														+ "\"");
 											}
 											break;
 										}
@@ -113,7 +114,7 @@ public class CmdLineInteractions {
 							}
 							if (!new File(newValue).exists()) {
 								out.println("  Invalid input: " + prop.getFiletype().name() + " " + newValue
-								        + " does not exist.");
+										+ " does not exist.");
 								ok = false;
 							}
 						}
@@ -159,7 +160,7 @@ public class CmdLineInteractions {
 	 * @return the value entered or the default value if nothing is entered
 	 */
 	protected static String enterValue(final RapidEnvInterpreter interpreter, final InputStream in,
-	        final PrintStream out, final String msg, final String defaultValue) {
+			final PrintStream out, final String msg, final String defaultValue) {
 		if (interpreter.getRunMode() == RunMode.batch) {
 			return defaultValue;
 		}
@@ -192,9 +193,9 @@ public class CmdLineInteractions {
 	 * @return true if the answer is yes or false if the answer is no
 	 */
 	public static boolean promptYesNo(final InputStream in, final PrintStream out, final String question,
-	        final boolean defaultValue) {
+			final boolean defaultValue) {
 		if (RapidEnvInterpreter.getInstance() != null
-		        && RapidEnvInterpreter.getInstance().getRunMode() == RunMode.batch) {
+				&& RapidEnvInterpreter.getInstance().getRunMode() == RunMode.batch) {
 			return true;
 		}
 		boolean ret = defaultValue;

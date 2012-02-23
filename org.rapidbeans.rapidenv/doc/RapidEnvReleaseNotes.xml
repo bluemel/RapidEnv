@@ -26,6 +26,19 @@
 	<sect1>
 		<title>1.3.x</title>
 	<sect2>
+		<title>1.3.1</title>
+		<para>
+			Issue date: 02/29/2012
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>Internal redesign of the concept of <emphasis role="bold">interpreted strings:</emphasis>
+				Added the information which strings are really interpreted to the reference manual.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+	<sect2>
 		<title>1.3.0</title>
 		<para>
 			Issue date: 01/23/2012

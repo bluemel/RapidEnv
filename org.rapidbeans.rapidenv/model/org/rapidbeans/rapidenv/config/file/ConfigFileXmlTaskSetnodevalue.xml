@@ -30,7 +30,8 @@ value has to be set.</description>
 
 	<property name="value" type="string"
 		mandatory="false"
-		multiline="true">
+		multiline="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The node value to set.</description>
 	</property>
 

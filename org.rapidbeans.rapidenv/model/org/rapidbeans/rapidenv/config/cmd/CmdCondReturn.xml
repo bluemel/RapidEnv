@@ -21,11 +21,13 @@
 	<description>Defines a condition on the return value
 at the end of the system command execution.</description>
 
-	<property name="equals" type="string">
+	<property name="equals" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The return value has to equal a distinct value.</description>
 	</property>
 
-	<property name="matches" type="string">
+	<property name="matches" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The return value has to match the given pattern.</description>
 	</property>
 

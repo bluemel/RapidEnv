@@ -37,7 +37,7 @@ In this case the tag value has to be specified differently
 	</property>
 
 	<property name="installsourceurl" type="string"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The URL where all installation unit packages are taken from
 by default. If an installunit's "sourceurl" is not defined
 it automatically defaults to &lt;installsourceurl&gt;/&lt;installunit.space&gt;/&lt;installunit.name&gt;/&lt;installunit.version&gt;
@@ -49,7 +49,7 @@ or to specify "sourceurl" for all the project's installunits.</description>
 	</property>
 
 	<property name="installtargetdir" type="string"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The relative or absolute path to the local folder where all install units are installed to by default.
 If an installunit's "homedir" is not defined the "homedir" automatically defaults to
 &lt;installtargetdir&gt;/&lt;installunit.space&gt;/&lt;installunit.name&gt;/&lt;installunit.version&gt;

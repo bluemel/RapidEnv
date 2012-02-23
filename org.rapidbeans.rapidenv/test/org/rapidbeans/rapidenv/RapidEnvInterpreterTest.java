@@ -35,6 +35,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.logging.Level;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class RapidEnvInterpreterTest {
 	final static char DRIVE_LETTER = new File(".").getAbsolutePath().charAt(0);
 
 	final static String PROJECT_DIR = new File(".").getAbsolutePath().substring(0,
-	        new File(".").getAbsolutePath().length() - 2);
+			new File(".").getAbsolutePath().length() - 2);
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -78,6 +79,11 @@ public class RapidEnvInterpreterTest {
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 	}
 
+	@After
+	public void tearDown() {
+		RapidEnvInterpreter.clearInstance();
+	}
+
 	@Test
 	public void testCreateConfigurationWindowsSimple() {
 		if (PlatformHelper.getOs() != OperatingSystem.windows) {
@@ -89,22 +95,26 @@ public class RapidEnvInterpreterTest {
 			assertTrue(mysqlbin.mkdirs());
 		}
 		FileHelper.copyFile(new File("testdata/conf/mysql/mysql.ico"), new File(
-		        "testdata/testinstall/mysql/5.5.15/bin/mysql.ico"), true);
+				"testdata/testinstall/mysql/5.5.15/bin/mysql.ico"), true);
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envIcon01.xml", "c" }));
+				"testdata/env/envIcon01.xml", "c" }));
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		PrintStream sout = new PrintStream(bStream);
 		env.setOut(sout);
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.config);
 		Project project = env.getProject();
-		Installunit unit = project.findInstallunitConfiguration("mysql");
-		ShellLinkIcon icon = (ShellLinkIcon) unit.getConfigurations().get(0);
+		final Installunit unitMysql = project.findInstallunitConfiguration("mysql");
+		ShellLinkIcon icon = (ShellLinkIcon) unitMysql.getConfigurations().get(0);
 		File shortcutFile = new File(System.getenv("USERPROFILE") + "\\Desktop\\" + icon.getTitle() + ".lnk");
 		try {
 			assertEquals("Start TestMySQL", icon.getTitle());
-			assertEquals("environment('SystemRoot')/system32/cmd.exe", icon.getExecutable());
-			assertEquals("homedir('mysql')/bin", icon.getExecutein());
-			assertEquals("homedir('mysql')/bin/mysql.ico", icon.getIconfile());
+			if (PlatformHelper.getOs() == OperatingSystem.windows) {
+				assertEquals(System.getenv("SystemRoot") + "/system32/cmd.exe", icon.getExecutable());
+			}
+			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
+					+ "/bin", icon.getExecutein());
+			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
+					+ "/bin/mysql.ico", icon.getIconfile());
 			assertEquals(2, icon.getArguments().size());
 			assertEquals("/C", icon.getArguments().get(0).getValue());
 			assertEquals("mysqld_start.cmd", icon.getArguments().get(1).getValue());
@@ -117,13 +127,12 @@ public class RapidEnvInterpreterTest {
 			shellLinkWinRead.load();
 			assertEquals("Start TestMySQL.lnk", shellLinkWinRead.getFile().getName());
 			assertNotNull(shellLinkWinRead.getTargetPath());
-			assertEquals(
-			        new File(env.interpret(unit, null, "environment('SystemRoot')/system32/cmd.exe")).getAbsolutePath(),
-			        shellLinkWinRead.getTargetPath().getAbsolutePath());
-			assertEquals(new File(env.interpret(unit, null, "homedir('mysql')/bin")).getAbsolutePath(),
-			        shellLinkWinRead.getWorkingDirectory().getAbsolutePath());
-			assertEquals(new File(env.interpret(unit, null, "homedir('mysql')/bin/mysql.ico")).getAbsolutePath(),
-			        shellLinkWinRead.getIconFile().getAbsolutePath());
+			assertEquals(new File(System.getenv("SystemRoot") + "/system32/cmd.exe").getAbsolutePath(),
+					shellLinkWinRead.getTargetPath().getAbsolutePath());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin").getAbsolutePath(), shellLinkWinRead
+					.getWorkingDirectory().getAbsolutePath());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin/mysql.ico").getAbsolutePath(), shellLinkWinRead
+					.getIconFile().getAbsolutePath());
 			assertEquals(0, shellLinkWinRead.getIconNumber());
 			assertEquals(2, shellLinkWinRead.getArguments().size());
 			assertEquals("/C", shellLinkWinRead.getArguments().get(0).getValue());
@@ -149,24 +158,26 @@ public class RapidEnvInterpreterTest {
 			assertTrue(mysqlbin.mkdirs());
 		}
 		FileHelper.copyFile(new File("testdata/conf/mysql/mysql.ico"), new File(
-		        "testdata/testinstall/mysql/5.5.15/bin/mysql.ico"), true);
+				"testdata/testinstall/mysql/5.5.15/bin/mysql.ico"), true);
 		FileHelper.copyFile(new File("testdata/conf/mysql/mysqld_start.cmd"), new File(
-		        "testdata/testinstall/mysql/5.5.15/bin/mysqld_start.cmd"), true);
+				"testdata/testinstall/mysql/5.5.15/bin/mysqld_start.cmd"), true);
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envIcon01.xml", "c" }));
+				"testdata/env/envIcon01.xml", "c" }));
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		PrintStream sout = new PrintStream(bStream);
 		env.setOut(sout);
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.config);
 		Project project = env.getProject();
-		Installunit unit = project.findInstallunitConfiguration("mysql");
-		ShellLinkIcon icon = (ShellLinkIcon) unit.getConfigurations().get(1);
+		final Installunit unitMysql = project.findInstallunitConfiguration("mysql");
+		ShellLinkIcon icon = (ShellLinkIcon) unitMysql.getConfigurations().get(1);
 		File shortcutFile = new File(System.getenv("USERPROFILE") + "\\Desktop\\" + icon.getTitle() + ".lnk");
 		try {
 			assertEquals("Start TestMySQL", icon.getTitle());
 			assertEquals("mysqld_start.cmd", icon.getExecutable());
-			assertEquals("homedir('mysql')/bin", icon.getExecutein());
-			assertEquals("homedir('mysql')/bin/mysql.ico", icon.getIconfile());
+			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
+					+ "/bin", icon.getExecutein());
+			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
+					+ "/bin/mysql.ico", icon.getIconfile());
 			assertEquals(2, icon.getArguments().size());
 			assertEquals("argval1", icon.getArguments().get(0).getValue());
 			assertEquals(false, icon.getArguments().get(0).getQuoted());
@@ -181,22 +192,20 @@ public class RapidEnvInterpreterTest {
 			shellLinkWinRead.load();
 			assertEquals("Start TestMySQL.lnk", shellLinkWinRead.getFile().getName());
 			assertNotNull(shellLinkWinRead.getTargetPath());
-			assertEquals(
-			        new File(env.interpret(unit, null, "environment('SystemRoot')/system32/cmd.exe")).getAbsolutePath(),
-			        shellLinkWinRead.getTargetPath().getAbsolutePath());
-			assertEquals(new File(env.interpret(unit, null, "homedir('mysql')/bin")).getAbsolutePath(),
-			        shellLinkWinRead.getWorkingDirectory().getAbsolutePath());
-			assertEquals(new File(env.interpret(unit, null, "homedir('mysql')/bin/mysql.ico")).getAbsolutePath(),
-			        shellLinkWinRead.getIconFile().getAbsolutePath());
+			assertEquals(new File(System.getenv("SystemRoot") + "/system32/cmd.exe").getAbsolutePath(),
+					shellLinkWinRead.getTargetPath().getAbsolutePath());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin").getAbsolutePath(), shellLinkWinRead
+					.getWorkingDirectory().getAbsolutePath());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin/mysql.ico").getAbsolutePath(), shellLinkWinRead
+					.getIconFile().getAbsolutePath());
 			assertEquals(0, shellLinkWinRead.getIconNumber());
 			assertEquals(5, shellLinkWinRead.getArguments().size());
 			assertEquals("/C", shellLinkWinRead.getArguments().get(0).getValue());
 			assertEquals(false, shellLinkWinRead.getArguments().get(0).getQuoted());
 			assertEquals("call", shellLinkWinRead.getArguments().get(1).getValue());
 			assertEquals(false, shellLinkWinRead.getArguments().get(1).getQuoted());
-			assertEquals(
-			        new File(env.interpret(unit, null, "homedir('mysql')/bin/mysqld_start.cmd")).getAbsolutePath(),
-			        shellLinkWinRead.getArguments().get(2).getValue());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin/mysqld_start.cmd").getAbsolutePath(), shellLinkWinRead
+					.getArguments().get(2).getValue());
 			assertEquals(true, shellLinkWinRead.getArguments().get(2).getQuoted());
 			assertEquals("argval1", shellLinkWinRead.getArguments().get(3).getValue());
 			assertEquals(false, shellLinkWinRead.getArguments().get(3).getQuoted());
@@ -223,24 +232,26 @@ public class RapidEnvInterpreterTest {
 			assertTrue(mysqlbin.mkdirs());
 		}
 		FileHelper.copyFile(new File("testdata/conf/mysql/mysql.ico"), new File(
-		        "testdata/testinstall/mysql/5.5.15/bin/mysql.ico"), true);
+				"testdata/testinstall/mysql/5.5.15/bin/mysql.ico"), true);
 		FileHelper.copyFile(new File("testdata/conf/mysql/mysqld_start.cmd"), new File(
-		        "testdata/testinstall/mysql/5.5.15/bin/mysqld_start.cmd"), true);
+				"testdata/testinstall/mysql/5.5.15/bin/mysqld_start.cmd"), true);
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envIcon01.xml", "c" }));
+				"testdata/env/envIcon01.xml", "c" }));
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		PrintStream sout = new PrintStream(bStream);
 		env.setOut(sout);
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.config);
 		Project project = env.getProject();
-		Installunit unit = project.findInstallunitConfiguration("mysql");
-		ShellLinkIcon icon = (ShellLinkIcon) unit.getConfigurations().get(2);
+		final Installunit unitMysql = project.findInstallunitConfiguration("mysql");
+		ShellLinkIcon icon = (ShellLinkIcon) unitMysql.getConfigurations().get(2);
 		File shortcutFile = new File(System.getenv("USERPROFILE") + "\\Desktop\\" + icon.getTitle() + ".lnk");
 		try {
 			assertEquals("Start TestMySQL", icon.getTitle());
 			assertEquals("mysqld_start.cmd", icon.getExecutable());
-			assertEquals("homedir('mysql')/bin", icon.getExecutein());
-			assertEquals("homedir('mysql')/bin/mysql.ico", icon.getIconfile());
+			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
+					+ "/bin", icon.getExecutein());
+			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
+					+ "/bin/mysql.ico", icon.getIconfile());
 			assertEquals(2, icon.getArguments().size());
 			assertEquals("argval1", icon.getArguments().get(0).getValue());
 			assertEquals(false, icon.getArguments().get(0).getQuoted());
@@ -255,13 +266,12 @@ public class RapidEnvInterpreterTest {
 			shellLinkWinRead.load();
 			assertEquals("Start TestMySQL.lnk", shellLinkWinRead.getFile().getName());
 			assertNotNull(shellLinkWinRead.getTargetPath());
-			assertEquals(
-			        new File(env.interpret(unit, null, "environment('SystemRoot')/system32/cmd.exe")).getAbsolutePath(),
-			        shellLinkWinRead.getTargetPath().getAbsolutePath());
-			assertEquals(new File(env.interpret(unit, null, "homedir('mysql')/bin")).getAbsolutePath(),
-			        shellLinkWinRead.getWorkingDirectory().getAbsolutePath());
-			assertEquals(new File(env.interpret(unit, null, "homedir('mysql')/bin/mysql.ico")).getAbsolutePath(),
-			        shellLinkWinRead.getIconFile().getAbsolutePath());
+			assertEquals(new File(System.getenv("SystemRoot") + "/system32/cmd.exe").getAbsolutePath(),
+					shellLinkWinRead.getTargetPath().getAbsolutePath());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin").getAbsolutePath(), shellLinkWinRead
+					.getWorkingDirectory().getAbsolutePath());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin/mysql.ico").getAbsolutePath(), shellLinkWinRead
+					.getIconFile().getAbsolutePath());
 			assertEquals(0, shellLinkWinRead.getIconNumber());
 			assertEquals(8, shellLinkWinRead.getArguments().size());
 			assertEquals("/C", shellLinkWinRead.getArguments().get(0).getValue());
@@ -274,9 +284,8 @@ public class RapidEnvInterpreterTest {
 			assertEquals(false, shellLinkWinRead.getArguments().get(3).getQuoted());
 			assertEquals("call", shellLinkWinRead.getArguments().get(4).getValue());
 			assertEquals(false, shellLinkWinRead.getArguments().get(4).getQuoted());
-			assertEquals(
-			        new File(env.interpret(unit, null, "homedir('mysql')/bin/mysqld_start.cmd")).getAbsolutePath(),
-			        shellLinkWinRead.getArguments().get(5).getValue());
+			assertEquals(new File(unitMysql.getHomedir() + "/bin/mysqld_start.cmd").getAbsolutePath(), shellLinkWinRead
+					.getArguments().get(5).getValue());
 			assertEquals(true, shellLinkWinRead.getArguments().get(5).getQuoted());
 			assertEquals("argval1", shellLinkWinRead.getArguments().get(6).getValue());
 			assertEquals(false, shellLinkWinRead.getArguments().get(6).getQuoted());
@@ -295,7 +304,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testParsePropertyConfigurationsSimple() {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "b" }));
+				"b" }));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(4, env.getPropertiesToProcess().size());
 	}
@@ -310,20 +319,21 @@ public class RapidEnvInterpreterTest {
 	public void testParsePropertyConfigurationsToolSpecific() throws IOException {
 
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envPropsToolSpecific.xml", "s" }));
+				"testdata/env/envPropsToolSpecific.xml", "s" }));
+		RapidEnvInterpreter.clearInstance();
 
 		try {
 
 			// boot that thing
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "b" }));
+					"b" }));
 			SequenceInputStream sin = new SequenceInputStream(new InputStreamLines(new String[] { "xyz", "n" // do
-																											 // not
-																											 // create
-																											 // the
-																											 // "command prompt here"
+																												// not
+																												// create
+																												// the
+																												// "command prompt here"
 			// explorer menu entry
-			        }));
+					}));
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			PrintStream sout = new PrintStream(bStream);
 			env.execute(sin, sout);
@@ -331,187 +341,194 @@ public class RapidEnvInterpreterTest {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.properties"),
-				        env.getProfileProps());
+						env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// try a stat
 			sin = new SequenceInputStream(new InputStreamLines(new String[] {}));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "s" }));
+					"s" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificStatWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.properties"),
-				        env.getProfileProps());
+						env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificStatLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// try an installation (the optional tool won't be installed)
 			sin = new SequenceInputStream(new InputStreamLines(new String[] {}));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "i" }));
+					"i" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWin.properties"),
-				        env.getProfileProps());
+						env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWin.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificInstLinux.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificInstLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// try a specific installation for the optional tool
 			sin = new SequenceInputStream(new InputStreamLines(new String[] { "", "Y" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "i", "otherapp" }));
+					"i", "otherapp" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstSpecWin.txt"),
-				        bStream);
+						bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstSpecLinux.txt"),
-				        bStream);
+						bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// try a 2nd stat
 			sin = new SequenceInputStream(new InputStreamLines(new String[] {}));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "s" }));
+					"s" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificStat2Win.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper
-				        .assertOutput(new File("testdata/out/outPropertyToolSepcificStat2Linux.txt"), bStream);
+						.assertOutput(new File("testdata/out/outPropertyToolSepcificStat2Linux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// configure all
 			sin = new SequenceInputStream(new InputStreamLines(new String[] {}));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "c" }));
+					"c" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificConfWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificConfLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// configure common property (nothing should happen)
 			sin = new SequenceInputStream(new InputStreamLines(new String[] {}));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "c", "myapp.home" }));
+					"c", "myapp.home" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificConfcWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper
-				        .assertOutput(new File("testdata/out/outPropertyToolSepcificConfcLinux.txt"), bStream);
+						.assertOutput(new File("testdata/out/outPropertyToolSepcificConfcLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// configure personal property
 			sin = new SequenceInputStream(new InputStreamLines(new String[] { "" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "c", "otherapp.data" }));
+					"c", "otherapp.data" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
@@ -519,34 +536,35 @@ public class RapidEnvInterpreterTest {
 				break;
 			case linux:
 				RapidEnvTestHelper
-				        .assertOutput(new File("testdata/out/outPropertyToolSepcificConfpLinux.txt"), bStream);
+						.assertOutput(new File("testdata/out/outPropertyToolSepcificConfpLinux.txt"), bStream);
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// deinstall both installunits with specific properties
 			sin = new SequenceInputStream(new InputStreamLines(new String[] {}));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific.xml",
-			        "d", "myapp", "otherapp" }));
+					"d", "myapp", "otherapp" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificDeinstWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificDeinstWin.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificDeinstWin.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificDeinstWin.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificDeinstLinux.txt"),
-				        bStream);
+						bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificDeinstLinux.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificDeinstLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificDeinstLinux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
@@ -567,20 +585,16 @@ public class RapidEnvInterpreterTest {
 	public void testParsePropertyConfigurationsToolSpecificPropvalchange() throws IOException {
 
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envPropsToolSpecific.xml", "s" }));
+				"testdata/env/envPropsToolSpecific.xml", "s" }));
+		RapidEnvInterpreter.clearInstance();
 
 		try {
 
 			// boot that thing
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific02.xml",
-			        "b" }));
-			SequenceInputStream sin = new SequenceInputStream(new InputStreamLines(new String[] { "xyz", "n" // do
-																											 // not
-																											 // create
-																											 // the
-																											 // "command prompt here"
-			// explorer menu entry
-			        }));
+					"b" }));
+			// do not create the "command prompt here" explorer menu entry
+			SequenceInputStream sin = new SequenceInputStream(new InputStreamLines(new String[] { "xyz", "n" }));
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			PrintStream sout = new PrintStream(bStream);
 			env.execute(sin, sout);
@@ -588,70 +602,72 @@ public class RapidEnvInterpreterTest {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.properties"),
-				        env.getProfileProps());
+						env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// install that stuff
 			sin = new SequenceInputStream(new InputStreamLines(new String[] { "/a/b/c" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific02.xml",
-			        "i" }));
+					"i" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInst02Win.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificInst02Win.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificInst02Win.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInst02Win.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
-				        new File("testdata/out/outPropertyToolSpecificInstLinux.properties"), env.getProfileProps());
+						new File("testdata/out/outPropertyToolSpecificInstLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
 			}
+			RapidEnvInterpreter.clearInstance();
 
 			// update otherapp selectively
 			sin = new SequenceInputStream(new InputStreamLines(new String[] { "/a/b/c" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/envPropsToolSpecificOtherPropvalCommon.xml", "u", "otherapp" }));
+					"testdata/env/envPropsToolSpecificOtherPropvalCommon.xml", "u", "otherapp" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificUpdate02Win.txt"),
-				        bStream);
+						bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificUpdate02Win.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificUpdate02Win.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Win.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificUpdate02Linux.txt"),
-				        bStream);
+						bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyToolSpecificUpdate02Linux.properties"), env.getProfileProps());
+						"testdata/out/outPropertyToolSpecificUpdate02Linux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Linux.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOs().name() + "\" not yet tested");
@@ -671,11 +687,11 @@ public class RapidEnvInterpreterTest {
 		switch (PlatformHelper.getOs()) {
 		case windows:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
-			        .startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
+					.startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
 			break;
 		default:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
-			        .startsWith("/h/opt/maven/bin:"));
+					.startsWith("/h/opt/maven/bin:"));
 			break;
 		}
 	}
@@ -690,11 +706,11 @@ public class RapidEnvInterpreterTest {
 		switch (PlatformHelper.getOs()) {
 		case windows:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
-			        .startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
+					.startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
 			break;
 		default:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
-			        .startsWith("/h/opt/maven/bin:"));
+					.startsWith("/h/opt/maven/bin:"));
 			break;
 		}
 	}
@@ -703,7 +719,7 @@ public class RapidEnvInterpreterTest {
 	public void testParsePropertyConfigurationsWithPathextensionsWithBraces2() {
 		CmdRenv cmd = new CmdRenv(new String[] { "-env", "testdata/env/envWithPathext.xml", "b" });
 		RapidEnvInterpreter env = new RapidEnvInterpreter(cmd, new AntGateway(new File(
-		        "testdata/ant/ant02_win.properties")));
+				"testdata/ant/ant02_win.properties")));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
@@ -719,11 +735,11 @@ public class RapidEnvInterpreterTest {
 		switch (PlatformHelper.getOs()) {
 		case windows:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
-			        .startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
+					.startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
 			break;
 		default:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
-			        .startsWith("/h/opt/maven/bin:"));
+					.startsWith("/h/opt/maven/bin:"));
 			break;
 		}
 	}
@@ -737,7 +753,7 @@ public class RapidEnvInterpreterTest {
 
 		try {
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/envTestInstall.xml", "i", "myapp" }));
+					"testdata/env/envTestInstall.xml", "i", "myapp" }));
 			final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			final PrintStream sout = new PrintStream(bStream);
 			env.execute(System.in, sout);
@@ -757,7 +773,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testInstallUnitsToProcessSimple() {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "s", "maven", "jdk" }));
+				"s", "maven", "jdk" }));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(2, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.maven", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
@@ -771,7 +787,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testInstallUnitsToProcessAll() {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "s" }));
+				"s" }));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(6, env.getInstallunitsToProcess().size());
 		assertEquals("jdk", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
@@ -791,7 +807,7 @@ public class RapidEnvInterpreterTest {
 	public void testInstallUnitsToProcessAmbigouus() {
 		try {
 			RapidEnvInterpreter renv = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/env.xml", "s", "ant", "ambitool" }));
+					"testdata/env/env.xml", "s", "ant", "ambitool" }));
 			renv.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		} catch (RapidEnvCmdException e) {
 			assertEquals("Ambigouus tool name \"ambitool\"" + " has been specified with the command", e.getMessage());
@@ -808,11 +824,11 @@ public class RapidEnvInterpreterTest {
 	public void testInstallUnitsToProcessRepeat() {
 		LoggerMock loggerMock = LoggerMock.getLogger(RapidEnvInterpreter.class.getName());
 		RapidEnvInterpreter renv = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "s", "ant", "ant" }), loggerMock);
+				"s", "ant", "ant" }), loggerMock);
 		renv.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(1, loggerMock.getLogRecords().size());
 		assertEquals("Install unit \"org.apache.ant\"" + " has been specified for one command multiple times",
-		        loggerMock.getLogRecords().get(0).getMessage());
+				loggerMock.getLogRecords().get(0).getMessage());
 		assertEquals(Level.WARNING, loggerMock.getLogRecords().get(0).getLevel());
 	}
 
@@ -824,7 +840,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testInstallUnitsToProcessFully() {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "s", "org.apache.maven", "jdk", "org.rapidbeans.alt.ambitool" }));
+				"s", "org.apache.maven", "jdk", "org.rapidbeans.alt.ambitool" }));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(3, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.maven", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
@@ -839,13 +855,13 @@ public class RapidEnvInterpreterTest {
 	public void testSpecInstallUnitInvalid() {
 		try {
 			RapidEnvInterpreter renv = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/env.xml", "b", "jdk", "ant", "xxx" }));
+					"testdata/env/env.xml", "b", "jdk", "ant", "xxx" }));
 			renv.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		} catch (RapidEnvCmdException e) {
 			assertTrue(e.getMessage().startsWith(
-			        "No install unit or property \"xxx\"\n"
-			                + "  is defined in RapidEnv environment configuration file\n  \""
-			                + new File("testdata/env/env.xml").getAbsolutePath() + "\""));
+					"No install unit or property \"xxx\"\n"
+							+ "  is defined in RapidEnv environment configuration file\n  \""
+							+ new File("testdata/env/env.xml").getAbsolutePath() + "\""));
 			throw e;
 		}
 	}
@@ -857,7 +873,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testInstallUnitsToProcessSubunitWithoutParentsName() {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "s", "serializer" }));
+				"s", "serializer" }));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(1, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
@@ -870,7 +886,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testInstallUnitsToProcessSubunitWithoutParentsNameFully() {
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "s", "xalan.serializer" }));
+				"s", "xalan.serializer" }));
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
 		assertEquals(1, env.getInstallunitsToProcess().size());
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
@@ -890,13 +906,13 @@ public class RapidEnvInterpreterTest {
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				assertTrue(e.getMessage().matches(
-				        "RapidEnv configuration file \""
-				                + ".*\\\\org.rapidbeans.rapidenv\\\\testdata\\\\env\\\\envXXX.xml\" " + "not found"));
+						"RapidEnv configuration file \""
+								+ ".*\\\\org.rapidbeans.rapidenv\\\\testdata\\\\env\\\\envXXX.xml\" " + "not found"));
 				break;
 			default:
 				assertTrue(e.getMessage().matches(
-				        "RapidEnv configuration file \"" + ".*/org.rapidbeans.rapidenv/testdata/env/envXXX.xml\" "
-				                + "not found"));
+						"RapidEnv configuration file \"" + ".*/org.rapidbeans.rapidenv/testdata/env/envXXX.xml\" "
+								+ "not found"));
 				break;
 			}
 		}
@@ -943,7 +959,7 @@ public class RapidEnvInterpreterTest {
 
 		// set up the profile
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envProps01.xml", "s" }));
+				"testdata/env/envProps01.xml", "s" }));
 		env.setPropertyValue("testprop02", "oldvalue");
 		File jdkHomdir = new File(env.getProject().findInstallunitConfiguration("jdk").getHomedir());
 		String jdkHome = jdkHomdir.getAbsolutePath();
@@ -954,15 +970,16 @@ public class RapidEnvInterpreterTest {
 		switch (PlatformHelper.getOs()) {
 		case windows:
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatWin.properties"),
-			        env.getProfileProps());
+					env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.cmd"),
-			        env.getProfileCmd());
+					env.getProfileCmd());
 			break;
 		case linux:
 			break;
 		default:
 			fail("Platform \"" + PlatformHelper.getOs().name() + "\" not supported.");
 		}
+		RapidEnvInterpreter.clearInstance();
 
 		env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envProps01.xml", "s" }));
 		assertNull(env.getPropertyValue("testprop01"));
@@ -979,16 +996,16 @@ public class RapidEnvInterpreterTest {
 		case windows:
 			RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyCommonChangedStatWin.txt"), bStream);
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatWin.properties"),
-			        env.getProfileProps());
+					env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.cmd"),
-			        env.getProfileCmd());
+					env.getProfileCmd());
 			break;
 		case linux:
 			RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyCommonChangedStatUnix.txt"), bStream);
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatUnix.properties"),
-			        env.getProfileProps());
+					env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.sh"),
-			        env.getProfileCmd());
+					env.getProfileCmd());
 			break;
 		}
 
@@ -1006,7 +1023,7 @@ public class RapidEnvInterpreterTest {
 
 		// set up the profile
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envProps01.xml", "s" }));
+				"testdata/env/envProps01.xml", "s" }));
 
 		env.setPropertyValue("testprop02", "oldvalue");
 		File jdkHomdir = new File(env.getProject().findInstallunitConfiguration("jdk").getHomedir());
@@ -1018,17 +1035,18 @@ public class RapidEnvInterpreterTest {
 		switch (PlatformHelper.getOs()) {
 		case windows:
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatWin.properties"),
-			        env.getProfileProps());
+					env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.cmd"),
-			        env.getProfileCmd());
+					env.getProfileCmd());
 			break;
 		case linux:
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatUnix.properties"),
-			        env.getProfileProps());
+					env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.sh"),
-			        env.getProfileCmd());
+					env.getProfileCmd());
 			break;
 		}
+		RapidEnvInterpreter.clearInstance();
 
 		env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envProps01.xml", "c" }));
 		try {
@@ -1064,19 +1082,19 @@ public class RapidEnvInterpreterTest {
 			switch (PlatformHelper.getOs()) {
 			case windows:
 				RapidEnvTestHelper
-				        .assertOutput(new File("testdata/out/outPropertyCommonChangedConfigWin.txt"), bStream);
+						.assertOutput(new File("testdata/out/outPropertyCommonChangedConfigWin.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyCommonChangedConfigWin.properties"), env.getProfileProps());
+						"testdata/out/outPropertyCommonChangedConfigWin.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedConfig.cmd"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyCommonChangedConfigLinux.txt"),
-				        bStream);
+						bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
-				        "testdata/out/outPropertyCommonChangedConfigLinux.properties"), env.getProfileProps());
+						"testdata/out/outPropertyCommonChangedConfigLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedConfig.sh"),
-				        env.getProfileCmd());
+						env.getProfileCmd());
 				break;
 			}
 		} finally {
@@ -1085,16 +1103,17 @@ public class RapidEnvInterpreterTest {
 	}
 
 	@Test
-	public void testPathWithExtesionsSimple() throws IOException {
+	public void testPathWithExtensionsSimple() throws IOException {
 
 		// set up the profile
-		// cmd.path=/x1:/x2:/x3 (linux) or \x1;x2\x3 (win)
+		// cmd.path=/x1:/x2:/x3 (Linux) or \x1;x2\x3 (win)
 		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envPropsPath01.xml", "s" }));
+				"testdata/env/envPropsPath01.xml", "s" }));
 		String originalPath = File.separator + "x1" + File.pathSeparator + File.separator + "x2" + File.pathSeparator
-		        + File.separator + "x3";
+				+ File.separator + "x3";
 		env.setPropertyValue("cmd.path", originalPath);
 		env.writeProfile();
+		RapidEnvInterpreter.clearInstance();
 
 		// test booting the path property
 		env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath01.xml", "b" }));
@@ -1103,23 +1122,27 @@ public class RapidEnvInterpreterTest {
 		PrintStream sout = new PrintStream(bStream);
 		env.execute(sin, sout);
 		// assert cmd.path extension
-		// cmd.path=/p1/:/p2:/p3:/x1:/x2:/x3/a1:/a2
+		// cmd.path=/p1/:/p2:/p3:/x1:/x3/a1:/a2 (x2 has been removed)
 		assertEquals(File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
-		        + File.separator + "p3" + File.pathSeparator + File.separator + "x1" + File.pathSeparator
-		        + File.separator + "x3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-		        + File.separator + "a2", env.getPropertyValue("cmd.path"));
+				+ File.separator + "p3" + File.pathSeparator + File.separator + "x1" + File.pathSeparator
+				+ File.separator + "x3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+				+ File.separator + "a2", env.getPropertyValue("cmd.path"));
+		RapidEnvInterpreter.clearInstance();
 
 		env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath02.xml", "u" }));
-		sin = new ByteArrayInputStream("n\n".getBytes());
+		// sin = new ByteArrayInputStream("n\n".getBytes());
 		bStream = new ByteArrayOutputStream();
 		sout = new PrintStream(bStream);
-		env.execute(sin, sout);
+		env.execute(null, sout);
+		// assert cmd.path extension
+		// cmd.path=/p0;/p1;/p2;/p2a;/p3;/x1;/x3;/a1;/a1a;/a2;/a3
 		assertEquals(File.separator + "p0" + File.pathSeparator + File.separator + "p1" + File.pathSeparator
-		        + File.separator + "p2" + File.pathSeparator + File.separator + "p2a" + File.pathSeparator
-		        + File.separator + "p3" + File.pathSeparator + File.separator + "x1" + File.pathSeparator
-		        + File.separator + "x3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-		        + File.separator + "a1a" + File.pathSeparator + File.separator + "a2" + File.pathSeparator
-		        + File.separator + "a3", env.getPropertyValue("cmd.path"));
+				+ File.separator + "p2" + File.pathSeparator + File.separator + "p2a" + File.pathSeparator
+				+ File.separator + "p3" + File.pathSeparator + File.separator + "x1" + File.pathSeparator
+				+ File.separator + "x3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+				+ File.separator + "a1a" + File.pathSeparator + File.separator + "a2" + File.pathSeparator
+				+ File.separator + "a3", env.getPropertyValue("cmd.path"));
+		RapidEnvInterpreter.clearInstance();
 
 		env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath03.xml", "u" }));
 		sin = new ByteArrayInputStream("n\n".getBytes());
@@ -1127,9 +1150,9 @@ public class RapidEnvInterpreterTest {
 		sout = new PrintStream(bStream);
 		env.execute(sin, sout);
 		assertEquals(File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
-		        + File.separator + "p3" + File.pathSeparator + File.separator + "x1" + File.pathSeparator
-		        + File.separator + "x3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-		        + File.separator + "a2", env.getPropertyValue("cmd.path"));
+				+ File.separator + "p3" + File.pathSeparator + File.separator + "x1" + File.pathSeparator
+				+ File.separator + "x3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+				+ File.separator + "a2", env.getPropertyValue("cmd.path"));
 
 		RapidEnvTestHelper.tearDownProfile(env);
 	}
@@ -1142,11 +1165,12 @@ public class RapidEnvInterpreterTest {
 			// set up the profile
 			// cmd.path=/x1:/x2:/x3 (linux) or \x1;x2\x3 (win)
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/envPropsPath04.xml", "s" }));
+					"testdata/env/envPropsPath04.xml", "s" }));
 			String originalPath = File.separator + "x1" + File.pathSeparator + File.separator + "x2"
-			        + File.pathSeparator + File.separator + "x3";
+					+ File.pathSeparator + File.separator + "x3";
 			env.setPropertyValue("cmd.path", originalPath);
 			env.writeProfile();
+			RapidEnvInterpreter.clearInstance();
 
 			// test booting the path property
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath04.xml", "b" }));
@@ -1157,12 +1181,13 @@ public class RapidEnvInterpreterTest {
 			// assert cmd.path extension
 			// cmd.path=/p1/:/p2:/p3:/a1:/a2
 			assertEquals(
-			        File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
-			                + File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-			                + File.separator + "a2" + File.pathSeparator
-			                + new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
-			                + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
-			        env.getPropertyValue("cmd.path"));
+					File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
+							+ File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+							+ File.separator + "a2" + File.pathSeparator
+							+ new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
+							+ new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
+					env.getPropertyValue("cmd.path"));
+			RapidEnvInterpreter.clearInstance();
 
 			// test installing units myapp 1.0.2 and otherapp 1.0
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath04.xml", "i" }));
@@ -1173,12 +1198,13 @@ public class RapidEnvInterpreterTest {
 			// assert cmd.path extension
 			// cmd.path=/p1/:/p2:/p3:/a1:/a2
 			assertEquals(
-			        File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
-			                + File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-			                + File.separator + "a2" + File.pathSeparator
-			                + new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
-			                + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
-			        env.getPropertyValue("cmd.path"));
+					File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
+							+ File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+							+ File.separator + "a2" + File.pathSeparator
+							+ new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
+							+ new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
+					env.getPropertyValue("cmd.path"));
+			RapidEnvInterpreter.clearInstance();
 
 			// test upgrading unit otherapp from version 1.0 to 2.0
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath05.xml", "u" }));
@@ -1189,12 +1215,13 @@ public class RapidEnvInterpreterTest {
 			// assert cmd.path extension
 			// cmd.path=/p1/:/p2:/p3:/a1:/a2
 			assertEquals(
-			        File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
-			                + File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-			                + File.separator + "a2" + File.pathSeparator
-			                + new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
-			                + new File("testdata/testinstall/otherapp/2.0").getAbsolutePath(),
-			        env.getPropertyValue("cmd.path"));
+					File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
+							+ File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+							+ File.separator + "a2" + File.pathSeparator
+							+ new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
+							+ new File("testdata/testinstall/otherapp/2.0").getAbsolutePath(),
+					env.getPropertyValue("cmd.path"));
+			RapidEnvInterpreter.clearInstance();
 
 			// test downgrading unit otherapp from version 2.0 to 1.0
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsPath04.xml", "u" }));
@@ -1205,12 +1232,12 @@ public class RapidEnvInterpreterTest {
 			// assert cmd.path extension
 			// cmd.path=/p1/:/p2:/p3:/a1:/a2
 			assertEquals(
-			        File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
-			                + File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
-			                + File.separator + "a2" + File.pathSeparator
-			                + new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
-			                + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
-			        env.getPropertyValue("cmd.path"));
+					File.separator + "p1" + File.pathSeparator + File.separator + "p2" + File.pathSeparator
+							+ File.separator + "p3" + File.pathSeparator + File.separator + "a1" + File.pathSeparator
+							+ File.separator + "a2" + File.pathSeparator
+							+ new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.pathSeparator
+							+ new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
+					env.getPropertyValue("cmd.path"));
 			RapidEnvTestHelper.tearDownProfile(env);
 		} finally {
 			if (new File("testdata/testinstall/myapp").exists()) {
@@ -1230,49 +1257,43 @@ public class RapidEnvInterpreterTest {
 			// test booting with properties cmd.path.system (personal)
 			// and cmd.path contains cmd.pat.system (profile is empty)
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/envPropsPath06.xml", "b" }));
+					"testdata/env/envPropsPath06.xml", "b" }));
 			try {
+				// do not create the command prompt here explorer entry
 				SequenceInputStream sin = new SequenceInputStream(new InputStreamLines(new String[] {
-				        "pathComponent1" + File.pathSeparator + "pathComponent2", "N" // do
-																					  // not
-																					  // create
-																					  // the
-																					  // command
-																					  // prompt
-																					  // here
-																					  // explorer
-																					  // entry
-				}));
+						"pathComponent1" + File.pathSeparator + "pathComponent2", "N" }));
 				ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 				PrintStream sout = new PrintStream(bStream);
 				env.execute(sin, sout);
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path.system"));
+						env.getPropertyValue("cmd.path.system"));
 				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
-				        + File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
-				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
-				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path"));
+						+ File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
+						+ File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
+						+ "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
+						env.getPropertyValue("cmd.path"));
+				RapidEnvInterpreter.clearInstance();
 
 				// test installing units myapp 1.0.2 and otherapp 1.0
 				env = new RapidEnvInterpreter(new CmdRenv(
-				        new String[] { "-env", "testdata/env/envPropsPath06.xml", "i" }));
+						new String[] { "-env", "testdata/env/envPropsPath06.xml", "i" }));
 				sin = new SequenceInputStream(new InputStreamLines());
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path.system"));
+						env.getPropertyValue("cmd.path.system"));
 				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
-				        + File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
-				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
-				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path"));
+						+ File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
+						+ File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
+						+ "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
+						env.getPropertyValue("cmd.path"));
+				RapidEnvInterpreter.clearInstance();
 
 				// test status after introducing upgrade of unit otherapp from
 				// version 1.0 to 2.0
 				env = new RapidEnvInterpreter(new CmdRenv(
-				        new String[] { "-env", "testdata/env/envPropsPath07.xml", "s" }));
+						new String[] { "-env", "testdata/env/envPropsPath07.xml", "s" }));
 				sin = new SequenceInputStream(new InputStreamLines());
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
@@ -1280,14 +1301,15 @@ public class RapidEnvInterpreterTest {
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertTrue(bStream.toString().contains("toolhome.otherapp: value of common property should be changed"));
 				assertTrue(bStream.toString().contains(
-				        "cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
+						"cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
 				assertTrue(bStream.toString().contains("cmd.path: value of common property should be changed"));
+				RapidEnvInterpreter.clearInstance();
 
 				// test 2nd status after introducing upgrade of unit otherapp
 				// from version 1.0 to 2.0
 				// same result expected
 				env = new RapidEnvInterpreter(new CmdRenv(
-				        new String[] { "-env", "testdata/env/envPropsPath07.xml", "s" }));
+						new String[] { "-env", "testdata/env/envPropsPath07.xml", "s" }));
 				sin = new SequenceInputStream(new InputStreamLines());
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
@@ -1295,42 +1317,44 @@ public class RapidEnvInterpreterTest {
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertTrue(bStream.toString().contains("toolhome.otherapp: value of common property should be changed"));
 				assertTrue(bStream.toString().contains(
-				        "cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
+						"cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
 				assertTrue(bStream.toString().contains("cmd.path: value of common property should be changed"));
+				RapidEnvInterpreter.clearInstance();
 
 				// test upgrading otherapp to version 2.0
 				env = new RapidEnvInterpreter(new CmdRenv(
-				        new String[] { "-env", "testdata/env/envPropsPath07.xml", "u" }));
+						new String[] { "-env", "testdata/env/envPropsPath07.xml", "u" }));
 				sin = new SequenceInputStream(new InputStreamLines());
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
 				assertEquals(new File("testdata/testinstall/otherapp/2.0").getAbsolutePath(),
-				        env.getPropertyValue("toolhome.otherapp"));
+						env.getPropertyValue("toolhome.otherapp"));
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path.system"));
+						env.getPropertyValue("cmd.path.system"));
 				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
-				        + File.pathSeparator + new File("testdata/testinstall/otherapp/2.0").getAbsolutePath()
-				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
-				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path"));
+						+ File.pathSeparator + new File("testdata/testinstall/otherapp/2.0").getAbsolutePath()
+						+ File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
+						+ "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
+						env.getPropertyValue("cmd.path"));
+				RapidEnvInterpreter.clearInstance();
 
 				// test downgrading otherapp to version 1.0 again
 				env = new RapidEnvInterpreter(new CmdRenv(
-				        new String[] { "-env", "testdata/env/envPropsPath06.xml", "u" }));
+						new String[] { "-env", "testdata/env/envPropsPath06.xml", "u" }));
 				sin = new SequenceInputStream(new InputStreamLines());
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path.system"));
+						env.getPropertyValue("cmd.path.system"));
 				assertEquals(new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
-				        env.getPropertyValue("toolhome.otherapp"));
+						env.getPropertyValue("toolhome.otherapp"));
 				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
-				        + File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
-				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
-				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
-				        env.getPropertyValue("cmd.path"));
+						+ File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
+						+ File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
+						+ "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
+						env.getPropertyValue("cmd.path"));
 			} finally {
 				RapidEnvTestHelper.tearDownProfile(env);
 			}
@@ -1350,7 +1374,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testLogLevelDefault() {
 		assertEquals(Level.INFO, new RapidEnvInterpreter(new CmdRenv(
-		        new String[] { "-env", "testdata/env/env.xml", "s" })).getLogLevel());
+				new String[] { "-env", "testdata/env/env.xml", "s" })).getLogLevel());
 	}
 
 	/**
@@ -1359,7 +1383,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testLogLevelVerbose() {
 		assertEquals(Level.FINE, new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "-verbose", "s" })).getLogLevel());
+				"-verbose", "s" })).getLogLevel());
 	}
 
 	/**
@@ -1368,7 +1392,7 @@ public class RapidEnvInterpreterTest {
 	@Test
 	public void testLogLevelDebug() {
 		assertEquals(Level.FINER, new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
-		        "-debug", "s" })).getLogLevel());
+				"-debug", "s" })).getLogLevel());
 	}
 
 	/**

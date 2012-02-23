@@ -24,7 +24,8 @@ given file. Optionally you can insert the line before or after the first occuren
 of a line specified by the given search pattern.</description>
 
 	<property name="line" type="string"
-		mandatory="true">
+		mandatory="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The line that should be inserted.</description>
 	</property>
 

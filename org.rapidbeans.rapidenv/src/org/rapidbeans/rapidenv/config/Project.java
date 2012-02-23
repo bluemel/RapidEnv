@@ -118,7 +118,7 @@ public class Project extends RapidBeanBaseProject {
 		// first try: find the unit directly from the tool map
 		// by the fully qualified name.
 		if (this.installunitMap == null || getInstallunits() == null
-		        || this.installunitMap.size() != getInstallunits().size()) {
+				|| this.installunitMap.size() != getInstallunits().size()) {
 			updateToolMap();
 		}
 		Installunit found = this.installunitMap.get(name);
@@ -131,12 +131,12 @@ public class Project extends RapidBeanBaseProject {
 		for (final Installunit current : this.installunitMap.values()) {
 			if (found == null) {
 				if (current.getName().equals(name)
-				        || (current.isSubunit() && current.getFullyQualifiedName(false).equals(name))) {
+						|| (current.isSubunit() && current.getFullyQualifiedName(false).equals(name))) {
 					found = current;
 				}
 			} else {
 				if (current.getName().equals(name)
-				        || (current.isSubunit() && current.getFullyQualifiedName(false).equals(name))) {
+						|| (current.isSubunit() && current.getFullyQualifiedName(false).equals(name))) {
 					throw new RapidEnvConfigurationException("Ambigouus tool name \"" + name + "\"");
 				}
 			}
@@ -196,28 +196,22 @@ public class Project extends RapidBeanBaseProject {
 	}
 
 	public URL getInstallsourceurlAsUrl() {
-		String surl = this.getInstallsourceurl();
+		final String surl = this.getInstallsourceurl();
 		if (surl == null) {
 			return null;
-		}
-		if (RapidEnvInterpreter.getInstance() != null) {
-			surl = RapidEnvInterpreter.getInstance().interpret(null, null, surl);
 		}
 		try {
 			return new URL(surl);
 		} catch (MalformedURLException e) {
 			throw new RapidEnvConfigurationException("Misconfiguration of the project's installsourceurl\n" + surl
-			        + " is no valid URL.");
+					+ " is no valid URL.");
 		}
 	}
 
 	public File getInstalltargetdirAsFile() {
-		String path = getInstalltargetdir();
+		final String path = getInstalltargetdir();
 		if (path == null) {
 			return null;
-		}
-		if (RapidEnvInterpreter.getInstance() != null) {
-			path = RapidEnvInterpreter.getInstance().interpret(null, null, path);
 		}
 		return new File(path);
 	}

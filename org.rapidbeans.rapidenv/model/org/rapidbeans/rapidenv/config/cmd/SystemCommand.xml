@@ -27,7 +27,8 @@
 		stdout and stderror as well as on files can be used to verify
 		command execution success.</description>
 
-	<property name="executable" type="string">
+	<property name="executable" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The Executable or batch file to execute</description>
 	</property>
 
@@ -42,7 +43,7 @@
 	</property>
 
 	<property name="workingdir" type="string"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The working directory in which to execute the command.</description>
 	</property>
 
@@ -52,19 +53,22 @@
 	</property>
 
 	<property name="messagestart" type="string"
-		multiline="true">
+		multiline="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>This message will be printed on standard output
 before the command is executed</description>
 	</property>
 
 	<property name="messagesuccess" type="string"
-		multiline="true">
+		multiline="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>This message will be printed on standard output
 after the command has been executed successfully</description>
 	</property>
 
 	<property name="messagefailure" type="string"
-		multiline="true">
+		multiline="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>This message will be printed on standard error
 after the command execution ended with errors (return != 0)</description>
 	</property>
@@ -100,7 +104,8 @@ after the command execution ended with errors (return != 0)</description>
 	</property>
 
 	<property name="input" type="string"
-		multiline="true">
+		multiline="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>Define input lines if you intend to
 to have automatic user input</description>
 	</property>

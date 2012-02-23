@@ -37,7 +37,8 @@
 	</property>
 
 	<property name="value" type="string"
-		emptyvalid="true">
+		emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The property's value depending from its mode:&#10;
 common: value simply defines the value.&#10;
 personal: value only defines the default value which interactively can be overwritten.</description>
@@ -47,7 +48,7 @@ personal: value only defines the default value which interactively can be overwr
 		default="common"
 		enum="PropertyCategory">
 		<description>Determines if the property's value can and should be
-individulally set by the user or be a common setting for all environments
+individually set by the user or be a common setting for all environments
 which can be centrally controlled.</description>
 	</property>
 
@@ -65,23 +66,23 @@ which can be centrally controlled.</description>
 
 	<property name="mustExist" type="boolean"
 		default="true">
-		<description>Only used for propertys of type "file".
-If it is true it is veryfied if the local file or folder exists.</description>
+		<description>Only used for properties of type "file".
+If it is true it is verified if the local file or folder exists.</description>
 	</property>
 
 	<property name="createIfNotExist" type="boolean"
 		default="false">
-		<description>Only used for propertys of type "file" with file type
+		<description>Only used for properties of type "file" with file type
 "directory" and if mustExist = "true".
-If it is true for propertys of type 'common' the path automatically
-created if it does not exist. For propertys of type 'personal' the
+If it is true for properties of type 'common' the path automatically
+created if it does not exist. For properties of type 'personal' the
 user is asked for creation if it does not exist.</description>
 	</property>
 
 	<property name="normalize" type="boolean"
 		default="true">
-		<description>Only used for propertys of type "file" and "path".
-If set to "true" file propertys will become normalized which means
+		<description>Only used for properties of type "file" and "path".
+If set to "true" file properties will become normalized which means
 have canonical path(s).
 Additionally in "paths" duplicate entries will be removed.</description>
 	</property>

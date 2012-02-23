@@ -18,7 +18,7 @@
 
 <beantype name="org.rapidbeans.rapidenv.config.PropertyExtensionFromInstallUnit"
 	extends="org.rapidbeans.rapidenv.config.PropertyExtension">
-	<description>A path extension defintion coming from an install unit.
+	<description>A path extension definition coming from an install unit.
 This extension will lead to some migration of the property value during upgrade if it changes.</description>
 	<property name="property" type="association"
 		targettype="Property" maxmult="1" inverse="installunitextensions">

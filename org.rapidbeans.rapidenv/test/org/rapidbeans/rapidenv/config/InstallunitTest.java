@@ -42,7 +42,7 @@ public class InstallunitTest {
 		}
 		TypePropertyCollection.setDefaultCharSeparator(',');
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-		        "org.rapidbeans.rapidenv.config.Project", true);
+				"org.rapidbeans.rapidenv.config.Project", true);
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 	}
@@ -56,14 +56,18 @@ public class InstallunitTest {
 
 	@Test
 	public void testCheckSemanticsOK() {
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(new File("testdata/env/env.xml"));
+		PropertyInterpretedString.unlockIntepretation();
 		Installunit jdk = ((Project) doc.getRoot()).findInstallunitConfiguration("jdk");
 		jdk.checkSemantics();
 	}
 
 	@Test(expected = RapidEnvConfigurationException.class)
 	public void testCheckSemanticsNoSourceURL() {
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(new File("testdata/env/envNoSourceURL.xml"));
+		PropertyInterpretedString.unlockIntepretation();
 		Installunit jdk = ((Project) doc.getRoot()).findInstallunitConfiguration("jdk");
 		try {
 			jdk.checkSemantics();
@@ -75,7 +79,9 @@ public class InstallunitTest {
 
 	@Test(expected = RapidEnvConfigurationException.class)
 	public void testCheckSemanticsNoHomedir() {
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(new File("testdata/env/envNoHomedir.xml"));
+		PropertyInterpretedString.unlockIntepretation();
 		Installunit jdk = ((Project) doc.getRoot()).findInstallunitConfiguration("jdk");
 		try {
 			jdk.checkSemantics();
@@ -94,7 +100,9 @@ public class InstallunitTest {
 		Installunit ant = new Installunit(new String[] { "", "org.apache", "ant" });
 		Installunit maven = new Installunit(new String[] { "", "org.apache", "maven" });
 		File testfile = new File("testdata/env/test.xml");
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(project);
+		PropertyInterpretedString.unlockIntepretation();
 		project.addInstallunit(jdk);
 		project.addInstallunit(ant);
 		project.addInstallunit(maven);
@@ -141,7 +149,7 @@ public class InstallunitTest {
 		Installunit test01 = project.findInstallunitConfiguration("test01");
 		Assert.assertEquals("org.rapidenv.test01", test01.getFullyQualifiedName());
 		Assert.assertEquals(new File("testdata/testtargetdir/org/rapidenv/test01/1.0.0").getAbsolutePath(), test01
-		        .getHomedirAsFile().getPath());
+				.getHomedirAsFile().getPath());
 		Installunit test01_1 = test01.getSubunits().get(0);
 		Assert.assertNotNull(test01_1);
 		Installunit test01_2_x = project.findInstallunitConfiguration("testx");
@@ -201,14 +209,16 @@ public class InstallunitTest {
 			project.findInstallunitConfiguration("test1");
 		} catch (RapidEnvConfigurationException e) {
 			Assert.assertTrue("Unexpected message text start: " + e.getMessage(),
-			        e.getMessage().startsWith("Ambigouus tool name"));
+					e.getMessage().startsWith("Ambigouus tool name"));
 			throw e;
 		}
 	}
 
 	@Test
 	public void testGetPackaging() {
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(new File("testdata/env/env.xml"));
+		PropertyInterpretedString.unlockIntepretation();
 		Project project = (Project) doc.getRoot();
 		Installunit ant = project.findInstallunitConfiguration("ant");
 		Assert.assertEquals("http://ant.apache.org/xxx.zip", ant.getSourceurl());
@@ -217,7 +227,9 @@ public class InstallunitTest {
 
 	@Test
 	public void testGetHomedir() {
+		PropertyInterpretedString.lockIntepretation();
 		Document doc = new Document(new File("testdata/env/env.xml"));
+		PropertyInterpretedString.unlockIntepretation();
 		Project project = (Project) doc.getRoot();
 		Installunit ant = project.findInstallunitConfiguration("ant");
 		Assert.assertEquals("testdata/testinstall/org/apache/ant/1.8.0", ant.getHomedir());
@@ -232,7 +244,7 @@ public class InstallunitTest {
 		Installunit test01 = project.findInstallunitConfiguration("org.rapidenv.test01");
 		Assert.assertEquals("testdata/testtargetdir/org/rapidenv/test01/1.0.0", test01.getHomedir());
 		Assert.assertEquals(new File("testdata/testtargetdir/org/rapidenv/test01/1.0.0").getAbsolutePath(), test01
-		        .getHomedirAsFile().getAbsolutePath());
+				.getHomedirAsFile().getAbsolutePath());
 		Installunit test01_1 = project.findInstallunitConfiguration("org.rapidenv.test01/test1");
 		Assert.assertEquals("testdata/testtargetdir/org/rapidenv/test01/1.0.0/test1/lib", test01_1.getHomedir());
 		Installunit test01_2_x = project.findInstallunitConfiguration("org.rapidenv.test01/test2/testx");
