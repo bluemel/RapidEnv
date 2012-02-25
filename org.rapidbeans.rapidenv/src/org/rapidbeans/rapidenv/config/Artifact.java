@@ -26,7 +26,6 @@ import org.rapidbeans.core.util.Version;
 import org.rapidbeans.core.util.XmlHelper;
 import org.w3c.dom.Node;
 
-
 /**
  * An Artifact of an Eclipse update site.
  */
@@ -46,13 +45,14 @@ public class Artifact {
 
 	private String downloadContentType = null;
 
-	private Properties properties = new Properties();
+	private final Properties properties = new Properties();
 
 	/**
 	 * Parse an Eclipse update site artifact file.
-	 *
-	 * @param is the input stream to parse.
-	 *
+	 * 
+	 * @param is
+	 *            the input stream to parse.
+	 * 
 	 * @return a list of artifacts found.
 	 */
 	public static List<Artifact> parse(final InputStream is) {

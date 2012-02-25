@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.util.FileHelper;
+import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
 import org.rapidbeans.rapidenv.config.Installunit;
@@ -35,102 +36,118 @@ import org.rapidbeans.rapidenv.config.Installunit;
  */
 public class ConfigExprFunctionFilecontentsTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    /**
-     * Simply read a file.
-     */
-    @Test
-    public final void intepretSimple() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                null, null,
-                "filecontents('testdata/ant/ant_win.properties')",
-                true);
-        String expected = "V1=Test1\r\n"
-                + "V2=Test2\r\n"
-                + "test.dev.location=ismaning\r\n";
-        String interpreted = expr.interpret();
-        Assert.assertEquals(expected, interpreted);
-    }
+	/**
+	 * Simply read a file.
+	 */
+	@Test
+	public final void intepretSimple() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "filecontents('testdata/ant/ant_win.properties')",
+		        true);
+		String expected = null;
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			expected = "V1=Test1\r\n" + "V2=Test2\r\n" + "test.dev.location=ismaning\r\n";
+			break;
+		default:
+			expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			break;
+		}
+		String interpreted = expr.interpret();
+		Assert.assertEquals(expected, interpreted);
+	}
 
-    /**
-     * Simply read a file a one single line.
-     */
-    @Test
-    public final void intepretAsOneLine() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null,
-                "filecontents('testdata/ant/ant_win.properties', '\\n\\r')",
-                true);
-        Assert.assertEquals("V1=Test1\\r\\n"
-                + "V2=Test2\\r\\n"
-                + "test.dev.location=ismaning\\r\\n",
-                expr.interpret());
-    }
+	/**
+	 * Simply read a file a one single line.
+	 */
+	@Test
+	public final void intepretAsOneLine() {
+		ConfigExprTopLevel expr = null;
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			expr = new ConfigExprTopLevel(null, null, "filecontents('testdata/ant/ant_win.properties', '\\n\\r')", true);
+			Assert.assertEquals("V1=Test1\\r\\n" + "V2=Test2\\r\\n" + "test.dev.location=ismaning\\r\\n",
+			        expr.interpret());
+			break;
+		default:
+			expr = new ConfigExprTopLevel(null, null, "filecontents('testdata/ant/ant_win.properties', '\\n')", true);
+			Assert.assertEquals("V1=Test1\\n" + "V2=Test2\\n" + "test.dev.location=ismaning\\n", expr.interpret());
+			break;
+		}
+	}
 
-    /**
-     * Simply read a file a one single line with additional escaping.
-     */
-    @Test
-    public final void intepretAsOneLineAdditionEsc() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null,
-                "filecontents('testdata/ant/ant_win.properties', '\\n\\r=')",
-                true);
-        Assert.assertEquals("V1\\=Test1\\r\\n"
-        		+ "V2\\=Test2\\r\\n"
-                + "test.dev.location\\=ismaning\\r\\n",
-                expr.interpret());
-    }
+	/**
+	 * Simply read a file a one single line with additional escaping.
+	 */
+	@Test
+	public final void intepretAsOneLineAdditionEsc() {
+		ConfigExprTopLevel expr = null;
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			expr = new ConfigExprTopLevel(null, null, "filecontents('testdata/ant/ant_win.properties', '\\n\\r=')",
+			        true);
+			Assert.assertEquals("V1\\=Test1\\r\\n" + "V2\\=Test2\\r\\n" + "test.dev.location\\=ismaning\\r\\n",
+			        expr.interpret());
+			break;
+		default:
+			expr = new ConfigExprTopLevel(null, null, "filecontents('testdata/ant/ant_win.properties', '\\n=')", true);
+			Assert.assertEquals("V1\\=Test1\\n" + "V2\\=Test2\\n" + "test.dev.location\\=ismaning\\n", expr.interpret());
+			break;
+		}
+	}
 
-    /**
-     * Test variable expansion within the argument.
-     */
-    @Test
-    public void interpretWithVarExtension() {
-        String x = new File("x").getAbsolutePath();
-        String path = x.substring(0, x.length() - 2);
-        (new RapidEnvInterpreter(new CmdRenv(new String[] {
-                "-env", "testdata/env/env.xml", "s" }))).setPropertyValue(
-                "wd", path);
-        Installunit tool = new Installunit("test");
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(tool, null,
-                "filecontents(${wd}'/testdata/ant/ant_win.properties', '\\n\\r=')",
-                true);
-        Assert.assertEquals("V1\\=Test1\\r\\n"
-                + "V2\\=Test2\\r\\n"
-                + "test.dev.location\\=ismaning\\r\\n",
-                expr.interpret());
-    }
+	/**
+	 * Test variable expansion within the argument.
+	 */
+	@Test
+	public void interpretWithVarExtension() {
+		String x = new File("x").getAbsolutePath();
+		String path = x.substring(0, x.length() - 2);
+		(new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }))).setPropertyValue(
+		        "wd", path);
+		Installunit tool = new Installunit("test");
+		ConfigExprTopLevel expr = null;
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			expr = new ConfigExprTopLevel(tool, null,
+			        "filecontents(${wd}'/testdata/ant/ant_win.properties', '\\n\\r=')", true);
+			Assert.assertEquals("V1\\=Test1\\r\\n" + "V2\\=Test2\\r\\n" + "test.dev.location\\=ismaning\\r\\n",
+			        expr.interpret());
+			break;
+		default:
+			expr = new ConfigExprTopLevel(tool, null, "filecontents(${wd}'/testdata/ant/ant_win.properties', '\\n=')",
+			        true);
+			Assert.assertEquals("V1\\=Test1\\n" + "V2\\=Test2\\n" + "test.dev.location\\=ismaning\\n", expr.interpret());
+			break;
+		}
+	}
 
-    /**
-     * Test variable expansion within the argument.
-     */
-    @Test
-    public void interpretWithVarExtensionNormalized() {
-        String x = new File("x").getAbsolutePath();
-        String path = x.substring(0, x.length() - 2);
-        (new RapidEnvInterpreter(new CmdRenv(new String[] {
-                "-env", "testdata/env/env.xml", "s" }))).setPropertyValue(
-                "wd", path);
-        Installunit tool = new Installunit("test");
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(tool, null,
-                "filecontents(${wd}'/testdata/ant/ant_win.properties', '\n\r=', 'normalize')",
-                true);
-        Assert.assertEquals("V1\\=Test1\\n"
-                + "V2\\=Test2\\n"
-                + "test.dev.location\\=ismaning\\n",
-                expr.interpret());
-    }
+	/**
+	 * Test variable expansion within the argument.
+	 */
+	@Test
+	public void interpretWithVarExtensionNormalized() {
+		String x = new File("x").getAbsolutePath();
+		String path = x.substring(0, x.length() - 2);
+		(new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }))).setPropertyValue(
+		        "wd", path);
+		Installunit tool = new Installunit("test");
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(tool, null,
+		        "filecontents(${wd}'/testdata/ant/ant_win.properties', '\n\r=', 'normalize')", true);
+		Assert.assertEquals("V1\\=Test1\\n" + "V2\\=Test2\\n" + "test.dev.location\\=ismaning\\n", expr.interpret());
+	}
 }

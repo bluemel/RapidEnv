@@ -17,62 +17,63 @@
 
 package org.rapidbeans.rapidenv.config.cmd;
 
- /**
-  * A System command execution result encapsulates
-  * output of stdout and stderror as well as the
-  * command's returncode.
-  *
-  * @author Martin Bluemel
-  */
+/**
+ * A System command execution result encapsulates output of stdout and stderror
+ * as well as the command's returncode.
+ * 
+ * @author Martin Bluemel
+ */
 public class CommandExecutionResult {
 
-    /**
-     * standard out.
-     */
-    private String stdout = null;
+	/**
+	 * standard out.
+	 */
+	private String stdout = null;
 
-    /**
-     * standard error.
-     */
-    private String stderr = null;
+	/**
+	 * standard error.
+	 */
+	private String stderr = null;
 
-    /**
-     * return code.
-     */
-    private int returncode = 0;
+	/**
+	 * return code.
+	 */
+	private int returncode = 0;
 
-    /**
-     * constructor.
-     *
-     * @param out stdout
-     * @param err stderr
-     * @param ret returncode
-     */
-    public CommandExecutionResult(
-            final String out, final String err, final int ret) {
-        this.stdout = out;
-        this.stderr = err;
-        this.returncode = ret;
-    }
+	/**
+	 * constructor.
+	 * 
+	 * @param out
+	 *            stdout
+	 * @param err
+	 *            stderr
+	 * @param ret
+	 *            returncode
+	 */
+	public CommandExecutionResult(final String out, final String err, final int ret) {
+		this.stdout = out;
+		this.stderr = err;
+		this.returncode = ret;
+	}
 
-    /**
-     * @return the returncode
-     */
-    public int getReturncode() {
-        return returncode;
-    }
+	/**
+	 * @return the returncode
+	 */
+	public int getReturncode() {
+		return returncode;
+	}
 
-    /**
-     * @return the stderr
-     */
-    public String getStderr() {
-        return stderr;
-    }
+	/**
+	 * @return the stderr
+	 */
+	public String getStderr() {
+		return stderr;
+	}
 
-    /**
-     * @return the stdout
-     */
-    public String getStdout() {
-        return stdout;
-    }
+	/**
+	 * @return the stdout
+	 */
+	public String getStdout() {
+		return stdout;
+	}
 }

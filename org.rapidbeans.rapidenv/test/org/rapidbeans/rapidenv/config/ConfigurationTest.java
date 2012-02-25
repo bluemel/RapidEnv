@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config;
 
-
 import java.io.File;
 
 import junit.framework.Assert;
@@ -30,38 +29,39 @@ import org.rapidbeans.core.util.FileHelper;
 
 public class ConfigurationTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
-                "project", "org.rapidbeans.rapidenv.config.Project", true);
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
+		        "org.rapidbeans.rapidenv.config.Project", true);
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    /**
-     * Simple check to test the hack to overcome problem with the
-     * RapidBeans escape map.
-     */
-    @Test
-    public void testSetIssue() {
-        Configuration config = new Configuration() {
-            @Override
-            public boolean check(boolean execute) {
-                return false;
-            }
-            public String print() {
-            	return "test";
-            }
-        };
-        config.setIssue("\\nest");
-        Assert.assertEquals("\\nest", config.getIssue());
-        config.setIssue("\\test");
-        Assert.assertEquals("\\test", config.getIssue());
-    }
+	/**
+	 * Simple check to test the hack to overcome problem with the RapidBeans
+	 * escape map.
+	 */
+	@Test
+	public void testSetIssue() {
+		Configuration config = new Configuration() {
+			@Override
+			public boolean check(boolean execute) {
+				return false;
+			}
+
+			public String print() {
+				return "test";
+			}
+		};
+		config.setIssue("\\nest");
+		Assert.assertEquals("\\nest", config.getIssue());
+		config.setIssue("\\test");
+		Assert.assertEquals("\\test", config.getIssue());
+	}
 }

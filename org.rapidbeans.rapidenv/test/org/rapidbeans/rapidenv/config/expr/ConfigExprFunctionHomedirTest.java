@@ -37,10 +37,10 @@ public class ConfigExprFunctionHomedirTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 	}
 
@@ -51,37 +51,26 @@ public class ConfigExprFunctionHomedirTest {
 	}
 
 	/**
-	 * Test without install unit argument.
-	 * The home directory of the enclosing install unit should be taken.
+	 * Test without install unit argument. The home directory of the enclosing
+	 * install unit should be taken.
 	 */
 	@Test
 	public void testInterpretWithoutArgument() {
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"}));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit(new String[]{"", "", "jdk"}), null,
-				"homedir()", false);
-		Assert.assertEquals(
-				new File("testdata/testinstall/jdk/1.6.0").getAbsolutePath(),
-				expr.interpret());
-		expr = new ConfigExprTopLevel(
-				new Installunit(new String[]{"", "org.apache", "ant"}), null,
-				"homedir()", false);
-		Assert.assertEquals(
-				new File("testdata/testinstall/org/apache/ant/1.8.0").getAbsolutePath(),
-				expr.interpret());
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit(new String[] { "", "", "jdk" }), null,
+		        "homedir()", false);
+		Assert.assertEquals(new File("testdata/testinstall/jdk/1.6.0").getAbsolutePath(), expr.interpret());
+		expr = new ConfigExprTopLevel(new Installunit(new String[] { "", "org.apache", "ant" }), null, "homedir()",
+		        false);
+		Assert.assertEquals(new File("testdata/testinstall/org/apache/ant/1.8.0").getAbsolutePath(), expr.interpret());
 	}
 
 	@Test
 	public void testInterpretWithNonDefaultHomedir() {
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"}));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit(new String[]{"", "org.apache", "maven"}), null,
-				"homedir()", false);
-		Assert.assertEquals(
-				new File("/h/opt/maven").getAbsolutePath(),
-				expr.interpret());
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit(new String[] { "", "org.apache", "maven" }),
+		        null, "homedir()", false);
+		Assert.assertEquals(new File("/h/opt/maven").getAbsolutePath(), expr.interpret());
 	}
 
 	/**
@@ -89,18 +78,11 @@ public class ConfigExprFunctionHomedirTest {
 	 */
 	@Test
 	public void testInterpretFully() {
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"}));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null, "homedir('jdk')", false);
-		Assert.assertEquals(
-				new File("testdata/testinstall/jdk/1.6.0").getAbsolutePath(),
-				expr.interpret());
-		expr = new ConfigExprTopLevel(new Installunit("jdk"), null,
-				"homedir('org.apache.ant')", false);
-		Assert.assertEquals(
-				new File("testdata/testinstall/org/apache/ant/1.8.0").getAbsolutePath(),
-				expr.interpret());
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "homedir('jdk')", false);
+		Assert.assertEquals(new File("testdata/testinstall/jdk/1.6.0").getAbsolutePath(), expr.interpret());
+		expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "homedir('org.apache.ant')", false);
+		Assert.assertEquals(new File("testdata/testinstall/org/apache/ant/1.8.0").getAbsolutePath(), expr.interpret());
 	}
 
 	/**
@@ -108,40 +90,30 @@ public class ConfigExprFunctionHomedirTest {
 	 */
 	@Test
 	public void testInterpretPureName() {
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"}));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit(new String[]{"", "jdk"}), null,
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit(new String[] { "", "jdk" }), null,
 		        "homedir('ant')", false);
-        Assert.assertEquals(
-		new File("testdata/testinstall/org/apache/ant/1.8.0").getAbsolutePath(),
-		expr.interpret());
+		Assert.assertEquals(new File("testdata/testinstall/org/apache/ant/1.8.0").getAbsolutePath(), expr.interpret());
 	}
 
-    /**
-     * Test interpret with old version.
-     */
-    @Test
-    public void testInterpretOldVersion() {
-        new RapidEnvInterpreter(new CmdRenv(new String[]{
-                "-env", "testdata/env/env.xml", "s"}));
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit(new String[]{"", "jdk"}), null,
-                "homedir('ant', '1.7.1')", false);
-        Assert.assertEquals(
-        new File("testdata/testinstall/org/apache/ant/1.7.1").getAbsolutePath(),
-        expr.interpret());
-    }
+	/**
+	 * Test interpret with old version.
+	 */
+	@Test
+	public void testInterpretOldVersion() {
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit(new String[] { "", "jdk" }), null,
+		        "homedir('ant', '1.7.1')", false);
+		Assert.assertEquals(new File("testdata/testinstall/org/apache/ant/1.7.1").getAbsolutePath(), expr.interpret());
+	}
 
 	/**
 	 * Test with ambiguous pure name.
 	 */
-	@Test(expected=RapidEnvConfigurationException.class)
+	@Test(expected = RapidEnvConfigurationException.class)
 	public void testInterpretPureNameAmbi() {
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/envAmbi.xml", "s"}));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit(new String[]{"org.apache", "ant"}), null,
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envAmbi.xml", "s" }));
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit(new String[] { "org.apache", "ant" }), null,
 		        "homedir('ant')", false);
 		try {
 			expr.interpret();

@@ -32,7 +32,8 @@ If it is undefined the definition is valid for all platforms without specific de
 		<description>Describes the method how to download (automatic versus manual))</description>
 	</property>
 
-	<property name="url" type="string">
+	<property name="url" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The URL where you can download the file.</description>
 	</property>
 

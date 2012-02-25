@@ -22,12 +22,14 @@
 	<description>An configuration operation on a single file</description>
 
 	<property name="path" type="string"
-		mandatory="true" mustexist="false">
+		mandatory="true" mustexist="false"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The path to the file to configure. The path usually is a relative one.
 If it is relative it is supposed to be relative to the parent installation unit's home directory.</description>
 	</property>
 
-	<property name="sourceurl" type="string">
+	<property name="sourceurl" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>Defines where the file to configure comes from.
 If "sourceurl" is not defined the file to configure is supposed to be already
 existent and will only be changed from its original form.</description>

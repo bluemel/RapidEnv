@@ -30,90 +30,83 @@ import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
 import org.rapidbeans.rapidenv.config.Installunit;
 
-
 /**
  * Tests for Property expressions.
- *
+ * 
  * @author Martin Bluemel
  */
 public class ConfigExprPropertyTest {
 
-    private static final Installunit testUnit = new Installunit("test");
+	private static final Installunit testUnit = new Installunit("test");
 
-    private RapidEnvInterpreter renv = null;
+	private RapidEnvInterpreter renv = null;
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    @Before
-    public void setUp() {
-        this.renv = new RapidEnvInterpreter(new CmdRenv(new String[]{
-                "-env", "testdata/env/env.xml", "s"}));        
-    }
+	@Before
+	public void setUp() {
+		this.renv = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+	}
 
-    public void tearDown() {
-        this.renv = null;
-    }
+	public void tearDown() {
+		this.renv = null;
+	}
 
-    /**
-     * Test simple property expansion.
-     */
-    @Test
-    public void interpretSimple() {
-        this.renv.setPropertyValue("prop1", "Abc Xyz");
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null,
-                "123${prop1}456", false);
-        Assert.assertEquals("123Abc Xyz456", expr.interpret());
-    }
+	/**
+	 * Test simple property expansion.
+	 */
+	@Test
+	public void interpretSimple() {
+		this.renv.setPropertyValue("prop1", "Abc Xyz");
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null, "123${prop1}456", false);
+		Assert.assertEquals("123Abc Xyz456", expr.interpret());
+	}
 
-    /**
-     * Test expansion of unknown property.
-     */
-    @Test
-    public void interpretUnknown() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null,
-                "123${propunknown}456", false);
-        Assert.assertEquals("123${propunknown}456", expr.interpret());
-    }
+	/**
+	 * Test expansion of unknown property.
+	 */
+	@Test
+	public void interpretUnknown() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null, "123${propunknown}456", false);
+		Assert.assertEquals("123${propunknown}456", expr.interpret());
+	}
 
-    /**
-     * Test nested property expansion.
-     */
-    @Test
-    public void interpretNestedSimple() {
-        this.renv.setPropertyValue("p1", "bingo");
-        this.renv.setPropertyValue("p2", "p1");
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null,
-                "A${${p2}}Z", false);
-        Assert.assertEquals("AbingoZ", expr.interpret());
-    }
+	/**
+	 * Test nested property expansion.
+	 */
+	@Test
+	public void interpretNestedSimple() {
+		this.renv.setPropertyValue("p1", "bingo");
+		this.renv.setPropertyValue("p2", "p1");
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null, "A${${p2}}Z", false);
+		Assert.assertEquals("AbingoZ", expr.interpret());
+	}
 
-    /**
-     * Test nested property expansion.
-     */
-    @Test
-    public void interpretNestedComplex() {
-        this.renv.setPropertyValue("pp1", "bingo");
-        this.renv.setPropertyValue("p2" + PlatformHelper.getOs().name(), "p");
-        this.renv.setPropertyValue("p3", "1");
-        this.renv.setPropertyValue("p4", "p2");
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null,
-                "A${p${${p4}osname()}${p3}}Z", false);
-        Assert.assertEquals("AbingoZ", expr.interpret());
-        expr = new ConfigExprTopLevel(testUnit, null,
-                "A${'p'${${p4}osname()}${p3}}Z", false);
-        Assert.assertEquals("AbingoZ", expr.interpret());
-    }
+	/**
+	 * Test nested property expansion.
+	 */
+	@Test
+	public void interpretNestedComplex() {
+		this.renv.setPropertyValue("pp1", "bingo");
+		this.renv.setPropertyValue("p2" + PlatformHelper.getOs().name(), "p");
+		this.renv.setPropertyValue("p3", "1");
+		this.renv.setPropertyValue("p4", "p2");
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null, "A${p${${p4}osname()}${p3}}Z", false);
+		Assert.assertEquals("AbingoZ", expr.interpret());
+		expr = new ConfigExprTopLevel(testUnit, null, "A${'p'${${p4}osname()}${p3}}Z", false);
+		Assert.assertEquals("AbingoZ", expr.interpret());
+	}
 }

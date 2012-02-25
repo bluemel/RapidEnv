@@ -19,22 +19,22 @@ package org.rapidbeans.rapidenv.config.cmd;
 import org.rapidbeans.rapidenv.RapidEnvException;
 
 /**
- * Indicates that a shortcut that was intended to be read
- * not exists.
- *
+ * Indicates that a shortcut that was intended to be read not exists.
+ * 
  * @author Martin Bluemel
  */
 public class ShortcutFileNotFoundException extends RapidEnvException {
 
-    /**
-     * The unavoidable serial version UID.
-     */
-    private static final long serialVersionUID = 1L;
+	/**
+	 * The unavoidable serial version UID.
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * @param message the exception message.
-     */
-    public ShortcutFileNotFoundException(String message) {
-        super(message);
-    }
+	/**
+	 * @param message
+	 *            the exception message.
+	 */
+	public ShortcutFileNotFoundException(String message) {
+		super(message);
+	}
 }

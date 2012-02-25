@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config;
 
-
 import java.io.File;
 
 import junit.framework.Assert;
@@ -34,44 +33,40 @@ import org.rapidbeans.rapidenv.cmd.CmdRenv;
 
 public class PropertyTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-        RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
-                "project", "org.rapidbeans.rapidenv.config.Project", true);
-        CmdRenv cmd = new CmdRenv(new String[]{
-                "-env",
-                "testdata/env/env.xml"
-        });
-        new RapidEnvInterpreter(cmd);
-     }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
+		        "org.rapidbeans.rapidenv.config.Project", true);
+		CmdRenv cmd = new CmdRenv(new String[] { "-env", "testdata/env/env.xml" });
+		new RapidEnvInterpreter(cmd);
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("profile"));
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    @Test
-    public void testLoadProperties() {
-        Document doc = new Document(new File("testdata/env/envWithPathext.xml"));
-        Project project = (Project) doc.getRoot();
-        Property cmdPath = project.findPropertyConfiguration("cmd.path");
-        Assert.assertEquals(2, cmdPath.getSpecificvalues().size());
-        switch (PlatformHelper.getOs()) {
-        case windows:
-            Assert.assertTrue(cmdPath.getValue(),
-                    cmdPath.getValue().startsWith("D:\\h\\opt\\maven\\bin;"));
-            break;
-        case linux:
-            String expected = cmdPath.getValue();
-            Assert.assertTrue(expected,
-                    expected.startsWith("/h/opt/maven/bin:"));
-            break;
-        }
-    }
+	@Test
+	public void testLoadProperties() {
+		Document doc = new Document(new File("testdata/env/envWithPathext.xml"));
+		Project project = (Project) doc.getRoot();
+		Property cmdPath = project.findPropertyConfiguration("cmd.path");
+		Assert.assertEquals(2, cmdPath.getSpecificvalues().size());
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			Assert.assertTrue(cmdPath.getValue(), cmdPath.getValue().startsWith("D:\\h\\opt\\maven\\bin;"));
+			break;
+		case linux:
+			String expected = cmdPath.getValue();
+			Assert.assertTrue(expected, expected.startsWith("/h/opt/maven/bin:"));
+			break;
+		}
+	}
 }

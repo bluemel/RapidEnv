@@ -74,16 +74,22 @@ confirmation).
 		<description>Defines how to get access to the installation source.</description>
 	</property>
 
-	<property name="sourceurl" type="string">
+	<property name="sourceurl" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>Defines where the installation source comes from.
 If "sourceurl" is not defined it automatically defaults to
 project.installsourceurl/space/name/version
 whereas each component of "space" will become a separate subfolder.</description>
 	</property>
 
-	<property name="sourcefile" type="string">
-		<description>Complex source URLs sometimes make it hard or impossible to figure out the source file name.
-In this case you simply specify the source file name separately.</description>
+	<property name="sourcefile" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>Specifies the source file name in case it is not the
+default one "&lt;install unit name&gt;-&lt;version&gt;.zip".
+Usually it is sufficient to define either a source file name or a
+complete source URL. Complex source URLs on the other hand sometimes make
+it hard or impossible to figure out the source file name.
+In this case you simply specify the source file name additionally.</description>
 	</property>
 
 	<property name="downloadmode" type="choice"
@@ -93,7 +99,8 @@ In this case you simply specify the source file name separately.</description>
 		<description>Describes how to load the installation unit's file(s) (installer).</description>
 	</property>
 
-	<property name="homedir" type="string">
+	<property name="homedir" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The folder where the unit is installed on your machine.
 If "homedir" is not defined it automatically defaults to
 project.installtargetdir/space/name/version

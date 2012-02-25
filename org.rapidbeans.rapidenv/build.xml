@@ -199,7 +199,7 @@
 			don't get forked into a new Java VM. since Ant 1.6.2
 		-->
 		<junit showoutput="yes" printsummary="yes" dir="." 
-			failureproperty="test.fail" fork="no" forkmode="once">
+			failureproperty="test.fail" fork="no" forkmode="perTest">
 			<classpath>
 				<pathelement location="classes_test"/>
 				<path refid="project.classpath"/>
@@ -471,10 +471,10 @@
 		<copy todir="../environment/lib">
 			<fileset dir="dist/lib"/>
 		</copy>
-		<copy todir="./../../RapidEnvExampleJavaEE/sources/environment">
+		<copy todir="./../RapidEnvExampleJavaEE/environment">
 			<fileset dir="." includes="env.dtd"/>
 		</copy>
-		<copy todir="../../../RapidEnvExampleJavaEE/sources/environment/lib">
+		<copy todir="../../RapidEnvExampleJavaEE/environment/lib">
 			<fileset dir="dist/lib"/>
 		</copy>
 		<!-- copy framework jar and sources directly to the local repository -->

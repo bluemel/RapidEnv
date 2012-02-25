@@ -52,15 +52,15 @@ public class ExceptionMapTest {
 
 	/**
 	 * Test the mapping.
-	 *
-	 * @throws MalformedURLException not expected here
+	 * 
+	 * @throws MalformedURLException
+	 *             not expected here
 	 */
 	@Test
 	public void testMapException() throws MalformedURLException {
 		ExceptionMap map = ExceptionMap.load();
 		try {
-			HttpDownload.download(new URL("http://ajshdbebfhdzrbsmkvlpo"),
-					new File("xxx"), new ArrayList<Filecheck>());
+			HttpDownload.download(new URL("http://ajshdbebfhdzrbsmkvlpo"), new File("xxx"), new ArrayList<Filecheck>());
 			// We can not expect a RuntimeException in every case since
 			// sometimes we simply get back a standard HTML page saying
 			// that the address requested has not been found
@@ -72,12 +72,9 @@ public class ExceptionMapTest {
 			// if you are off line
 			ExceptionMapping mapping = map.map(e);
 			Assert.assertSame(e, mapping.getMappedException());
-			Assert.assertEquals(ExceptionMap.ERRORCODE_HTTP_DOWNLOAD,
-					mapping.getErrorcodeAsInteger());
-			Assert.assertEquals("Download failed from unknown host "
-					+ "\"ajshdbebfhdzrbsmkvlpo\"\n"
-					+ "Please check if you are connected to the LAN or Internet.",
-					mapping.getMessage(Locale.ENGLISH));
+			Assert.assertEquals(ExceptionMap.ERRORCODE_HTTP_DOWNLOAD, mapping.getErrorcodeAsInteger());
+			Assert.assertEquals("Download failed from unknown host " + "\"ajshdbebfhdzrbsmkvlpo\"\n"
+			        + "Please check if you are connected to the LAN or Internet.", mapping.getMessage(Locale.ENGLISH));
 		} catch (RuntimeException e) {
 			// if you are online
 			e.printStackTrace();

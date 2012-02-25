@@ -17,8 +17,8 @@
 -->
 
 <beantype name="org.rapidbeans.rapidenv.config.PropertyValue">
-	<description>A specifc value defintion for a RapidEnv property
-This specific value definition overdefines the parent property's value attribute
+	<description>A specific value definition for a RapidEnv property
+This specific value definition overrides the parent property's value attribute
 for two purposes:
 1) platform (os) specific value definitions
 2) complex value definitions that can't be performed in an XML attribute and need an
@@ -26,10 +26,12 @@ for two purposes:
 	<property name="osfamily" type="choice"
 		enum="org.rapidbeans.core.util.OperatingSystem">
 		<description>If this value is defined the environment variable becomes a platform specific one.
-If ist is undefined the definition the property's value is valid for all platforms.</description>
+If it is undefined the definition the property's value is valid for all platforms.</description>
 	</property>
 	<property name="value" type="string"
-		emptyvalid="true">
+		emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString"
+		>
 		<description>The property's (default) value.
 Could be platform specific when using the "osfamily" attribute.
 If not defined the value will be taken from the parent property node's value attribute</description>

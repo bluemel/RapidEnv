@@ -26,30 +26,27 @@ import org.rapidbeans.rapidenv.config.Property;
 
 /**
  * Used to insert the scheduled install unit version into strings.
- *
+ * 
  * @author Martin Bluemel
  */
 public class ConfigExprFunctionVersion extends RapidBeanBaseConfigExprFunctionVersion {
 
-    /**
-     * constructor for an Environment Variable Expression.
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param funcContent
-     *            the environment variable's name
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-	public ConfigExprFunctionVersion(
-	        final Installunit enclosingUnit,
-	        final Property enclosingProp,
-			final String funcContent,
-			final Boolean escapeLiterals) {
-	    super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	/**
+	 * constructor for an Environment Variable Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            the environment variable's name
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionVersion(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
 	}
 
 	/**
@@ -68,22 +65,21 @@ public class ConfigExprFunctionVersion extends RapidBeanBaseConfigExprFunctionVe
 			unit = getEnclosingInstallUnit();
 		}
 		if (unit.getVersion() == null) {
-		    throw new RapidEnvException("No version defined for install unit \""
-		            + unit.getFullyQualifiedName() + "\".");
+			throw new RapidEnvException("No version defined for install unit \"" + unit.getFullyQualifiedName() + "\".");
 		}
 		return unit.getVersion().toString();
 	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionVersion.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionVersion.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

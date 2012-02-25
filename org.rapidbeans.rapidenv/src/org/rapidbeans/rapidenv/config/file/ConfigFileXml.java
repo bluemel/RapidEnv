@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,89 +27,96 @@ import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
 
-
 /**
  * The root of all evil.
  */
 public class ConfigFileXml extends RapidBeanBaseConfigFileXml {
 
-    /**
-     * Check if the file configuration has been performed properly or not
-     * @return if the configuration has been performed properly or not
-     */
-    public boolean check(final boolean execute) {
-        RapidEnvInterpreter.log(Level.FINE,
-                "checking XML file configuration: "
-                + ((Installunit) this.getParentBean()).getName()
-                + this.getPathAsFile().getName());
-        return super.check(execute);
-    }
-
-    /**
-     * Creates a configuration file editor used for automatic changes
-     *
-     * @param cfgFile the parent file configuration
-     * @param file the file to edit (may be null)
-     *
-     * @return the configuration  file editor
-     */
-    public ConfigFileEditor createEditor(final ConfigFile cfgFile, final File file) {
-        final ConfigFileEditorXml editor = new ConfigFileEditorXml(cfgFile, file);
-        return editor;
-    }
-
-    /**
-     * Create a new XML configuration file.
-     *
-     * @param targetfile the file to create
-     *
-     * @throws IOException in case of IO problems
-     */
-    public void createNewFile(final File targetfile) throws IOException {
-    	FileWriter writer = null;
-    	try {
-            writer = new FileWriter(targetfile);
-            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
-            writer.write(PlatformHelper.getLineFeed());
-    	} finally {
-    		if (writer != null) {
-    			writer.close();
-    		}
-    	}
+	/**
+	 * Check if the file configuration has been performed properly or not
+	 * 
+	 * @return if the configuration has been performed properly or not
+	 */
+	public boolean check(final boolean execute) {
+		RapidEnvInterpreter.log(Level.FINE,
+		        "checking XML file configuration: " + ((Installunit) this.getParentBean()).getName()
+		                + this.getPathAsFile().getName());
+		return super.check(execute);
 	}
 
-    /**
-     * default constructor.
-     */
-    public ConfigFileXml() {
-        super();
-    }
+	/**
+	 * Creates a configuration file editor used for automatic changes
+	 * 
+	 * @param cfgFile
+	 *            the parent file configuration
+	 * @param file
+	 *            the file to edit (may be null)
+	 * 
+	 * @return the configuration file editor
+	 */
+	public ConfigFileEditor createEditor(final ConfigFile cfgFile, final File file) {
+		final ConfigFileEditorXml editor = new ConfigFileEditorXml(cfgFile, file);
+		return editor;
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public ConfigFileXml(final String s) {
-        super(s);
-    }
+	/**
+	 * Create a new XML configuration file.
+	 * 
+	 * @param targetfile
+	 *            the file to create
+	 * 
+	 * @throws IOException
+	 *             in case of IO problems
+	 */
+	public void createNewFile(final File targetfile) throws IOException {
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(targetfile);
+			writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
+			writer.write(PlatformHelper.getLineFeed());
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public ConfigFileXml(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * default constructor.
+	 */
+	public ConfigFileXml() {
+		super();
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileXml.class);
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public ConfigFileXml(final String s) {
+		super(s);
+	}
 
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public ConfigFileXml(final String[] sa) {
+		super(sa);
+	}
+
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileXml.class);
+
+	/**
+	 * @return the RapidBean's type
+	 */
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

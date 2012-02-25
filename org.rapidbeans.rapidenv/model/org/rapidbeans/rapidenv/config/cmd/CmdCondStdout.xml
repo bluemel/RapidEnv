@@ -23,19 +23,23 @@ at the end of the system command execution.</description>
 
 	<property name="equals" type="string"
 		multiline="true"
-		emptyvalid="true">
+		emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The standard out output has be exactly the specified (maybe multi lined) value.</description>
 	</property>
 
-	<property name="matches" type="string">
+	<property name="matches" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The standard out output has to match the specified pattern (Java regular expression) from begin to end.</description>
 	</property>
 
-	<property name="contains" type="string">
+	<property name="contains" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The standard out output must contain the specified string.</description>
 	</property>
 
-	<property name="containsmatch" type="string">
+	<property name="containsmatch" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The standard out output has to match the specified pattern (Java regular expression).</description>
 	</property>
 

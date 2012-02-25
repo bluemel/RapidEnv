@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
-
 import java.io.File;
 
 import junit.framework.Assert;
@@ -33,57 +32,55 @@ import org.rapidbeans.rapidenv.config.Project;
 
 public class ConfigFileTextTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-        new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
-        RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
-                "project", "org.rapidbeans.rapidenv.config.Project", true);
-     }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
+		        "org.rapidbeans.rapidenv.config.Project", true);
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    @Test
-    public void testReadConfiguration() {
-        Document doc = new Document(new File("testdata/env/envFileText01.xml"));
-        Project project = (Project) doc.getRoot();
-        Installunit unit = project.findInstallunitConfiguration("maven");
-        ConfigFileText file =
-            (ConfigFileText) unit.getConfigurations().get(0);
-        Assert.assertNotNull(file.getTasks());
-        final ConfigFileTextTaskInsert task0 =
-            (ConfigFileTextTaskInsert) file.getTasks().get(0);
-        Assert.assertEquals("1 1 1", task0.getLine());
-        Assert.assertSame(InsertMode.prepend, task0.getMode());
-    }
+	@Test
+	public void testReadConfiguration() {
+		Document doc = new Document(new File("testdata/env/envFileText01.xml"));
+		Project project = (Project) doc.getRoot();
+		Installunit unit = project.findInstallunitConfiguration("maven");
+		ConfigFileText file = (ConfigFileText) unit.getConfigurations().get(0);
+		Assert.assertNotNull(file.getTasks());
+		final ConfigFileTextTaskInsert task0 = (ConfigFileTextTaskInsert) file.getTasks().get(0);
+		Assert.assertEquals("1 1 1", task0.getLine());
+		Assert.assertSame(InsertMode.prepend, task0.getMode());
+	}
 
-//    @Test
-//    public void testConfigSetnodevalueCheckConfigRequired() {
-//        RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
-//                new CmdRenv(new String[] {
-//                        "-env", "testdata/env/envFileXml01.xml", "s"}));
-//        Project project = interpreter.getProject();
-//        Installunit unit = project.findInstallunitConfiguration("maven");
-//        ConfigFile fileConfig = (ConfigFile) unit.getConfigurations().get(0);
-//        File source = new File(fileConfig.getSourceurlAsUrl().getFile());
-//        File cfgfile = fileConfig.getPathAsFile();
-//        Assert.assertFalse(cfgfile.exists());
-//        Assert.assertTrue(cfgfile.getParentFile().mkdirs());
-//        FileHelper.copyFile(source, cfgfile);
-//        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-//        PrintStream sout = new PrintStream(bStream);
-////        PrintStream sout = System.out; // new PrintStream(bStream);
-//        interpreter.execute(sout);
-////        ConfigFileXmlTaskSetnodevalue setnodevalTask =
-////            (ConfigFileXmlTaskSetnodevalue) fileConfig.getTasks().get(0); 
-//        Assert.assertFalse(fileConfig.getOk());
-//    }
+	// @Test
+	// public void testConfigSetnodevalueCheckConfigRequired() {
+	// RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
+	// new CmdRenv(new String[] {
+	// "-env", "testdata/env/envFileXml01.xml", "s"}));
+	// Project project = interpreter.getProject();
+	// Installunit unit = project.findInstallunitConfiguration("maven");
+	// ConfigFile fileConfig = (ConfigFile) unit.getConfigurations().get(0);
+	// File source = new File(fileConfig.getSourceurlAsUrl().getFile());
+	// File cfgfile = fileConfig.getPathAsFile();
+	// Assert.assertFalse(cfgfile.exists());
+	// Assert.assertTrue(cfgfile.getParentFile().mkdirs());
+	// FileHelper.copyFile(source, cfgfile);
+	// ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+	// PrintStream sout = new PrintStream(bStream);
+	// // PrintStream sout = System.out; // new PrintStream(bStream);
+	// interpreter.execute(sout);
+	// // ConfigFileXmlTaskSetnodevalue setnodevalTask =
+	// // (ConfigFileXmlTaskSetnodevalue) fileConfig.getTasks().get(0);
+	// Assert.assertFalse(fileConfig.getOk());
+	// }
 }

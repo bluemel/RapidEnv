@@ -31,7 +31,9 @@ import org.w3c.dom.Node;
 public class ConfigFileEditorXmlTest {
 
 	/**
-	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}.
+	 * Test method for
+	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testRetrieveNodeTopLevel() {
@@ -43,7 +45,9 @@ public class ConfigFileEditorXmlTest {
 	}
 
 	/**
-	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}.
+	 * Test method for
+	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testRetrieveSubnode() {
@@ -55,7 +59,9 @@ public class ConfigFileEditorXmlTest {
 	}
 
 	/**
-	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}.
+	 * Test method for
+	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testRetrieveSubnodeWithSpecAttribute() {
@@ -66,18 +72,17 @@ public class ConfigFileEditorXmlTest {
 	}
 
 	/**
-	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}.
+	 * Test method for
+	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testRetrieveSubnodeWithSpecAttributeComplex() {
 		File testfile = new File("testdata/conf/textXmlComplex01.xml");
 		ConfigFileEditorXml editor = new ConfigFileEditorXml(null, testfile);
-		Node node = editor.retrieveNode(
-				"//workbench/window/page/views"
-				+ "/view[@id='org.eclipse.jdt.ui.PackageExplorer']"
-				+ "/viewState/customFilters/xmlDefinedFilters"
-				+ "/child[@filterId='org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*']"
-				+ "/@isEnabled");
+		Node node = editor.retrieveNode("//workbench/window/page/views"
+		        + "/view[@id='org.eclipse.jdt.ui.PackageExplorer']" + "/viewState/customFilters/xmlDefinedFilters"
+		        + "/child[@filterId='org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*']" + "/@isEnabled");
 		Assert.assertEquals("false", node.getNodeValue());
 	}
 
@@ -86,8 +91,7 @@ public class ConfigFileEditorXmlTest {
 	 */
 	@Test
 	public void testIsAttributePath() {
-		Assert.assertTrue(ConfigFileEditorXml.isAttributePath(
-				"//xxx/yyy/@zXw-120"));
+		Assert.assertTrue(ConfigFileEditorXml.isAttributePath("//xxx/yyy/@zXw-120"));
 	}
 
 	/**
@@ -95,8 +99,7 @@ public class ConfigFileEditorXmlTest {
 	 */
 	@Test
 	public void testParseIdAttrs() {
-		XmlHelper.parseIdAttrs(
-				"//xxx/yyy[@id='org.eclipse.wst.server.ui.editor'"
-				+ " and @name='JBoss 6.0 Runtime Server']");
+		XmlHelper.parseIdAttrs("//xxx/yyy[@id='org.eclipse.wst.server.ui.editor'"
+		        + " and @name='JBoss 6.0 Runtime Server']");
 	}
 }

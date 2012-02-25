@@ -26,14 +26,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.rapidbeans.rapidenv.RapidEnvException;
+import org.rapidbeans.rapidenv.config.cmd.ExceptionMap;
 
 /**
  * Verify file by computing checksums.
  */
 public class Verifyer {
 
-	public static String hashValue(final File file,
-			final Hashalgorithm hashalg) {
+	public static String hashValue(final File file, final Hashalgorithm hashalg) {
 		InputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
@@ -52,7 +52,7 @@ public class Verifyer {
 			}
 			return result.toString();
 		} catch (FileNotFoundException e) {
-			throw new RapidEnvException(e);
+			throw new RapidEnvException(e.getMessage(), e, ExceptionMap.ERRORCODE_HASH_FILE_NOT_FOUND);
 		} catch (NoSuchAlgorithmException e) {
 			throw new RapidEnvException(e);
 		} catch (IOException e) {

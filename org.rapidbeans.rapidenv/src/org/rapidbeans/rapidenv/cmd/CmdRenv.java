@@ -37,22 +37,26 @@ import org.rapidbeans.rapidenv.config.cmd.ExceptionMapping;
 
 /**
  * The main class interpreting an "renv" command line
- *
+ * 
  * @author Martin Bluemel
  */
 public class CmdRenv {
 
 	/**
 	 * The command main method.
-	 *
-	 * @param args all command line arguments
+	 * 
+	 * @param args
+	 *            all command line arguments
 	 */
 	public static void main(final String[] args) {
+		int errorcode = 0;
+		CmdRenv command = null;
+		RapidEnvInterpreter interpreter = null;
 		try {
 			final LogManager lm = LogManager.getLogManager();
 			try {
 				lm.readConfiguration(CmdRenv.class.getClassLoader().getResourceAsStream(
-						"org/rapidbeans/rapidenv/logging.properties"));
+				        "org/rapidbeans/rapidenv/logging.properties"));
 			} catch (SecurityException e) {
 				throw new RapidEnvException(e);
 			} catch (FileNotFoundException e) {
@@ -61,13 +65,12 @@ public class CmdRenv {
 				throw new RapidEnvException(e);
 			}
 			TypePropertyCollection.setDefaultCharSeparator(',');
-			final RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(args));
+			command = new CmdRenv(args);
+			interpreter = new RapidEnvInterpreter(command);
 			interpreter.execute();
-			System.exit(0);
 		} catch (RapidEnvException e) {
-//System.out.println("@@@ e.getErrocode(): " + e.getErrorcode());
 			if (e.getErrorcode() > 0 && e.getErrorcode() < 10000) {
-				final int errorcode = e.getErrorcode();
+				errorcode = e.getErrorcode();
 				final ExceptionMapping mapping = ExceptionMap.load().map(e);
 				String message = "ERROR: ";
 				if (mapping != null) {
@@ -76,21 +79,38 @@ public class CmdRenv {
 					message += e.getMessage();
 				}
 				System.out.println(message);
-				System.exit(errorcode);
 			} else if (e.getErrorcode() > 20000) {
-					final ExceptionMapping mapping = ExceptionMap.load().map(e);
-					String message = "";
-					if (mapping != null) {
-						message += mapping.getMessage(Locale.ENGLISH);
-					} else {
-						message += e.getMessage();
-					}
-					System.out.println(message);
-					System.exit(0);
+				final ExceptionMapping mapping = ExceptionMap.load().map(e);
+				String message = "INFO: ";
+				if (mapping != null) {
+					message += mapping.getMessage(Locale.ENGLISH);
+				} else {
+					message += e.getMessage();
+				}
+				System.out.println(message);
 			} else {
 				e.printStackTrace();
-				System.exit(-1);
+				errorcode = 1;
 			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			errorcode = 2;
+		} finally {
+			if (command != null && interpreter != null) {
+				switch (command.getCommand()) {
+				case boot:
+				case config:
+				case deinstall:
+				case install:
+				case update:
+					System.out.println("------------------------------------------------------------------------");
+					System.out.println(interpreter.getStatisicsAsString());
+					break;
+				default:
+					break;
+				}
+			}
+			System.exit(errorcode);
 		}
 	}
 
@@ -109,12 +129,12 @@ public class CmdRenv {
 	/**
 	 * the options (tagged parameters) containing n string values
 	 */
-	private Map<CmdRenvOption, String[]> options = new HashMap<CmdRenvOption, String[]>();
+	private final Map<CmdRenvOption, String[]> options = new HashMap<CmdRenvOption, String[]>();
 
 	/**
 	 * the tool name strings.
 	 */
-	private List<String> installunitOrPropertyNames = new ArrayList<String>();
+	private final List<String> installunitOrPropertyNames = new ArrayList<String>();
 
 	/**
 	 * @return the command
@@ -152,15 +172,14 @@ public class CmdRenv {
 	}
 
 	private enum InterpreterState {
-		options,
-		command,
-		tools
+		options, command, tools
 	}
 
 	/**
 	 * constructor of the command line interpreter.
-	 *
-	 * @param args all arguments from the command line
+	 * 
+	 * @param args
+	 *            all arguments from the command line
 	 */
 	public CmdRenv(final String[] args) {
 		this.args = args;
@@ -171,13 +190,12 @@ public class CmdRenv {
 	 * Parse the command.
 	 */
 	private void parse() {
-		switch(this.args.length) {
+		switch (this.args.length) {
 		case 0:
 			// take the default command and settings file
 			break;
 		default:
-			if (!parseHelp(args[0])
-					&& !parseVersion(args[0])) {
+			if (!parseHelp(args[0]) && !parseVersion(args[0])) {
 				InterpreterState state = InterpreterState.options;
 				final int len = this.args.length;
 				for (int i = 0; i < len; i++) {
@@ -198,8 +216,7 @@ public class CmdRenv {
 						this.installunitOrPropertyNames.add(args[i]);
 						break;
 					default:
-						throw new AssertionError(
-								"Unforseen interpreter state \"" + state + "\"");
+						throw new AssertionError("Unforseen interpreter state \"" + state + "\"");
 					}
 				}
 			}
@@ -208,9 +225,10 @@ public class CmdRenv {
 
 	/**
 	 * Parse an option
-	 *
-	 * @param string the option string
-	 *
+	 * 
+	 * @param string
+	 *            the option string
+	 * 
 	 * @return the count of option arguments
 	 */
 	private int parseOption(final String[] args, final int pos) {
@@ -219,7 +237,7 @@ public class CmdRenv {
 		CmdRenvOption option = null;
 		try {
 			option = CmdRenvOption.valueOf(strippedOptionString);
-			optionArgumentCount= option.getArgcount();
+			optionArgumentCount = option.getArgcount();
 		} catch (IllegalArgumentException e) {
 			for (final CmdRenvOption currenOption : CmdRenvOption.values()) {
 				if (currenOption.getShort1().equals(strippedOptionString)) {
@@ -243,9 +261,10 @@ public class CmdRenv {
 
 	/**
 	 * Parse a command.
-	 *
-	 * @param string the command string.
-	 *
+	 * 
+	 * @param string
+	 *            the command string.
+	 * 
 	 * @return the command enum
 	 */
 	private CmdRenvCommand parseCommand(final String string) {
@@ -272,16 +291,16 @@ public class CmdRenv {
 
 	/**
 	 * Parse an argument for help command given in different variants.
-	 *
-	 * @param arg the argument string to parse
-	 *
+	 * 
+	 * @param arg
+	 *            the argument string to parse
+	 * 
 	 * @return if a help command has been detected
 	 */
 	private boolean parseHelp(String arg) {
-		if (arg.equalsIgnoreCase("h") || arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("--h")
-				|| arg.equals("?") || arg.equals("-?") || arg.equals("/?") || arg.equals("--?")
-				|| arg.equalsIgnoreCase("help") || arg.equalsIgnoreCase("-help") || arg.equalsIgnoreCase("--help")
-				) {
+		if (arg.equalsIgnoreCase("h") || arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("--h") || arg.equals("?")
+		        || arg.equals("-?") || arg.equals("/?") || arg.equals("--?") || arg.equalsIgnoreCase("help")
+		        || arg.equalsIgnoreCase("-help") || arg.equalsIgnoreCase("--help")) {
 			this.command = CmdRenvCommand.help;
 		}
 		return this.command == CmdRenvCommand.help;
@@ -289,15 +308,15 @@ public class CmdRenv {
 
 	/**
 	 * Parse an argument for version command given in different variants.
-	 *
-	 * @param arg the argument string to parse
-	 *
+	 * 
+	 * @param arg
+	 *            the argument string to parse
+	 * 
 	 * @return if a help command has been detected
 	 */
 	private boolean parseVersion(String arg) {
-		if (arg.equalsIgnoreCase("v") || arg.equalsIgnoreCase("--v")
-				|| arg.equalsIgnoreCase("version") || arg.equalsIgnoreCase("-version") || arg.equalsIgnoreCase("--version")
-				) {
+		if (arg.equalsIgnoreCase("v") || arg.equalsIgnoreCase("--v") || arg.equalsIgnoreCase("version")
+		        || arg.equalsIgnoreCase("-version") || arg.equalsIgnoreCase("--version")) {
 			this.command = CmdRenvCommand.version;
 		}
 		return this.command == CmdRenvCommand.version;

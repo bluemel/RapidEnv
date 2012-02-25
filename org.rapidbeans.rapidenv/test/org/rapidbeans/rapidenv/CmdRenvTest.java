@@ -25,7 +25,7 @@ import org.rapidbeans.rapidenv.cmd.CmdRenv;
 
 /**
  * Unit tests for the renv command line parser.
- *
+ * 
  * @author Martin Bluemel
  */
 public class CmdRenvTest {
@@ -45,7 +45,7 @@ public class CmdRenvTest {
 	 */
 	@Test
 	public void testParseOneStat() {
-		CmdRenv cmd = new CmdRenv(new String[]{"stat"});
+		CmdRenv cmd = new CmdRenv(new String[] { "stat" });
 		Assert.assertSame(CmdRenvCommand.stat, cmd.getCommand());
 		Assert.assertEquals(0, cmd.getInstallunitOrPropertyNames().size());
 	}
@@ -55,18 +55,17 @@ public class CmdRenvTest {
 	 */
 	@Test
 	public void testParseOneStatShort() {
-		CmdRenv cmd = new CmdRenv(new String[]{"s"});
+		CmdRenv cmd = new CmdRenv(new String[] { "s" });
 		Assert.assertSame(CmdRenvCommand.stat, cmd.getCommand());
 		Assert.assertEquals(0, cmd.getInstallunitOrPropertyNames().size());
 	}
-
 
 	/**
 	 * renv deinstall.
 	 */
 	@Test
 	public void testParseOneDeinstall() {
-		CmdRenv cmd = new CmdRenv(new String[]{"deinstall"});
+		CmdRenv cmd = new CmdRenv(new String[] { "deinstall" });
 		Assert.assertSame(CmdRenvCommand.deinstall, cmd.getCommand());
 		Assert.assertEquals(0, cmd.getInstallunitOrPropertyNames().size());
 	}
@@ -76,7 +75,7 @@ public class CmdRenvTest {
 	 */
 	@Test
 	public void testParseOneDeinstallShort() {
-		CmdRenv cmd = new CmdRenv(new String[]{"d"});
+		CmdRenv cmd = new CmdRenv(new String[] { "d" });
 		Assert.assertSame(CmdRenvCommand.deinstall, cmd.getCommand());
 		Assert.assertEquals(0, cmd.getInstallunitOrPropertyNames().size());
 	}
@@ -86,7 +85,7 @@ public class CmdRenvTest {
 	 */
 	@Test
 	public void testParseOneTool() {
-		CmdRenv cmd = new CmdRenv(new String[]{"update", "java"});
+		CmdRenv cmd = new CmdRenv(new String[] { "update", "java" });
 		Assert.assertSame(CmdRenvCommand.update, cmd.getCommand());
 		Assert.assertEquals(1, cmd.getInstallunitOrPropertyNames().size());
 		Assert.assertEquals("java", cmd.getInstallunitOrPropertyNames().get(0));
@@ -97,7 +96,7 @@ public class CmdRenvTest {
 	 */
 	@Test
 	public void testParseMoreTools() {
-		CmdRenv cmd = new CmdRenv(new String[]{"update", "java", "ant", "eclipse"});
+		CmdRenv cmd = new CmdRenv(new String[] { "update", "java", "ant", "eclipse" });
 		Assert.assertSame(CmdRenvCommand.update, cmd.getCommand());
 		Assert.assertEquals(3, cmd.getInstallunitOrPropertyNames().size());
 		Assert.assertEquals("ant", cmd.getInstallunitOrPropertyNames().get(1));
@@ -108,8 +107,7 @@ public class CmdRenvTest {
 	 */
 	@Test
 	public void testParseOptions() {
-		CmdRenv cmd = new CmdRenv(new String[]{"-v", "-env", "env.xml",
-				"deinstall", "java", "ant", "eclipse"});
+		CmdRenv cmd = new CmdRenv(new String[] { "-v", "-env", "env.xml", "deinstall", "java", "ant", "eclipse" });
 		Assert.assertSame(CmdRenvCommand.deinstall, cmd.getCommand());
 		Assert.assertEquals(3, cmd.getInstallunitOrPropertyNames().size());
 		Assert.assertTrue(cmd.getOptions().containsKey(CmdRenvOption.verbose));
@@ -121,32 +119,32 @@ public class CmdRenvTest {
 	}
 
 	/**
-	 * Help should be recognized from a various range of strings
-	 * (case insensitively).
+	 * Help should be recognized from a various range of strings (case
+	 * insensitively).
 	 */
 	@Test
 	public void testParseHelpOk() {
-		CmdRenv cmd = new CmdRenv(new String[]{"h"});
+		CmdRenv cmd = new CmdRenv(new String[] { "h" });
 		Assert.assertSame(CmdRenvCommand.help, cmd.getCommand());
-		cmd = new CmdRenv(new String[]{"HelP"});
+		cmd = new CmdRenv(new String[] { "HelP" });
 		Assert.assertSame(CmdRenvCommand.help, cmd.getCommand());
-		cmd = new CmdRenv(new String[]{"-h"});
+		cmd = new CmdRenv(new String[] { "-h" });
 		Assert.assertSame(CmdRenvCommand.help, cmd.getCommand());
-		cmd = new CmdRenv(new String[]{"--h"});
+		cmd = new CmdRenv(new String[] { "--h" });
 		Assert.assertSame(CmdRenvCommand.help, cmd.getCommand());
-		cmd = new CmdRenv(new String[]{"-HeLp"});
+		cmd = new CmdRenv(new String[] { "-HeLp" });
 		Assert.assertSame(CmdRenvCommand.help, cmd.getCommand());
-		cmd = new CmdRenv(new String[]{"--hElP"});
+		cmd = new CmdRenv(new String[] { "--hElP" });
 		Assert.assertSame(CmdRenvCommand.help, cmd.getCommand());
 	}
 
 	/**
 	 * Test if a typo is recognized.
 	 */
-	@Test(expected=RapidEnvCmdException.class)
+	@Test(expected = RapidEnvCmdException.class)
 	public void testParseIllegalCommand1() {
 		try {
-			new CmdRenv(new String[]{"helpx"});
+			new CmdRenv(new String[] { "helpx" });
 		} catch (RapidEnvCmdException e) {
 			Assert.assertEquals("Illegal command: helpx", e.getMessage());
 			throw e;
@@ -156,10 +154,10 @@ public class CmdRenvTest {
 	/**
 	 * Test if a typo is recognized.
 	 */
-	@Test(expected=RapidEnvCmdException.class)
+	@Test(expected = RapidEnvCmdException.class)
 	public void testParseIllegalCommandWithOptions() {
 		try {
-			new CmdRenv(new String[]{"-env", "xxx.xml", "x"});
+			new CmdRenv(new String[] { "-env", "xxx.xml", "x" });
 		} catch (RapidEnvCmdException e) {
 			Assert.assertEquals("Illegal command: x", e.getMessage());
 			throw e;
@@ -167,15 +165,13 @@ public class CmdRenvTest {
 	}
 
 	/**
-	 * Test if an illegal argument is recognized.
-	 * renv -asdf install java.
-	 * Should throw a RapidEnvException because of illegal
-	 * argument "-asdf".
+	 * Test if an illegal argument is recognized. renv -asdf install java.
+	 * Should throw a RapidEnvException because of illegal argument "-asdf".
 	 */
-	@Test(expected=RapidEnvException.class)
+	@Test(expected = RapidEnvException.class)
 	public void testParseIllegalOption() {
 		try {
-			new CmdRenv(new String[]{"-asdf", "install", "java"});
+			new CmdRenv(new String[] { "-asdf", "install", "java" });
 		} catch (RapidEnvCmdException e) {
 			Assert.assertEquals("Illegal option: -asdf", e.getMessage());
 			throw e;
@@ -184,7 +180,7 @@ public class CmdRenvTest {
 
 	@Test
 	public void testGetConfigfileDefault() {
-		CmdRenv cmd = new CmdRenv(new String[]{"c"});
+		CmdRenv cmd = new CmdRenv(new String[] { "c" });
 		Assert.assertEquals("env.xml", cmd.getConfigfile().getName());
 	}
 }

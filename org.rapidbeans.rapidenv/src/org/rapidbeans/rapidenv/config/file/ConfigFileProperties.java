@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
-
 import java.io.File;
 import java.util.logging.Level;
 
@@ -25,70 +24,74 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
 
-
 /**
  * A properties config file.
  */
 public class ConfigFileProperties extends RapidBeanBaseConfigFileProperties {
 
-    /**
-     * Check if the file configuration has been performed properly or not
-     * @return if the configuration has been performed properly or not
-     */
-    public boolean check(final boolean execute) {
-        RapidEnvInterpreter.log(Level.FINE,
-                "checking properties file configuration: "
-                + ((Installunit) this.getParentBean()).getName()
-                + this.getPathAsFile().getName());
-        return super.check(execute);
-    }
+	/**
+	 * Check if the file configuration has been performed properly or not
+	 * 
+	 * @return if the configuration has been performed properly or not
+	 */
+	public boolean check(final boolean execute) {
+		RapidEnvInterpreter.log(Level.FINE,
+		        "checking properties file configuration: " + ((Installunit) this.getParentBean()).getName()
+		                + this.getPathAsFile().getName());
+		return super.check(execute);
+	}
 
-    /**
-     * Creates a configuration file editor used for automatic changes
-     *
-     * @param cfgFile the parent file configuration
-     * @param file the file to edit (may be null)
-     *
-     * @return the configuration  file editor
-     */
-    public ConfigFileEditor createEditor(final ConfigFile cfgFile, final File file) {
-        final ConfigFileEditorProperties editor =
-            new ConfigFileEditorProperties(cfgFile, file);
-        return editor;
-    }
+	/**
+	 * Creates a configuration file editor used for automatic changes
+	 * 
+	 * @param cfgFile
+	 *            the parent file configuration
+	 * @param file
+	 *            the file to edit (may be null)
+	 * 
+	 * @return the configuration file editor
+	 */
+	public ConfigFileEditor createEditor(final ConfigFile cfgFile, final File file) {
+		final ConfigFileEditorProperties editor = new ConfigFileEditorProperties(cfgFile, file);
+		return editor;
+	}
 
-    /**
-     * default constructor.
-     */
-    public ConfigFileProperties() {
-        super();
-    }
+	/**
+	 * default constructor.
+	 */
+	public ConfigFileProperties() {
+		super();
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public ConfigFileProperties(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public ConfigFileProperties(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public ConfigFileProperties(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public ConfigFileProperties(final String[] sa) {
+		super(sa);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileProperties.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileProperties.class);
 
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the RapidBean's type
+	 */
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

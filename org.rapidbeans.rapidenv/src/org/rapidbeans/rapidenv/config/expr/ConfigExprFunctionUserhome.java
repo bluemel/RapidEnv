@@ -24,47 +24,46 @@ import org.rapidbeans.rapidenv.config.Property;
 
 public class ConfigExprFunctionUserhome extends RapidBeanBaseConfigExprFunctionUsername {
 
-    /**
-    * The interpreting method determines the user's home directory platform independently.<br>
-    * The determination is done over Java system property user.home
-    * 
-    * @return The current user's home directory as string
-    */
-    public String interpret() {
-        return PlatformHelper.userhome();
-    }
+	/**
+	 * The interpreting method determines the user's home directory platform
+	 * independently.<br>
+	 * The determination is done over Java system property user.home
+	 * 
+	 * @return The current user's home directory as string
+	 */
+	public String interpret() {
+		return PlatformHelper.userhome();
+	}
 
-    /**
-     * The constructor for the Hostname Function Expression.
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param funcContent function parameter list. Must be empty for Hostname
-     *            Function Expressions.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-    public ConfigExprFunctionUserhome(
-            final Installunit enclosingUnit,
-            final Property enclosingProp,
-            final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
-    }
+	/**
+	 * The constructor for the Hostname Function Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param funcContent
+	 *            function parameter list. Must be empty for Hostname Function
+	 *            Expressions.
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionUserhome(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionUserhome.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionUserhome.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

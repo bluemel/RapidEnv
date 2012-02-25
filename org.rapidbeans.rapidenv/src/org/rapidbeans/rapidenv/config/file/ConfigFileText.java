@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
-
 import java.io.File;
 import java.util.logging.Level;
 
@@ -25,70 +24,74 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
 
-
 /**
  * The root of all evil.
  */
 public class ConfigFileText extends RapidBeanBaseConfigFileText {
 
-    /**
-     * Check if the file configuration has been performed properly or not
-     * @return if the configuration has been performed properly or not
-     */
-    public boolean check(final boolean execute) {
-        RapidEnvInterpreter.log(Level.FINE,
-                "checking text file configuration: "
-                + ((Installunit) this.getParentBean()).getName()
-                + this.getPathAsFile().getName());
-        return super.check(execute);
-    }
+	/**
+	 * Check if the file configuration has been performed properly or not
+	 * 
+	 * @return if the configuration has been performed properly or not
+	 */
+	public boolean check(final boolean execute) {
+		RapidEnvInterpreter.log(Level.FINE,
+		        "checking text file configuration: " + ((Installunit) this.getParentBean()).getName()
+		                + this.getPathAsFile().getName());
+		return super.check(execute);
+	}
 
-    /**
-     * Creates a configuration file editor used for automatic changes
-     *
-     * @param cfgFile the parent file configuration
-     * @param file the file to edit (may be null)
-     *
-     * @return the configuration  file editor
-     */
-    public ConfigFileEditor createEditor(final ConfigFile cfgFile, final File file) {
-        final ConfigFileEditorText editor =
-            new ConfigFileEditorText(cfgFile, file);
-        return editor;
-    }
+	/**
+	 * Creates a configuration file editor used for automatic changes
+	 * 
+	 * @param cfgFile
+	 *            the parent file configuration
+	 * @param file
+	 *            the file to edit (may be null)
+	 * 
+	 * @return the configuration file editor
+	 */
+	public ConfigFileEditor createEditor(final ConfigFile cfgFile, final File file) {
+		final ConfigFileEditorText editor = new ConfigFileEditorText(cfgFile, file);
+		return editor;
+	}
 
-    /**
-     * default constructor.
-     */
-    public ConfigFileText() {
-        super();
-    }
+	/**
+	 * default constructor.
+	 */
+	public ConfigFileText() {
+		super();
+	}
 
-    /**
-     * constructor out of a string.
-     * @param s the string
-     */
-    public ConfigFileText(final String s) {
-        super(s);
-    }
+	/**
+	 * constructor out of a string.
+	 * 
+	 * @param s
+	 *            the string
+	 */
+	public ConfigFileText(final String s) {
+		super(s);
+	}
 
-    /**
-     * constructor out of a string array.
-     * @param sa the string array
-     */
-    public ConfigFileText(final String[] sa) {
-        super(sa);
-    }
+	/**
+	 * constructor out of a string array.
+	 * 
+	 * @param sa
+	 *            the string array
+	 */
+	public ConfigFileText(final String[] sa) {
+		super(sa);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileText.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFileText.class);
 
-    /**
-     * @return the RapidBean's type
-     */
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the RapidBean's type
+	 */
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

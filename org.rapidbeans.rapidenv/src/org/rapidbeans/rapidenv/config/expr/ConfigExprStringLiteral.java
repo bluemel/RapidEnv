@@ -25,70 +25,72 @@ import org.rapidbeans.rapidenv.config.Property;
 /**
  * A Constant String Expression can be defined implicitly and explicitly<br>
  * - text that is not recognized as any other expression implicitly is a
- *   Constant String Expression.<br>
- * - text between ' characters explicitly is a Constant String
- *   Expression. This text is prevented from being interpreted<br>
+ * Constant String Expression.<br>
+ * - text between ' characters explicitly is a Constant String Expression. This
+ * text is prevented from being interpreted<br>
  * For example<br>
- *   &nbsp;&nbsp;<code>xxx${ENVVAR1}'yyy${yyy}'hostname()zzz</code>
- * is interpreted as a sequence of 5 ConfigfileChange Expressions:<br>
+ * &nbsp;&nbsp;<code>xxx${ENVVAR1}'yyy${yyy}'hostname()zzz</code> is interpreted
+ * as a sequence of 5 ConfigfileChange Expressions:<br>
  * - <code>Constant String Expression: text = "xxx"</code><br>
  * - <code>Environment Variable Expression: varname = "ENVVAR1"</code><br>
  * - <code>Constant String Expression: text = "yyy${yyy}"</code><br>
  * - <code>Function Expression: function = hostname()</code><br>
  * - <code>Constant String Expression: text = "zzz"</code><br>
+ * 
  * @author Martin Bluemel
  */
 public class ConfigExprStringLiteral extends RapidBeanBaseConfigExprStringLiteral {
 
-    // the string with text
-    private String text = null;
+	// the string with text
+	private String text = null;
 
-    /**
-     * The constructor for a Constant String Expression.
-     * 
-     * @param enclosingUnit
-     *            this enclosing install unit
-     * @param enclosingProp
-     *            the enclosing property
-     * @param text
-     *            the string with text
-     */
-    public ConfigExprStringLiteral(final Installunit enclosingUnit,
-            final Property enclosingProp, final String text) {
-        super();
-        setEnclosingInstallUnit(enclosingUnit);
-        setEnclosingProperty(enclosingProp);
-        this.text = text;
-    }
+	/**
+	 * The constructor for a Constant String Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            this enclosing install unit
+	 * @param enclosingProp
+	 *            the enclosing property
+	 * @param text
+	 *            the string with text
+	 */
+	public ConfigExprStringLiteral(final Installunit enclosingUnit, final Property enclosingProp, final String text) {
+		super();
+		setEnclosingInstallUnit(enclosingUnit);
+		setEnclosingProperty(enclosingProp);
+		this.text = text;
+	}
 
-    /**
-     * The interpreting method just returns the text.
-     * 
-     * @return constant text as string
-     */
-    public String interpret() {
-        return this.text;
-    }
+	/**
+	 * The interpreting method just returns the text.
+	 * 
+	 * @return constant text as string
+	 */
+	public String interpret() {
+		return this.text;
+	}
 
-    /**
-     * As a constant string expression must not have children this method always
-     * throws an Exception.
-     * @param child the argument is ot used for this method.
-     */
-    public void addChild(final ConfigExpr child) {
-        throw new RapidEnvException("no childs for ConfigExprString");
-    }
+	/**
+	 * As a constant string expression must not have children this method always
+	 * throws an Exception.
+	 * 
+	 * @param child
+	 *            the argument is ot used for this method.
+	 */
+	public void addChild(final ConfigExpr child) {
+		throw new RapidEnvException("no childs for ConfigExprString");
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprStringLiteral.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprStringLiteral.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

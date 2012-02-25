@@ -37,14 +37,13 @@ public class ConfigExprFunctionReplaceTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"})).setPropertyValue(
-				"test.dir", "/home/martin");
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" })).setPropertyValue(
+		        "test.dir", "/home/martin");
 	}
 
 	@AfterClass
@@ -59,8 +58,7 @@ public class ConfigExprFunctionReplaceTest {
 	@Test
 	public void testSimple() {
 		Installunit unit = new Installunit("test");
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(unit, null,
-				"replace('@a@b@c@', '@', '-')", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(unit, null, "replace('@a@b@c@', '@', '-')", false);
 		Assert.assertEquals("-a-b-c-", expr.interpret());
 	}
 
@@ -70,15 +68,15 @@ public class ConfigExprFunctionReplaceTest {
 	@Test
 	public void testRegex01() {
 		Installunit unit = new Installunit("test");
-		Assert.assertEquals("aXXXf", new ConfigExprTopLevel(unit, null,
-				"replace('a@@@@@@bcde@@f', '@.*@', 'XXX')", false).interpret());
+		Assert.assertEquals("aXXXf", new ConfigExprTopLevel(unit, null, "replace('a@@@@@@bcde@@f', '@.*@', 'XXX')",
+		        false).interpret());
 	}
 
 	@Test
 	public void testComplexNesting() {
 		Installunit unit = new Installunit("test");
 		Assert.assertEquals("a\\:b/c/d", new ConfigExprTopLevel(unit, null,
-				"replace(pathconvert('a:b\\c\\d', '/'), ':', '\\\\\\\\\\:')", true).interpret());
+		        "replace(pathconvert('a:b\\c\\d', '/'), ':', '\\\\\\\\\\:')", true).interpret());
 	}
 
 	@Test

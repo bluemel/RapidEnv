@@ -33,7 +33,7 @@
 		<description>Defines if a new attribute node should be added to a new line</description>
 	</property>
 
-	<!-- activate the default escape map with multilie="true" -->
+	<!-- activate the default escape map with multiline="true" -->
 	<property name="indent" type="string"
 		default="\t"
 		multiline="true"

@@ -17,11 +17,9 @@
 
 package org.rapidbeans.rapidenv.config.cmd;
 
-
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.datasource.Document;
 import org.rapidbeans.rapidenv.RapidEnvException;
-
 
 /**
  * The Exception Map.
@@ -29,11 +27,23 @@ import org.rapidbeans.rapidenv.RapidEnvException;
 public class ExceptionMap extends RapidBeanBaseExceptionMap {
 
 	public static final int ERRORCODE_HTTP_DOWNLOAD = 1001;
+
 	public static final int ERRORCODE_UNKNOWN_PROP_OR_UNIT = 1002;
+
 	public static final int ERRORCODE_AMBIGOUUS_NAME = 1003;
+
 	public static final int ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT = 1004;
+
 	public static final int ERRORCODE_HTTP_DOWNLOAD_CONNECTION_PROBLEM = 1005;
+
 	public static final int ERRORCODE_DOWNLOAD_FORBIDDEN = 1007;
+
+	public static final int ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT_LOOP = 1008;
+
+	public static final int ERRORCODE_HASH_INVALID_ALGORITHM = 1009;
+
+	public static final int ERRORCODE_HASH_FILE_NOT_FOUND = 1010;
+
 	public static final int INFOCODE_DOWNLOAD_MANUAL_REQUIRED = 20001;
 
 	/**
@@ -45,7 +55,9 @@ public class ExceptionMap extends RapidBeanBaseExceptionMap {
 
 	/**
 	 * constructor out of a string.
-	 * @param s the string
+	 * 
+	 * @param s
+	 *            the string
 	 */
 	public ExceptionMap(final String s) {
 		super(s);
@@ -53,7 +65,9 @@ public class ExceptionMap extends RapidBeanBaseExceptionMap {
 
 	/**
 	 * constructor out of a string array.
-	 * @param sa the string array
+	 * 
+	 * @param sa
+	 *            the string array
 	 */
 	public ExceptionMap(final String[] sa) {
 		super(sa);
@@ -67,29 +81,30 @@ public class ExceptionMap extends RapidBeanBaseExceptionMap {
 	/**
 	 * @return the RapidBean's type
 	 */
+	@Override
 	public TypeRapidBean getType() {
 		return type;
 	}
 
 	/**
 	 * Factory method to load the Exception map.
-	 *
+	 * 
 	 * @return a new Exception map instance loaded from resource file
 	 *         org/rapidbeans/rapidenv/commandlineErrorMappings.xml
 	 */
 	public static ExceptionMap load() {
-		Document doc = new Document("map",
-				TypeRapidBean.forName("org.rapidbeans.rapidenv.config.cmd.ExceptionMap"),
-				null,
-				ExceptionMap.class.getClassLoader().getResourceAsStream("org/rapidbeans/rapidenv/commandlineErrorMappings.xml"));
+		Document doc = new Document("map", TypeRapidBean.forName("org.rapidbeans.rapidenv.config.cmd.ExceptionMap"),
+		        null, ExceptionMap.class.getClassLoader().getResourceAsStream(
+		                "org/rapidbeans/rapidenv/commandlineErrorMappings.xml"));
 		return (ExceptionMap) doc.getRoot();
 	}
 
 	/**
 	 * Find mapping for an RapidEnvException.
-	 *
-	 * @param e the exception to map
-	 *
+	 * 
+	 * @param e
+	 *            the exception to map
+	 * 
 	 * @return the mapping or null if not mapped
 	 */
 	public ExceptionMapping map(final RapidEnvException e) {

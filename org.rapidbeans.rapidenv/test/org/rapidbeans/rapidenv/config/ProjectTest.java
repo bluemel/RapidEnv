@@ -17,7 +17,6 @@
 
 package org.rapidbeans.rapidenv.config;
 
-
 import java.io.File;
 
 import org.junit.AfterClass;
@@ -29,27 +28,30 @@ import org.rapidbeans.datasource.Document;
 
 public class ProjectTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-        RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
-                "project", "org.rapidbeans.rapidenv.config.Project", true);
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
+				"org.rapidbeans.rapidenv.config.Project", true);
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("profile"));
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    @Test
-    public void testCheckSemanticsOK() {
-        Document doc = new Document(new File("testdata/env/env.xml"));
-        Project project = (Project) doc.getRoot();
-        project.checkSemantics();
-    }
+	@Test
+	public void testCheckSemanticsOK() {
+		PropertyInterpretedString.lockIntepretation();
+		Document doc = new Document(new File("testdata/env/env.xml"));
+		PropertyInterpretedString.unlockIntepretation();
+		Project project = (Project) doc.getRoot();
+		project.checkSemantics();
+	}
 }

@@ -14,8 +14,7 @@ public class RepositoryTest {
 
 	@Test
 	public void testRead() throws FileNotFoundException {
-		InputStream is = new FileInputStream(
-				new File("testdata/unpack/artifacts.xml"));
+		InputStream is = new FileInputStream(new File("testdata/unpack/artifacts.xml"));
 		final List<Artifact> artifacts = Artifact.parse(is);
 		Assert.assertEquals(17, artifacts.size());
 		for (Artifact art : artifacts) {

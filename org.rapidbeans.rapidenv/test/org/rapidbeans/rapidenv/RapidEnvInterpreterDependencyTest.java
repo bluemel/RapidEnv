@@ -32,314 +32,215 @@ import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
  * Unit tests for the RapidEnv command interpreter.
- *
+ * 
  * @author Martin Bluemel
  */
 public class RapidEnvInterpreterDependencyTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        TypePropertyCollection.setDefaultCharSeparator(',');
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
-        new File("testdata/testinstall").mkdir();
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		TypePropertyCollection.setDefaultCharSeparator(',');
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		new File("testdata/testinstall").mkdir();
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-        FileHelper.deleteDeep(new File("../../env.dtd"));
-        FileHelper.deleteDeep(new File("testdata/testinstall"));
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("profile"));
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
+	}
 
-    /**
-     * All install units are taken by default (if no install unit is specified).
-     * The sequence of the units is as they are defined in the environment
-     * definition.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultStatusSimple() {
-        checkInstallUnitsToProcessSorting("testdata/env/env.xml", "s",
-                new String[]{
-                "jdk",
-                "org.apache.ant",
-                "org.apache.ant/xalan.serializer",
-                "org.apache.maven",
-                "org.rapidbeans.ambitool",
-                "org.rapidbeans.alt.ambitool"
-        });
-    }
+	/**
+	 * All install units are taken by default (if no install unit is specified).
+	 * The sequence of the units is as they are defined in the environment
+	 * definition.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultStatusSimple() {
+		checkInstallUnitsToProcessSorting("testdata/env/env.xml", "s", new String[] { "jdk", "org.apache.ant",
+		        "org.apache.ant/xalan.serializer", "org.apache.maven", "org.rapidbeans.ambitool",
+		        "org.rapidbeans.alt.ambitool" });
+	}
 
-    /**
-     * All install units are taken by default
-     * if no install unit is specified.
-     * The sequence of the units is as they are defined in the environment
-     * definition.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultStatusComplex() {
-        checkInstallUnitsToProcessSorting("testdata/env/envDepSub.xml", "s",
-                new String[]{
-                "jdk",
-                "org.apache.ant",
-                "org.apache.maven",
-                "org.rapidenv.test01",
-                "org.rapidenv.test01/test1",
-                "org.rapidenv.test01/test2",
-                "org.rapidenv.test01/test2/test1",
-                "org.rapidenv.test01/test2/testx",
-                "org.rapidenv.test01/test3",
-                "org.rapidenv.test01/test4",
-                "org.rapidenv.test01/test5",
-                "org.rapidenv.test02"
-        });
-    }
+	/**
+	 * All install units are taken by default if no install unit is specified.
+	 * The sequence of the units is as they are defined in the environment
+	 * definition.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultStatusComplex() {
+		checkInstallUnitsToProcessSorting("testdata/env/envDepSub.xml", "s", new String[] { "jdk", "org.apache.ant",
+		        "org.apache.maven", "org.rapidenv.test01", "org.rapidenv.test01/test1", "org.rapidenv.test01/test2",
+		        "org.rapidenv.test01/test2/test1", "org.rapidenv.test01/test2/testx", "org.rapidenv.test01/test3",
+		        "org.rapidenv.test01/test4", "org.rapidenv.test01/test5", "org.rapidenv.test02" });
+	}
 
-    /**
-     * All install units are taken by default.
-     * The sequence of the units regards dependencies
-     * but in this case is as defined.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultInstallComplex() {
-        checkInstallUnitsToProcessSorting("testdata/env/envDepSub.xml", "i",
-                new String[]{
-                "jdk",
-                "org.apache.ant",
-                "org.apache.maven",
-                "org.rapidenv.test01",
-                "org.rapidenv.test01/test1",
-                "org.rapidenv.test01/test2",
-                "org.rapidenv.test01/test2/test1",
-                "org.rapidenv.test01/test2/testx",
-                "org.rapidenv.test01/test3",
-                "org.rapidenv.test01/test4",
-                "org.rapidenv.test01/test5",
-                "org.rapidenv.test02"
-        });
-    }
+	/**
+	 * All install units are taken by default. The sequence of the units regards
+	 * dependencies but in this case is as defined.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultInstallComplex() {
+		checkInstallUnitsToProcessSorting("testdata/env/envDepSub.xml", "i", new String[] { "jdk", "org.apache.ant",
+		        "org.apache.maven", "org.rapidenv.test01", "org.rapidenv.test01/test1", "org.rapidenv.test01/test2",
+		        "org.rapidenv.test01/test2/test1", "org.rapidenv.test01/test2/testx", "org.rapidenv.test01/test3",
+		        "org.rapidenv.test01/test4", "org.rapidenv.test01/test5", "org.rapidenv.test02" });
+	}
 
-    /**
-     * All install units are taken by default.
-     * The sequence of the units is as they are defined in the environment
-     * definition but depth fist.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultDeinstallComplex() {
-        checkInstallUnitsToProcessSorting("testdata/env/envDepSub.xml", "d",
-                new String[]{
-                "org.rapidenv.test02",
-                "org.rapidenv.test01/test1",
-                "org.rapidenv.test01/test2/test1",
-                "org.rapidenv.test01/test2/testx",
-                "org.rapidenv.test01/test2",
-                "org.rapidenv.test01/test3",
-                "org.rapidenv.test01/test4",
-                "org.rapidenv.test01/test5",
-                "org.rapidenv.test01",
-                "org.apache.ant",
-                "org.apache.maven",
-                "jdk",
-        });
-    }
+	/**
+	 * All install units are taken by default. The sequence of the units is as
+	 * they are defined in the environment definition but depth fist.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultDeinstallComplex() {
+		checkInstallUnitsToProcessSorting("testdata/env/envDepSub.xml", "d", new String[] { "org.rapidenv.test02",
+		        "org.rapidenv.test01/test1", "org.rapidenv.test01/test2/test1", "org.rapidenv.test01/test2/testx",
+		        "org.rapidenv.test01/test2", "org.rapidenv.test01/test3", "org.rapidenv.test01/test4",
+		        "org.rapidenv.test01/test5", "org.rapidenv.test01", "org.apache.ant", "org.apache.maven", "jdk", });
+	}
 
-    /**
-     * All install units are taken by default
-     * if no install unit is specified.
-     * The sequence of the units is as they are defined in the environment
-     * definition.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultStatusComplex2() {
-        checkInstallUnitsToProcessSorting("testdata/env/envDepSub02.xml", "s",
-                new String[]{
-                "jdk",
-                "org.apache.ant",
-                "org.apache.maven",
-                "org.rapidenv.test01",
-                "org.rapidenv.test01/test1",
-                "org.rapidenv.test01/test2",
-                "org.rapidenv.test01/test2/test1",
-                "org.rapidenv.test01/test2/testx",
-                "org.rapidenv.test01/test3",
-                "org.rapidenv.test01/test4",
-                "org.rapidenv.test01/test5",
-                "org.rapidenv.test02"
-        });
-    }
+	/**
+	 * All install units are taken by default if no install unit is specified.
+	 * The sequence of the units is as they are defined in the environment
+	 * definition.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultStatusComplex2() {
+		checkInstallUnitsToProcessSorting("testdata/env/envDepSub02.xml", "s", new String[] { "jdk", "org.apache.ant",
+		        "org.apache.maven", "org.rapidenv.test01", "org.rapidenv.test01/test1", "org.rapidenv.test01/test2",
+		        "org.rapidenv.test01/test2/test1", "org.rapidenv.test01/test2/testx", "org.rapidenv.test01/test3",
+		        "org.rapidenv.test01/test4", "org.rapidenv.test01/test5", "org.rapidenv.test02" });
+	}
 
-    /**
-     * All install units are taken by default.
-     * The sequence of the units regards dependencies.
-     * So since ant requires maven it is installed afterwards.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultInstallComplex2() {
-        checkInstallUnitsToProcessSorting("testdata/env/envDepSub02.xml", "i",
-                new String[]{
-                "jdk",
-                "org.apache.maven",
-                "org.apache.ant",
-                "org.rapidenv.test01",
-                "org.rapidenv.test01/test4",
-                "org.rapidenv.test01/test1",
-                "org.rapidenv.test01/test2",
-                "org.rapidenv.test01/test2/test1",
-                "org.rapidenv.test01/test2/testx",
-                "org.rapidenv.test01/test3",
-                "org.rapidenv.test01/test5",
-                "org.rapidenv.test02"
-        });
-    }
+	/**
+	 * All install units are taken by default. The sequence of the units regards
+	 * dependencies. So since ant requires maven it is installed afterwards.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultInstallComplex2() {
+		checkInstallUnitsToProcessSorting("testdata/env/envDepSub02.xml", "i", new String[] { "jdk",
+		        "org.apache.maven", "org.apache.ant", "org.rapidenv.test01", "org.rapidenv.test01/test4",
+		        "org.rapidenv.test01/test1", "org.rapidenv.test01/test2", "org.rapidenv.test01/test2/test1",
+		        "org.rapidenv.test01/test2/testx", "org.rapidenv.test01/test3", "org.rapidenv.test01/test5",
+		        "org.rapidenv.test02" });
+	}
 
-    /**
-     * All install units are taken by default.
-     * The sequence of the units is as they are defined in the environment
-     * definition but depth fist.
-     */
-    @Test
-    public void testInstallUnitsToProcessDefaultDeinstallComplex2() {
-        checkInstallUnitsToProcessSorting("testdata/env/envDepSub02.xml", "d",
-                new String[]{
-                "org.rapidenv.test02",
-                "org.rapidenv.test01/test1",
-                "org.rapidenv.test01/test2/test1",
-                "org.rapidenv.test01/test2/testx",
-                "org.rapidenv.test01/test2",
-                "org.rapidenv.test01/test3",
-                "org.rapidenv.test01/test5",
-                "org.rapidenv.test01/test4",
-                "org.rapidenv.test01",
-                "org.apache.ant",
-                "org.apache.maven",
-                "jdk",
-        });
-    }
+	/**
+	 * All install units are taken by default. The sequence of the units is as
+	 * they are defined in the environment definition but depth fist.
+	 */
+	@Test
+	public void testInstallUnitsToProcessDefaultDeinstallComplex2() {
+		checkInstallUnitsToProcessSorting("testdata/env/envDepSub02.xml", "d", new String[] { "org.rapidenv.test02",
+		        "org.rapidenv.test01/test1", "org.rapidenv.test01/test2/test1", "org.rapidenv.test01/test2/testx",
+		        "org.rapidenv.test01/test2", "org.rapidenv.test01/test3", "org.rapidenv.test01/test5",
+		        "org.rapidenv.test01/test4", "org.rapidenv.test01", "org.apache.ant", "org.apache.maven", "jdk", });
+	}
 
-    @Test (expected = RapidEnvCmdException.class)
-    public void testCheckDependenciesInstallSonWithoutParent() {
-        try {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {"-env", "testdata/env/envDepSub.xml", "i",
-                        "org.rapidenv.test01/test2/test1"}));
-        env.initPropertiesAndInstallunitsToProcess();
-        List<Installunit> installUnits = env.getInstallunitsToProcess();
-        env.checkDependencies(installUnits, CmdRenvCommand.install);
-        } catch (RapidEnvCmdException e) {
-            Assert.assertEquals(
-                    "Can not install unit \"org.rapidenv.test01/test2/test1\""
-                    + " because parent unit \"org.rapidenv.test01/test2\" is not installed.",
-                    e.getMessage());
-            throw e;
-        }
-    }
+	@Test(expected = RapidEnvCmdException.class)
+	public void testCheckDependenciesInstallSonWithoutParent() {
+		try {
+			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+			        "testdata/env/envDepSub.xml", "i", "org.rapidenv.test01/test2/test1" }));
+			env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.install);
+			List<Installunit> installUnits = env.getInstallunitsToProcess();
+			env.checkDependencies(installUnits, CmdRenvCommand.install);
+		} catch (RapidEnvCmdException e) {
+			Assert.assertEquals("Can not install unit \"org.rapidenv.test01/test2/test1\""
+			        + " because parent unit \"org.rapidenv.test01/test2\" is not installed.", e.getMessage());
+			throw e;
+		}
+	}
 
-    @Test (expected = RapidEnvConfigurationException.class)
-    public void testCheckDependenciesIntraTreeNodeDeps1() {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {
-                        "-env", "testdata/env/envDepSubIntraTreeNodes01.xml", "i", "jdk"}));
-        try {
-            env.checkDependenciesAll();
-        } catch (RapidEnvConfigurationException e) {
-            Assert.assertEquals(
-                    "Invalid dependency defined between install unit "
-                    + "\"org.rapidenv.test01/test2/testx\" and install unit "
-                    + "\"org.rapidenv.test01/test4\" because these install units "
-                    + "are defined  on different subunit tree node levels.",
-                    e.getMessage());
-            throw e;
-        }
-    }
+	@Test(expected = RapidEnvConfigurationException.class)
+	public void testCheckDependenciesIntraTreeNodeDeps1() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envDepSubIntraTreeNodes01.xml", "i", "jdk" }));
+		try {
+			env.checkDependenciesAll();
+		} catch (RapidEnvConfigurationException e) {
+			Assert.assertEquals("Invalid dependency defined between install unit "
+			        + "\"org.rapidenv.test01/test2/testx\" and install unit "
+			        + "\"org.rapidenv.test01/test4\" because these install units "
+			        + "are defined  on different subunit tree node levels.", e.getMessage());
+			throw e;
+		}
+	}
 
-    @Test (expected = RapidEnvConfigurationException.class)
-    public void testCheckDependenciesIntraTreeNodeDeps2() {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {
-                        "-env", "testdata/env/envDepSubIntraTreeNodes02.xml", "i", "jdk"}));
-        try {
-            env.checkDependenciesAll();
-        } catch (RapidEnvConfigurationException e) {
-            Assert.assertEquals(
-                    "Invalid dependency defined between install unit "
-                    + "\"org.rapidenv.test02\" and install unit "
-                    + "\"org.rapidenv.test01/test5\" because these install units "
-                    + "are defined  on different subunit tree node levels.",
-                    e.getMessage());
-            throw e;
-        }
-    }
+	@Test(expected = RapidEnvConfigurationException.class)
+	public void testCheckDependenciesIntraTreeNodeDeps2() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envDepSubIntraTreeNodes02.xml", "i", "jdk" }));
+		try {
+			env.checkDependenciesAll();
+		} catch (RapidEnvConfigurationException e) {
+			Assert.assertEquals("Invalid dependency defined between install unit "
+			        + "\"org.rapidenv.test02\" and install unit "
+			        + "\"org.rapidenv.test01/test5\" because these install units "
+			        + "are defined  on different subunit tree node levels.", e.getMessage());
+			throw e;
+		}
+	}
 
-    @Test (expected = RapidEnvConfigurationException.class)
-    public void testCheckDependenciesCyclicDepsSimple() {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {
-                        "-env", "testdata/env/envDepSubCyc01.xml", "i", "jdk"}));
-        try {
-            env.checkDependenciesAll();
-        } catch (RapidEnvConfigurationException e) {
-            Assert.assertEquals(
-                    "Invalid dependency cycle defined for install units "
-                    + "\"org.rapidenv.test01/test4\", "
-                    + "\"org.rapidenv.test01/test5\"",
-                    e.getMessage());
-            throw e;
-        }
-    }
+	@Test(expected = RapidEnvConfigurationException.class)
+	public void testCheckDependenciesCyclicDepsSimple() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envDepSubCyc01.xml", "i", "jdk" }));
+		try {
+			env.checkDependenciesAll();
+		} catch (RapidEnvConfigurationException e) {
+			Assert.assertEquals("Invalid dependency cycle defined for install units "
+			        + "\"org.rapidenv.test01/test4\", " + "\"org.rapidenv.test01/test5\"", e.getMessage());
+			throw e;
+		}
+	}
 
-    @Test (expected = RapidEnvConfigurationException.class)
-    public void testCheckDependenciesCyclicDepsMore() {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {
-                        "-env", "testdata/env/envDepSubCyc02.xml", "i", "jdk"}));
-        try {
-            env.checkDependenciesAll();
-        } catch (RapidEnvConfigurationException e) {
-            Assert.assertEquals(
-                    "Invalid dependency cycle defined for install units "
-                    + "\"jdk\", \"org.rapidenv.test02\", "
-                    + "\"org.rapidenv.test01\", \"org.apache.ant\"",
-                    e.getMessage());
-            throw e;
-        }
-    }
+	@Test(expected = RapidEnvConfigurationException.class)
+	public void testCheckDependenciesCyclicDepsMore() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envDepSubCyc02.xml", "i", "jdk" }));
+		try {
+			env.checkDependenciesAll();
+		} catch (RapidEnvConfigurationException e) {
+			Assert.assertEquals("Invalid dependency cycle defined for install units "
+			        + "\"jdk\", \"org.rapidenv.test02\", " + "\"org.rapidenv.test01\", \"org.apache.ant\"",
+			        e.getMessage());
+			throw e;
+		}
+	}
 
-    @Test (expected = RapidEnvConfigurationException.class)
-    public void testCheckDependenciesCyclicDepsSelf() {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {
-                        "-env", "testdata/env/envDepSubCyc03.xml", "i", "jdk"}));
-        try {
-            env.checkDependenciesAll();
-        } catch (RapidEnvConfigurationException e) {
-            Assert.assertEquals(
-                    "Invalid self dependency defined for install unit "
-                    + "\"org.rapidenv.test01/test3\"",
-                    e.getMessage());
-            throw e;
-        }
-    }
+	@Test(expected = RapidEnvConfigurationException.class)
+	public void testCheckDependenciesCyclicDepsSelf() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envDepSubCyc03.xml", "i", "jdk" }));
+		try {
+			env.checkDependenciesAll();
+		} catch (RapidEnvConfigurationException e) {
+			Assert.assertEquals("Invalid self dependency defined for install unit " + "\"org.rapidenv.test01/test3\"",
+			        e.getMessage());
+			throw e;
+		}
+	}
 
-    public void testCheckDependenciesCyclicDepsNoCycles() {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {
-                        "-env", "testdata/env/envDepSubCyc04.xml", "i", "jdk"}));
-        env.checkDependenciesAll();
-    }
+	public void testCheckDependenciesCyclicDepsNoCycles() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envDepSubCyc04.xml", "i", "jdk" }));
+		env.checkDependenciesAll();
+	}
 
-    private void checkInstallUnitsToProcessSorting(
-            String envFilePath, String command,
-            String[] unitNames) {
-        RapidEnvInterpreter env = new RapidEnvInterpreter(
-                new CmdRenv(new String[] {"-env", envFilePath, command}));
-        env.initPropertiesAndInstallunitsToProcess();
-        List<Installunit> installUnits = env.getInstallunitsToProcess();
-        int size = installUnits.size();
-        Assert.assertEquals(unitNames.length, size);
-        for (int i = 0; i < size; i++) {
-            Assert.assertEquals("Failure on list pos " + i + ": ",
-                    unitNames[i], installUnits.get(i).getFullyQualifiedName());
-        }
-    }
+	private void checkInstallUnitsToProcessSorting(String envFilePath, String command, String[] unitNames) {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", envFilePath, command }));
+		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.stat);
+		List<Installunit> installUnits = env.getInstallunitsToProcess();
+		int size = installUnits.size();
+		Assert.assertEquals(unitNames.length, size);
+		for (int i = 0; i < size; i++) {
+			Assert.assertEquals("Failure on list pos " + i + ": ", unitNames[i], installUnits.get(i)
+			        .getFullyQualifiedName());
+		}
+	}
 }

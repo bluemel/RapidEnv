@@ -332,6 +332,12 @@
 			<xsl:when test="@type = 'file'">
 				<xsl:text>path to local file</xsl:text>
 			</xsl:when>
+			<xsl:when test="@type = 'string'">
+				<xsl:if test="@implementingclass = 'org.rapidbeans.rapidenv.config.PropertyInterpretedString'">
+					<xsl:text>interpreted </xsl:text>
+				</xsl:if>
+				<xsl:text>string</xsl:text>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="@type"/>
 			</xsl:otherwise>

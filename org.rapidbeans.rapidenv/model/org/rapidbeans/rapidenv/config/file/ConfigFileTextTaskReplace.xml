@@ -25,7 +25,8 @@
 		<description>Specifies the text to replace</description>
 	</property>
 
-	<property name="replaceby" type="string" mandatory="true" emptyvalid="true">
+	<property name="replaceby" type="string" mandatory="true" emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>Specifies the text to insert instead of the replaced text.</description>
 	</property>
 

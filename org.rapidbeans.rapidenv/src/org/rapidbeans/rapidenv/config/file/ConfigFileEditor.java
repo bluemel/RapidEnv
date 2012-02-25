@@ -38,153 +38,152 @@ import org.rapidbeans.rapidenv.RapidEnvException;
  */
 public abstract class ConfigFileEditor {
 
-    /**
-     * the file to edit during configuration.
-     */
-    private ConfigFile configfile = null;
+	/**
+	 * the file to edit during configuration.
+	 */
+	private ConfigFile configfile = null;
 
-    /**
-     * The concrete file to work on.
-     */
-    private File file = null;
+	/**
+	 * The concrete file to work on.
+	 */
+	private File file = null;
 
-    /**
-     * @return the file
-     */
-    protected File getFile() {
-        return this.file;
-    }
+	/**
+	 * @return the file
+	 */
+	protected File getFile() {
+		return this.file;
+	}
 
-    /**
-     * Getter for field <code>configfile</code>.
-     * 
-     * @return the field <code>configfile</code>
-     */
-    protected final ConfigFile getConfigfile() {
-        return this.configfile;
-    }
+	/**
+	 * Getter for field <code>configfile</code>.
+	 * 
+	 * @return the field <code>configfile</code>
+	 */
+	protected final ConfigFile getConfigfile() {
+		return this.configfile;
+	}
 
-    private boolean changedSomething = false;
+	private boolean changedSomething = false;
 
-    /**
-     * Simply provide access to field <code>configfile</code> to true.
-     * 
-     * @return a boolean: true means there has been something changed.
-     */
-    protected final boolean getChangedSomething() {
-        return this.changedSomething;
-    }
+	/**
+	 * Simply provide access to field <code>configfile</code> to true.
+	 * 
+	 * @return a boolean: true means there has been something changed.
+	 */
+	protected final boolean getChangedSomething() {
+		return this.changedSomething;
+	}
 
-    /**
-     * Simply sets field <code>configfile</code> to true.
-     */
-    protected final void setChangedSomething() {
-        this.changedSomething = true;
-    }
+	/**
+	 * Simply sets field <code>configfile</code> to true.
+	 */
+	protected final void setChangedSomething() {
+		this.changedSomething = true;
+	}
 
-    private boolean createIfNotExists = false;
+	private boolean createIfNotExists = false;
 
-    /**
-     * @param createIfNotExists the createIfNotExists to set
-     */
-    public void setCreateIfNotExists(final boolean createIfNotExists) {
-        this.createIfNotExists = createIfNotExists;
-    }
+	/**
+	 * @param createIfNotExists
+	 *            the createIfNotExists to set
+	 */
+	public void setCreateIfNotExists(final boolean createIfNotExists) {
+		this.createIfNotExists = createIfNotExists;
+	}
 
-    /**
-     * The method reading the file to edit into the editor.
-     */
-    protected abstract void load();
+	/**
+	 * The method reading the file to edit into the editor.
+	 */
+	protected abstract void load();
 
-    /**
-     * The method saving the edited file.
-     */
-    protected abstract void save();
+	/**
+	 * The method saving the edited file.
+	 */
+	protected abstract void save();
 
-    /**
-     * constructor.
-     * 
-     * @param configfile
-     *            configuration file
-     * @param file
-     *            the file to edit (may be null)
-     */
-    public ConfigFileEditor(final ConfigFile configfile, final File file) {
-        this.configfile = configfile;
-        this.file = file;
-        if (this.file == null) {
-            this.file = this.configfile.getPathAsFile();
-        }
-    }
+	/**
+	 * constructor.
+	 * 
+	 * @param configfile
+	 *            configuration file
+	 * @param file
+	 *            the file to edit (may be null)
+	 */
+	public ConfigFileEditor(final ConfigFile configfile, final File file) {
+		this.configfile = configfile;
+		this.file = file;
+		if (this.file == null) {
+			this.file = this.configfile.getPathAsFile();
+		}
+	}
 
-    /**
-     * load a file.
-     * 
-     * @return ArrayList of lines
-     */
-    protected final ArrayList<String> loadFile() {
-        if (!this.file.exists() && this.createIfNotExists) {
-            try {
-                if (!this.file.createNewFile()) {
-                    throw new RapidEnvException(
-                            "Error while trying to create new file \""
-                            + this.file.getAbsolutePath() + "\"");
-                }
-            } catch (IOException e) {
-                throw new RapidEnvException(
-                        "Exception while trying to create new file \""
-                        + this.file.getAbsolutePath() + "\"", e);
-            }
-        }
-        ArrayList<String> lines = new ArrayList<String>();
-        LineNumberReader rd = null;
-        try {
-            rd = new LineNumberReader(new InputStreamReader(new FileInputStream(this.file)));
-            String line;
-            int i = 0;
-            while ((line = rd.readLine()) != null) {
-                lines.add(i++, line);
-            }
-            rd.close();
-        } catch (FileNotFoundException e) {
-            throw new RapidEnvException(e);
-        } catch (IOException e) {
-            throw new RapidEnvException(e);
-        } finally {
-            try {
-                if (rd != null) {
-                    rd.close();
-                }
-            } catch (IOException e) {
-                throw new RapidEnvException(e);
-            }
-        }
-        return lines;
-    }
+	/**
+	 * load a file.
+	 * 
+	 * @return ArrayList of lines
+	 */
+	protected final ArrayList<String> loadFile() {
+		if (!this.file.exists() && this.createIfNotExists) {
+			try {
+				if (!this.file.createNewFile()) {
+					throw new RapidEnvException("Error while trying to create new file \""
+					        + this.file.getAbsolutePath() + "\"");
+				}
+			} catch (IOException e) {
+				throw new RapidEnvException("Exception while trying to create new file \""
+				        + this.file.getAbsolutePath() + "\"", e);
+			}
+		}
+		ArrayList<String> lines = new ArrayList<String>();
+		LineNumberReader rd = null;
+		try {
+			rd = new LineNumberReader(new InputStreamReader(new FileInputStream(this.file)));
+			String line;
+			int i = 0;
+			while ((line = rd.readLine()) != null) {
+				lines.add(i++, line);
+			}
+			rd.close();
+		} catch (FileNotFoundException e) {
+			throw new RapidEnvException(e);
+		} catch (IOException e) {
+			throw new RapidEnvException(e);
+		} finally {
+			try {
+				if (rd != null) {
+					rd.close();
+				}
+			} catch (IOException e) {
+				throw new RapidEnvException(e);
+			}
+		}
+		return lines;
+	}
 
-    /**
-     * save a file.
-     * 
-     * @param lines
-     *            ArrayList of lines to write to the file
-     */
-    protected final void saveFile(final List<String> lines) {
-        if (!this.changedSomething) {
-            return;
-        }
-        PrintWriter wr = null;
-        try {
-            wr = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.file)));
+	/**
+	 * save a file.
+	 * 
+	 * @param lines
+	 *            ArrayList of lines to write to the file
+	 */
+	protected final void saveFile(final List<String> lines) {
+		if (!this.changedSomething) {
+			return;
+		}
+		PrintWriter wr = null;
+		try {
+			wr = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.file)));
 
-            for (int i = 0; i < lines.size(); i++) {
-                wr.println((String) lines.get(i));
-            }
-        } catch (FileNotFoundException e) {
-            throw new RapidEnvException(e);
-        } finally {
-            if (wr != null) {
-                wr.close();
-            }
-        }
-    }
+			for (int i = 0; i < lines.size(); i++) {
+				wr.println((String) lines.get(i));
+			}
+		} catch (FileNotFoundException e) {
+			throw new RapidEnvException(e);
+		} finally {
+			if (wr != null) {
+				wr.close();
+			}
+		}
+	}
 }

@@ -20,12 +20,13 @@ public class HttpDownload {
 
 	/**
 	 * Load an arbitrary file via HTTP.
-	 *
-	 * @param url URL of the remote source file
-	 * @param target local target file
+	 * 
+	 * @param url
+	 *            URL of the remote source file
+	 * @param target
+	 *            local target file
 	 */
-	public static void download(final URL url, final File target,
-			final List<Filecheck> filechecks) {
+	public static void download(final URL url, final File target, final List<Filecheck> filechecks) {
 		// Hack for local tests
 		if (url.toString().startsWith("http://D:/")) {
 			FileHelper.copyFile(new File(url.toString().substring(7)), target);
@@ -39,7 +40,8 @@ public class HttpDownload {
 				os = new FileOutputStream(target);
 				int bytesRead;
 				int retry = 0;
-				while (retry < 5) {
+				final int maxRetry = 20;
+				while (retry < maxRetry) {
 					bytesRead = is.read(buffer);
 					switch (bytesRead) {
 					case -1:
@@ -47,7 +49,7 @@ public class HttpDownload {
 						break;
 					case 0:
 						try {
-							Thread.sleep(100);
+							Thread.sleep(200);
 						} catch (InterruptedException e) {
 							throw new RapidEnvException(e);
 						}
@@ -58,36 +60,34 @@ public class HttpDownload {
 						break;
 					}
 				}
+				if (retry == maxRetry) {
+					throw new RapidEnvException("Download failed from URL \"" + url.toString() + "\"\n"
+					        + "Connection timed out in read loop.",
+					        ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT_LOOP);
+				}
 			} catch (UnknownHostException e) {
-				throw new RapidEnvException("Download failed from unknown host \""
-							+ e.getMessage() + "\"\n"
-							+ "Please check if you are connected to the LAN or Internet.",
-						e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD);
+				throw new RapidEnvException("Download failed from unknown host \"" + e.getMessage() + "\"\n"
+				        + "Please check if you are connected to the LAN or Internet.", e,
+				        ExceptionMap.ERRORCODE_HTTP_DOWNLOAD);
 			} catch (ConnectException e) {
 				if (e.getMessage().startsWith("Connection timed out")) {
-					throw new RapidEnvException("Download failed from URL \""
-							+ url.toString() + "\"\n"
-							+ "Connection timed out.",
-						e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT);
+					throw new RapidEnvException("Download failed from URL \"" + url.toString() + "\"\n"
+					        + "Connection timed out.", e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_TIMEOUT);
 				} else {
-					throw new RapidEnvException("Download failed from URL \""
-							+ url.toString() + "\"\n"
-							+ "Connection probleme \"" + e.getMessage() + "\"",
-						e, ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_PROBLEM);
+					throw new RapidEnvException("Download failed from URL \"" + url.toString() + "\"\n"
+					        + "Connection probleme \"" + e.getMessage() + "\"", e,
+					        ExceptionMap.ERRORCODE_HTTP_DOWNLOAD_CONNECTION_PROBLEM);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				throw new RapidEnvException("HTPP download failed from URL \""
-							+ url.toString() + "\" to file \""
-							+ target.getAbsolutePath(),
-						e);
+				throw new RapidEnvException("HTPP download failed from URL \"" + url.toString() + "\" to file \""
+				        + target.getAbsolutePath(), e);
 			} finally {
 				if (is != null) {
 					try {
 						is.close();
 					} catch (IOException e) {
-						throw new RapidEnvException("closing input stream failed "
-								+ "for URL \"" + url.toString(), e);
+						throw new RapidEnvException("closing input stream failed " + "for URL \"" + url.toString(), e);
 					}
 				}
 				if (os != null) {
@@ -95,28 +95,22 @@ public class HttpDownload {
 						os.close();
 					} catch (IOException e) {
 						throw new RapidEnvException("Closing output stream failed for file \""
-								+ target.getAbsolutePath(), e);
+						        + target.getAbsolutePath(), e);
 					}
 				}
 			}
 		}
-		if (target.exists()
-				&& filechecks != null) {
+		if (target.exists() && filechecks != null) {
 			for (final Filecheck check : filechecks) {
-				final String checksum = Verifyer.hashValue(target,
-						check.getHashalgorithm());
+				final String checksum = Verifyer.hashValue(target, check.getHashalgorithm());
 				if (checksum.equals(check.getHashvalue())) {
-					final RapidEnvInterpreter interpreter =
-							RapidEnvInterpreter.getInstance();
+					final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
 					if (interpreter != null) {
-						interpreter.getOut().println("  "
-								+ check.getHashalgorithm().name()
-								+ " Hashvalue OK");
+						interpreter.getOut().println("  " + check.getHashalgorithm().name() + " Hashvalue OK");
 					}
 				} else {
-					throw new RapidEnvException("File \""
-							+ target.getAbsolutePath() + "\" has an icorrect"
-							+ " hash value \"" + checksum + "\".");
+					throw new RapidEnvException("File \"" + target.getAbsolutePath() + "\" has an icorrect"
+					        + " hash value \"" + checksum + "\".");
 				}
 			}
 		}

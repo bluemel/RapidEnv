@@ -36,5 +36,10 @@
 			<description>A directory tool &quot;otherapp&quot; urgently needs</description>
 		    <environment name="OTHERAPP_DATA"/>
 	    </property>
+	    <property name="testcommon"
+	    	value="xyz"
+	    	>
+	    	<description>Test a common property</description>
+	    </property>
 	</installunit>
 </project>

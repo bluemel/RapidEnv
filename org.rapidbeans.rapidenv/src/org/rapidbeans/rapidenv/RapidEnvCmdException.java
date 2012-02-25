@@ -26,8 +26,9 @@ public class RapidEnvCmdException extends RapidEnvException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public RapidEnvCmdException(final String message) {
 		super(message);
@@ -35,9 +36,11 @@ public class RapidEnvCmdException extends RapidEnvException {
 
 	/**
 	 * The constructor with message.
-	 *
-	 * @param message the message
-	 * @param errorcode the error code
+	 * 
+	 * @param message
+	 *            the message
+	 * @param errorcode
+	 *            the error code
 	 */
 	public RapidEnvCmdException(final String message, final int errorcode) {
 		super(message, errorcode);
@@ -45,8 +48,9 @@ public class RapidEnvCmdException extends RapidEnvException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param cause the cause
+	 * 
+	 * @param cause
+	 *            the cause
 	 */
 	public RapidEnvCmdException(final Throwable cause) {
 		super(cause);
@@ -54,9 +58,11 @@ public class RapidEnvCmdException extends RapidEnvException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param cause the cause
-	 * @param errorcode the error code
+	 * 
+	 * @param cause
+	 *            the cause
+	 * @param errorcode
+	 *            the error code
 	 */
 	public RapidEnvCmdException(final Throwable cause, final int errorcode) {
 		super(cause, errorcode);
@@ -64,9 +70,11 @@ public class RapidEnvCmdException extends RapidEnvException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public RapidEnvCmdException(final String message, final Throwable cause) {
 		super(message, cause);
@@ -74,10 +82,13 @@ public class RapidEnvCmdException extends RapidEnvException {
 
 	/**
 	 * The constructor with message and cause.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param errorcode the error code
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param errorcode
+	 *            the error code
 	 */
 	public RapidEnvCmdException(final String message, final Throwable cause, final int errorcode) {
 		super(message, cause, errorcode);

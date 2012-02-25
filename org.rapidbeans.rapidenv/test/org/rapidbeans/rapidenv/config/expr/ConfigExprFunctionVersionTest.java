@@ -40,19 +40,18 @@ public class ConfigExprFunctionVersionTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-	    FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"})).setPropertyValue(
-				"test.dir", "/home/martin");
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" })).setPropertyValue(
+		        "test.dir", "/home/martin");
 	}
 
 	@AfterClass
 	public static void tearDownClass() {
-	    FileHelper.deleteDeep(new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 	}
 
@@ -62,11 +61,9 @@ public class ConfigExprFunctionVersionTest {
 	 */
 	@Test
 	public final void testInterpret() {
-		Installunit tool = new Installunit(new String[] { "testspace",
-				"testtool" });
+		Installunit tool = new Installunit(new String[] { "testspace", "testtool" });
 		tool.setVersion(new Version("1.2.3"));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(tool, null,
-				"a version() b", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(tool, null, "a version() b", false);
 		Assert.assertEquals("a 1.2.3 b", expr.interpret());
 	}
 
@@ -76,13 +73,10 @@ public class ConfigExprFunctionVersionTest {
 	 */
 	@Test
 	public final void testInterpretInstallunit() {
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"}));
-		Installunit tool = new Installunit(
-				new String[] { "testspace", "testtool" });
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
+		Installunit tool = new Installunit(new String[] { "testspace", "testtool" });
 		tool.setVersion(new Version("1.2.3"));
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				tool, null, "version('jdk')", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(tool, null, "version('jdk')", false);
 		Assert.assertEquals("1.6.0", expr.interpret());
 	}
 }

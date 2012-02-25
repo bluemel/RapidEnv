@@ -32,182 +32,179 @@ import org.rapidbeans.core.util.PlatformHelper;
  */
 public class LinefeedControlInputStreamReaderTest {
 
-    /**
-     * Platform specific line feed.
-     */
-    private static String LF_PF = "\n";
+	/**
+	 * Platform specific line feed.
+	 */
+	private static String LF_PF = "\n";
 
-    static {
-        if (PlatformHelper.getOs() == OperatingSystem.windows) {
-            LF_PF = "\r\n";
-        }
-    }
+	static {
+		if (PlatformHelper.getOs() == OperatingSystem.windows) {
+			LF_PF = "\r\n";
+		}
+	}
 
-    /**
-     * Read a file with windows line feeds while preserving.
-     * @throws IOException in case of IO problem
-     */
-    @Test
-    public final void readPreserveWin() throws IOException {
-        LinefeedControlInputStreamReader reader = null;
-        try {
-            reader = new LinefeedControlInputStreamReader(
-                    new File("testdata/ant/ant_win.properties"),
-                    LinefeedControl.preserve);
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = reader.read()) != -1) {
-                buf.append((char) c);
-            }
-            String read = buf.toString();
-            String expected = "V1=Test1\r\n"
-                    + "V2=Test2\r\n"
-                    + "test.dev.location=ismaning\r\n";
-            Assert.assertEquals(expected, read);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
+	/**
+	 * Read a file with windows line feeds while preserving.
+	 * 
+	 * @throws IOException
+	 *             in case of IO problem
+	 */
+	@Test
+	public final void readPreserveWin() throws IOException {
+		if (!(PlatformHelper.getOs() == OperatingSystem.windows)) {
+			return;
+		}
+		LinefeedControlInputStreamReader reader = null;
+		try {
+			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_win.properties"),
+			        LinefeedControl.preserve);
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = reader.read()) != -1) {
+				buf.append((char) c);
+			}
+			String read = buf.toString();
+			String expected = "V1=Test1\r\n" + "V2=Test2\r\n" + "test.dev.location=ismaning\r\n";
+			Assert.assertEquals(expected, read);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
 
-    /**
-     * Read a file with windows line feeds while normalizing.
-     * @throws IOException in case of IO problem
-     */
-    @Test
-    public final void readNormalizeWin() throws IOException {
-        LinefeedControlInputStreamReader reader = null;
-        try {
-            reader = new LinefeedControlInputStreamReader(
-                    new File("testdata/ant/ant_win.properties"),
-                    LinefeedControl.normalize);
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = reader.read()) != -1) {
-                buf.append((char) c);
-            }
-            String read = buf.toString();
-            String expected = "V1=Test1\n"
-                    + "V2=Test2\n"
-                    + "test.dev.location=ismaning\n";
-            Assert.assertEquals(expected, read);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
+	/**
+	 * Read a file with windows line feeds while normalizing.
+	 * 
+	 * @throws IOException
+	 *             in case of IO problem
+	 */
+	@Test
+	public final void readNormalizeWin() throws IOException {
+		LinefeedControlInputStreamReader reader = null;
+		try {
+			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_win.properties"),
+			        LinefeedControl.normalize);
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = reader.read()) != -1) {
+				buf.append((char) c);
+			}
+			String read = buf.toString();
+			String expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			Assert.assertEquals(expected, read);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
 
-    /**
-     * Read a file with windows line feeds while normalizing.
-     * @throws IOException in case of IO problem
-     */
-    @Test
-    public final void readPlatformWin() throws IOException {
-        LinefeedControlInputStreamReader reader = null;
-        try {
-            reader = new LinefeedControlInputStreamReader(
-                    new File("testdata/ant/ant_win.properties"),
-                    LinefeedControl.platform);
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = reader.read()) != -1) {
-                buf.append((char) c);
-            }
-            String read = buf.toString();
-            String expected = "V1=Test1" + LF_PF
-                    + "V2=Test2"  + LF_PF
-                    + "test.dev.location=ismaning" + LF_PF;
-            Assert.assertEquals(expected, read);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
+	/**
+	 * Read a file with windows line feeds while normalizing.
+	 * 
+	 * @throws IOException
+	 *             in case of IO problem
+	 */
+	@Test
+	public final void readPlatformWin() throws IOException {
+		LinefeedControlInputStreamReader reader = null;
+		try {
+			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_win.properties"),
+			        LinefeedControl.platform);
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = reader.read()) != -1) {
+				buf.append((char) c);
+			}
+			String read = buf.toString();
+			String expected = "V1=Test1" + LF_PF + "V2=Test2" + LF_PF + "test.dev.location=ismaning" + LF_PF;
+			Assert.assertEquals(expected, read);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
 
-    /**
-     * Read a file with windows line feeds while preserving.
-     * @throws IOException in case of IO problem
-     */
-    @Test
-    public final void readPreserveNorm() throws IOException {
-        LinefeedControlInputStreamReader reader = null;
-        try {
-            reader = new LinefeedControlInputStreamReader(
-                    new File("testdata/ant/ant_norm.properties"),
-                    LinefeedControl.preserve);
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = reader.read()) != -1) {
-                buf.append((char) c);
-            }
-            String read = buf.toString();
-            String expected = "V1=Test1\n"
-                    + "V2=Test2\n"
-                    + "test.dev.location=ismaning\n";
-            Assert.assertEquals(expected, read);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
+	/**
+	 * Read a file with windows line feeds while preserving.
+	 * 
+	 * @throws IOException
+	 *             in case of IO problem
+	 */
+	@Test
+	public final void readPreserveNorm() throws IOException {
+		LinefeedControlInputStreamReader reader = null;
+		try {
+			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_norm.properties"),
+			        LinefeedControl.preserve);
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = reader.read()) != -1) {
+				buf.append((char) c);
+			}
+			String read = buf.toString();
+			String expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			Assert.assertEquals(expected, read);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
 
-    /**
-     * Read a file with windows line feeds while normalizing.
-     * @throws IOException in case of IO problem
-     */
-    @Test
-    public final void readNormalizeNorm() throws IOException {
-        LinefeedControlInputStreamReader reader = null;
-        try {
-            reader = new LinefeedControlInputStreamReader(
-                    new File("testdata/ant/ant_norm.properties"),
-                    LinefeedControl.normalize);
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = reader.read()) != -1) {
-                buf.append((char) c);
-            }
-            String read = buf.toString();
-            String expected = "V1=Test1\n"
-                    + "V2=Test2\n"
-                    + "test.dev.location=ismaning\n";
-            Assert.assertEquals(expected, read);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
+	/**
+	 * Read a file with windows line feeds while normalizing.
+	 * 
+	 * @throws IOException
+	 *             in case of IO problem
+	 */
+	@Test
+	public final void readNormalizeNorm() throws IOException {
+		LinefeedControlInputStreamReader reader = null;
+		try {
+			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_norm.properties"),
+			        LinefeedControl.normalize);
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = reader.read()) != -1) {
+				buf.append((char) c);
+			}
+			String read = buf.toString();
+			String expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			Assert.assertEquals(expected, read);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
 
-    /**
-     * Read a file with windows line feeds while normalizing.
-     * @throws IOException in case of IO problem
-     */
-    @Test
-    public final void readPlatformNorm() throws IOException {
-        LinefeedControlInputStreamReader reader = null;
-        try {
-            reader = new LinefeedControlInputStreamReader(
-                    new File("testdata/ant/ant_norm.properties"),
-                    LinefeedControl.platform);
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = reader.read()) != -1) {
-                buf.append((char) c);
-            }
-            String read = buf.toString();
-            String expected = "V1=Test1" + LF_PF
-                    + "V2=Test2"  + LF_PF
-                    + "test.dev.location=ismaning" + LF_PF;
-            Assert.assertEquals(expected, read);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
+	/**
+	 * Read a file with windows line feeds while normalizing.
+	 * 
+	 * @throws IOException
+	 *             in case of IO problem
+	 */
+	@Test
+	public final void readPlatformNorm() throws IOException {
+		LinefeedControlInputStreamReader reader = null;
+		try {
+			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_norm.properties"),
+			        LinefeedControl.platform);
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = reader.read()) != -1) {
+				buf.append((char) c);
+			}
+			String read = buf.toString();
+			String expected = "V1=Test1" + LF_PF + "V2=Test2" + LF_PF + "test.dev.location=ismaning" + LF_PF;
+			Assert.assertEquals(expected, read);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
 }

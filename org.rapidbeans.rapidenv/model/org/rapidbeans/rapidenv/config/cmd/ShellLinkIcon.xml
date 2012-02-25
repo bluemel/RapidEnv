@@ -25,20 +25,20 @@
 		of your development environment.</description>
 
 	<property name="title" type="string"
-		mandatory="true">
+		mandatory="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The title of your icon</description>
 	</property>
 
 	<property name="executable" type="string"
 		mandatory="true"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The program or shell command to execute.</description>
 	</property>
 
 	<property name="executionmode" type="choice"
 		enum="ShellLinkExecutionMode"
-		default="simple"
-		>
+		default="simple">
 		<description>The mode how to execute the executable.</description>
 	</property>
 
@@ -49,12 +49,12 @@
 	</property>
 
 	<property name="executein" type="string"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The directory where to execute the program or shell command</description>
 	</property>
 
 	<property name="iconfile" type="string"
-		>
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The icon file to show</description>
 	</property>
 

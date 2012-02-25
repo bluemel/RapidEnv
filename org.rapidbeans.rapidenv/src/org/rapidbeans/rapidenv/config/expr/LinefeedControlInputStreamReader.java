@@ -28,74 +28,72 @@ import org.rapidbeans.rapidenv.RapidEnvException;
 
 /**
  * Reads an input stream while adapting / converting line feed characters.
- *
+ * 
  * @author Martin Bluemel
  */
 public class LinefeedControlInputStreamReader extends InputStreamReader {
 
-    private boolean firstChar = true;
-    private LinefeedControl linefeedControl = null;
+	private boolean firstChar = true;
 
-    private int bufferedChar = -1;
+	private LinefeedControl linefeedControl = null;
 
-    private int generatedChar = -1;
+	private int bufferedChar = -1;
 
-    public LinefeedControlInputStreamReader(final File inputFile,
-            final LinefeedControl ctrl)
-            throws FileNotFoundException {
-        super(new FileInputStream(inputFile));
-        this.linefeedControl = ctrl;
-    }
+	private int generatedChar = -1;
 
-    public int read() throws IOException {
-        int currentChar;
-        if (this.firstChar) {
-            currentChar = super.read();
-            this.bufferedChar = super.read();
-            this.firstChar = false;
-        } else {
-            if (this.generatedChar == -1) {
-                currentChar = this.bufferedChar;
-                this.bufferedChar = super.read();
-            } else {
-                currentChar = this.generatedChar;
-                this.generatedChar = -1;
-            }                
-        }
+	public LinefeedControlInputStreamReader(final File inputFile, final LinefeedControl ctrl)
+	        throws FileNotFoundException {
+		super(new FileInputStream(inputFile));
+		this.linefeedControl = ctrl;
+	}
 
-        switch (this.linefeedControl) {
-        case normalize:
-            if (currentChar == '\r' && this.bufferedChar == '\n') {
-                currentChar = '\n';
-                this.bufferedChar = super.read();
-            }
-            break;
-        case platform:
-            switch (PlatformHelper.getOs()) {
-            case windows:
-                if (this.bufferedChar == '\n' && currentChar != '\r') {
-                    this.generatedChar = '\r';
-                }
-                break;
-            case linux:
-                if (currentChar == '\r' && this.bufferedChar == '\n') {
-                    currentChar = '\n';
-                    this.bufferedChar = super.read();
-                }
-                break;
-            default:
-                throw new RapidEnvException("Operating system \""
-                        + PlatformHelper.getOs().name()
-                        + "\" not yet supported");
-            }
-            break;
-        case preserve:
-            // do nothing
-            break;
-        default:
-            throw new RapidEnvException("Unknown linefeed control type \""
-                    + this.linefeedControl.name() + "\".");
-        }
-        return currentChar;
-    }
+	public int read() throws IOException {
+		int currentChar;
+		if (this.firstChar) {
+			currentChar = super.read();
+			this.bufferedChar = super.read();
+			this.firstChar = false;
+		} else {
+			if (this.generatedChar == -1) {
+				currentChar = this.bufferedChar;
+				this.bufferedChar = super.read();
+			} else {
+				currentChar = this.generatedChar;
+				this.generatedChar = -1;
+			}
+		}
+
+		switch (this.linefeedControl) {
+		case normalize:
+			if (currentChar == '\r' && this.bufferedChar == '\n') {
+				currentChar = '\n';
+				this.bufferedChar = super.read();
+			}
+			break;
+		case platform:
+			switch (PlatformHelper.getOs()) {
+			case windows:
+				if (this.bufferedChar == '\n' && currentChar != '\r') {
+					this.generatedChar = '\r';
+				}
+				break;
+			case linux:
+				if (currentChar == '\r' && this.bufferedChar == '\n') {
+					currentChar = '\n';
+					this.bufferedChar = super.read();
+				}
+				break;
+			default:
+				throw new RapidEnvException("Operating system \"" + PlatformHelper.getOs().name()
+				        + "\" not yet supported");
+			}
+			break;
+		case preserve:
+			// do nothing
+			break;
+		default:
+			throw new RapidEnvException("Unknown linefeed control type \"" + this.linefeedControl.name() + "\".");
+		}
+		return currentChar;
+	}
 }

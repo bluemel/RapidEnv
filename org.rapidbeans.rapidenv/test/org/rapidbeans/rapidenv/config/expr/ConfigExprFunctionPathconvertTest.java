@@ -40,14 +40,13 @@ public class ConfigExprFunctionPathconvertTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-        if (!new File("profile").exists()) {
-            new File("profile").mkdir();
-        }
-        FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		if (!new File("profile").exists()) {
+			new File("profile").mkdir();
+		}
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
-		new RapidEnvInterpreter(new CmdRenv(new String[]{
-				"-env", "testdata/env/env.xml", "s"})).setPropertyValue(
-				"test.dir", "/home/martin");
+		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" })).setPropertyValue(
+		        "test.dir", "/home/martin");
 	}
 
 	@AfterClass
@@ -62,9 +61,8 @@ public class ConfigExprFunctionPathconvertTest {
 	@Test
 	public void interpretWithVarExtension() {
 		Installunit unit = new Installunit("test");
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(unit, null,
-				"pathconvert(${test.dir}'/xxx/yyy/zzz.txt', '/')",
-				false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(unit, null, "pathconvert(${test.dir}'/xxx/yyy/zzz.txt', '/')",
+		        false);
 		Assert.assertEquals("/home/martin/xxx/yyy/zzz.txt", expr.interpret());
 	}
 
@@ -74,12 +72,9 @@ public class ConfigExprFunctionPathconvertTest {
 	 */
 	@Test
 	public void interpretPlatformSpecific() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				null, null,
-				"a pathconvert('C:\\a\\b\\c')", false);
-		Assert.assertEquals("a C:" + File.separator + "a"
-				+ File.separator + "b" + File.separator + "c",
-				expr.interpret());
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "a pathconvert('C:\\a\\b\\c')", false);
+		Assert.assertEquals("a C:" + File.separator + "a" + File.separator + "b" + File.separator + "c",
+		        expr.interpret());
 	}
 
 	/**
@@ -87,10 +82,7 @@ public class ConfigExprFunctionPathconvertTest {
 	 */
 	@Test
 	public void interpretSlash() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				null, null,
-				"a pathconvert('C:\\a/b\\c', '/')",
-				false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "a pathconvert('C:\\a/b\\c', '/')", false);
 		Assert.assertEquals("a C:/a/b/c", expr.interpret());
 	}
 
@@ -99,10 +91,7 @@ public class ConfigExprFunctionPathconvertTest {
 	 */
 	@Test
 	public void interpretBackslash() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				null, null,
-				"a pathconvert('C:/a\\b/c', '\\')",
-				false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "a pathconvert('C:/a\\b/c', '\\')", false);
 		Assert.assertEquals("a C:\\a\\b\\c", expr.interpret());
 	}
 
@@ -111,10 +100,7 @@ public class ConfigExprFunctionPathconvertTest {
 	 */
 	@Test
 	public void interpretBackslashEsc() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				null, null,
-				"a pathconvert('C:/a\\\\b/c', '\\\\')",
-				true);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(null, null, "a pathconvert('C:/a\\\\b/c', '\\\\')", true);
 		Assert.assertEquals("a C:\\a\\b\\c", expr.interpret());
 	}
 
@@ -125,8 +111,7 @@ public class ConfigExprFunctionPathconvertTest {
 	@Test(expected = RapidEnvException.class)
 	public void interpretSeparatorCharEmpty() {
 		try {
-			new ConfigExprTopLevel(new Installunit("xyz"), null,
-					"a pathconvert('C:/a\\b/c', '')", false);
+			new ConfigExprTopLevel(new Installunit("xyz"), null, "a pathconvert('C:/a\\b/c', '')", false);
 		} catch (RapidEnvException e) {
 			Exception eNest1 = (Exception) e.getCause();
 			Assert.assertSame(InvocationTargetException.class, eNest1.getClass());
@@ -140,12 +125,10 @@ public class ConfigExprFunctionPathconvertTest {
 	 * Test with a to long separator char ("##") given.<br>
 	 * Only a string with one character is valid.
 	 */
-	@Test(expected=RapidEnvException.class)
+	@Test(expected = RapidEnvException.class)
 	public void interpretSeparatorCharTooLong() {
 		try {
-			new ConfigExprTopLevel(new Installunit("xyz"),
-					null, "a pathconvert('C:/a\\b/c','##')",
-					false);
+			new ConfigExprTopLevel(new Installunit("xyz"), null, "a pathconvert('C:/a\\b/c','##')", false);
 		} catch (RapidEnvException e) {
 			Exception eNest1 = (Exception) e.getCause();
 			Assert.assertSame(InvocationTargetException.class, eNest1.getClass());

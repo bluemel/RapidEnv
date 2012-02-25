@@ -51,7 +51,8 @@ If ist is undefined the configuration is valid for all platforms without specifi
 		<description>Set this value to true if you want to use expression literal escaping</description>
 	</property>
 
-	<property name="cleanupfilesonconfig" type="string">
+	<property name="cleanupfilesonconfig" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>Defines a comma separated list of files that will be deleted
 after this configuration has been performed</description>
 	</property>

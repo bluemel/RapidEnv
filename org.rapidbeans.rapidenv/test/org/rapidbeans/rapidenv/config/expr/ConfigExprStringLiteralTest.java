@@ -26,70 +26,56 @@ public class ConfigExprStringLiteralTest {
 
 	@Test
 	public void testInterpret() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null,
-				"xxx''hostname()yyy''pathconvert('/a\\b/c', '/')zzz",
-				false);
-		Assert.assertEquals("xxx"
-				+ PlatformHelper.hostname()
-				+ "yyy"
-				+ "/a/b/c"
-		        + "zzz", expr.interpret());
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null,
+		        "xxx''hostname()yyy''pathconvert('/a\\b/c', '/')zzz", false);
+		Assert.assertEquals("xxx" + PlatformHelper.hostname() + "yyy" + "/a/b/c" + "zzz", expr.interpret());
 	}
 
-    @Test
-    public void testConstantLiteral() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "xxx'yyy'zzz", false);
-        Assert.assertEquals("xxxyyyzzz", expr.interpret());
-    }
+	@Test
+	public void testConstantLiteral() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx'yyy'zzz", false);
+		Assert.assertEquals("xxxyyyzzz", expr.interpret());
+	}
 
-    @Test
-    public void testEscapingAposthrophOuter() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "xxx\\'yyy'\\zzz", false);
-        Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
-    }
+	@Test
+	public void testEscapingAposthrophOuter() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx\\'yyy'\\zzz", false);
+		Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
+	}
 
-    @Test
-    public void testEscapingApostrophLiteral() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "'xxx\\'yyy\\'zzz'", true);
-        Assert.assertEquals("xxx'yyy'zzz", expr.interpret());
-    }
+	@Test
+	public void testEscapingApostrophLiteral() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "'xxx\\'yyy\\'zzz'", true);
+		Assert.assertEquals("xxx'yyy'zzz", expr.interpret());
+	}
 
-    @Test
-    public void testInterpretBackslashSingleOuter() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "xxx\\yyy\\zzz", false);
-        Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
-    }
+	@Test
+	public void testInterpretBackslashSingleOuter() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx\\yyy\\zzz", false);
+		Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
+	}
 
-    @Test
-    public void testInterpretBackslashSingleLiteral() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "'xxx\\yyy\\zzz'", false);
-        Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
-    }
+	@Test
+	public void testInterpretBackslashSingleLiteral() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "'xxx\\yyy\\zzz'", false);
+		Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
+	}
 
-    @Test
-    public void testEscapingBackslashOuter() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "xxx\\yyy\\zzz", false);
-        Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
-    }
+	@Test
+	public void testEscapingBackslashOuter() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx\\yyy\\zzz", false);
+		Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
+	}
 
-    @Test
-    public void testEscapingBackslashLiteral() {
-        ConfigExprTopLevel expr = new ConfigExprTopLevel(
-                new Installunit("jdk"), null, "'xxx\\\\yyy\\\\zzz'", true);
-        Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
-    }
+	@Test
+	public void testEscapingBackslashLiteral() {
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "'xxx\\\\yyy\\\\zzz'", true);
+		Assert.assertEquals("xxx\\yyy\\zzz", expr.interpret());
+	}
 
 	@Test
 	public void testExprString() {
-		ConfigExprTopLevel expr = new ConfigExprTopLevel(
-				new Installunit("jdk"), null, "xxx${V1}'yyy${V2}zzz'", false);
+		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null, "xxx${V1}'yyy${V2}zzz'", false);
 		Assert.assertEquals(3, expr.getChilds().size());
 		Assert.assertSame(ConfigExprStringLiteral.class, expr.getChilds().get(0).getClass());
 		Assert.assertSame(ConfigExprProperty.class, expr.getChilds().get(1).getClass());

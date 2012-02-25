@@ -30,78 +30,78 @@ import org.rapidbeans.rapidenv.config.PropertyValueType;
 
 public class ConfigExprFunctionSubstractextensions extends RapidBeanBaseConfigExprFunctionSubstractextensions {
 
-    /**
-    * The interpreting method determines the user name platform independently.<br>
-    * The user name determination is done by over Java system property user.name
-    * 
-    * @return the interpreted path expression
-    */
-    public String interpret() {
-        final Property prop = this.getEnclosingProperty();
-        if (prop == null) {
-            throw new RapidEnvException("ERROR while trying to interpret expression."
-                    + "\n  No enclosing property defined");
-        }
-        if (prop.getValuetype() != PropertyValueType.path) {
-            throw new RapidEnvException("ERROR while trying to interpret expression."
-                    + "\n  Enclosing property is no \"path\" property."
-                    + "\n  The function substractextensions is only valid to apply in the context of paths.");
-        }
-        final String path = this.getArgs().get(0).interpret();
-        final List<String> pathElements = StringHelper.split(path, File.pathSeparator);
-        if (pathElements.size() == 0) {
-            return "";
-        }
-        for (final PropertyExtension pe : prop.getExtensions()) {
-            if (pathElements.size() == 0) {
-                return "";
-            }
-            final String pevalue = prop.normalize(pe.getValue());
-            final int index = pathElements.indexOf(pevalue);
-            if (index != -1) {
-                pathElements.remove(index);
-            }
-        }
-        final StringBuffer result = new StringBuffer();
-        for (int i = 0; i < pathElements.size(); i++) {
-            if (i > 0) {
-                result.append(File.pathSeparator);
-            }
-            result.append(pathElements.get(i));
-        }
-        return result.toString();
-    }
+	/**
+	 * The interpreting method determines the user name platform independently.<br>
+	 * The user name determination is done by over Java system property
+	 * user.name
+	 * 
+	 * @return the interpreted path expression
+	 */
+	public String interpret() {
+		final Property prop = this.getEnclosingProperty();
+		if (prop == null) {
+			throw new RapidEnvException("ERROR while trying to interpret expression."
+			        + "\n  No enclosing property defined");
+		}
+		if (prop.getValuetype() != PropertyValueType.path) {
+			throw new RapidEnvException("ERROR while trying to interpret expression."
+			        + "\n  Enclosing property is no \"path\" property."
+			        + "\n  The function substractextensions is only valid to apply in the context of paths.");
+		}
+		final String path = this.getArgs().get(0).interpret();
+		final List<String> pathElements = StringHelper.split(path, File.pathSeparator);
+		if (pathElements.size() == 0) {
+			return "";
+		}
+		for (final PropertyExtension pe : prop.getExtensions()) {
+			if (pathElements.size() == 0) {
+				return "";
+			}
+			final String pevalue = prop.normalize(pe.getValue());
+			final int index = pathElements.indexOf(pevalue);
+			if (index != -1) {
+				pathElements.remove(index);
+			}
+		}
+		final StringBuffer result = new StringBuffer();
+		for (int i = 0; i < pathElements.size(); i++) {
+			if (i > 0) {
+				result.append(File.pathSeparator);
+			}
+			result.append(pathElements.get(i));
+		}
+		return result.toString();
+	}
 
-    /**
-     * The constructor for the substractextensions Function Expression.
-     * 
-     * @param enclosingUnit
-     *            the enclosing install unit instance or null if property
-     * @param enclosingProp
-     *            the enclosing property instance or null if install unit
-     * @param funcContent
-     *            function parameter list. Must be empty for Hostname
-     *            Function Expressions.
-     * @param escapeLiterals
-     *            if escaping literals is desired or not
-     */
-    public ConfigExprFunctionSubstractextensions(final Installunit enclosingUnit,
-            final Property enclosingProp, final String funcContent,
-			final Boolean escapeLiterals) {
-        super();
-        init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
-    }
+	/**
+	 * The constructor for the substractextensions Function Expression.
+	 * 
+	 * @param enclosingUnit
+	 *            the enclosing install unit instance or null if property
+	 * @param enclosingProp
+	 *            the enclosing property instance or null if install unit
+	 * @param funcContent
+	 *            function parameter list. Must be empty for Hostname Function
+	 *            Expressions.
+	 * @param escapeLiterals
+	 *            if escaping literals is desired or not
+	 */
+	public ConfigExprFunctionSubstractextensions(final Installunit enclosingUnit, final Property enclosingProp,
+	        final String funcContent, final Boolean escapeLiterals) {
+		super();
+		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
+	}
 
-    /**
-     * the bean's type (class variable).
-     */
-    private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionSubstractextensions.class);
+	/**
+	 * the bean's type (class variable).
+	 */
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionSubstractextensions.class);
 
-    /**
-     * @return the bean's type
-     */
-    @Override
-    public TypeRapidBean getType() {
-        return type;
-    }
+	/**
+	 * @return the bean's type
+	 */
+	@Override
+	public TypeRapidBean getType() {
+		return type;
+	}
 }

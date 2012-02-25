@@ -32,7 +32,8 @@ Creates the node if not already present. Caution only use node creation for uniq
 	</property>
 
 	<property name="value" type="string"
-		mandatory="true">
+		mandatory="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The property value to set.</description>
 	</property>
 	
