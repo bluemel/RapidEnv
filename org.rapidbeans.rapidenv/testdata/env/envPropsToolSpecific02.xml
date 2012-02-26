@@ -31,7 +31,7 @@
 		<property name="data" category="personal"
 			valuetype="file"
 			value="testdata/testinstall/OtherappData"
-			filetype="directory" mustExist="true" createIfNotExist="true"
+			filetype="directory" mustExist="false"
 			>
 			<description>A directory tool &quot;otherapp&quot; urgently needs</description>
 			<environment name="OTHERAPP_DATA"/>

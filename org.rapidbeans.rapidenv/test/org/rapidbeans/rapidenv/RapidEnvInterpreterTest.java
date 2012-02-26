@@ -619,7 +619,7 @@ public class RapidEnvInterpreterTest {
 			RapidEnvInterpreter.clearInstance();
 
 			// install that stuff
-			sin = new SequenceInputStream(new InputStreamLines(new String[] { "/a/b/c", "" }));
+			sin = new SequenceInputStream(new InputStreamLines(new String[] { "/a/b/c" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific02.xml",
