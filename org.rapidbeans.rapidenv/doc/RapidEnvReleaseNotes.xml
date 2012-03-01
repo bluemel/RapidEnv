@@ -48,7 +48,7 @@
 				<para><emphasis role="bold">Introduced install state data file ".renvstate.xml"</emphasis>
 				in order to persist the installation state and to make install unit home directories
 				independent from the name/version convention.
-				<emphasis role="bold">Please not: this change requires migration of existing environment.</emphasis>
+				<emphasis role="bold">Please note: this change requires migration of existing environment.</emphasis>
 				Migration should happen automatically during the first "renv" call.
 				If not simply install the installation unit again.
 				</para>
