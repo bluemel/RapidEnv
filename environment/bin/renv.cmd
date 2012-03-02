@@ -39,18 +39,19 @@ set RAPID_ENV_PROFILE=%RAPID_ENV_PROFILES_HOME%\renv_%USERNAME%_%COMPUTERNAME%
 set JAVA=java
 if exist "%ProgramFiles%\Java\jre5\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre5\bin\java.exe
 if exist "%ProgramFiles%\Java\jre6\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre6\bin\java.exe
-if "%JAVA%" == "java" echo WARNING no standard JRE 5 or 6 installation found
+if exist "%ProgramFiles%\Java\jre7\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre7\bin\java.exe
+if "%JAVA%" == "java" echo WARNING no standard JRE 5 or 6 or 7 installation found
 if "%1" == "-v" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 
 :# RAPID_ENV_COMMAND is the JVM call to execute the "renv" command
-set RAPID_ENV_COMMAND="%JAVA%" -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.3.0.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\rapidbeans-framework-0.9.4.jar
+set RAPID_ENV_COMMAND="%JAVA%" -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.3.1.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\rapidbeans-framework-0.9.5.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\ant-1.8.2.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
 
 :# if there is not already an RapidEnv profile for this user and this host do the set up
-if not exist "%RAPID_ENV_PROFILE%.cmd" call :SETUPENV
+if not exist "%RAPID_ENV_PROFILE%.cmd" call :SETUPENV %*
 if not exist "%RAPID_ENV_PROFILE%.cmd" echo RapidEnv ERROR: boot error, %RAPID_ENV_PROFILE%.cmd not created.& goto END
 
 :# source the RapidEnv profile
@@ -68,7 +69,20 @@ goto END
 
 
 :SETUPENV
-call %RAPID_ENV_COMMAND% boot
+
+:SETUPENV_LOOP
+if "%1" == "" goto SETUPENV_CONT1
+if "%1" == "-yes" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -yes
+if "%1" == "-y" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -yes
+if "%1" == "-verbose" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -verbose
+if "%1" == "-v" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -verbose
+if "%1" == "-debug" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -debug
+if "%1" == "-d" set RAPID_ENV_OPTIONS=%RAPID_ENV_OPTIONS% -debug
+shift
+goto SETUPENV_LOOP
+
+:SETUPENV_CONT1
+call %RAPID_ENV_COMMAND% %RAPID_ENV_OPTIONS% boot
 if not %ERRORLEVEL% == 0 echo ERROR %ERRORLEVEL% during execution of renv.cmd& goto END
 if not exist "%RAPID_ENV_PROFILE%.cmd" goto :EOF
 
