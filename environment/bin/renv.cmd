@@ -45,7 +45,10 @@ if "%1" == "-v" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 
 :# RAPID_ENV_COMMAND is the JVM call to execute the "renv" command
-set RAPID_ENV_COMMAND="%JAVA%" -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.3.1.jar
+set RAPID_ENV_COMMAND="%JAVA%"
+if defined HTTP_PROXY_HOST set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyHost=%HTTP_PROXY_HOST%
+if defined HTTP_PROXY_PORT set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyPort=%HTTP_PROXY_PORT%
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.3.1.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\rapidbeans-framework-0.9.5.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\ant-1.8.2.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
