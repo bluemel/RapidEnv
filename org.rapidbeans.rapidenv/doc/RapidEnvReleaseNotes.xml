@@ -67,6 +67,9 @@
 			<listitem>
 				<para><emphasis role="bold">Improved HTTP download speed by factor 4</emphasis></para>
 			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Improved local and share file copy speed for large files on Windows</emphasis></para>
+			</listitem>
 		</itemizedlist>
 	</sect2>
 	</sect1>
