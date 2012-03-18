@@ -413,8 +413,6 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						removeLocalsourcefile = true;
 					}
 					if (!localsourcefile.exists()) {
-						RapidEnvInterpreter.getInstance().getOut()
-								.println("@@@@@@@@@@@@@@@@@@@@@@@@@");
 						RapidEnvInterpreter.log(
 								Level.FINE,
 								"Local source file \""
@@ -700,14 +698,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 							+ "\\system32\\cmd.exe");
 				}
 				if (robocopy) {
-					System.out.println("ROBO");
+					RapidEnvInterpreter.log(Level.FINE, "Using robopy");
 					syscmd.addArgument(new Argument(src.getParent().replace(
 							'/', '\\')));
 					syscmd.addArgument(new Argument(tgt.getParent().replace(
 							'/', '\\')));
 					syscmd.addArgument(new Argument(src.getName()));
 				} else {
-					System.out.println("COPY");
+					RapidEnvInterpreter.log(Level.FINE,
+							"Using \"copy\" command");
 					syscmd.addArgument(new Argument("/C"));
 					syscmd.addArgument(new Argument("copy /Y "
 							+ src.getAbsolutePath().replace('/', '\\') + " "
@@ -752,14 +751,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 				break;
 			default:
-				System.out.println("JAVA");
+				RapidEnvInterpreter.log(Level.FINE, "Using Java copy");
 				FileHelper.copyFile(src, tgt);
 				break;
 			}
 		} else if (nativeCopy && src.length() > 10000) {
 			switch (PlatformHelper.getOs()) {
 			case windows:
-				System.out.println("COPY");
+				RapidEnvInterpreter.log(Level.FINE, "Using \"copy\" command");
 				final SystemCommand syscmd = new SystemCommand();
 				syscmd.setExecutable(System.getenv("SystemRoot")
 						+ "\\system32\\cmd.exe");
@@ -776,12 +775,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 				break;
 			default:
-				System.out.println("JAVA");
+				RapidEnvInterpreter.log(Level.FINE, "Using Java copy");
 				FileHelper.copyFile(src, tgt);
 				break;
 			}
 		} else {
-			System.out.println("JAVA");
+			RapidEnvInterpreter.log(Level.FINE, "Using Java copy");
 			FileHelper.copyFile(src, tgt);
 		}
 	}
