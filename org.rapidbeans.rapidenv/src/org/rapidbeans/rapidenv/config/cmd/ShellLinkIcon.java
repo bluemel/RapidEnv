@@ -98,9 +98,12 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			File startMenuFolder = null;
 			switch (PlatformHelper.getOs()) {
 			case windows:
-				startMenuFolder = new File(System.getenv("USERPROFILE")
-						+ File.separator + "Start Menu" + File.separator
-						+ project.getName() + File.separator + project.getTag());
+				startMenuFolder = new File(ShellLinkWindows
+						.getStartMenuFolder().getAbsolutePath()
+						+ File.separator
+						+ project.getName()
+						+ File.separator
+						+ project.getTag());
 				break;
 			case linux:
 				startMenuFolder = new File(System.getenv("HOME")
