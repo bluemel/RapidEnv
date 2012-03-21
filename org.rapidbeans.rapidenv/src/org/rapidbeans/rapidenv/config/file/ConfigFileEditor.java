@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,18 +128,22 @@ public abstract class ConfigFileEditor {
 		if (!this.file.exists() && this.createIfNotExists) {
 			try {
 				if (!this.file.createNewFile()) {
-					throw new RapidEnvException("Error while trying to create new file \""
-					        + this.file.getAbsolutePath() + "\"");
+					throw new RapidEnvException(
+							"Error while trying to create new file \""
+									+ this.file.getAbsolutePath() + "\"");
 				}
 			} catch (IOException e) {
-				throw new RapidEnvException("Exception while trying to create new file \""
-				        + this.file.getAbsolutePath() + "\"", e);
+				throw new RapidEnvException(
+						"Exception while trying to create new file \""
+								+ this.file.getAbsolutePath() + "\"", e);
 			}
 		}
 		ArrayList<String> lines = new ArrayList<String>();
 		LineNumberReader rd = null;
 		try {
-			rd = new LineNumberReader(new InputStreamReader(new FileInputStream(this.file)));
+			rd = new LineNumberReader(new InputStreamReader(
+					new FileInputStream(this.file), this.configfile
+							.getEncoding().name()));
 			String line;
 			int i = 0;
 			while ((line = rd.readLine()) != null) {
@@ -173,12 +178,15 @@ public abstract class ConfigFileEditor {
 		}
 		PrintWriter wr = null;
 		try {
-			wr = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.file)));
+			wr = new PrintWriter(new OutputStreamWriter(new FileOutputStream(
+					this.file), this.configfile.getEncoding().name()));
 
 			for (int i = 0; i < lines.size(); i++) {
 				wr.println((String) lines.get(i));
 			}
 		} catch (FileNotFoundException e) {
+			throw new RapidEnvException(e);
+		} catch (UnsupportedEncodingException e) {
 			throw new RapidEnvException(e);
 		} finally {
 			if (wr != null) {
