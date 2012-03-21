@@ -196,7 +196,6 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 	private boolean checkShellLink(final boolean execute, final String title,
 			final File shellLinkFolder) {
 
-		final File executeInFolder = new File(getExecutein());
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter
 				.getInstance();
 		File executable = getExecutableAsFile();
@@ -276,6 +275,16 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		if (configArgs != null) {
 			for (final Argument arg : configArgs) {
 				args.add(arg);
+			}
+		}
+
+		File executeInFolder = null;
+		if (getExecutein() != null && getExecutein().length() > 0) {
+			executeInFolder = new File(getExecutein());
+		} else {
+			executeInFolder = executable.getParentFile();
+			if ((!executeInFolder.exists()) || (!executeInFolder.isDirectory())) {
+				executeInFolder = getParentInstallunit().getHomedirAsFile();
 			}
 		}
 
@@ -420,7 +429,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		}
 
 		if (ok) {
-			if (newArgumentsCount != shellLink.getArguments().size()) {
+			if (newArgumentsCount != oldArgumentsCount) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title
 						+ "\" needs to be updated" + " in folder \""
