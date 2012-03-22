@@ -698,14 +698,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 							+ "\\system32\\cmd.exe");
 				}
 				if (robocopy) {
-					RapidEnvInterpreter.log(Level.FINE, "Using robopy");
+					RapidEnvInterpreter.log(Level.FINER, "Using robopy");
 					syscmd.addArgument(new Argument(src.getParent().replace(
 							'/', '\\')));
 					syscmd.addArgument(new Argument(tgt.getParent().replace(
 							'/', '\\')));
 					syscmd.addArgument(new Argument(src.getName()));
 				} else {
-					RapidEnvInterpreter.log(Level.FINE,
+					RapidEnvInterpreter.log(Level.FINER,
 							"Using \"copy\" command");
 					syscmd.addArgument(new Argument("/C"));
 					syscmd.addArgument(new Argument("copy /Y "
@@ -717,7 +717,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				if (robocopy) {
 					if (result.getReturncode() != 0
 							&& result.getReturncode() != 1) {
-						throw new RapidEnvException("Faild to copy file \""
+						throw new RapidEnvException("Failed to copy file \""
 								+ src.getAbsolutePath() + "\" to \""
 								+ tgt.getAbsolutePath() + "\"");
 					}
@@ -751,14 +751,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 				break;
 			default:
-				RapidEnvInterpreter.log(Level.FINE, "Using Java copy");
+				RapidEnvInterpreter.log(Level.FINER, "Using Java copy");
 				FileHelper.copyFile(src, tgt);
 				break;
 			}
 		} else if (nativeCopy && src.length() > 10000) {
 			switch (PlatformHelper.getOs()) {
 			case windows:
-				RapidEnvInterpreter.log(Level.FINE, "Using \"copy\" command");
+				RapidEnvInterpreter.log(Level.FINER, "Using \"copy\" command");
 				final SystemCommand syscmd = new SystemCommand();
 				syscmd.setExecutable(System.getenv("SystemRoot")
 						+ "\\system32\\cmd.exe");
@@ -769,19 +769,71 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				syscmd.setSilent(true);
 				final CommandExecutionResult result = syscmd.execute();
 				if (result.getReturncode() != 0) {
-					throw new RapidEnvException("Faild to copy file \""
+					throw new RapidEnvException("Failed to copy file \""
 							+ src.getAbsolutePath() + "\" to \""
 							+ tgt.getAbsolutePath() + "\"");
 				}
 				break;
 			default:
-				RapidEnvInterpreter.log(Level.FINE, "Using Java copy");
+				RapidEnvInterpreter.log(Level.FINER, "Using Java copy");
 				FileHelper.copyFile(src, tgt);
 				break;
 			}
 		} else {
-			RapidEnvInterpreter.log(Level.FINE, "Using Java copy");
+			RapidEnvInterpreter.log(Level.FINER, "Using Java copy");
 			FileHelper.copyFile(src, tgt);
+		}
+	}
+
+	protected static void renameFile(final File from, final File to,
+			final String errorMessage) {
+		switch (PlatformHelper.getOs()) {
+		case windows:
+			if (from.isDirectory()) {
+				SystemCommand syscmd = new SystemCommand();
+				syscmd.setExecutable("robocopy.exe");
+				if (syscmd.getExecutableAsFile().exists()) {
+					// robocopy /S /E from to
+					RapidEnvInterpreter.log(Level.FINER, "Using robopy");
+					syscmd.addArgument(new Argument("/S"));
+					syscmd.addArgument(new Argument("/E"));
+					syscmd.addArgument(new Argument(from.getAbsolutePath()));
+					syscmd.addArgument(new Argument(to.getAbsolutePath()));
+				} else {
+					syscmd.setExecutable("xcopy.exe");
+					if (syscmd.getExecutableAsFile().exists()) {
+						RapidEnvInterpreter.log(Level.FINER, "Using xcopy");
+						syscmd.addArgument(new Argument("/Q"));
+						syscmd.addArgument(new Argument("/Y"));
+						syscmd.addArgument(new Argument("/S"));
+						syscmd.addArgument(new Argument("/E"));
+						syscmd.addArgument(new Argument(from.getAbsolutePath()));
+						syscmd.addArgument(new Argument(to.getAbsolutePath()
+								+ File.separator));
+					} else {
+						syscmd = null;
+					}
+				}
+				if (syscmd == null) {
+					if (!from.renameTo(to)) {
+						throw new RapidEnvException(errorMessage);
+					}
+				} else {
+					syscmd.setSilent(true);
+					syscmd.execute();
+					FileHelper.deleteDeep(from);
+				}
+			} else {
+				if (!from.renameTo(to)) {
+					throw new RapidEnvException(errorMessage);
+				}
+			}
+			break;
+		default:
+			if (!from.renameTo(to)) {
+				throw new RapidEnvException(errorMessage);
+			}
+			break;
 		}
 	}
 
@@ -1275,29 +1327,26 @@ public class Installunit extends RapidBeanBaseInstallunit {
 									+ contentFile.getAbsolutePath()
 									+ "\" to \"" + contentFile.getName()
 									+ ".tmp.rmrdirs" + "\"...");
-					if (contentFile.renameTo(renamedContentFile) == false) {
-						throw new RapidEnvCmdException(
-								"Problems to rename content file \""
-										+ contentFile.getAbsolutePath()
-										+ "\" to name \""
-										+ contentFile.getName()
-										+ ".tmp.rmrdirs" + "\".");
-					}
+					renameFile(
+							contentFile,
+							renamedContentFile,
+							"Problems to rename content file \""
+									+ contentFile.getAbsolutePath()
+									+ "\" to name \"" + contentFile.getName()
+									+ ".tmp.rmrdirs" + "\".");
 					RapidEnvInterpreter.log(
 							Level.FINER,
 							"Moving renamed content file / directory \""
 									+ renamedContentFile.getAbsolutePath()
 									+ "\" below directory \""
 									+ dir.getAbsolutePath() + "\"...");
-					if (renamedContentFile.renameTo(new File(dir,
-							renamedContentFile.getName())) == false) {
-						throw new RapidEnvCmdException(
-								"Problems moving renamed content file / directory \""
-										+ renamedContentFile.getAbsolutePath()
-										+ "\" below directory \""
-										+ dir.getAbsolutePath() + "\"..."
-										+ "\".");
-					}
+					renameFile(
+							renamedContentFile,
+							new File(dir, renamedContentFile.getName()),
+							"Problems moving renamed content file / directory \""
+									+ renamedContentFile.getAbsolutePath()
+									+ "\" below directory \""
+									+ dir.getAbsolutePath() + "\"..." + "\".");
 				} else {
 					RapidEnvInterpreter.log(
 							Level.FINER,
@@ -1305,15 +1354,13 @@ public class Installunit extends RapidBeanBaseInstallunit {
 									+ contentFile.getAbsolutePath()
 									+ "\" below directory \""
 									+ dir.getAbsolutePath() + "\"...");
-					if (contentFile.renameTo(new File(dir, contentFile
-							.getName())) == false) {
-						throw new RapidEnvCmdException(
-								"Problems moving content file / directory \""
-										+ contentFile.getAbsolutePath()
-										+ "\" below directory \""
-										+ dir.getAbsolutePath() + "\"..."
-										+ "\".");
-					}
+					renameFile(
+							contentFile,
+							new File(dir, contentFile.getName()),
+							"Problems moving content file / directory \""
+									+ contentFile.getAbsolutePath()
+									+ "\" below directory \""
+									+ dir.getAbsolutePath() + "\"..." + "\".");
 				}
 			}
 			RapidEnvInterpreter.log(Level.FINER,
@@ -1331,14 +1378,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 								+ renamedMovedContentFile.getAbsolutePath()
 								+ "\" to \"" + rootdirMostUpper.getName()
 								+ "\"...");
-				if (renamedMovedContentFile.renameTo(new File(dir,
-						rootdirMostUpper.getName())) == false) {
-					throw new RapidEnvCmdException(
-							"Problems to rename renamed moved content file \""
-									+ renamedMovedContentFile.getAbsolutePath()
-									+ "\" to name \""
-									+ rootdirMostUpper.getName() + "\".");
-				}
+				renameFile(renamedMovedContentFile, new File(dir,
+						rootdirMostUpper.getName()),
+						"Problems to rename renamed moved content file \""
+								+ renamedMovedContentFile.getAbsolutePath()
+								+ "\" to name \"" + rootdirMostUpper.getName()
+								+ "\".");
 			}
 		}
 	}
