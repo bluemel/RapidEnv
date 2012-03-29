@@ -1587,7 +1587,8 @@ public class RapidEnvInterpreter {
 	/**
 	 * Needed privately and for testing.
 	 * 
-	 * @parameter command the command issued
+	 * @param command
+	 *            the command issued
 	 */
 	protected void initPropertiesAndInstallunitsToProcess(
 			final CmdRenvCommand command) {

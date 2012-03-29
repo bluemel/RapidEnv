@@ -1236,7 +1236,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	/**
 	 * Determines the installation status of this install unit.
 	 * 
-	 * @parameter command the command as working context
+	 * @param command
+	 *            the command as working context
 	 * 
 	 * @return the installation status
 	 */
@@ -1279,6 +1280,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * eclipse will be moved upwards into "unpack" and eclipse will be removed.
 	 * 
 	 * @param dir
+	 *            the top level directory / folder
 	 */
 	private void removeRootDirs(final File dir) {
 		File rootdirMostUpper = null;
@@ -1568,7 +1570,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * that an install unit's home directory path always end with the version
 	 * number as separate folder.
 	 * 
-	 * @parameter command the command as working context
+	 * @param command
+	 *            the command as working context
 	 * 
 	 * @return the nearest installed version or null if no version at all is
 	 *         installed
