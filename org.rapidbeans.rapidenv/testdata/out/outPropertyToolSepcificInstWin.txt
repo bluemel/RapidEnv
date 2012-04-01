@@ -1,8 +1,8 @@
 
 RapidEnv development environment
   Project: test, Tag: main
-  - introduced property "myapp.home" with value "D:\Projects\RapidEnv\org.rapidbeans.rapidenv\testdata\testinstall\myapp\1.0.2"
-installing myapp 1.0.2 by unpacking file D:\Projects\RapidEnv\org.rapidbeans.rapidenv\testdata\site\myapp\1.0.2\myapp-1.0.2.zip
-  into local folder D:\Projects\RapidEnv\org.rapidbeans.rapidenv\testdata\testinstall\myapp\1.0.2...
+  - introduced property "myapp.home" with value "@RAPIDENV_HOME@\testdata\testinstall\myapp\1.0.2"
+installing myapp 1.0.2 by unpacking file @RAPIDENV_HOME@\testdata\site\myapp\1.0.2\myapp-1.0.2.zip
+  into local folder @RAPIDENV_HOME@\testdata\testinstall\myapp\1.0.2...
   - otherapp 1.0 optional
 Installation finished successfully
