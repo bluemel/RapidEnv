@@ -17,19 +17,10 @@
 
 package org.rapidbeans.rapidenv.config.cmd;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Locale;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.rapidbeans.rapidenv.RapidEnvException;
-import org.rapidbeans.rapidenv.config.Filecheck;
-import org.rapidbeans.rapidenv.config.HttpDownload;
 
 public class ExceptionMapTest {
 
