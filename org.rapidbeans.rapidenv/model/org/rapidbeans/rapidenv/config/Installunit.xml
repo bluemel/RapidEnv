@@ -136,12 +136,14 @@ discontinued: deinstall during update, refuse instsllstion snd configuration</de
 		<description>Determines the type of packaging.</description>
 	</property>
 
-	<property name="removerootdirs" type="boolean"
-		default="true">
-		<description>This flag drives the removal of one or more
+	<property name="unpackstrategy" type="choice"
+		enum="UnpackStrategy"
+		default="removerootdeep">
+		<description>This property drives the removal of one or more
 (single) root directories after having unpacked the
-installation zip file under "homedir". While "homedir" is usually
-sufficient the default behavior is removerootdirs="true".</description>
+installation archive file under &quot;homedir()&quot;.
+The default behavior is "removerootdeep" but in most cases &quot;removeroot&quot;
+will be sufficient and have better performance as well as less problems under Windows file system.</description>
 	</property>
 
 	<property name="deinstallunusedmode" type="choice"

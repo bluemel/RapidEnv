@@ -614,7 +614,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 										+ "\n" + "  into local folder "
 										+ homedir.getAbsolutePath() + "...");
 				final Unpacker unpacker = new Unpacker(renv.getAnt());
-				unpacker.unpack(localsourcefile, homedir);
+				switch (getUnpackstrategy()) {
+				case simple:
+				case removerootdeep:
+					unpacker.unpack(localsourcefile, homedir);
+					break;
+				case removeroot:
+					unpacker.unpack(localsourcefile, homedir.getParentFile());
+					break;
+				}
 				break;
 
 			case put:
@@ -652,8 +660,16 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			}
 
 			// remove root directories
-			if (getRemoverootdirs()) {
+			switch (getUnpackstrategy()) {
+			case simple:
+				// do nothing
+				break;
+			case removerootdeep:
 				removeRootDirs(homedir);
+				break;
+			case removeroot:
+				removeRootDir(homedir);
+				break;
 			}
 			installedSuccessfully = true;
 
@@ -1271,6 +1287,62 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						+ Integer.toString(nearestInstalledVersion
 								.compareTo(getVersion())));
 			}
+		}
+	}
+
+	/**
+	 * Rename the singular root folder below the given directory.
+	 * 
+	 * @param dir
+	 *            the top level directory / folder
+	 */
+	private void removeRootDir(final File homedir) {
+		// search the unpack folder
+		File unpackDir = null;
+		// heuristics: the unpack folder is the only one without a
+		// .renvstate.xml file.
+		for (final File dir : homedir.getParentFile().listFiles()) {
+			if (dir.isDirectory()
+					&& (!FileHelper.containsFileWithName(dir.listFiles(),
+							".renvstate.xml"))) {
+				if (!dir.equals(homedir)) {
+					if (unpackDir == null) {
+						unpackDir = dir;
+					} else {
+						throw new RapidEnvException(
+								"Could not determine uniquely unpacked root folder to rename in directory \""
+										+ homedir + "\".");
+					}
+				}
+				break;
+			}
+		}
+		if (unpackDir == null) {
+			throw new RapidEnvException(
+					"Could not determine unpacked root folder to rename in directory \""
+							+ homedir + "\".");
+		}
+		RapidEnvInterpreter.log(Level.FINE,
+				"- movig file \".renvstate.xml\" from \"" + homedir
+						+ "\" to \"" + unpackDir + "\" ...");
+		if (!new File(homedir, ".renvstate.xml").renameTo(new File(unpackDir,
+				".renvstate.xml"))) {
+			throw new RapidEnvException(
+					"Problems to move file \".renvstate.xml\" from \""
+							+ homedir + "\" to \"" + unpackDir + "\".");
+		}
+		RapidEnvInterpreter.log(Level.FINE,
+				"- deleting directory \"" + homedir.getAbsolutePath()
+						+ "\" ...");
+		if (!homedir.delete()) {
+			throw new RapidEnvException("Problems to delete directory \""
+					+ homedir + "\".");
+		}
+		RapidEnvInterpreter.log(Level.FINE, "- renaming directory \""
+				+ unpackDir + "\" to \"" + homedir.getName() + "\" ...");
+		if (!unpackDir.renameTo(homedir)) {
+			throw new RapidEnvException("Problems to rename directory \""
+					+ unpackDir + "\" to \"" + homedir.getName() + "\".");
 		}
 	}
 

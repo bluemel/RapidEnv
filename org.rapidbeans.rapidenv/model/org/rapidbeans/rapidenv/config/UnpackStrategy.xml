@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * Rapid Beans Framework: UnpackStrategy.xml
+ *
+ * Copyright (C) 2012 Martin Bluemel
+ *
+ * Creation Date: 04/03/2012
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.config.UnpackStrategy">
+	<description>Describes the different strategies to unpack an archive file.</description>
+	<enum name="simple">
+		<description>Simply put a single file into the specified folder.</description>
+	</enum>
+	<enum name="removeroot">
+		<description>Remove the root folder. Requires the archive to have one
+single root folder for all files included.</description>
+	</enum>
+	<enum name="removerootdeep">
+		<description>Automatically remove one or more root folders in case there are any.
+Does not require the archive to have one or more root folders for all files included
+but in case they are there they are removed.</description>
+	</enum>
+</enumtype>

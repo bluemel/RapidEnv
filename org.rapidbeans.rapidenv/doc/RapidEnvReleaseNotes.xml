@@ -32,6 +32,14 @@
 		</para>
 		<itemizedlist>
 			<listitem>
+				<para>Changed <emphasis role="bold">installunit</emphasis> property
+<emphasis role="bold">removerootdirs</emphasis> to <emphasis role="bold">unpackstrategy</emphasis>.
+Please note that this change implies a small <emphasis role="bold">migration effort</emphasis>:
+removerootdirs="false" => unpackstrategy="simple"
+removerootdirs="true" or removerootdirs not defined usually => unpackstrategy="removeroot"
+Use unpackstrategy="removerootdeep" in case you are not sure.</para>
+			</listitem>
+			<listitem>
 				<para>Added text file <emphasis role="bold">encoding</emphasis> attribute for all kinds
 				of file configurations (textfile, propertiesfile, xmlfile).
 				</para>
