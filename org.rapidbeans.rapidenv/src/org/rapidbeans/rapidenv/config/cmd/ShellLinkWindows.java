@@ -476,7 +476,7 @@ public class ShellLinkWindows {
 
 		// German
 		File startMenuFolder = new File(System.getenv("USERPROFILE")
-				+ File.separator + "Startmenü");
+				+ File.separator + "StartmenÃ¼");
 		if (startMenuFolder.exists()) {
 			return startMenuFolder;
 		}

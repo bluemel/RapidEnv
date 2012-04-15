@@ -30,8 +30,7 @@
 		<description>The pattern to search for.</description>
 	</property>
 
-	<property name="replacement" mandatory="true"
-		minlen="1">
+	<property name="replacement" mandatory="true">
 		<description>The replacement.</description>
 	</property>
 
