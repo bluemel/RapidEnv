@@ -18,7 +18,7 @@
 '#######################################################
 '# Read a Windows shortcut
 '#######################################################
-WScript.Echo "Reading shortcut """ & WScript.Arguments(0) & """"
+WScript.Echo "Reading shortcut """ & WScript.Arguments(0) & """" 
 Set wsShell = CreateObject("WScript.Shell")
 Set shortcut = wsShell.CreateShortcut(WScript.Arguments(0))
 WScript.Echo "FullName=" & shortcut.FullName

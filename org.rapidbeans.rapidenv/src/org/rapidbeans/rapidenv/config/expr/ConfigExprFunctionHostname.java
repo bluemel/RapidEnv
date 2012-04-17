@@ -27,7 +27,10 @@ import org.rapidbeans.rapidenv.config.Property;
  * 
  * @author Martin Bluemel
  */
-public class ConfigExprFunctionHostname extends RapidBeanBaseConfigExprFunctionHostname {
+public class ConfigExprFunctionHostname extends
+		RapidBeanBaseConfigExprFunctionHostname {
+
+	public static String cachedHostname = null;
 
 	/**
 	 * The interpreting method determines the hostname platform indepently.<br>
@@ -38,7 +41,11 @@ public class ConfigExprFunctionHostname extends RapidBeanBaseConfigExprFunctionH
 	 * @return hostname as string
 	 */
 	public final String interpret() {
-		return PlatformHelper.hostname();
+		if (cachedHostname == null) {
+			cachedHostname = PlatformHelper.hostname();
+		}
+		return cachedHostname;
+		// return PlatformHelper.hostname();
 	}
 
 	/**
@@ -54,8 +61,9 @@ public class ConfigExprFunctionHostname extends RapidBeanBaseConfigExprFunctionH
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionHostname(final Installunit enclosingUnit, final Property enclosingProp,
-	        final String funcContent, final Boolean escapeLiterals) {
+	public ConfigExprFunctionHostname(final Installunit enclosingUnit,
+			final Property enclosingProp, final String funcContent,
+			final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);
 	}
@@ -63,7 +71,8 @@ public class ConfigExprFunctionHostname extends RapidBeanBaseConfigExprFunctionH
 	/**
 	 * the bean's type (class variable).
 	 */
-	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHostname.class);
+	private static TypeRapidBean type = TypeRapidBean
+			.createInstance(ConfigExprFunctionHostname.class);
 
 	/**
 	 * @return the bean's type
