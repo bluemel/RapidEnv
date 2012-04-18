@@ -55,8 +55,9 @@ public class CmdRenv {
 		try {
 			final LogManager lm = LogManager.getLogManager();
 			try {
-				lm.readConfiguration(CmdRenv.class.getClassLoader().getResourceAsStream(
-				        "org/rapidbeans/rapidenv/logging.properties"));
+				lm.readConfiguration(CmdRenv.class.getClassLoader()
+						.getResourceAsStream(
+								"org/rapidbeans/rapidenv/logging.properties"));
 			} catch (SecurityException e) {
 				throw new RapidEnvException(e);
 			} catch (FileNotFoundException e) {
@@ -103,9 +104,17 @@ public class CmdRenv {
 				case deinstall:
 				case install:
 				case update:
-					System.out.println("------------------------------------------------------------------------");
+					System.out
+							.println("------------------------------------------------------------------------");
 					System.out.println(interpreter.getStatisicsAsString());
 					break;
+				case stat:
+					if (command.getOptions().get(CmdRenvOption.verbose) != null
+							|| command.getOptions().get(CmdRenvOption.debug) != null) {
+						System.out
+								.println("------------------------------------------------------------------------");
+						System.out.println(interpreter.getStatisicsAsString());
+					}
 				default:
 					break;
 				}
@@ -216,7 +225,8 @@ public class CmdRenv {
 						this.installunitOrPropertyNames.add(args[i]);
 						break;
 					default:
-						throw new AssertionError("Unforseen interpreter state \"" + state + "\"");
+						throw new AssertionError(
+								"Unforseen interpreter state \"" + state + "\"");
 					}
 				}
 			}
@@ -298,9 +308,12 @@ public class CmdRenv {
 	 * @return if a help command has been detected
 	 */
 	private boolean parseHelp(String arg) {
-		if (arg.equalsIgnoreCase("h") || arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("--h") || arg.equals("?")
-		        || arg.equals("-?") || arg.equals("/?") || arg.equals("--?") || arg.equalsIgnoreCase("help")
-		        || arg.equalsIgnoreCase("-help") || arg.equalsIgnoreCase("--help")) {
+		if (arg.equalsIgnoreCase("h") || arg.equalsIgnoreCase("-h")
+				|| arg.equalsIgnoreCase("--h") || arg.equals("?")
+				|| arg.equals("-?") || arg.equals("/?") || arg.equals("--?")
+				|| arg.equalsIgnoreCase("help")
+				|| arg.equalsIgnoreCase("-help")
+				|| arg.equalsIgnoreCase("--help")) {
 			this.command = CmdRenvCommand.help;
 		}
 		return this.command == CmdRenvCommand.help;
@@ -315,8 +328,10 @@ public class CmdRenv {
 	 * @return if a help command has been detected
 	 */
 	private boolean parseVersion(String arg) {
-		if (arg.equalsIgnoreCase("v") || arg.equalsIgnoreCase("--v") || arg.equalsIgnoreCase("version")
-		        || arg.equalsIgnoreCase("-version") || arg.equalsIgnoreCase("--version")) {
+		if (arg.equalsIgnoreCase("v") || arg.equalsIgnoreCase("--v")
+				|| arg.equalsIgnoreCase("version")
+				|| arg.equalsIgnoreCase("-version")
+				|| arg.equalsIgnoreCase("--version")) {
 			this.command = CmdRenvCommand.version;
 		}
 		return this.command == CmdRenvCommand.version;
