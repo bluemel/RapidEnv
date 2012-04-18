@@ -66,7 +66,13 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * Print the current status of this installation unit
 	 */
 	public void stat() {
-		final InstallStatus installStatus = getInstallationStatus(CmdRenvCommand.stat);
+		InstallStatus installStatus = null;
+		if (RapidEnvInterpreter.getInstance() != null) {
+			installStatus = RapidEnvInterpreter.getInstance()
+					.getInstallationStatus(this, CmdRenvCommand.stat);
+		} else {
+			installStatus = getInstallationStatus(CmdRenvCommand.stat);
+		}
 		String sign = null;
 
 		switch (installStatus) {
@@ -255,8 +261,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 
-		if (checkInstalled
-				&& getInstallationStatus(CmdRenvCommand.install) != InstallStatus.notinstalled) {
+		InstallStatus installStatus = null;
+		if (RapidEnvInterpreter.getInstance() != null) {
+			installStatus = RapidEnvInterpreter.getInstance()
+					.getInstallationStatus(this, CmdRenvCommand.install);
+		} else {
+			installStatus = getInstallationStatus(CmdRenvCommand.install);
+		}
+
+		if (checkInstalled && installStatus != InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \""
 					+ getFullyQualifiedName() + "\" is already installed");
 		}
@@ -867,7 +880,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 *            determines if to keep icons (in case of update) or not.
 	 */
 	public void deinstall(final boolean keepIcons) {
-		if (getInstallationStatus(CmdRenvCommand.deinstall) == InstallStatus.notinstalled) {
+		InstallStatus installStatus = null;
+		if (RapidEnvInterpreter.getInstance() != null) {
+			installStatus = RapidEnvInterpreter.getInstance()
+					.getInstallationStatus(this, CmdRenvCommand.deinstall);
+		} else {
+			installStatus = getInstallationStatus(CmdRenvCommand.deinstall);
+		}
+
+		if (installStatus == InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \""
 					+ getFullyQualifiedName() + "\" is not installed");
 		}
@@ -1150,7 +1171,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	public void updowngrade() {
 
-		if (getInstallationStatus(CmdRenvCommand.update) == InstallStatus.notinstalled) {
+		InstallStatus installStatus = null;
+		if (RapidEnvInterpreter.getInstance() != null) {
+			installStatus = RapidEnvInterpreter.getInstance()
+					.getInstallationStatus(this, CmdRenvCommand.update);
+		} else {
+			installStatus = getInstallationStatus(CmdRenvCommand.update);
+		}
+
+		if (installStatus == InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \""
 					+ getFullyQualifiedName() + "\" is not installed");
 		}

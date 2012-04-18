@@ -28,12 +28,17 @@
 	<sect2>
 		<title>1.3.3</title>
 		<para>
-			Issue date: 04/18/2012
+			Issue date: 04/19/2012
 		</para>
 		<itemizedlist>
 			<listitem>
 				<para><emphasis role="bold">Performance improvement</emphasis>.
-Using new RapidBeans framework version 0.9.6 with tuned "hostname()" function.</para>
+by fixing expensive internal installation status determination not to be performed
+more than once during one interpreter run.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Further performance improvement</emphasis>.
+using new RapidBeans framework version 0.9.6 with tuned "hostname()" function.</para>
 			</listitem>
 		</itemizedlist>
 	</sect2>
