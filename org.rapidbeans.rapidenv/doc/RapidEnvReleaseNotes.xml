@@ -32,12 +32,12 @@
 		</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis role="bold">Performance improvement</emphasis>.
+				<para><emphasis role="bold">Performance improvement</emphasis>
 by fixing expensive internal installation status determination not to be performed
 more than once during one interpreter run.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis role="bold">Further performance improvement</emphasis>.
+				<para><emphasis role="bold">Further performance improvement</emphasis>
 using new RapidBeans framework version 0.9.6 with tuned "hostname()" function.</para>
 			</listitem>
 		</itemizedlist>
