@@ -28,19 +28,19 @@
 	<sect2>
 		<title>1.3.3</title>
 		<para>
-			Issue date: xx/xx/2012
+			Issue date: 04/18/2012
 		</para>
 		<itemizedlist>
 			<listitem>
-				<para>Performance improvement. Current version new RapidBeans framework version
-0.9.5 with tuned "hostname()" function.</para>
+				<para><emphasis role="bold">Performance improvement</emphasis>.
+Using new RapidBeans framework version 0.9.6 with tuned "hostname()" function.</para>
 			</listitem>
 		</itemizedlist>
 	</sect2>
 	<sect2>
 		<title>1.3.2</title>
 		<para>
-			Issue date: 01/04/2012
+			Issue date: 04/01/2012
 		</para>
 		<itemizedlist>
 			<listitem>
