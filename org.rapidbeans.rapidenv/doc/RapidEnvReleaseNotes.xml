@@ -26,6 +26,17 @@
 	<sect1>
 		<title>1.3.x</title>
 	<sect2>
+		<title>1.3.4</title>
+		<para>
+			Issue date: 05/??/2012
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>Introduced property file configuration <emphasis role="bold">deleteprop</emphasis>.</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+	<sect2>
 		<title>1.3.3</title>
 		<para>
 			Issue date: 04/19/2012

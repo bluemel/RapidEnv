@@ -31,6 +31,8 @@
 		<property name="tasks">
 			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFilePropertiesTaskSetpropvalue"
 				xmlelement="setpropvalue"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFilePropertiesTaskDeleteprop"
+				xmlelement="deleteprop"/>
 		</property>
 	</xmlbinding>
 

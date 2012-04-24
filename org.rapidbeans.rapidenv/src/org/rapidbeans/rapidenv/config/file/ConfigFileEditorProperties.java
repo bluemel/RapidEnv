@@ -76,12 +76,16 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 		this.load();
 		String currentSection = null;
 		for (int i = 0; i < properties.size(); i++) {
-			final String trimmedLine = StringHelper.trim((String) properties.get(i));
+			final String trimmedLine = StringHelper.trim((String) properties
+					.get(i));
 			if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
 				currentSection = trimmedLine;
 			}
-			final String prop = checkForProperty((String) properties.get(i), name);
-			if (prop != null && (section == null || (currentSection != null && section.equals(currentSection)))) {
+			final String prop = checkForProperty((String) properties.get(i),
+					name);
+			if (prop != null
+					&& (section == null || (currentSection != null && section
+							.equals(currentSection)))) {
 				return prop;
 			}
 		}
@@ -102,7 +106,8 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 	private String checkForProperty(final String line, final String name) {
 		String parsedPropertyValue = null;
 		final char[] trimChars = new char[] { ' ', '\t', '\n' };
-		String trimmedLine = StringHelper.trim(line, trimChars, TrimMode.leading);
+		String trimmedLine = StringHelper.trim(line, trimChars,
+				TrimMode.leading);
 		if (trimmedLine.equals("")) {
 			return null;
 		} else if (trimmedLine.startsWith("#")) {
@@ -114,7 +119,8 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 		if (iEqualsChar == -1) {
 			return null;
 		}
-		final String parsedPropertyName = StringHelper.splitFirst(trimmedLine, "=").trim();
+		final String parsedPropertyName = StringHelper.splitFirst(trimmedLine,
+				"=").trim();
 		if (name.equals(parsedPropertyName)) {
 			parsedPropertyValue = trimmedLine.substring(iEqualsChar + 1);
 		}
@@ -143,7 +149,8 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 	 * @param value
 	 *            - value to set
 	 */
-	public final void setProperty(final String section, final String name, final String value) {
+	public final void setProperty(final String section, final String name,
+			final String value) {
 		setProperty(section, name, value, null, true);
 	}
 
@@ -157,7 +164,8 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 	 * @param appendIfNotExists
 	 *            - append a new Property if the property was not found
 	 */
-	public final void setProperty(final String name, final String value, final boolean appendIfNotExists) {
+	public final void setProperty(final String name, final String value,
+			final boolean appendIfNotExists) {
 		setProperty(null, name, value, null, appendIfNotExists);
 	}
 
@@ -175,17 +183,21 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 	 * @param appendIfNotExists
 	 *            - append a new Property if the property was not found
 	 */
-	public final void setProperty(final String section, final String name, final String value, final String commenttag,
-	        final boolean appendIfNotExists) {
+	public final void setProperty(final String section, final String name,
+			final String value, final String commenttag,
+			final boolean appendIfNotExists) {
 		this.load();
 		String currentSection = null;
 		for (int i = 0; i < properties.size(); i++) {
-			final String trimmedLine = StringHelper.trim((String) properties.get(i));
+			final String trimmedLine = StringHelper.trim((String) properties
+					.get(i));
 			if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
 				currentSection = trimmedLine;
 			}
 			String prop = checkForProperty((String) properties.get(i), name);
-			if (prop != null && (section == null || (currentSection != null && section.equals(currentSection)))) {
+			if (prop != null
+					&& (section == null || (currentSection != null && section
+							.equals(currentSection)))) {
 				properties.set(i, name + "=" + value);
 				if (commenttag != null) {
 					this.insertComment(commenttag, i + 1, "property changed");
@@ -197,14 +209,45 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 
 		// property not found
 		if (appendIfNotExists) {
-			if (section != null && (currentSection == null || (!currentSection.equals(section)))) {
+			if (section != null
+					&& (currentSection == null || (!currentSection
+							.equals(section)))) {
 				properties.add(section);
 			}
 			properties.add(name + "=" + value);
 			if (commenttag != null) {
-				this.insertComment(commenttag, properties.size(), "property added");
+				this.insertComment(commenttag, properties.size(),
+						"property added");
 			}
 			this.setChangedSomething();
+		}
+	}
+
+	/**
+	 * delete a Property.
+	 * 
+	 * @param section
+	 *            the section e. g. [section_xyz] if null delete the first match
+	 * @param name
+	 *            name of the property to delete
+	 */
+	public final void deleteProperty(final String section, final String name) {
+		this.load();
+		String currentSection = null;
+		for (int i = 0; i < properties.size(); i++) {
+			final String trimmedLine = StringHelper.trim((String) properties
+					.get(i));
+			if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
+				currentSection = trimmedLine;
+			}
+			String prop = checkForProperty((String) properties.get(i), name);
+			if (prop != null
+					&& (section == null || (currentSection != null && section
+							.equals(currentSection)))) {
+				properties.remove(i);
+				this.setChangedSomething();
+				return;
+			}
 		}
 	}
 
@@ -219,7 +262,8 @@ public class ConfigFileEditorProperties extends ConfigFileEditor {
 	 * @param comment
 	 *            - the comment text
 	 */
-	private void insertComment(final String tag, final int pos, final String comment) {
+	private void insertComment(final String tag, final int pos,
+			final String comment) {
 		if (pos == 0) {
 			this.properties.add(0, "# (" + tag + ") " + comment);
 		} else {

@@ -19,8 +19,8 @@
 <beantype name="org.rapidbeans.rapidenv.config.file.ConfigFilePropertiesTaskSetpropvalue"
 	extends="org.rapidbeans.rapidenv.config.ConfigurationTask">
 
-	<description>Sets an XML node (element or attribute).
-Creates the node if not already present. Caution only use node creation for uniqe elements.</description>
+	<description>Sets a distinct property identified by its name and optionally an additional section name to the specified value.
+Creates the property if not already present.</description>
 
 	<property name="section" type="string">
 		<description>The section of the property to set.</description>
