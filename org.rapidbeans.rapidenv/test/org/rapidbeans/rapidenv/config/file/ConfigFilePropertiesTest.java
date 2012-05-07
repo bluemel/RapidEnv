@@ -1,9 +1,9 @@
 /*
- * RapidEnv: ConfigFilePropertiesTest.java
+ * RapidEnv: ConfigFileXmlTest.java
  *
  * Copyright (C) 2010 Martin Bluemel
  *
- * Creation Date: 09/17/2010
+ * Creation Date: 09/10/2010
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
@@ -17,8 +17,11 @@
 
 package org.rapidbeans.rapidenv.config.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.net.MalformedURLException;
 
 import junit.framework.Assert;
 
@@ -27,79 +30,119 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.type.RapidBeansTypeLoader;
 import org.rapidbeans.core.util.FileHelper;
+import org.rapidbeans.core.util.PlatformHelper;
+import org.rapidbeans.core.util.Version;
 import org.rapidbeans.datasource.Document;
+import org.rapidbeans.rapidenv.RapidEnvInterpreter;
+import org.rapidbeans.rapidenv.RapidEnvTestHelper;
+import org.rapidbeans.rapidenv.cmd.CmdRenv;
+import org.rapidbeans.rapidenv.config.InstallState;
 import org.rapidbeans.rapidenv.config.Installunit;
+import org.rapidbeans.rapidenv.config.InstallunitData;
 import org.rapidbeans.rapidenv.config.Project;
 
 public class ConfigFilePropertiesTest {
 
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws MalformedURLException {
 		if (!new File("profile").exists()) {
 			new File("profile").mkdir();
 		}
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
+		InstallunitData data = new InstallunitData();
+		data.setFullname("org.apache.maven");
+		data.setVersion(new Version("2.1.2"));
+		data.setInstallstate(InstallState.installed);
+		Document doc = new Document(data);
+		doc.setUrl(new File(
+				"testdata/testinstall/org/apache/maven/2.1.2/.renvstate.xml")
+				.toURI().toURL());
+		doc.save();
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-		        "org.rapidbeans.rapidenv.config.Project", true);
+				"org.rapidbeans.rapidenv.config.Project", true);
 	}
 
 	@AfterClass
 	public static void tearDownClass() {
+		CmdRenv cmd = new CmdRenv(
+				new String[] { "-env", "testdata/env/env.xml" });
+		RapidEnvTestHelper.tearDownProfile(new RapidEnvInterpreter(cmd));
 		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
+		File file1 = new File("renv_" + PlatformHelper.username() + "_"
+				+ PlatformHelper.hostname() + ".properties");
+		file1.delete();
+		new File("renv_" + PlatformHelper.username() + "_"
+				+ PlatformHelper.hostname() + ".cmd").delete();
 	}
 
 	@Test
 	public void testReadConfiguration() {
-		Document doc = new Document(new File("testdata/env/envFileProperties01.xml"));
+		Document doc = new Document(new File(
+				"testdata/env/envFileProperties01.xml"));
 		Project project = (Project) doc.getRoot();
 		Installunit unit = project.findInstallunitConfiguration("maven");
-		ConfigFileProperties file = (ConfigFileProperties) unit.getConfigurations().get(0);
+		ConfigFileProperties file = (ConfigFileProperties) unit
+				.getConfigurations().get(0);
 		Assert.assertNotNull(file.getTasks());
-		final ConfigFilePropertiesTaskSetpropvalue task0 = (ConfigFilePropertiesTaskSetpropvalue) file.getTasks()
-		        .get(0);
+		final ConfigFilePropertiesTaskSetpropvalue task0 = (ConfigFilePropertiesTaskSetpropvalue) file
+				.getTasks().get(0);
 		Assert.assertEquals("prop.1", task0.getName());
 		Assert.assertEquals("xyz", task0.getValue());
+		final ConfigFilePropertiesTaskDeleteprop task1 = (ConfigFilePropertiesTaskDeleteprop) file
+				.getTasks().get(1);
+		Assert.assertEquals("prop.del", task1.getName());
 	}
 
+	/**
+	 * test configuring an XML file.
+	 * 
+	 * @throws FileNotFoundException
+	 */
 	@Test
-	public void createAndWriteNewPropertiesFile() throws IOException {
-		if (new File("testdata/conf/test.properties").exists()) {
-			Assert.assertTrue(new File("testdata/conf/test.properties").delete());
+	public void testConfigSetnodevalueCheckConfigRequired()
+			throws FileNotFoundException {
+		File cfgfile = null;
+		try {
+			RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
+					new CmdRenv(new String[] { "-env",
+							"testdata/env/envFileProperties01.xml", "s" }));
+			Project project = interpreter.getProject();
+			Installunit unit = project.findInstallunitConfiguration("maven");
+			ConfigFile fileConfig = (ConfigFile) unit.getConfigurations()
+					.get(0);
+			Assert.assertEquals("conf/settings.xml", fileConfig.getPath());
+			File source = new File(fileConfig.getSourceurlAsUrl().getFile());
+			cfgfile = fileConfig.getPathAsFile();
+			Assert.assertFalse(cfgfile.exists());
+			Assert.assertTrue(cfgfile.getParentFile().mkdirs());
+			FileHelper.copyFile(source, cfgfile);
+			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			PrintStream sout = new PrintStream(bStream);
+			interpreter.execute(System.in, sout);
+			Assert.assertFalse(fileConfig.getOk());
+
+			interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] {
+					"-env", "testdata/env/envFileProperties01.xml", "c" }));
+			bStream = new ByteArrayOutputStream();
+			sout = new PrintStream(bStream);
+			interpreter.execute(System.in, sout);
+			project = interpreter.getProject();
+			unit = project.findInstallunitConfiguration("maven");
+			/* ConfigFileEditorProperties editor = */
+			new ConfigFileEditorProperties(null, cfgfile);
+			ConfigFileProperties file = (ConfigFileProperties) unit
+					.getConfigurations().get(0);
+			final ConfigFilePropertiesTaskSetpropvalue task0 = (ConfigFilePropertiesTaskSetpropvalue) file
+					.getTasks().get(0);
+			Assert.assertEquals("prop.1", task0.getName());
+			Assert.assertEquals("xyz", task0.getValue());
+		} finally {
+			if (cfgfile != null && cfgfile.exists()) {
+				cfgfile.delete();
+			}
 		}
-		ConfigFileEditorProperties propedit = new ConfigFileEditorProperties(new ConfigFileProperties(), new File(
-		        "testdata/conf/test.properties"));
-		propedit.setCreateIfNotExists(true);
-		propedit.setProperty("[sect1]", "prop1", "val11");
-		propedit.setProperty("[sect1]", "prop2", "val12");
-		propedit.setProperty("[sect2]", "prop1", "val21");
-		propedit.setProperty("[sect2]", "prop2", "val22");
-		propedit.save();
-		Assert.assertTrue(FileHelper.filesEqual(new File("testdata/conf/test.properties"), new File(
-		        "testdata/conf/testref01.properties"), true, true));
-		Assert.assertTrue(new File("testdata/conf/test.properties").delete());
-	}
-
-	@Test
-	public void readAndChangePropertiesFile() throws IOException {
-		FileHelper.copyFile(new File("testdata/conf/testref01.properties"), new File("testdata/conf/test.properties"));
-		ConfigFileEditorProperties propedit = new ConfigFileEditorProperties(new ConfigFileProperties(), new File(
-		        "testdata/conf/test.properties"));
-		Assert.assertEquals("val22", propedit.getProperty("[sect2]", "prop2"));
-		Assert.assertEquals("val11", propedit.getProperty("[sect1]", "prop1"));
-		Assert.assertEquals("val21", propedit.getProperty("[sect2]", "prop1"));
-		Assert.assertEquals("val12", propedit.getProperty("[sect1]", "prop2"));
-		propedit.setProperty("[sect1]", "prop1", "val11a");
-		propedit.setProperty("[sect1]", "prop2", "val12a");
-		propedit.setProperty("[sect2]", "prop1", "val21a");
-		propedit.setProperty("[sect2]", "prop2", "val22a");
-		propedit.setProperty("[sect3]", "prop1", "val31");
-		propedit.setProperty("[sect3]", "prop2", "val32");
-		propedit.save();
-		Assert.assertTrue(FileHelper.filesEqual(new File("testdata/conf/test.properties"), new File(
-		        "testdata/conf/testref02.properties"), true, true));
-		Assert.assertTrue(new File("testdata/conf/test.properties").delete());
 	}
 }

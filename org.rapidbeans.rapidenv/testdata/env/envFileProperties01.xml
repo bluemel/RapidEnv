@@ -6,8 +6,8 @@
 	installtargetdir="testdata/testinstall"
 	>
 
-	<property name="maven.repo" propmode="common"
-		proptype="file"
+	<property name="maven.repo" category="common"
+		valuetype="file"
 		value="MavenRepository"
 		filetype="directory" mustExist="true" createIfNotExist="true"
 		>
@@ -23,6 +23,7 @@
 			>
 			<setpropvalue name="prop.1"
 				value="xyz"/>
+			<deleteprop name="prop.del"/>
 		</propertiesfile>
 	</installunit>
 </project>
