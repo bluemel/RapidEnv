@@ -28,7 +28,7 @@ public class ConfigExprTopLevelTest {
 	public void testInterpret() {
 		ConfigExprTopLevel expr = new ConfigExprTopLevel(new Installunit("jdk"), null,
 		        "xxx''osname()yyy''pathconvert('\\a/b\\c', '/')zzz", false);
-		Assert.assertEquals("xxx" + PlatformHelper.getOs().name() + "yyy" + "/a/b/c" + "zzz", expr.interpret());
+		Assert.assertEquals("xxx" + PlatformHelper.getOsfamily().name() + "yyy" + "/a/b/c" + "zzz", expr.interpret());
 	}
 
 	private static final int I5 = 5;

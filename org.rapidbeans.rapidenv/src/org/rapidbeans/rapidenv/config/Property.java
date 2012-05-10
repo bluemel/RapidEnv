@@ -30,6 +30,7 @@ import org.rapidbeans.core.basic.IdKeyprops;
 import org.rapidbeans.core.common.ReadonlyListCollection;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.OperatingSystem;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.CmdRenvCommand;
@@ -45,11 +46,11 @@ public class Property extends RapidBeanBaseProperty {
 
 	private PropertyValue specificValueCommon = null;
 
-	private Map<OperatingSystem, PropertyValue> specificvaluesOsSpecific = null;
+	private Map<OperatingSystemFamily, PropertyValue> specificvaluesOsSpecific = null;
 
 	private Environment environmentCommon = null;
 
-	private Map<OperatingSystem, Environment> environmentsOsSpecific = null;
+	private Map<OperatingSystemFamily, Environment> environmentsOsSpecific = null;
 
 	@Override
 	public synchronized Id getId() {
@@ -91,7 +92,7 @@ public class Property extends RapidBeanBaseProperty {
 				PropertyInterpretedString.lockIntepretation();
 			}
 			final PropertyValue specificValue = getSpecificvalue(PlatformHelper
-					.getOs());
+					.getOsfamily());
 			if (specificValue != null && specificValue.getValue() != null) {
 				currentValue = specificValue.getValue();
 			} else {
@@ -332,7 +333,8 @@ public class Property extends RapidBeanBaseProperty {
 	 * 
 	 * @return the specific value for the given operation system
 	 */
-	public synchronized PropertyValue getSpecificvalue(final OperatingSystem os) {
+	public synchronized PropertyValue getSpecificvalue(
+			final OperatingSystemFamily os) {
 		if (this.specificValueCommon == null) {
 			initSpecificvalue();
 		}
@@ -348,7 +350,8 @@ public class Property extends RapidBeanBaseProperty {
 	 * 
 	 * @return the environment variable definitions associated to this property
 	 */
-	public synchronized Environment getEnvironment(final OperatingSystem os) {
+	public synchronized Environment getEnvironment(
+			final OperatingSystemFamily os) {
 		if (this.environmentsOsSpecific == null) {
 			initEnvironment();
 		}
@@ -362,7 +365,7 @@ public class Property extends RapidBeanBaseProperty {
 	 * (Lazy) initialization of the environment map and common.
 	 */
 	private void initEnvironment() {
-		this.environmentsOsSpecific = new HashMap<OperatingSystem, Environment>();
+		this.environmentsOsSpecific = new HashMap<OperatingSystemFamily, Environment>();
 		if (this.getEnvironments() == null) {
 			this.setEnvironments(new ArrayList<Environment>());
 		}
@@ -393,7 +396,7 @@ public class Property extends RapidBeanBaseProperty {
 	 * (Lazy) initialization of the specific value map and common.
 	 */
 	private void initSpecificvalue() {
-		this.specificvaluesOsSpecific = new HashMap<OperatingSystem, PropertyValue>();
+		this.specificvaluesOsSpecific = new HashMap<OperatingSystemFamily, PropertyValue>();
 		if (getSpecificvalues() != null) {
 			for (final PropertyValue value : this.getSpecificvalues()) {
 				if (value.getOsfamily() == null) {

@@ -125,7 +125,7 @@ public abstract class Configuration extends RapidBeanBaseConfiguration {
 		if (getOsfamily() == null) {
 			return true;
 		}
-		return getOsfamily() == PlatformHelper.getOs();
+		return getOsfamily() == PlatformHelper.getOsfamily();
 	}
 
 	public void cleanupFilesOnConfig() {

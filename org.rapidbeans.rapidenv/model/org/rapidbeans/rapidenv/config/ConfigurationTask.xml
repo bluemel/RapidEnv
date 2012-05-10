@@ -30,7 +30,7 @@ or already done.
 </description>
 
 	<property name="osfamily" type="choice"
-		enum="org.rapidbeans.core.util.OperatingSystem">
+		enum="org.rapidbeans.core.util.OperatingSystemFamily">
 		<description>If this value is defined the configuration task gets a platform specific one.
 If ist is undefined the configuration is valid for all platforms without specific definition.</description>
 	</property>

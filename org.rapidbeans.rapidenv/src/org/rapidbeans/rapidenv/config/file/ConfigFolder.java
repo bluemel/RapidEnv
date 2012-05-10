@@ -23,7 +23,7 @@ import java.util.logging.Level;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.FileHelper;
-import org.rapidbeans.core.util.OperatingSystem;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
@@ -49,42 +49,54 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 		final URL url = getSourceurlAsUrl();
 		File sourcefile = null;
 		final File targetfolder = getPathAsFile();
-		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter
+				.getInstance();
 		final Unpacker unpacker = new Unpacker(interpreter.getAnt());
 		boolean configured = false;
 
 		if (getSourceurl() != null) {
 			if (url.getProtocol().equals("file")) {
-				RapidEnvInterpreter.log(Level.FINE, "Folder configuration sourceurl = \"" + getSourceurl() + "\"");
+				RapidEnvInterpreter.log(Level.FINE,
+						"Folder configuration sourceurl = \"" + getSourceurl()
+								+ "\"");
 				RapidEnvInterpreter.log(Level.FINE, "");
 				sourcefile = new File(url.getFile());
-				RapidEnvInterpreter.log(Level.FINE, "Folder configuration sourcefile \"" + sourcefile.getAbsolutePath()
-				        + "\"");
+				RapidEnvInterpreter.log(
+						Level.FINE,
+						"Folder configuration sourcefile \""
+								+ sourcefile.getAbsolutePath() + "\"");
 				if (!sourcefile.exists()) {
-					throw new RapidEnvConfigurationException("File \"" + sourcefile.getAbsolutePath()
-					        + "\" does not exist.");
+					throw new RapidEnvConfigurationException("File \""
+							+ sourcefile.getAbsolutePath()
+							+ "\" does not exist.");
 				}
 				if (!targetfolder.exists()) {
 					if (execute) {
-						RapidEnvInterpreter.log(Level.FINE, "Folder configuration unpacking sourcfile...");
+						RapidEnvInterpreter.log(Level.FINE,
+								"Folder configuration unpacking sourcfile...");
 						unpacker.unpack(sourcefile, targetfolder);
-						final String msg = "    unpacked " + sourcefile.getAbsolutePath() + " to folder "
-						        + targetfolder.getAbsolutePath();
+						final String msg = "    unpacked "
+								+ sourcefile.getAbsolutePath() + " to folder "
+								+ targetfolder.getAbsolutePath();
 						interpreter.getOut().println(msg);
 						configured = true;
 					} else {
-						final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" does not exist.";
+						final String msg = "Folder \""
+								+ targetfolder.getAbsolutePath()
+								+ "\" does not exist.";
 						RapidEnvInterpreter.log(Level.FINE, msg);
 						setIssue(msg);
 						return false;
 					}
 				} else {
-					RapidEnvInterpreter.log(Level.FINE, "Folder is already configured");
+					RapidEnvInterpreter.log(Level.FINE,
+							"Folder is already configured");
 					return true;
 				}
 			} else {
-				throw new RapidEnvConfigurationException("Protocol different from file not supported"
-				        + "for folder configuration property \"sourceurl\".");
+				throw new RapidEnvConfigurationException(
+						"Protocol different from file not supported"
+								+ "for folder configuration property \"sourceurl\".");
 			}
 		} else {
 			if (!targetfolder.exists()) {
@@ -92,11 +104,14 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 					if (!targetfolder.exists()) {
 						FileHelper.mkdirs(targetfolder);
 					}
-					final String msg = "    created new folder " + targetfolder.getAbsolutePath();
+					final String msg = "    created new folder "
+							+ targetfolder.getAbsolutePath();
 					interpreter.getOut().println(msg);
 					configured = true;
 				} else {
-					final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" does not exist.";
+					final String msg = "Folder \""
+							+ targetfolder.getAbsolutePath()
+							+ "\" does not exist.";
 					RapidEnvInterpreter.log(Level.FINE, msg);
 					setIssue(msg);
 					return false;
@@ -111,12 +126,15 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 				if (sourcefile.lastModified() > targetfolder.lastModified()) {
 					if (execute) {
 						unpacker.unpack(sourcefile, targetfolder);
-						final String msg = "    unpacked " + sourcefile.getAbsolutePath() + " to folder "
-						        + targetfolder.getAbsolutePath();
+						final String msg = "    unpacked "
+								+ sourcefile.getAbsolutePath() + " to folder "
+								+ targetfolder.getAbsolutePath();
 						interpreter.getOut().println(msg);
 						configured = true;
 					} else {
-						final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" is not up to date.";
+						final String msg = "Folder \""
+								+ targetfolder.getAbsolutePath()
+								+ "\" is not up to date.";
 						RapidEnvInterpreter.log(Level.FINE, msg);
 						setIssue(msg);
 						return false;
@@ -125,20 +143,25 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 				break;
 
 			case diff:
-				throw new RapidEnvException("copycondition (= unpackcondition) " + "\"diff\" not yet soupported");
+				throw new RapidEnvException(
+						"copycondition (= unpackcondition) "
+								+ "\"diff\" not yet soupported");
 			}
 		}
 
 		if (getCanread() && (!targetfolder.canRead())) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Add read rights to " + "folder \"" + targetfolder.getAbsolutePath() + "\".");
+						"Add read rights to " + "folder \""
+								+ targetfolder.getAbsolutePath() + "\".");
 				if (!targetfolder.setReadable(true)) {
-					throw new RapidEnvException("Adding read rights" + " to configuration file \""
-					        + targetfolder.getAbsolutePath() + "\" failed.");
+					throw new RapidEnvException("Adding read rights"
+							+ " to configuration file \""
+							+ targetfolder.getAbsolutePath() + "\" failed.");
 				}
 			} else {
-				final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" is not readable.";
+				final String msg = "Folder \"" + targetfolder.getAbsolutePath()
+						+ "\" is not readable.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
@@ -147,13 +170,16 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 		if (getCanwrite() && (!targetfolder.canWrite())) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Add write rights to " + "folder \"" + targetfolder.getAbsolutePath() + "\".");
+						"Add write rights to " + "folder \""
+								+ targetfolder.getAbsolutePath() + "\".");
 				if (!targetfolder.setWritable(true)) {
-					throw new RapidEnvException("Adding write rights" + " to folder \""
-					        + targetfolder.getAbsolutePath() + "\" failed.");
+					throw new RapidEnvException("Adding write rights"
+							+ " to folder \"" + targetfolder.getAbsolutePath()
+							+ "\" failed.");
 				}
 			} else {
-				final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" is not writeable.";
+				final String msg = "Folder \"" + targetfolder.getAbsolutePath()
+						+ "\" is not writeable.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
@@ -162,13 +188,16 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 		if (getCanexecute() && (!targetfolder.canExecute())) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Add execution rights to " + "folder \"" + targetfolder.getAbsolutePath() + "\".");
+						"Add execution rights to " + "folder \""
+								+ targetfolder.getAbsolutePath() + "\".");
 				if (!targetfolder.setExecutable(true)) {
-					throw new RapidEnvException("Adding execution rights" + " to folder \""
-					        + targetfolder.getAbsolutePath() + "\" failed.");
+					throw new RapidEnvException("Adding execution rights"
+							+ " to folder \"" + targetfolder.getAbsolutePath()
+							+ "\" failed.");
 				}
 			} else {
-				final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" is not executeable.";
+				final String msg = "Folder \"" + targetfolder.getAbsolutePath()
+						+ "\" is not executeable.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
@@ -177,13 +206,16 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 		if (!getCanread() && targetfolder.canRead()) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Remove read rights from folder \"" + targetfolder.getAbsolutePath() + "\".");
+						"Remove read rights from folder \""
+								+ targetfolder.getAbsolutePath() + "\".");
 				if (!targetfolder.setReadable(false)) {
-					throw new RapidEnvException("Withdrawing read rights" + " from folder \""
-					        + targetfolder.getAbsolutePath() + "\" failed.");
+					throw new RapidEnvException("Withdrawing read rights"
+							+ " from folder \""
+							+ targetfolder.getAbsolutePath() + "\" failed.");
 				}
 			} else {
-				final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" is readable but should not be.";
+				final String msg = "Folder \"" + targetfolder.getAbsolutePath()
+						+ "\" is readable but should not be.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
@@ -192,31 +224,40 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 		if (!getCanwrite() && targetfolder.canWrite()) {
 			if (execute) {
 				interpreter.getOut().println(
-				        "Remove write rights from folder \"" + targetfolder.getAbsolutePath() + "\".");
+						"Remove write rights from folder \""
+								+ targetfolder.getAbsolutePath() + "\".");
 				if (!targetfolder.setWritable(false)) {
-					throw new RapidEnvException("Withdrawing write rights from folder \""
-					        + targetfolder.getAbsolutePath() + "\" failed.");
+					throw new RapidEnvException(
+							"Withdrawing write rights from folder \""
+									+ targetfolder.getAbsolutePath()
+									+ "\" failed.");
 				}
 			} else {
-				final String msg = "Folder \"" + targetfolder.getAbsolutePath() + "\" is writeable but should not be.";
+				final String msg = "Folder \"" + targetfolder.getAbsolutePath()
+						+ "\" is writeable but should not be.";
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				setIssue(msg);
 				return false;
 			}
 		}
 
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			if (!getCanexecute() && targetfolder.canExecute()) {
 				if (execute) {
 					interpreter.getOut().println(
-					        "Remove execution rights from folder \"" + targetfolder.getAbsolutePath() + "\".");
+							"Remove execution rights from folder \""
+									+ targetfolder.getAbsolutePath() + "\".");
 					if (!targetfolder.setExecutable(false)) {
-						throw new RapidEnvException("Withdrawing execution rights" + " from configuration file \""
-						        + targetfolder.getAbsolutePath() + "\" failed.");
+						throw new RapidEnvException(
+								"Withdrawing execution rights"
+										+ " from configuration file \""
+										+ targetfolder.getAbsolutePath()
+										+ "\" failed.");
 					}
 				} else {
-					final String msg = "Folder \"" + targetfolder.getAbsolutePath()
-					        + "\" is executeable but should not be.";
+					final String msg = "Folder \""
+							+ targetfolder.getAbsolutePath()
+							+ "\" is executeable but should not be.";
 					RapidEnvInterpreter.log(Level.FINE, msg);
 					setIssue(msg);
 					return false;
@@ -286,7 +327,8 @@ public class ConfigFolder extends RapidBeanBaseConfigFolder {
 	/**
 	 * the bean's type (class variable).
 	 */
-	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFolder.class);
+	private static TypeRapidBean type = TypeRapidBean
+			.createInstance(ConfigFolder.class);
 
 	/**
 	 * @return the RapidBean's type

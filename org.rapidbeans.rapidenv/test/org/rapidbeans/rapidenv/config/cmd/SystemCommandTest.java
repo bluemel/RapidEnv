@@ -55,7 +55,7 @@ public class SystemCommandTest {
 
 	@Test
 	public void testProcessInput() throws IOException, InterruptedException {
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case linux:
 			// cmd = new SystemCommand();
 			// cmd.setExecutable("sh");
@@ -89,7 +89,7 @@ public class SystemCommandTest {
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
 		SystemCommand cmd = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			cmd = (SystemCommand) unit.getConfigurations().get(0);
 			break;
@@ -97,7 +97,7 @@ public class SystemCommandTest {
 			cmd = (SystemCommand) unit.getConfigurations().get(3);
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 		final File exe = cmd.getExecutableAsFile();
@@ -114,7 +114,7 @@ public class SystemCommandTest {
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
 		SystemCommand cmd = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			cmd = (SystemCommand) unit.getConfigurations().get(0);
 			break;
@@ -122,7 +122,7 @@ public class SystemCommandTest {
 			cmd = (SystemCommand) unit.getConfigurations().get(3);
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 		CommandExecutionResult result = cmd.execute();
@@ -130,7 +130,7 @@ public class SystemCommandTest {
 		Assert.assertEquals("", result.getStderr());
 		Assert.assertEquals(0, result.getReturncode());
 		File testfile = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			testfile = new File(System.getenv("TMP"), "test.txt");
 			break;
@@ -138,7 +138,7 @@ public class SystemCommandTest {
 			testfile = new File("/tmp/test.txt");
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 		Assert.assertTrue(testfile.exists());
@@ -153,7 +153,7 @@ public class SystemCommandTest {
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
 		SystemCommand cmd = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			cmd = (SystemCommand) unit.getConfigurations().get(1);
 			break;
@@ -161,7 +161,7 @@ public class SystemCommandTest {
 			cmd = (SystemCommand) unit.getConfigurations().get(4);
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 		CommandExecutionResult result = cmd.execute();
@@ -179,7 +179,7 @@ public class SystemCommandTest {
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
 		SystemCommand cmd = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			cmd = (SystemCommand) unit.getConfigurations().get(2);
 			break;
@@ -187,7 +187,7 @@ public class SystemCommandTest {
 			cmd = (SystemCommand) unit.getConfigurations().get(5);
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 		CommandExecutionResult result = cmd.execute();
@@ -206,7 +206,7 @@ public class SystemCommandTest {
 	 */
 	@Test
 	public void testArgumentsPassingWindowsCmdProg() {
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 
 			// test with a cmd.exe call with a programmed SystemCommand
@@ -229,7 +229,7 @@ public class SystemCommandTest {
 			// nothing to do
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 	}
@@ -244,7 +244,7 @@ public class SystemCommandTest {
 	 */
 	@Test
 	public void testArgumentsPassingWindowsCmdConf() {
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 
 			RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
@@ -263,7 +263,7 @@ public class SystemCommandTest {
 			// Do nothing
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 	}
@@ -278,7 +278,7 @@ public class SystemCommandTest {
 	 */
 	@Test
 	public void testArgumentsPassingWindowsCscriptProg() {
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 
 			// test with a cscript.exe call with a programmed SystemCommand
@@ -302,7 +302,7 @@ public class SystemCommandTest {
 		case linux:
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" currently not supported");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" currently not supported");
 			break;
 		}
 	}

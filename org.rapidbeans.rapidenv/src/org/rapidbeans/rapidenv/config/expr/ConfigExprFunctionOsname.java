@@ -66,7 +66,7 @@ public class ConfigExprFunctionOsname extends RapidBeanBaseConfigExprFunctionOsn
 				}
 			}
 		}
-		final String osname = PlatformHelper.getOs().name();
+		final String osname = PlatformHelper.getOsfamily().name();
 		final String converted = conversionMap.get(osname);
 		if (converted != null) {
 			return converted;

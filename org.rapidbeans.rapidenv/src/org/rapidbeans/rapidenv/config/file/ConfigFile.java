@@ -27,7 +27,7 @@ import org.rapidbeans.core.common.ReadonlyListCollection;
 import org.rapidbeans.core.exception.RapidBeansRuntimeException;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.FileHelper;
-import org.rapidbeans.core.util.OperatingSystem;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
@@ -335,7 +335,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 			}
 		}
 
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			if (!getCanexecute() && targetfile.canExecute()) {
 				if (execute) {
 					interpreter.getOut().println(

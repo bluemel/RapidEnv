@@ -49,7 +49,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			String path = exe;
 			file = new File(path);
 			String pathEnvvarname = null;
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				pathEnvvarname = "Path";
 				break;
@@ -58,7 +58,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 				break;
 			default:
 				throw new RapidEnvException("Platform \""
-						+ PlatformHelper.getOs().name() + "\" not supported!");
+						+ PlatformHelper.getOsfamily().name() + "\" not supported!");
 			}
 			String cmdpathstring = System.getenv(pathEnvvarname);
 			if (pathextension != null) {
@@ -383,7 +383,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 	private String getCommandline() {
 		final StringBuffer cmdline = new StringBuffer();
 		if (getRunasbatch()) {
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				final String envvarSysdirWin = System.getenv("SystemRoot");
 				if (envvarSysdirWin != null && envvarSysdirWin.length() > 0) {
@@ -404,7 +404,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			default:
 				throw new RapidEnvException("ERROR: "
 						+ " system command execution currently not supported"
-						+ " for OS platform \"" + PlatformHelper.getOs().name()
+						+ " for OS platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\".");
 			}
 		}
@@ -448,7 +448,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 	private String[] getCommandArray() {
 		final List<String> cmdArrayList = new ArrayList<String>();
 		if (getRunasbatch()) {
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				final String envvarSysdirWin = System.getenv("SystemRoot");
 				if (envvarSysdirWin != null && envvarSysdirWin.length() > 0) {
@@ -465,7 +465,7 @@ public class SystemCommand extends RapidBeanBaseSystemCommand {
 			default:
 				throw new RapidEnvException("ERROR: "
 						+ " system command execution currently not supported"
-						+ " for OS platform \"" + PlatformHelper.getOs().name()
+						+ " for OS platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\".");
 			}
 		}

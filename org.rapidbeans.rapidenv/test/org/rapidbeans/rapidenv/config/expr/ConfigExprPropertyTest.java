@@ -101,7 +101,7 @@ public class ConfigExprPropertyTest {
 	@Test
 	public void interpretNestedComplex() {
 		this.renv.setPropertyValue("pp1", "bingo");
-		this.renv.setPropertyValue("p2" + PlatformHelper.getOs().name(), "p");
+		this.renv.setPropertyValue("p2" + PlatformHelper.getOsfamily().name(), "p");
 		this.renv.setPropertyValue("p3", "1");
 		this.renv.setPropertyValue("p4", "p2");
 		ConfigExprTopLevel expr = new ConfigExprTopLevel(testUnit, null, "A${p${${p4}osname()}${p3}}Z", false);

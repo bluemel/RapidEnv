@@ -60,7 +60,7 @@ public class PropertyTest {
 		Project project = (Project) doc.getRoot();
 		Property cmdPath = project.findPropertyConfiguration("cmd.path");
 		Assert.assertEquals(2, cmdPath.getSpecificvalues().size());
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			Assert.assertTrue(
 					cmdPath.getValue(),

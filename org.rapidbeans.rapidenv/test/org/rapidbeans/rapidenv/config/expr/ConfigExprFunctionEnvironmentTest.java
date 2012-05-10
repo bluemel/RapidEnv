@@ -61,7 +61,7 @@ public class ConfigExprFunctionEnvironmentTest {
 		new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }));
 		// AntGateway ant = new AntGateway(new
 		// File("testdata/ant/ant_win.properties"));
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			ConfigExprTopLevel expr1 = new ConfigExprTopLevel(new Installunit(new String[] { "", "jdk" }), null,
 			        "environment('USERNAME')", false);
@@ -73,7 +73,7 @@ public class ConfigExprFunctionEnvironmentTest {
 			Assert.assertEquals(PlatformHelper.username(), expr2.interpret());
 			break;
 		default:
-			Assert.fail("Operating system (family) \"" + PlatformHelper.getOs().name() + "\" not yet tested.");
+			Assert.fail("Operating system (family) \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested.");
 		}
 	}
 }

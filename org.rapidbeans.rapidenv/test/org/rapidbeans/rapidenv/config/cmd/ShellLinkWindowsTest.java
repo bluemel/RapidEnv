@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.type.RapidBeansTypeLoader;
 import org.rapidbeans.core.util.FileHelper;
-import org.rapidbeans.core.util.OperatingSystem;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 
 /**
@@ -46,7 +46,7 @@ public class ShellLinkWindowsTest {
 	 */
 	@Test
 	public void testCreateProgrammatically() {
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			return;
 		}
 		File linkFile = new File("testdata/shelllink/testCreate.lnk");
@@ -102,7 +102,7 @@ public class ShellLinkWindowsTest {
 	 */
 	@Test
 	public void testReadWindows() {
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			return;
 		}
 		ShellLinkWindows shellLink = new ShellLinkWindows(new File(
@@ -141,7 +141,7 @@ public class ShellLinkWindowsTest {
 
 	@Test
 	public void testGetStartMenuFolderWindows() {
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			return;
 		}
 		File startMenuFolder = ShellLinkWindows.getStartMenuFolder();

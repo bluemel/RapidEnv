@@ -65,7 +65,7 @@ public class ConfigExprFunctionPackaging extends RapidBeanBaseConfigExprFunction
 			}
 		}
 		String defaultPackaging = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case linux:
 			defaultPackaging = "tar.gz";
 			break;
@@ -73,7 +73,7 @@ public class ConfigExprFunctionPackaging extends RapidBeanBaseConfigExprFunction
 			defaultPackaging = "zip";
 			break;
 		}
-		final String converted = conversionMap.get(PlatformHelper.getOs().name());
+		final String converted = conversionMap.get(PlatformHelper.getOsfamily().name());
 		if (converted != null) {
 			return converted;
 		} else {

@@ -78,7 +78,7 @@ public class CommandExecutor {
 		final StringBuffer bufErr = new StringBuffer();
 		String cmdline = null;
 
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			String cmdlineWin = "cmd.exe /C ";
 			if (this.dir != null) {
@@ -92,7 +92,7 @@ public class CommandExecutor {
 			break;
 		default:
 			throw new RapidEnvException("ERROR: " + " system command execution currently not supported"
-			        + " for OS platform \"" + PlatformHelper.getOs().name() + "\".");
+			        + " for OS platform \"" + PlatformHelper.getOsfamily().name() + "\".");
 		}
 
 		// ToolDbStandalone dbTool = null;

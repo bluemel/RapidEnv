@@ -24,7 +24,7 @@ for two purposes:
 2) complex value definitions that can't be performed in an XML attribute and need an
    XML element</description>
 	<property name="osfamily" type="choice"
-		enum="org.rapidbeans.core.util.OperatingSystem">
+		enum="org.rapidbeans.core.util.OperatingSystemFamily">
 		<description>If this value is defined the environment variable becomes a platform specific one.
 If it is undefined the definition the property's value is valid for all platforms.</description>
 	</property>

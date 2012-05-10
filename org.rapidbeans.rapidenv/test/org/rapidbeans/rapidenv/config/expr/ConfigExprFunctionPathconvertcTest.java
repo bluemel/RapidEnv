@@ -60,7 +60,7 @@ public class ConfigExprFunctionPathconvertcTest {
 	 */
 	@Test
 	public void interpretAbsolute() {
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			ConfigExprTopLevel exprWin = new ConfigExprTopLevel(null, null, "a pathconvertc('C:\\a\\b\\c')", false);
 			Assert.assertEquals("a C:" + File.separator + "a" + File.separator + "b" + File.separator + "c",
@@ -72,7 +72,7 @@ public class ConfigExprFunctionPathconvertcTest {
 			        exprUnix.interpret());
 			break;
 		default:
-			Assert.fail("Operating system \"" + PlatformHelper.getOs().name() + "\" not yet supported.");
+			Assert.fail("Operating system \"" + PlatformHelper.getOsfamily().name() + "\" not yet supported.");
 			break;
 		}
 	}

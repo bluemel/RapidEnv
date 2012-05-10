@@ -76,7 +76,7 @@ public class ConfigExprFunctionFilecontentsTest {
 				"filecontents('testdata/ant/ant_win.properties', '', 'platform')",
 				true);
 		String expected = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			expected = "V1=Test1\r\n" + "V2=Test2\r\n"
 					+ "test.dev.location=ismaning\r\n";
@@ -108,7 +108,7 @@ public class ConfigExprFunctionFilecontentsTest {
 	@Test
 	public final void intepretAsOneLinePlatform() {
 		ConfigExprTopLevel expr = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			expr = new ConfigExprTopLevel(
 					null,
@@ -136,7 +136,7 @@ public class ConfigExprFunctionFilecontentsTest {
 	@Test
 	public final void intepretAsOneLineAdditionEsc() {
 		ConfigExprTopLevel expr = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		default:
 			expr = new ConfigExprTopLevel(
 					null,
@@ -164,7 +164,7 @@ public class ConfigExprFunctionFilecontentsTest {
 	@Test
 	public final void intepretAsOneLineAdditionEscPlatform() {
 		ConfigExprTopLevel expr = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			expr = new ConfigExprTopLevel(
 					null,
@@ -197,7 +197,7 @@ public class ConfigExprFunctionFilecontentsTest {
 				"testdata/env/env.xml", "s" }))).setPropertyValue("wd", path);
 		Installunit tool = new Installunit("test");
 		ConfigExprTopLevel expr = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			expr = new ConfigExprTopLevel(
 					tool,

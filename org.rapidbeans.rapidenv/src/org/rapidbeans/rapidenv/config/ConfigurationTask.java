@@ -42,7 +42,7 @@ public abstract class ConfigurationTask extends RapidBeanBaseConfigurationTask {
 		if (getOsfamily() == null) {
 			return true;
 		}
-		return getOsfamily() == PlatformHelper.getOs();
+		return getOsfamily() == PlatformHelper.getOsfamily();
 	}
 
 	/**

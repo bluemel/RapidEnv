@@ -71,7 +71,7 @@ public class LinefeedControlInputStreamReader extends InputStreamReader {
 			}
 			break;
 		case platform:
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				if (this.bufferedChar == '\n' && currentChar != '\r') {
 					this.generatedChar = '\r';
@@ -84,7 +84,7 @@ public class LinefeedControlInputStreamReader extends InputStreamReader {
 				}
 				break;
 			default:
-				throw new RapidEnvException("Operating system \"" + PlatformHelper.getOs().name()
+				throw new RapidEnvException("Operating system \"" + PlatformHelper.getOsfamily().name()
 				        + "\" not yet supported");
 			}
 			break;

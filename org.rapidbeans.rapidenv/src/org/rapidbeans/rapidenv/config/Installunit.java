@@ -564,7 +564,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 							.getParentFile();
 					final String standardArchiveFileName = getName() + "-"
 							+ getVersion() + "-"
-							+ PlatformHelper.getOs().name() + "-"
+							+ PlatformHelper.getOsfamily().name() + "-"
 							+ PlatformHelper.getArchName();
 					if (new File(localsourcefiledir, standardArchiveFileName
 							+ ".zip").exists()) {
@@ -714,7 +714,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	protected static void copyFile(final File src, final File tgt,
 			final boolean nativeCopy, final boolean optimizedCopy) {
 		if (nativeCopy && optimizedCopy && src.length() > 100000) {
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				boolean robocopy = true;
 				final SystemCommand syscmd = new SystemCommand();
@@ -785,7 +785,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				break;
 			}
 		} else if (nativeCopy && src.length() > 10000) {
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvInterpreter.log(Level.FINER, "Using \"copy\" command");
 				final SystemCommand syscmd = new SystemCommand();
@@ -816,7 +816,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	protected static void renameFile(final File from, final File to,
 			final String errorMessage) {
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			if (from.isDirectory()) {
 				SystemCommand syscmd = new SystemCommand();
@@ -1026,7 +1026,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				.getInstance();
 		for (final ShellLinkIcon icon : getIcons()) {
 
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 
 			case windows:
 				final File desktopFolder = new File(
@@ -2108,7 +2108,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				RapidEnvInterpreter.log(Level.FINER, "DOWNLOAD[" + (i++)
 						+ "]: " + dl.getUrl() + "\"");
 				if (dl.getOsfamily() == null
-						|| dl.getOsfamily() == PlatformHelper.getOs()) {
+						|| dl.getOsfamily() == PlatformHelper.getOsfamily()) {
 					downloads.add(dl);
 				}
 			}
@@ -2126,7 +2126,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		if (super.getSourcefilechecks() != null) {
 			for (final Filecheck check : super.getSourcefilechecks()) {
 				if (check.getOsfamily() == null
-						|| check.getOsfamily() == PlatformHelper.getOs()) {
+						|| check.getOsfamily() == PlatformHelper.getOsfamily()) {
 					filechecks.add(check);
 				}
 			}

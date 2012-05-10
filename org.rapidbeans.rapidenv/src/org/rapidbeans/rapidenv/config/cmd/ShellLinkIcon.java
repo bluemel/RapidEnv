@@ -53,7 +53,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 					.getProject();
 			boolean ok = true;
 			File desktopFolder = null;
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				desktopFolder = new File(System.getenv("USERPROFILE")
 						+ "\\Desktop");
@@ -63,10 +63,10 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				break;
 			default:
 				throw new RapidEnvException("Icons are not supported for OS \""
-						+ PlatformHelper.getOs().name() + "\".");
+						+ PlatformHelper.getOsfamily().name() + "\".");
 			}
 			if (this.getShowondesktop()) {
-				switch (PlatformHelper.getOs()) {
+				switch (PlatformHelper.getOsfamily()) {
 				case windows:
 					ok = checkShellLink(execute, getTitle(), desktopFolder);
 					break;
@@ -90,13 +90,13 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				default:
 					throw new RapidEnvException(
 							"Icons are not supported for OS \""
-									+ PlatformHelper.getOs().name() + "\".");
+									+ PlatformHelper.getOsfamily().name() + "\".");
 				}
 			} else {
 				ok = checkShellLinkDelete(execute, getTitle(), desktopFolder);
 			}
 			File startMenuFolder = null;
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				startMenuFolder = new File(ShellLinkWindows
 						.getStartMenuFolder().getAbsolutePath()
@@ -111,11 +111,11 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				break;
 			default:
 				throw new RapidEnvException("Icons are not supported for OS \""
-						+ PlatformHelper.getOs().name() + "\".");
+						+ PlatformHelper.getOsfamily().name() + "\".");
 			}
 			if (ok) {
 				if (this.getShowonstartmenu()) {
-					switch (PlatformHelper.getOs()) {
+					switch (PlatformHelper.getOsfamily()) {
 					case windows:
 						ok = checkShellLink(execute, getTitle(),
 								startMenuFolder);
@@ -142,7 +142,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 					default:
 						throw new RapidEnvException(
 								"Icons are not supported for OS \""
-										+ PlatformHelper.getOs().name() + "\".");
+										+ PlatformHelper.getOsfamily().name() + "\".");
 					}
 				} else {
 					ok = checkShellLinkDelete(execute, getTitle(),
@@ -205,7 +205,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		Argument argProfileCmd;
 		switch (getExecutionmode()) {
 		case cmd:
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				executable = new File(System.getenv("SystemRoot")
 						+ File.separator + "system32" + File.separator
@@ -228,11 +228,11 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			default:
 				throw new RapidEnvException("Icons with execution mode \"cmd\""
 						+ " are not supported for OS \""
-						+ PlatformHelper.getOs().name() + "\".");
+						+ PlatformHelper.getOsfamily().name() + "\".");
 			}
 			break;
 		case cmdenv:
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				executable = new File(System.getenv("SystemRoot")
 						+ File.separator + "system32" + File.separator
@@ -265,7 +265,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				break;
 			default:
 				throw new RapidEnvException("Icons are not supported for OS \""
-						+ PlatformHelper.getOs().name() + "\".");
+						+ PlatformHelper.getOsfamily().name() + "\".");
 			}
 			break;
 		default:
@@ -290,7 +290,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 		boolean ok = true;
 
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			ok = checkShellLinkWindows(execute, title, shellLinkFolder,
 					executeInFolder, executable, args);
@@ -301,7 +301,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			break;
 		default:
 			throw new RapidEnvException("Icons are not supported for OS \""
-					+ PlatformHelper.getOs().name() + "\".");
+					+ PlatformHelper.getOsfamily().name() + "\".");
 		}
 
 		return ok;
@@ -328,7 +328,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter
 				.getInstance();
 		File shellLinkFile = null;
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			shellLinkFile = new File(shellLinkFolder, title + ".lnk");
 			break;
@@ -337,7 +337,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			break;
 		default:
 			throw new RapidEnvException("Icons are not supported for OS \""
-					+ PlatformHelper.getOs().name() + "\".");
+					+ PlatformHelper.getOsfamily().name() + "\".");
 		}
 
 		boolean ok = true;

@@ -21,7 +21,7 @@
 	<description>Defines a hash value check on a file.</description>
 
 	<property name="osfamily" type="choice"
-		enum="org.rapidbeans.core.util.OperatingSystem">
+		enum="org.rapidbeans.core.util.OperatingSystemFamily">
 		<description>If this value is defined this check will become an operating system specific one.
 If it is undefined the definition is valid for all platforms without specific definition.</description>
 	</property>

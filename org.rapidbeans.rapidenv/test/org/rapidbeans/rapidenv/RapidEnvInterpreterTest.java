@@ -41,7 +41,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.type.TypePropertyCollection;
 import org.rapidbeans.core.util.FileHelper;
-import org.rapidbeans.core.util.OperatingSystem;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
 import org.rapidbeans.rapidenv.config.Installunit;
@@ -86,7 +86,7 @@ public class RapidEnvInterpreterTest {
 
 	@Test
 	public void testCreateConfigurationWindowsSimple() {
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			return;
 		}
 		final File testinstall = new File("testdata/testinstall");
@@ -112,7 +112,7 @@ public class RapidEnvInterpreterTest {
 				+ "\\Desktop\\" + icon.getTitle() + ".lnk");
 		try {
 			assertEquals("Start TestMySQL", icon.getTitle());
-			if (PlatformHelper.getOs() == OperatingSystem.windows) {
+			if (PlatformHelper.getOsfamily() == OperatingSystemFamily.windows) {
 				assertEquals(System.getenv("SystemRoot") + "/system32/cmd.exe",
 						icon.getExecutable());
 			}
@@ -165,7 +165,7 @@ public class RapidEnvInterpreterTest {
 
 	@Test
 	public void testCreateConfigurationWindowsCmd() {
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			return;
 		}
 		final File testinstall = new File("testdata/testinstall");
@@ -266,7 +266,7 @@ public class RapidEnvInterpreterTest {
 
 	@Test
 	public void testCreateConfigurationWindowsCmdenv() {
-		if (PlatformHelper.getOs() != OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.windows) {
 			return;
 		}
 		final File testinstall = new File("testdata/testinstall");
@@ -415,7 +415,7 @@ public class RapidEnvInterpreterTest {
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			PrintStream sout = new PrintStream(bStream);
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificBootWin.txt"),
@@ -443,7 +443,7 @@ public class RapidEnvInterpreterTest {
 						env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -455,7 +455,7 @@ public class RapidEnvInterpreterTest {
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envPropsToolSpecific.xml", "s" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificStatWin.txt"),
@@ -483,7 +483,7 @@ public class RapidEnvInterpreterTest {
 						env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -495,7 +495,7 @@ public class RapidEnvInterpreterTest {
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envPropsToolSpecific.xml", "i" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificInstWin.txt"),
@@ -523,7 +523,7 @@ public class RapidEnvInterpreterTest {
 						env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -536,7 +536,7 @@ public class RapidEnvInterpreterTest {
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envPropsToolSpecific.xml", "i", "otherapp" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificInstSpecWin.txt"),
@@ -568,7 +568,7 @@ public class RapidEnvInterpreterTest {
 								env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -580,7 +580,7 @@ public class RapidEnvInterpreterTest {
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envPropsToolSpecific.xml", "s" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificStat2Win.txt"),
@@ -610,7 +610,7 @@ public class RapidEnvInterpreterTest {
 								env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -622,7 +622,7 @@ public class RapidEnvInterpreterTest {
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envPropsToolSpecific.xml", "c" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificConfWin.txt"),
@@ -652,7 +652,7 @@ public class RapidEnvInterpreterTest {
 								env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -666,7 +666,7 @@ public class RapidEnvInterpreterTest {
 							"testdata/env/envPropsToolSpecific.xml", "c",
 							"myapp.home" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificConfcWin.txt"),
@@ -696,7 +696,7 @@ public class RapidEnvInterpreterTest {
 								env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -710,7 +710,7 @@ public class RapidEnvInterpreterTest {
 					"testdata/env/envPropsToolSpecific.xml", "c",
 					"otherapp.data" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificConfpWin.txt"),
@@ -722,7 +722,7 @@ public class RapidEnvInterpreterTest {
 						bStream);
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -735,7 +735,7 @@ public class RapidEnvInterpreterTest {
 					"testdata/env/envPropsToolSpecific.xml", "d", "myapp",
 					"otherapp" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificDeinstWin.txt"),
@@ -763,7 +763,7 @@ public class RapidEnvInterpreterTest {
 						env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 
@@ -798,7 +798,7 @@ public class RapidEnvInterpreterTest {
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			PrintStream sout = new PrintStream(bStream);
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificBootWin.txt"),
@@ -826,7 +826,7 @@ public class RapidEnvInterpreterTest {
 						env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -839,7 +839,7 @@ public class RapidEnvInterpreterTest {
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envPropsToolSpecific02.xml", "i" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificInst02Win.txt"),
@@ -867,7 +867,7 @@ public class RapidEnvInterpreterTest {
 						env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 			RapidEnvInterpreter.clearInstance();
@@ -881,7 +881,7 @@ public class RapidEnvInterpreterTest {
 					"testdata/env/envPropsToolSpecificOtherPropvalCommon.xml",
 					"u", "otherapp" }));
 			env.execute(sin, sout);
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyToolSepcificUpdate02Win.txt"),
@@ -913,7 +913,7 @@ public class RapidEnvInterpreterTest {
 								env.getProfileCmd());
 				break;
 			default:
-				fail("Platform \"" + PlatformHelper.getOs().name()
+				fail("Platform \"" + PlatformHelper.getOsfamily().name()
 						+ "\" not yet tested");
 			}
 		} finally {
@@ -929,7 +929,7 @@ public class RapidEnvInterpreterTest {
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			assertTrue(
 					"cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"",
@@ -953,7 +953,7 @@ public class RapidEnvInterpreterTest {
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			assertTrue(
 					"cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"",
@@ -988,7 +988,7 @@ public class RapidEnvInterpreterTest {
 		env.initPropertiesAndInstallunitsToProcess(CmdRenvCommand.boot);
 		assertEquals(3, env.getPropertiesToProcess().size());
 		env.initProperties(CmdRenvCommand.boot);
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			assertTrue(
 					"cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"",
@@ -1195,7 +1195,7 @@ public class RapidEnvInterpreterTest {
 			new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
 					"testdata/env/envXXX.xml", "s" }));
 		} catch (RapidEnvConfigurationException e) {
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				assertTrue(e
 						.getMessage()
@@ -1269,7 +1269,7 @@ public class RapidEnvInterpreterTest {
 		env.setPropertyValue("testprop05", "newvalue");
 		env.setPropertyValue("testprop06", "oldvalue");
 		env.writeProfile();
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			RapidEnvTestHelper.assertFilesEqual(new File(
 					"testdata/out/outPropertyCommonChangedStatWin.properties"),
@@ -1281,7 +1281,7 @@ public class RapidEnvInterpreterTest {
 		case linux:
 			break;
 		default:
-			fail("Platform \"" + PlatformHelper.getOs().name()
+			fail("Platform \"" + PlatformHelper.getOsfamily().name()
 					+ "\" not supported.");
 		}
 		RapidEnvInterpreter.clearInstance();
@@ -1298,7 +1298,7 @@ public class RapidEnvInterpreterTest {
 		assertNull(env.getPropertyValue("testprop04"));
 		assertEquals("newvalue", env.getPropertyValue("testprop05"));
 		assertEquals("oldvalue", env.getPropertyValue("testprop06"));
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			RapidEnvTestHelper.assertOutput(new File(
 					"testdata/out/outPropertyCommonChangedStatWin.txt"),
@@ -1349,7 +1349,7 @@ public class RapidEnvInterpreterTest {
 		env.setPropertyValue("testprop05", "newvalue");
 		env.setPropertyValue("testprop06", "oldvalue");
 		env.writeProfile();
-		switch (PlatformHelper.getOs()) {
+		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			RapidEnvTestHelper.assertFilesEqual(new File(
 					"testdata/out/outPropertyCommonChangedStatWin.properties"),
@@ -1405,7 +1405,7 @@ public class RapidEnvInterpreterTest {
 			// in the properties file
 			assertEquals("oldvalue", env.getPropertyValue("testprop06"));
 
-			switch (PlatformHelper.getOs()) {
+			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File(
 						"testdata/out/outPropertyCommonChangedConfigWin.txt"),

@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.rapidbeans.core.util.OperatingSystem;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 
 /**
@@ -38,7 +38,7 @@ public class LinefeedControlInputStreamReaderTest {
 	private static String LF_PF = "\n";
 
 	static {
-		if (PlatformHelper.getOs() == OperatingSystem.windows) {
+		if (PlatformHelper.getOsfamily() == OperatingSystemFamily.windows) {
 			LF_PF = "\r\n";
 		}
 	}
@@ -51,20 +51,22 @@ public class LinefeedControlInputStreamReaderTest {
 	 */
 	@Test
 	public final void readPreserveWin() throws IOException {
-		if (!(PlatformHelper.getOs() == OperatingSystem.windows)) {
+		if (!(PlatformHelper.getOsfamily() == OperatingSystemFamily.windows)) {
 			return;
 		}
 		LinefeedControlInputStreamReader reader = null;
 		try {
-			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_win.properties"),
-			        LinefeedControl.preserve);
+			reader = new LinefeedControlInputStreamReader(new File(
+					"testdata/ant/ant_win.properties"),
+					LinefeedControl.preserve);
 			StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			String read = buf.toString();
-			String expected = "V1=Test1\r\n" + "V2=Test2\r\n" + "test.dev.location=ismaning\r\n";
+			String expected = "V1=Test1\r\n" + "V2=Test2\r\n"
+					+ "test.dev.location=ismaning\r\n";
 			Assert.assertEquals(expected, read);
 		} finally {
 			if (reader != null) {
@@ -83,15 +85,17 @@ public class LinefeedControlInputStreamReaderTest {
 	public final void readNormalizeWin() throws IOException {
 		LinefeedControlInputStreamReader reader = null;
 		try {
-			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_win.properties"),
-			        LinefeedControl.normalize);
+			reader = new LinefeedControlInputStreamReader(new File(
+					"testdata/ant/ant_win.properties"),
+					LinefeedControl.normalize);
 			StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			String read = buf.toString();
-			String expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			String expected = "V1=Test1\n" + "V2=Test2\n"
+					+ "test.dev.location=ismaning\n";
 			Assert.assertEquals(expected, read);
 		} finally {
 			if (reader != null) {
@@ -110,15 +114,17 @@ public class LinefeedControlInputStreamReaderTest {
 	public final void readPlatformWin() throws IOException {
 		LinefeedControlInputStreamReader reader = null;
 		try {
-			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_win.properties"),
-			        LinefeedControl.platform);
+			reader = new LinefeedControlInputStreamReader(new File(
+					"testdata/ant/ant_win.properties"),
+					LinefeedControl.platform);
 			StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			String read = buf.toString();
-			String expected = "V1=Test1" + LF_PF + "V2=Test2" + LF_PF + "test.dev.location=ismaning" + LF_PF;
+			String expected = "V1=Test1" + LF_PF + "V2=Test2" + LF_PF
+					+ "test.dev.location=ismaning" + LF_PF;
 			Assert.assertEquals(expected, read);
 		} finally {
 			if (reader != null) {
@@ -137,15 +143,17 @@ public class LinefeedControlInputStreamReaderTest {
 	public final void readPreserveNorm() throws IOException {
 		LinefeedControlInputStreamReader reader = null;
 		try {
-			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_norm.properties"),
-			        LinefeedControl.preserve);
+			reader = new LinefeedControlInputStreamReader(new File(
+					"testdata/ant/ant_norm.properties"),
+					LinefeedControl.preserve);
 			StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			String read = buf.toString();
-			String expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			String expected = "V1=Test1\n" + "V2=Test2\n"
+					+ "test.dev.location=ismaning\n";
 			Assert.assertEquals(expected, read);
 		} finally {
 			if (reader != null) {
@@ -164,15 +172,17 @@ public class LinefeedControlInputStreamReaderTest {
 	public final void readNormalizeNorm() throws IOException {
 		LinefeedControlInputStreamReader reader = null;
 		try {
-			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_norm.properties"),
-			        LinefeedControl.normalize);
+			reader = new LinefeedControlInputStreamReader(new File(
+					"testdata/ant/ant_norm.properties"),
+					LinefeedControl.normalize);
 			StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			String read = buf.toString();
-			String expected = "V1=Test1\n" + "V2=Test2\n" + "test.dev.location=ismaning\n";
+			String expected = "V1=Test1\n" + "V2=Test2\n"
+					+ "test.dev.location=ismaning\n";
 			Assert.assertEquals(expected, read);
 		} finally {
 			if (reader != null) {
@@ -191,15 +201,17 @@ public class LinefeedControlInputStreamReaderTest {
 	public final void readPlatformNorm() throws IOException {
 		LinefeedControlInputStreamReader reader = null;
 		try {
-			reader = new LinefeedControlInputStreamReader(new File("testdata/ant/ant_norm.properties"),
-			        LinefeedControl.platform);
+			reader = new LinefeedControlInputStreamReader(new File(
+					"testdata/ant/ant_norm.properties"),
+					LinefeedControl.platform);
 			StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			String read = buf.toString();
-			String expected = "V1=Test1" + LF_PF + "V2=Test2" + LF_PF + "test.dev.location=ismaning" + LF_PF;
+			String expected = "V1=Test1" + LF_PF + "V2=Test2" + LF_PF
+					+ "test.dev.location=ismaning" + LF_PF;
 			Assert.assertEquals(expected, read);
 		} finally {
 			if (reader != null) {

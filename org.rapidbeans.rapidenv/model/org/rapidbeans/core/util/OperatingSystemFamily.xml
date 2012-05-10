@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
- * Rapid Beans Framework: OperatingSystem.xml
+ * Rapid Beans Framework: OperatingSystemFamily.xml
  *
  * Copyright (C) 2011 Martin Bluemel
  *
@@ -17,7 +17,7 @@
 -->
 
 <!-- duplicated model for documentation reasons -->
-<enumtype name="org.rapidbeans.core.util.OperatingSystem">
+<enumtype name="org.rapidbeans.core.util.OperatingSystemFamily">
 	<description>Determines the operating system (family).</description>
 	<enum name="linux">
 		<description>The Linux open source operating system.</description>
