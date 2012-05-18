@@ -106,8 +106,14 @@ public class ConfigFilePropertiesTaskSetpropvalue extends RapidBeanBaseConfigFil
 					if (getSection() != null) {
 						msg += "[" + getSection() + "] ";
 					}
-					msg += "\"" + getName() + "\"" + " has a value different to \"" + getValue() + "\"" + " ("
-					        + propval + ")" + " in file " + fileCfg.getPathAsFile().getAbsolutePath();
+					if (interpreter.getLogLevel().intValue() <= Level.FINE.intValue()) {
+						msg += "\"" + getName() + "\"" + " has a value different to \"" + getValue() + "\"" + " ("
+						        + propval + ")" + " in file " + fileCfg.getPathAsFile().getAbsolutePath();
+					} else {
+						msg += "\"" + getName() + "\"" + " has a value different to \""
+						        + ConfigFile.limit(getValue(), 128) + "\"" + " (" + ConfigFile.limit(propval, 128)
+						        + ")" + " in file " + fileCfg.getPathAsFile().getAbsolutePath();
+					}
 					RapidEnvInterpreter.log(Level.FINE, msg);
 					fileCfg.setIssue(msg);
 					ok = false;

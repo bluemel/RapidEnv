@@ -29,7 +29,6 @@ import org.rapidbeans.core.basic.Id;
 import org.rapidbeans.core.basic.IdKeyprops;
 import org.rapidbeans.core.common.ReadonlyListCollection;
 import org.rapidbeans.core.type.TypeRapidBean;
-import org.rapidbeans.core.util.OperatingSystem;
 import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.core.util.StringHelper;
