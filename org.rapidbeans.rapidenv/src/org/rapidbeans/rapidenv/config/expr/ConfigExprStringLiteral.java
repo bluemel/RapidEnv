@@ -75,7 +75,7 @@ public class ConfigExprStringLiteral extends RapidBeanBaseConfigExprStringLitera
 	 * throws an Exception.
 	 * 
 	 * @param child
-	 *            the argument is ot used for this method.
+	 *            the argument is not used for this method.
 	 */
 	public void addChild(final ConfigExpr child) {
 		throw new RapidEnvException("no childs for ConfigExprString");
