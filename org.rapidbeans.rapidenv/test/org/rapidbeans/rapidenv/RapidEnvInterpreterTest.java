@@ -1468,6 +1468,7 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
+				// System.out.println(bStream);
 				assertEquals(new File("testdata/testinstall/otherapp/2.0").getAbsolutePath(),
 				        env.getPropertyValue("toolhome.otherapp"));
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
@@ -1487,7 +1488,7 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				System.out.println(bStream);
+				// System.out.println(bStream);
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertFalse(bStream.toString()
 				        .contains("toolhome.otherapp: value of common property should be changed"));
@@ -1498,52 +1499,47 @@ public class RapidEnvInterpreterTest {
 				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
 				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
 				        env.getPropertyValue("cmd.path"));
-				// FIXME
-				// assertFalse(bStream.toString().contains("cmd.path: value of common property should be changed"));
+				assertFalse(bStream.toString().contains("cmd.path: value of common property should be changed"));
 				RapidEnvInterpreter.clearInstance();
 
 				// test 2nd status after introducing upgrade of unit otherapp
 				// from version 1.0 to 2.0
 				// same result expected
-				// env = new RapidEnvInterpreter(new CmdRenv(
-				// new String[] { "-env", "testdata/env/envPropsPath09.xml", "s"
-				// }));
-				// sin = new SequenceInputStream(new InputStreamLines());
-				// bStream = new ByteArrayOutputStream();
-				// sout = new PrintStream(bStream);
-				// env.execute(sin, sout);
-				// assertTrue(bStream.toString().contains("toolhome.myapp = \""));
-				// assertTrue(bStream.toString().contains("toolhome.otherapp: value of common property should be changed"));
-				// assertTrue(bStream.toString().contains(
-				// "cmd.path.system = \"pathComponent1" + File.pathSeparator +
-				// "pathComponent2\""));
-				// assertTrue(bStream.toString().contains("cmd.path: value of common property should be changed"));
-				// RapidEnvInterpreter.clearInstance();
+				env = new RapidEnvInterpreter(new CmdRenv(
+				        new String[] { "-env", "testdata/env/envPropsPath09.xml", "s" }));
+				sin = new SequenceInputStream(new InputStreamLines());
+				bStream = new ByteArrayOutputStream();
+				sout = new PrintStream(bStream);
+				env.execute(sin, sout);
+				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
+				assertFalse(bStream.toString()
+				        .contains("toolhome.otherapp: value of common property should be changed"));
+				assertTrue(bStream.toString().contains(
+				        "cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
+				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
+				        + File.pathSeparator + new File("testdata/testinstall/otherapp/2.0").getAbsolutePath()
+				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
+				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
+				        env.getPropertyValue("cmd.path"));
+				assertFalse(bStream.toString().contains("cmd.path: value of common property should be changed"));
+				RapidEnvInterpreter.clearInstance();
 
 				// test downgrading otherapp to version 1.0 again
-				// env = new RapidEnvInterpreter(new CmdRenv(
-				// new String[] { "-env", "testdata/env/envPropsPath08.xml", "u"
-				// }));
-				// sin = new SequenceInputStream(new InputStreamLines());
-				// bStream = new ByteArrayOutputStream();
-				// sout = new PrintStream(bStream);
-				// env.execute(sin, sout);
-				// assertEquals("pathComponent1" + File.pathSeparator +
-				// "pathComponent2",
-				// env.getPropertyValue("cmd.path.system"));
-				// assertEquals(new
-				// File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
-				// env.getPropertyValue("toolhome.otherapp"));
-				// assertEquals(new
-				// File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() +
-				// File.separator + "bin"
-				// + File.pathSeparator + new
-				// File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
-				// + File.separator + "bin" + File.pathSeparator +
-				// File.separator + "fixed" + File.separator
-				// + "extension" + File.pathSeparator + "pathComponent1" +
-				// File.pathSeparator + "pathComponent2",
-				// env.getPropertyValue("cmd.path"));
+				env = new RapidEnvInterpreter(new CmdRenv(
+				        new String[] { "-env", "testdata/env/envPropsPath08.xml", "u" }));
+				sin = new SequenceInputStream(new InputStreamLines());
+				bStream = new ByteArrayOutputStream();
+				sout = new PrintStream(bStream);
+				env.execute(sin, sout);
+				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
+				        env.getPropertyValue("cmd.path.system"));
+				assertEquals(new File("testdata/testinstall/otherapp/1.0").getAbsolutePath(),
+				        env.getPropertyValue("toolhome.otherapp"));
+				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
+				        + File.pathSeparator + new File("testdata/testinstall/otherapp/1.0").getAbsolutePath()
+				        + File.separator + "bin" + File.pathSeparator + File.separator + "fixed" + File.separator
+				        + "extension" + File.pathSeparator + "pathComponent1" + File.pathSeparator + "pathComponent2",
+				        env.getPropertyValue("cmd.path"));
 			} finally {
 				RapidEnvTestHelper.tearDownProfile(env);
 			}

@@ -145,36 +145,29 @@ public class Property extends RapidBeanBaseProperty {
 					for (int i = size - 1; i >= 0; i--) {
 						final PropertyExtensionFromInstallUnit extfu = extfus.get(i);
 						final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
+						// System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+						// System.out.println("@@@ property = " +
+						// this.getFullyQualifiedName());
+						// System.out.println("@@@ parentInstallUnit = " +
+						// parentInstallUnit.getFullyQualifiedName());
 						final String value = normalize(extfu.getValue());
+						// System.out.println("@@@ extension value = " + value);
 						final InstallStatus parentInstallUnitInstallStatus = env.getInstallationStatus(
 						        parentInstallUnit, CmdRenvCommand.stat);
+						// System.out.println("@@@ parentInstallUnit.getInstallcontrol() = "
+						// + parentInstallUnit.getInstallcontrol().name());
+						// System.out.println("@@@ env.getCommand() = " +
+						// env.getCommand().name());
+						// System.out.println("@@@ parentInstallUnitInstallStatus = "
+						// + parentInstallUnitInstallStatus.name());
 						switch (parentInstallUnitInstallStatus) {
 						case deinstallrequired:
 							removePathExtension(pathComponents, extfu.getPropextmode(), value);
 						break;
 						default:
-							// System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-							// System.out.println("@@@ property = " +
-							// this.getFullyQualifiedName());
-							// System.out.println("@@@ extension value = " +
-							// value);
-							// System.out.println("@@@ parentInstallUnit = " +
-							// parentInstallUnit.getFullyQualifiedName());
-							// System.out.println("@@@ parentInstallUnit.getInstallcontrol() = "
-							// + parentInstallUnit.getInstallcontrol().name());
-							// System.out.println("@@@ env.getCommand() = " +
-							// env.getCommand().name());
-							// System.out.println("@@@ parentInstallUnitInstallStatus = "
-							// + parentInstallUnitInstallStatus.name());
-							if (parentInstallUnit.getInstallcontrol() == InstallControl.normal
-							        || (parentInstallUnit.getInstallcontrol() == InstallControl.optional && (parentInstallUnit
-							                .shouldBeInstalled()
-							                || parentInstallUnitInstallStatus == InstallStatus.uptodate
-							                || parentInstallUnitInstallStatus == InstallStatus.configurationrequired
-							                || parentInstallUnitInstallStatus == InstallStatus.upgraderequired || parentInstallUnitInstallStatus == InstallStatus.downgraderequired))) {
-								if (extfu.getPropextmode() == PropertyExtensionMode.prepend) {
-									addPathExtension(pathComponents, extfu.getPropextmode(), value);
-								}
+							if (relevantParentUnitInstallState(parentInstallUnit, parentInstallUnitInstallStatus)
+							        && extfu.getPropextmode() == PropertyExtensionMode.prepend) {
+								addPathExtension(pathComponents, extfu.getPropextmode(), value);
 							}
 						break;
 						}
@@ -191,15 +184,9 @@ public class Property extends RapidBeanBaseProperty {
 						case deinstallrequired:
 						break;
 						default:
-							if (parentInstallUnit.getInstallcontrol() == InstallControl.normal
-							        || (parentInstallUnit.getInstallcontrol() == InstallControl.optional && (parentInstallUnit
-							                .shouldBeInstalled()
-							                || parentInstallUnitInstallStatus == InstallStatus.uptodate
-							                || parentInstallUnitInstallStatus == InstallStatus.configurationrequired
-							                || parentInstallUnitInstallStatus == InstallStatus.upgraderequired || parentInstallUnitInstallStatus == InstallStatus.downgraderequired))) {
-								if (extfu.getPropextmode() == PropertyExtensionMode.append) {
-									addPathExtension(pathComponents, extfu.getPropextmode(), value);
-								}
+							if (relevantParentUnitInstallState(parentInstallUnit, parentInstallUnitInstallStatus)
+							        && extfu.getPropextmode() == PropertyExtensionMode.append) {
+								addPathExtension(pathComponents, extfu.getPropextmode(), value);
 							}
 						break;
 						}
@@ -231,6 +218,30 @@ public class Property extends RapidBeanBaseProperty {
 				PropertyInterpretedString.unlockIntepretation();
 			}
 		}
+	}
+
+	/**
+	 * Determines if the parent installation unit of a path extension is in a
+	 * relevant state (considering also the installation command) so that it
+	 * should be effective or not.
+	 * 
+	 * @param parentInstallUnit
+	 *            the parent installation unit of the specific path extension to
+	 *            check
+	 * @param parentInstallUnitInstallStatus
+	 *            has to be already determined by the caller
+	 * 
+	 * @return f the parent installation unit of a path extension is in a
+	 *         relevant state so that it should be effective or not
+	 */
+	private boolean relevantParentUnitInstallState(final Installunit parentInstallUnit,
+	        final InstallStatus parentInstallUnitInstallStatus) {
+		return parentInstallUnit.getInstallcontrol() == InstallControl.normal
+		        || (parentInstallUnit.getInstallcontrol() == InstallControl.optional && (parentInstallUnit
+		                .shouldBeInstalled()
+		                || parentInstallUnitInstallStatus == InstallStatus.uptodate
+		                || parentInstallUnitInstallStatus == InstallStatus.configurationrequired
+		                || parentInstallUnitInstallStatus == InstallStatus.upgraderequired || parentInstallUnitInstallStatus == InstallStatus.downgraderequired));
 	}
 
 	public Installunit getParentInstallunit() {

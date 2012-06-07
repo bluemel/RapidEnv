@@ -217,7 +217,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 
 		InstallStatus installStatus = null;
-		if (RapidEnvInterpreter.getInstance() != null) {
+		if (renv != null) {
 			installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this, CmdRenvCommand.install);
 		} else {
 			installStatus = getInstallationStatus(CmdRenvCommand.install);
@@ -227,20 +227,22 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is already installed");
 		}
 
-		if (this.getInstallcontrol() == InstallControl.optional
-		        && (!chosenUnits.contains(this.getFullyQualifiedName()))) {
-			boolean explicitlyChosen = false;
-			for (final String unitName : chosenUnits) {
-				final Installunit unit = renv.getProject().findInstallunitConfiguration(unitName);
-				if (unit == this) {
-					explicitlyChosen = true;
-					break;
+		if (renv == null || renv.getCommand() == CmdRenvCommand.install) {
+			if (this.getInstallcontrol() == InstallControl.optional
+			        && (!chosenUnits.contains(this.getFullyQualifiedName()))) {
+				boolean explicitlyChosen = false;
+				for (final String unitName : chosenUnits) {
+					final Installunit unit = renv.getProject().findInstallunitConfiguration(unitName);
+					if (unit == this) {
+						explicitlyChosen = true;
+						break;
+					}
 				}
-			}
-			if (!explicitlyChosen) {
-				RapidEnvInterpreter.log(Level.FINE, "Skipping installation of unit \"" + getFullyQualifiedName() + "\""
-				        + " because it has not been explicitly chosen.");
-				return;
+				if (!explicitlyChosen) {
+					RapidEnvInterpreter.log(Level.FINE, "Skipping installation of unit \"" + getFullyQualifiedName()
+					        + "\"" + " because it has not been explicitly chosen.");
+					return;
+				}
 			}
 		}
 		storeData(InstallState.installing);
@@ -928,6 +930,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		InstallStatus installStatus = null;
 		if (RapidEnvInterpreter.getInstance() != null) {
 			installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this, CmdRenvCommand.update);
+			// ask for installation state with command install in advance in
+			// order to get it correctly
+			// from the cache after having deinstalled it.
+			// System.out.println("@@@ @@@@@@@@@@@@@ INSTALLATION STATE for install: "
+			// + RapidEnvInterpreter.getInstance().getInstallationStatus(this,
+			// CmdRenvCommand.install).name());
 		} else {
 			installStatus = getInstallationStatus(CmdRenvCommand.update);
 		}
