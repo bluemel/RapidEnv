@@ -18,7 +18,6 @@
 package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
-import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
@@ -63,9 +62,6 @@ public class ConfigExprFunctionVersion extends RapidBeanBaseConfigExprFunctionVe
 		}
 		if (unit == null) {
 			unit = getEnclosingInstallUnit();
-		}
-		if (unit.getVersion() == null) {
-			throw new RapidEnvException("No version defined for install unit \"" + unit.getFullyQualifiedName() + "\".");
 		}
 		return unit.getVersion().toString();
 	}

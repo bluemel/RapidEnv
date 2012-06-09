@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.util.FileHelper;
 import org.rapidbeans.core.util.Version;
+import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
 import org.rapidbeans.rapidenv.config.Installunit;

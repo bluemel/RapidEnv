@@ -79,5 +79,6 @@ public class ConfigExprStringLiteralTest {
 		Assert.assertEquals(3, expr.getChilds().size());
 		Assert.assertSame(ConfigExprStringLiteral.class, expr.getChilds().get(0).getClass());
 		Assert.assertSame(ConfigExprProperty.class, expr.getChilds().get(1).getClass());
+		Assert.assertEquals("xxx${V1}yyy${V2}zzz", expr.interpret());
 	}
 }
