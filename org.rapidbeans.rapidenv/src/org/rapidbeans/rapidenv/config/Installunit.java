@@ -45,6 +45,7 @@ import org.rapidbeans.rapidenv.config.cmd.Argument;
 import org.rapidbeans.rapidenv.config.cmd.CommandExecutionResult;
 import org.rapidbeans.rapidenv.config.cmd.ExceptionMap;
 import org.rapidbeans.rapidenv.config.cmd.ShellLinkIcon;
+import org.rapidbeans.rapidenv.config.cmd.ShellLinkWindows;
 import org.rapidbeans.rapidenv.config.cmd.SystemCommand;
 import org.rapidbeans.rapidenv.config.expr.ConfigExprTopLevel;
 import org.rapidbeans.rapidenv.config.file.ConfigFile;
@@ -835,11 +836,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						throw new RapidEnvException("Problems to delete file \"" + iconFile.getAbsolutePath() + "\"");
 					}
 				}
-				final File startmenuFolderProjectname = new File(System.getenv("USERPROFILE") + File.separator
-				        + "Start Menu" + File.separator + intepreter.getProject().getName());
-				final File startmenuFolderProjectag = new File(System.getenv("USERPROFILE") + File.separator
-				        + "Start Menu" + File.separator + intepreter.getProject().getName() + File.separator
-				        + intepreter.getProject().getTag());
+				final File startmenuFolderProjectname = new File(ShellLinkWindows.getStartMenuFolder(), intepreter
+				        .getProject().getName());
+				final File startmenuFolderProjectag = new File(ShellLinkWindows.getStartMenuFolder(), intepreter
+				        .getProject().getName() + File.separator + intepreter.getProject().getTag());
 				iconFile = new File(startmenuFolderProjectag, interpret(icon.getTitle(), intepreter.getAnt()) + ".lnk");
 				if (iconFile.exists()) {
 					if (iconFile.delete()) {
