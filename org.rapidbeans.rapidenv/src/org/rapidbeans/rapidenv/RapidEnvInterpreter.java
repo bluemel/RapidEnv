@@ -772,7 +772,7 @@ public class RapidEnvInterpreter {
 			int installedUnitsCount = 0;
 			for (final Installunit unit : getInstallunitsToProcess()) {
 				if (getInstallationStatus(unit, CmdRenvCommand.install) == InstallStatus.notinstalled
-				        && !(unit.getInstallcontrol() == InstallControl.optional || unit.getInstallcontrol() == InstallControl.discontinued)) {
+				        && unit.shouldBeInstalled()) {
 					unit.install(this.renvCommand.getInstallunitOrPropertyNames());
 					installedUnitsCount++;
 				} else {
@@ -794,10 +794,22 @@ public class RapidEnvInterpreter {
 	 * since this determination is used very often and is very expensive.
 	 * 
 	 * @param installunit
-	 *            the installunit to investigate.
+	 *            the installation unit to investigate.
+	 * @return the installation status of the given installation unit
+	 */
+	public InstallStatus getInstallationStatus(Installunit installunit) {
+		return getInstallationStatus(installunit, getCommand());
+	}
+
+	/**
+	 * Centralized install status determination equipped with a result cache
+	 * since this determination is used very often and is very expensive.
+	 * 
+	 * @param installunit
+	 *            the installation unit to investigate.
 	 * @param cmd
 	 *            the RapidEnv command that is currently executed
-	 * @return the installation status of the given installunit
+	 * @return the installation status of the given installation unit
 	 */
 	public InstallStatus getInstallationStatus(Installunit installunit, CmdRenvCommand cmd) {
 		InstallStatus status = null;

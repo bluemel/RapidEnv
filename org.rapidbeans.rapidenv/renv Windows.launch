@@ -6,8 +6,14 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables">
+<mapEntry key="RAPID_ENV_HOME" value="D:\Wad\kdg_dev_group\environment\wad"/>
+<mapEntry key="RAPID_ENV_PROFILE" value="D:\Wad\kdg_dev_group\environment\wad\profile\renv_Bluemel1.Martin_L80069197"/>
+<mapEntry key="RAPID_ENV_PROFILES_HOME" value="D:\Wad\kdg_dev_group\environment\wad\profile"/>
+<mapEntry key="RAPID_ENV_PROJECT_HOME" value="D:\Wad"/>
+</mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.rapidbeans.rapidenv.cmd.CmdRenv"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-yes"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="i"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.rapidbeans.rapidenv"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="D:/Projects/RapidEnv/environment"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="D:\Wad\kdg_dev_group\environment\wad"/>
 </launchConfiguration>

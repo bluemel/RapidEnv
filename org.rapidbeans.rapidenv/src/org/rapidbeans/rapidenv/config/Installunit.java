@@ -930,12 +930,6 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		InstallStatus installStatus = null;
 		if (RapidEnvInterpreter.getInstance() != null) {
 			installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this, CmdRenvCommand.update);
-			// ask for installation state with command install in advance in
-			// order to get it correctly
-			// from the cache after having deinstalled it.
-			// System.out.println("@@@ @@@@@@@@@@@@@ INSTALLATION STATE for install: "
-			// + RapidEnvInterpreter.getInstance().getInstallationStatus(this,
-			// CmdRenvCommand.install).name());
 		} else {
 			installStatus = getInstallationStatus(CmdRenvCommand.update);
 		}
@@ -1799,11 +1793,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	public boolean shouldBeInstalled() {
 		// System.out.println("@@@ CALL should be installed: " +
 		// this.getFullyQualifiedName());
+		final InstallStatus installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this);
 		if (getParentUnit() == null) {
 			// if (RapidEnvInterpreter.getInstance().getCommand() != null)
 			// System.out.println("@@@ command = " +
 			// RapidEnvInterpreter.getInstance().getCommand().name());
-			if (this.getInstallationStatus(RapidEnvInterpreter.getInstance().getCommand()) == InstallStatus.notinstalled) {
+			if (installStatus == InstallStatus.notinstalled) {
 				// if
 				// (RapidEnvInterpreter.getInstance().getInstallunitsToProcess()
 				// != null)
@@ -1827,7 +1822,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				return false;
 			}
 		} else {
-			if (this.getInstallationStatus(RapidEnvInterpreter.getInstance().getCommand()) == InstallStatus.notinstalled) {
+			if (installStatus == InstallStatus.notinstalled) {
 				if (getParentUnit().shouldBeInstalled()) {
 					return true;
 				} else {
