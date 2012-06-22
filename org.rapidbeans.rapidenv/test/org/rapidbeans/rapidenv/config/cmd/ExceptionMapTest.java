@@ -1,5 +1,5 @@
 /*
- * RapidEnv: ExceptionMap.java
+ * RapidEnv: ExceptionMapTest.java
  *
  * Copyright (C) 2011 Martin Bluemel
  *

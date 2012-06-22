@@ -25,8 +25,7 @@ import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 /**
  * The root of all evil.
  */
-public class ConfigFilePropertiesTaskDeleteprop extends
-		RapidBeanBaseConfigFilePropertiesTaskDeleteprop {
+public class ConfigFilePropertiesTaskDeleteprop extends RapidBeanBaseConfigFilePropertiesTaskDeleteprop {
 
 	/**
 	 * Check if the node value has been set properly or not
@@ -43,24 +42,19 @@ public class ConfigFilePropertiesTaskDeleteprop extends
 	 */
 	@Override
 	public boolean check(final boolean execute, final boolean silent) {
+		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
+		final ConfigFileProperties fileCfg = (ConfigFileProperties) getParentBean();
+		final ConfigFileEditorProperties editor = (ConfigFileEditorProperties) fileCfg.getEditor();
 		boolean ok = true;
 		if (execute) {
 			ok = false;
-		}
-		final RapidEnvInterpreter interpreter = RapidEnvInterpreter
-				.getInstance();
-		final ConfigFileProperties fileCfg = (ConfigFileProperties) getParentBean();
-		final ConfigFileEditorProperties editor = (ConfigFileEditorProperties) fileCfg
-				.getEditor();
-		if (execute) {
-			if (editor.getProperty(getName()) != null) {
+			if (editor.getProperty(getSection(), getName()) != null) {
 				editor.deleteProperty(getSection(), getName());
 				String msg = "    deleted property ";
 				if (getSection() != null) {
 					msg += "[" + getSection() + "] ";
 				}
-				msg += "\"" + getName() + "\"" + " in file "
-						+ fileCfg.getPathAsFile().getAbsolutePath();
+				msg += "\"" + getName() + "\"" + " in file " + fileCfg.getPathAsFile().getAbsolutePath();
 				if (!silent) {
 					interpreter.getOut().println(msg);
 				}
@@ -72,7 +66,7 @@ public class ConfigFilePropertiesTaskDeleteprop extends
 					msg += "[" + getSection() + "] ";
 				}
 				msg += "\"" + getName() + "\"" + " already deleted in file "
-						+ fileCfg.getPathAsFile().getAbsolutePath();
+				        + fileCfg.getPathAsFile().getAbsolutePath();
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				fileCfg.setIssue(msg);
 				ok = true;
@@ -82,17 +76,16 @@ public class ConfigFilePropertiesTaskDeleteprop extends
 			if (getSection() != null) {
 				msg += "[" + getSection() + "] ";
 			}
-			if (editor.getProperty(getName()) != null) {
+			if (editor.getProperty(getSection(), getName()) != null) {
 				msg += "\"" + getName() + "\"" + " should be deleted in file "
-						+ fileCfg.getPathAsFile().getAbsolutePath();
+				        + fileCfg.getPathAsFile().getAbsolutePath();
 				RapidEnvInterpreter.log(Level.FINE, msg);
 				fileCfg.setIssue(msg);
 				ok = false;
 			} else {
 				msg += "\"" + getName() + "\"" + " already deleted in file "
-						+ fileCfg.getPathAsFile().getAbsolutePath();
+				        + fileCfg.getPathAsFile().getAbsolutePath();
 				RapidEnvInterpreter.log(Level.FINE, msg);
-				fileCfg.setIssue(msg);
 				ok = true;
 			}
 		}
@@ -129,8 +122,7 @@ public class ConfigFilePropertiesTaskDeleteprop extends
 	/**
 	 * the bean's type (class variable).
 	 */
-	private static TypeRapidBean type = TypeRapidBean
-			.createInstance(ConfigFilePropertiesTaskDeleteprop.class);
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigFilePropertiesTaskDeleteprop.class);
 
 	/**
 	 * @return the RapidBean's type

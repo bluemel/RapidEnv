@@ -453,7 +453,7 @@
 		description="deploy only to local Maven repository"
 		>
 
-		<copy todir="../env/bin">
+		<copy todir="../environment/bin">
 			<fileset dir="scripts/windows"/>
 			<fileset dir="scripts/unix"/>
 			<filterset>
