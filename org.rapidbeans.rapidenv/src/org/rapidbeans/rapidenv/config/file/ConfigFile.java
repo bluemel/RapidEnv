@@ -323,15 +323,30 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 				if (!cfgTask.checkOsfamily()) {
 					continue;
 				}
-				final boolean checkResult = cfgTask.check(execute, false);
-				if (execute) {
-					if (checkResult) {
-						configured = true;
+				try {
+					final boolean checkResult = cfgTask.check(execute, false);
+					if (execute) {
+						if (checkResult) {
+							configured = true;
+						}
+					} else {
+						if (!checkResult) {
+							return false;
+						}
 					}
-				} else {
-					if (!checkResult) {
-						return false;
+				} catch (RuntimeException e) {
+					String msg = "Unforeseen problem while";
+					if (execute) {
+						msg += " modifying";
+					} else {
+						msg += " checking";
 					}
+					msg += " file \"" + this.getPath() + "\"";
+					this.setOk(false);
+					this.setIssue(msg);
+					RapidEnvInterpreter.log(Level.SEVERE, msg + ":");
+					e.printStackTrace();
+					return false;
 				}
 			}
 			if (configured) {

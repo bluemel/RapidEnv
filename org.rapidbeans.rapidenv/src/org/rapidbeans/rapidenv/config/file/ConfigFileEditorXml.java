@@ -204,6 +204,7 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 			if (idAttrs.size() > 0) {
 				newChildName = StringHelper.splitBeforeLast(newChildName, "[");
 			}
+			RapidEnvInterpreter.log(Level.FINER, "Creating XML-Element \"" + newChildName + "\"...");
 			final Node newChild = this.document.createElement(newChildName);
 			if (value != null) {
 				final Node textnode = this.document.createTextNode(value);
