@@ -498,7 +498,7 @@ public class RapidEnvInterpreter {
 	}
 
 	private void createExplorerMenuEntry() {
-		final File tmpfile = new File("newCmdMenuEntry.reg");
+		final File tmpfile = new File("cmdMenuEntry.reg");
 		OutputStreamWriter osw = null;
 		try {
 			final String lf = PlatformHelper.getLineFeed();
@@ -537,7 +537,8 @@ public class RapidEnvInterpreter {
 			throw new RapidEnvException("Problem while creating explorer menu entry:" + " returncode = "
 			        + result.getReturncode());
 		}
-		tmpfile.delete();
+		// do not delete to leave a chance to execute in hindsight
+		// tmpfile.delete();
 	}
 
 	private void deleteExplorerMenuEntry() {

@@ -28,7 +28,7 @@
 	<sect2>
 		<title>1.3.4</title>
 		<para>
-			Issue date: 07/??/2012
+			Issue date: 07/31/2012
 		</para>
 		<itemizedlist>
 			<listitem>
@@ -36,6 +36,15 @@
 			</listitem>
 			<listitem>
 				<para><emphasis role="bold">Fixed Windows Start menu icon creation for German windows.</emphasis>.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Improved behavior in case of unforeseen exceptions while executing file configurations:</emphasis>
+          Exceptions are reported but do not interrupt the overall configuration process.
+          Files having configuration problems are explicitly reported.
+				</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Suppressed reg file deletion for command prompt menu entry.</emphasis>.</para>
 			</listitem>
 		</itemizedlist>
 	</sect2>
@@ -46,12 +55,11 @@
 		</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis role="bold">Performance improvement</emphasis>
-by fixing expensive internal installation status determination not to be performed
-more than once during one interpreter run.</para>
+				<para><emphasis role="bold">Performance improvements</emphasis>
+by tweaking expensive internal installation status determination.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis role="bold">Further performance improvement</emphasis>
+				<para><emphasis role="bold">Further performance improvements</emphasis>
 using new RapidBeans framework version 0.9.6 with tuned "hostname()" function.</para>
 			</listitem>
 		</itemizedlist>
