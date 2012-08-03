@@ -397,6 +397,26 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 		if (ok) {
 			if (newArgumentsCount != oldArgumentsCount) {
+				if (RapidEnvInterpreter.getInstance().getLogLevel().intValue() <= Level.FINER.intValue()) {
+					RapidEnvInterpreter.log(Level.FINER, "Shell link icon \"" + title + "\" in folder \""
+					        + shellLinkFolder.getAbsolutePath() + "\" differs from configuration");
+					final StringBuilder sb = new StringBuilder();
+					sb.append("Current Arguments:\n");
+					int i = 0;
+					for (final Argument arg : shellLink.getArguments()) {
+						sb.append("  [" + Integer.toString(i) + "]: " + arg.getName() + ": \"" + arg.getValue()
+						        + "\", quoted = " + Boolean.toString(arg.getQuoted()) + "\n");
+						i++;
+					}
+					sb.append("Configured Arguments:\n");
+					i = 0;
+					for (final Argument arg : arguments) {
+						sb.append("  [" + Integer.toString(i) + "]: " + arg.getName() + ": \"" + arg.getValue()
+						        + "\", quoted = " + Boolean.toString(arg.getQuoted()) + "\n");
+						i++;
+					}
+					RapidEnvInterpreter.log(Level.FINER, sb.toString());
+				}
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
 				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Arguments count has changed\n"
