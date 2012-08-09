@@ -1857,8 +1857,20 @@ public class RapidEnvInterpreter {
 				        ExceptionMap.ERRORCODE_AMBIGOUUS_NAME);
 			} else if (unit != null && property == null) {
 				if (installUnitsToProcMap.get(unit.getFullyQualifiedName()) == null) {
-					installUnitsToProcMap.put(unit.getFullyQualifiedName(), unit);
-					result.installunits.add(unit);
+					if (unit.getOsfamily() != null && (!unit.getOsfamily().equals(PlatformHelper.getOsfamily()))) {
+						log(Level.FINE, "Installation unit \"" + unit.getFullyQualifiedName()
+						        + "\" excluded on OS family \"" + PlatformHelper.getOsfamily().name() + "\"");
+					} else if (unit.getOs() != null && (!unit.getOs().equals(PlatformHelper.getOs()))) {
+						log(Level.FINE, "Installation unit \"" + unit.getFullyQualifiedName() + "\" excluded on OS \""
+						        + PlatformHelper.getOs().name() + "\"");
+					} else if (unit.getArchitecture() != null
+					        && (!unit.getArchitecture().equals(PlatformHelper.getArchName()))) {
+						log(Level.FINE, "Installation unit \"" + unit.getFullyQualifiedName()
+						        + "\" excluded on architecture \"" + PlatformHelper.getArchName() + "\"");
+					} else {
+						installUnitsToProcMap.put(unit.getFullyQualifiedName(), unit);
+						result.installunits.add(unit);
+					}
 				} else {
 					logger.warning("Install unit \"" + unit.getFullyQualifiedName()
 					        + "\" has been specified for one command multiple times");

@@ -109,8 +109,19 @@ whereas each component of "space" will become a separate subfolder.</description
 
 	<property name="osfamily" type="choice"
 		enum="org.rapidbeans.core.util.OperatingSystemFamily">
-		<description>If this value is defined the install unit will exclusievely be installed on
+		<description>If this value is defined the install unit will exclusively be installed on
+this type of operating system family otherwise it will be installed operating system independently.</description>
+	</property>
+
+	<property name="os" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystem">
+		<description>If this value is defined the install unit will exclusively be installed on
 this type of operating system otherwise it will be installed operating system independently.</description>
+	</property>
+
+	<property name="architecture" type="string">
+		<description>If this value is defined the install unit will exclusively be installed on
+this platform architecture otherwise it will be installed platform architecture independently.</description>
 	</property>
 
 	<property name="installcontrol" type="choice"
