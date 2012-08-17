@@ -1791,24 +1791,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	}
 
 	public boolean shouldBeInstalled() {
-		// System.out.println("@@@ CALL should be installed: " +
-		// this.getFullyQualifiedName());
 		final InstallStatus installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this);
 		if (getParentUnit() == null) {
-			// if (RapidEnvInterpreter.getInstance().getCommand() != null)
-			// System.out.println("@@@ command = " +
-			// RapidEnvInterpreter.getInstance().getCommand().name());
 			if (installStatus == InstallStatus.notinstalled) {
-				// if
-				// (RapidEnvInterpreter.getInstance().getInstallunitsToProcess()
-				// != null)
-				// System.out.println("@@@ etInstallunitsToProcess().contains(this) = "
-				// +
-				// RapidEnvInterpreter.getInstance().getInstallunitsToProcess().contains(this));
-				// System.out
-				// .println("@@@ getInstallUnitOrPropertyNamesExplicitelySpecified() = "
-				// + RapidEnvInterpreter.getInstance()
-				// .getInstallUnitOrPropertyNamesExplicitelySpecified());
 				if (this.getInstallcontrol() == InstallControl.normal
 				        || ((RapidEnvInterpreter.getInstance().getCommand() == CmdRenvCommand.install || RapidEnvInterpreter
 				                .getInstance().getCommand() == CmdRenvCommand.update)

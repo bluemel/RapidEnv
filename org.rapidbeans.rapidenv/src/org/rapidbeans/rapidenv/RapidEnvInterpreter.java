@@ -920,7 +920,7 @@ public class RapidEnvInterpreter {
 			for (final Installunit unit : getInstallunitsToProcess()) {
 				switch (getInstallationStatus(unit, CmdRenvCommand.update)) {
 				case notinstalled:
-					if (!(unit.getInstallcontrol() == InstallControl.optional || unit.getInstallcontrol() == InstallControl.discontinued)) {
+					if (unit.shouldBeInstalled()) {
 						unit.install(this.renvCommand.getInstallunitOrPropertyNames());
 						updatedUnitsCount++;
 					} else if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
@@ -1157,15 +1157,7 @@ public class RapidEnvInterpreter {
 			}
 		break;
 		case install:
-			// System.out.println("@@@ @@@@@@@@@@@@@@@@@@@@@ init property: " +
-			// propCfg.getFullyQualifiedName() + "...");
 			final boolean isInstallunitSpecific = propCfg.getParentInstallunit() != null;
-			// System.out.println("@@@ getInstallunitsToProcess().size() = "
-			// + getInstallunitsToProcess().size());
-			// System.out.println("@@@ all install units .size() = "
-			// +
-			// getProject().getContainer().findBeansByType("org.rapidbeans.rapidenv.config.Installunit")
-			// .size());
 			final boolean allInstallunitsToProcess = getInstallunitsToProcess().size() == getProject().getContainer()
 			        .findBeansByType("org.rapidbeans.rapidenv.config.Installunit").size();
 			boolean thisPropsInstallunitToProcess = false;
@@ -1200,15 +1192,6 @@ public class RapidEnvInterpreter {
 			        && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.normal;
 			final boolean controlDiscontinued = propCfg.getParentInstallunit() != null
 			        && propCfg.getParentInstallunit().getInstallcontrol() == InstallControl.discontinued;
-			// System.out.println("@@@ init property: " +
-			// propCfg.getFullyQualifiedName() + "...");
-			// System.out.println("@@@ controlDiscontinued = " +
-			// controlDiscontinued);
-			// System.out.println("@@@ thisPropsInstallunitToProcess = " +
-			// thisPropsInstallunitToProcess);
-			// System.out.println("@@@ controlNormal = " + controlNormal);
-			// System.out.println("@@@ allInstallunitsToProcess = " +
-			// allInstallunitsToProcess);
 			if (controlDiscontinued) {
 				propValue = null;
 			} else if ((isInstallunitSpecific && (thisPropsInstallunitToProcess || (controlNormal && allInstallunitsToProcess)))
