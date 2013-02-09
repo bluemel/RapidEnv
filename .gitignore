@@ -13,5 +13,6 @@ org.rapidbeans.rapidenv/doc/RapidEnvReferenceManual.xml
 org.rapidbeans.rapidenv/doc/RapidEnvReferenceManualCldescr.xml
 org.rapidbeans.rapidenv/env.dtd
 org.rapidbeans.rapidenv/gensrc
+org.rapidbeans.rapidenv/target
 org.rapidbeans.rapidenv/testreport
 tools
