@@ -340,12 +340,12 @@ public class RapidEnvInterpreter {
 				}
 				readProfile();
 				initProperties(this.command);
-			break;
+				break;
 			case help:
 			case version:
 			case hashvalue:
-			// do nothing
-			break;
+				// do nothing
+				break;
 			default:
 				out.println("\nRapidEnv development environment");
 				readProfile();
@@ -356,38 +356,38 @@ public class RapidEnvInterpreter {
 				out.println("  Project: " + getProject().getName() + ", Tag: " + tag);
 				initPropertiesAndInstallunitsToProcess(this.command);
 				initProperties(this.command);
-			break;
+				break;
 			}
 
 			// dispatch
 			switch (this.command) {
 			case boot:
 				execBoot();
-			break;
+				break;
 			case stat:
 				execStat();
-			break;
+				break;
 			case install:
 				execInstall();
-			break;
+				break;
 			case deinstall:
 				deinstallAll = execDeinstall();
-			break;
+				break;
 			case update:
 				execUpdate();
-			break;
+				break;
 			case config:
 				execConfig();
-			break;
+				break;
 			case help:
 				execHelp();
-			break;
+				break;
 			case version:
 				execVersion();
-			break;
+				break;
 			case hashvalue:
 				execHashvalue();
-			break;
+				break;
 			default:
 				throw new RapidEnvCmdException("command \"" + this.command + "\" is not yest supported");
 			}
@@ -396,16 +396,16 @@ public class RapidEnvInterpreter {
 			switch (this.command) {
 			case boot:
 				writeProfile();
-			break;
+				break;
 			case help:
 			case hashvalue:
 			case version:
-			break;
+				break;
 			default:
 				if (profileChanged() && !deinstallAll) {
 					writeProfile();
 				}
-			break;
+				break;
 			}
 		} finally {
 			this.timeEnd = System.currentTimeMillis();
@@ -450,24 +450,24 @@ public class RapidEnvInterpreter {
 			create = CmdLineInteractions.promptYesNo(this.in, this.out,
 			        "\nDo you want to create a \"Command Prompt Here\" menu entry\n"
 			                + "  in Windows Explorer for this development environment?", true);
-		break;
+			break;
 		case linux:
 			switch (RapidEnvInterpreter.getLinuxDesktop()) {
 			case kde:
 				create = CmdLineInteractions.promptYesNo(this.in, this.out,
 				        "\nDo you want to create an \"Open Terminal\" action\n"
 				                + "  for KDE's Dolphin file manager for this development environment?", true);
-			break;
+				break;
 			case gnome:
 				create = CmdLineInteractions.promptYesNo(this.in, this.out,
 				        "\nDo you want to create a \"Open Terminal\" script\n"
 				                + "  for Gnome's Nautilus file manager for this development environment?", true);
-			break;
+				break;
 			default:
 				log(Level.FINE, "No service menu entry to delete for Linux desktop \""
 				        + RapidEnvInterpreter.getLinuxDesktop().name());
 			}
-		break;
+			break;
 		default:
 			throw new RapidEnvException("Operating systm \"" + PlatformHelper.getOsfamily().name()
 			        + "\" not yet supported");
@@ -476,20 +476,20 @@ public class RapidEnvInterpreter {
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				createExplorerMenuEntry();
-			break;
+				break;
 			case linux:
 				switch (RapidEnvInterpreter.getLinuxDesktop()) {
 				case kde:
 					createKdeServiceMenuEntry();
-				break;
+					break;
 				case gnome:
 					createGnomeServiceMenuEntry();
-				break;
+					break;
 				default:
 					log(Level.FINE, "No service menu entry to delete for Linux desktop \""
 					        + RapidEnvInterpreter.getLinuxDesktop().name());
 				}
-			break;
+				break;
 			default:
 				throw new RapidEnvException("Operating systm \"" + PlatformHelper.getOsfamily().name()
 				        + "\" not yet supported");
@@ -755,7 +755,7 @@ public class RapidEnvInterpreter {
 							install = CmdLineInteractions.promptYesNo(this.in, this.out,
 							        "Installation unit \"" + unit.getFullyQualifiedName()
 							                + "\" is discontinued.\n  Do you want to install anyway?", false);
-						break;
+							break;
 						default:
 							throw new AssertionError("Run mode \"" + this.runMode.name() + "\" not supported");
 						}
@@ -851,7 +851,7 @@ public class RapidEnvInterpreter {
 				        "Do you really want do deinstall the complete evironment including:\n"
 				                + "- all install units\n" + "- your personal profile\n"
 				                + "- the RapidEnv command prompt?", false);
-			break;
+				break;
 			default:
 				throw new AssertionError("Run mode \"" + this.runMode.name() + " not yet supported");
 			}
@@ -870,7 +870,7 @@ public class RapidEnvInterpreter {
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				deleteExplorerMenuEntry();
-			break;
+				break;
 			case linux:
 				this.out.println("Deleting profile for " + getProject().getName() + " " + getProject().getTag() + " "
 				        + "...");
@@ -884,16 +884,16 @@ public class RapidEnvInterpreter {
 				switch (RapidEnvInterpreter.getLinuxDesktop()) {
 				case kde:
 					deleteKdeServiceMenuEntry();
-				break;
+					break;
 				case gnome:
 					deleteGnomeServiceMenuEntry();
-				break;
+					break;
 				default:
 					log(Level.FINE, "No start menu shell link icon \"" + getProject().getName() + "_"
 					        + getProject().getTag() + ".desktop" + "\" to delete for Linux desktop \""
 					        + RapidEnvInterpreter.getLinuxDesktop().name());
 				}
-			break;
+				break;
 			default:
 				throw new RapidEnvException("Operating systm \"" + PlatformHelper.getOsfamily().name()
 				        + "\" not yet supported");
@@ -926,10 +926,10 @@ public class RapidEnvInterpreter {
 					} else if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
 						unit.stat();
 					}
-				break;
+					break;
 				case deinstallrequired:
 					unit.deinstall();
-				break;
+					break;
 				case upgraderequired:
 				case downgraderequired:
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
@@ -938,7 +938,7 @@ public class RapidEnvInterpreter {
 						unit.updowngrade();
 						updatedUnitsCount++;
 					}
-				break;
+					break;
 				case configurationrequired:
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
 						unit.deinstall();
@@ -946,7 +946,7 @@ public class RapidEnvInterpreter {
 						unit.configure(true);
 						updatedUnitsCount++;
 					}
-				break;
+					break;
 				case uptodate:
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
 						unit.deinstall();
@@ -958,7 +958,7 @@ public class RapidEnvInterpreter {
 							unit.stat();
 						}
 					}
-				break;
+					break;
 				default:
 					throw new AssertionError("Unexpected installation status \""
 					        + getInstallationStatus(unit, CmdRenvCommand.update) + "\" for installation unit \""
@@ -996,12 +996,12 @@ public class RapidEnvInterpreter {
 							iudRequieredUnitsCount++;
 						}
 					}
-				break;
+					break;
 				case upgraderequired:
 				case downgraderequired:
 					unit.stat();
 					iudRequieredUnitsCount++;
-				break;
+					break;
 				case configurationrequired:
 					if (this.installUnitOrPropertyNamesExplicitelySpecified) {
 						unit.configure(true);
@@ -1015,7 +1015,7 @@ public class RapidEnvInterpreter {
 							configuredUnitsCount++;
 						}
 					}
-				break;
+					break;
 				case uptodate:
 					if (this.installUnitOrPropertyNamesExplicitelySpecified) {
 						out.println(" installation unit \"" + unit.getFullyQualifiedName()
@@ -1023,7 +1023,7 @@ public class RapidEnvInterpreter {
 					} else {
 						unit.stat();
 					}
-				break;
+					break;
 				default:
 					throw new AssertionError("Unexpected installation status \""
 					        + getInstallationStatus(unit, CmdRenvCommand.config) + "\" for installation unit \""
@@ -1128,7 +1128,7 @@ public class RapidEnvInterpreter {
 				// }
 				// }
 			}
-		break;
+			break;
 
 		default:
 			throw new AssertionError("Run mode \"" + RapidEnvInterpreter.getInstance().getRunMode().name()
@@ -1145,7 +1145,7 @@ public class RapidEnvInterpreter {
 			                .getPropertiesToProcess().contains(propCfg))) {
 				propValue = propCfg.update();
 			}
-		break;
+			break;
 		case update:
 		case config:
 			if (propCfg.getParentInstallunit() != null
@@ -1155,7 +1155,7 @@ public class RapidEnvInterpreter {
 			} else {
 				propValue = getPropertyValuePersisted(propCfg.getFullyQualifiedName());
 			}
-		break;
+			break;
 		case install:
 			final boolean isInstallunitSpecific = propCfg.getParentInstallunit() != null;
 			final boolean allInstallunitsToProcess = getInstallunitsToProcess().size() == getProject().getContainer()
@@ -1200,10 +1200,10 @@ public class RapidEnvInterpreter {
 			} else {
 				propValue = getPropertyValuePersisted(propCfg.getFullyQualifiedName());
 			}
-		break;
+			break;
 		default:
 			propValue = getPropertyValuePersisted(propCfg.getFullyQualifiedName());
-		break;
+			break;
 		}
 		if (propValue != null) {
 			setPropertyValue(propCfg.getFullyQualifiedName(), propValue);
@@ -1255,11 +1255,11 @@ public class RapidEnvInterpreter {
 		case windows:
 			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
 			        + ".cmd");
-		break;
+			break;
 		case linux:
 			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
 			        + ".sh");
-		break;
+			break;
 		default:
 			throw new RapidEnvException("OS platform \"" + PlatformHelper.getOsName() + "\" not yet supported");
 		}
@@ -1282,7 +1282,7 @@ public class RapidEnvInterpreter {
 				        + ":: Tag: " + getProject().getTag() + LF + ":: User: " + PlatformHelper.username() + LF
 				        + ":: Machine: " + PlatformHelper.hostname() + LF + ":: Do not edit this file manually" + LF);
 				wrCmd.write("@ECHO OFF" + LF);
-			break;
+				break;
 			default:
 				wrCmd.write("# RapidEnv environment profile" + LF + "# Project: " + getProject().getName() + LF
 				        + "# Tag: " + getProject().getTag() + LF + "# User: " + PlatformHelper.username() + LF
@@ -1293,10 +1293,10 @@ public class RapidEnvInterpreter {
 				switch (PlatformHelper.getOsfamily()) {
 				case windows:
 					wrCmd.write("set RAPID_ENV_HOME=" + System.getenv("RAPID_ENV_HOME") + LF);
-				break;
+					break;
 				default:
 					wrCmd.write("export RAPID_ENV_HOME=\"" + System.getenv("RAPID_ENV_HOME") + "\"" + LF);
-				break;
+					break;
 				}
 				for (final Property prop : getProject().getPropertys()) {
 					final String propName = prop.getFullyQualifiedName();
@@ -1309,10 +1309,10 @@ public class RapidEnvInterpreter {
 							switch (PlatformHelper.getOsfamily()) {
 							case windows:
 								wrCmd.write("set " + environmentVar.getName() + "=" + propValue + LF);
-							break;
+								break;
 							default:
 								wrCmd.write("export " + environmentVar.getName() + "=\"" + propValue + "\"" + LF);
-							break;
+								break;
 							}
 						}
 					}
@@ -1343,11 +1343,11 @@ public class RapidEnvInterpreter {
 		case windows:
 			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
 			        + ".cmd");
-		break;
+			break;
 		case linux:
 			profileFileCmd = new File(profileDir, "renv_" + PlatformHelper.username() + "_" + PlatformHelper.hostname()
 			        + ".sh");
-		break;
+			break;
 		default:
 			throw new RapidEnvException("OS platform \"" + PlatformHelper.getOsName() + "\" not yet supported");
 		}
@@ -1581,7 +1581,7 @@ public class RapidEnvInterpreter {
 				} else {
 					installunits.add(extremeUnitIndex, unit);
 				}
-			break;
+				break;
 			case deinstall:
 				if (unit.getDepends() != null) {
 					for (int i = size - 1; i >= 0; i--) {
@@ -1596,7 +1596,7 @@ public class RapidEnvInterpreter {
 				} else {
 					installunits.add(extremeUnitIndex, unit);
 				}
-			break;
+				break;
 			}
 		}
 		return installunits;
@@ -1623,9 +1623,9 @@ public class RapidEnvInterpreter {
 						}
 					}
 				}
-			break;
+				break;
 			case update:
-			break;
+				break;
 			case deinstall:
 				if (unit.getDependents() != null) {
 					for (final Installunit unit1 : unit.getDependents()) {
@@ -1642,9 +1642,9 @@ public class RapidEnvInterpreter {
 						}
 					}
 				}
-			break;
+				break;
 			default:
-			break;
+				break;
 			}
 		}
 	}
@@ -1777,7 +1777,7 @@ public class RapidEnvInterpreter {
 				}
 			}
 			installUnitsToProc.add(unit);
-		break;
+			break;
 		default:
 			installUnitsToProc.add(unit);
 			if (unit.getSubunits() != null) {
@@ -1786,7 +1786,7 @@ public class RapidEnvInterpreter {
 					addSubunitsRecursively(subunit, installUnitsToProc, cmd);
 				}
 			}
-		break;
+			break;
 		}
 	}
 
