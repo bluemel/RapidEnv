@@ -2,17 +2,4 @@ eclipseworkspace
 environment/profile
 mavenrepo
 org.rapidbeans.rapidenv.eclipseheadless/classes_eclipse
-org.rapidbeans.rapidenv/classes
-org.rapidbeans.rapidenv/classes_eclipse
-org.rapidbeans.rapidenv/classes_generators
-org.rapidbeans.rapidenv/classes_test
-org.rapidbeans.rapidenv/dist
-org.rapidbeans.rapidenv/doc/dist
-org.rapidbeans.rapidenv/doc/model.xml
-org.rapidbeans.rapidenv/doc/RapidEnvReferenceManual.xml
-org.rapidbeans.rapidenv/doc/RapidEnvReferenceManualCldescr.xml
-org.rapidbeans.rapidenv/env.dtd
-org.rapidbeans.rapidenv/gensrc
-org.rapidbeans.rapidenv/target
-org.rapidbeans.rapidenv/testreport
 tools
