@@ -1217,7 +1217,7 @@ public class RapidEnvInterpreter {
 	 */
 	private void readProfile() {
 		final File profileFileProps = getProfileProps();
-		log(Level.FINE, "Reading user profile from file: " + profileFileProps.getAbsolutePath());
+		log(Level.FINE, "reading user profile from file: " + profileFileProps.getAbsolutePath());
 		if (!profileFileProps.exists()) {
 			return;
 		}
@@ -1414,6 +1414,17 @@ public class RapidEnvInterpreter {
 			this.runMode = RunMode.batch;
 		}
 
+		singleInstance = this;
+
+		// set the log level
+		if (this.options.containsKey(CmdRenvOption.debug)) {
+			logger.setLevel(Level.FINER);
+		} else if (this.options.containsKey(CmdRenvOption.verbose)) {
+			logger.setLevel(Level.FINE);
+		} else { // default
+			logger.setLevel(Level.INFO);
+		}
+
 		// create the profile directory if it doesn't exist
 		final String profilesHomePath = System.getenv("RAPID_ENV_PROFILES_HOME");
 		if (profilesHomePath != null) {
@@ -1425,12 +1436,12 @@ public class RapidEnvInterpreter {
 
 		// load the configuration file
 		final File configfile = cmd.getConfigfile();
+		log(Level.FINE, "reading environment configfile: \"" + configfile.getAbsolutePath() + "\"");
 		TypeRapidBean.forName(Project.class.getName());
 		try {
 			PropertyInterpretedString.lockIntepretation();
 			this.configDoc = new Document(TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project"), configfile);
 			PropertyInterpretedString.unlockIntepretation();
-			singleInstance = this;
 			getProject().checkSemantics();
 			getProject().updateToolMap();
 		} catch (ValidationInstanceAssocTwiceException e) {
@@ -1452,15 +1463,6 @@ public class RapidEnvInterpreter {
 			} else {
 				throw e;
 			}
-		}
-
-		// set the log level
-		if (this.options.containsKey(CmdRenvOption.debug)) {
-			logger.setLevel(Level.FINER);
-		} else if (this.options.containsKey(CmdRenvOption.verbose)) {
-			logger.setLevel(Level.FINE);
-		} else { // default
-			logger.setLevel(Level.INFO);
 		}
 	}
 
