@@ -1,7 +1,7 @@
 /*
  * RapidEnv: RapidEnvInterpreter.java
  *
- * Copyright (C) 2010 Martin Bluemel
+ * Copyright (C) 2010 - 2013 Martin Bluemel
  *
  * Creation Date: 05/25/2010
  *
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1440,7 +1441,10 @@ public class RapidEnvInterpreter {
 		TypeRapidBean.forName(Project.class.getName());
 		try {
 			PropertyInterpretedString.lockIntepretation();
-			this.configDoc = new Document(TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project"), configfile);
+			this.configDoc = new Document("environment_configuration",
+			        TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project"),
+			        configfile.toURI().toURL(),
+			        new Preprocessor(configfile).getInputStream());
 			PropertyInterpretedString.unlockIntepretation();
 			getProject().checkSemantics();
 			getProject().updateToolMap();
@@ -1463,6 +1467,12 @@ public class RapidEnvInterpreter {
 			} else {
 				throw e;
 			}
+		} catch (MalformedURLException e) {
+			throw new RapidEnvConfigurationException("Malformed URL for RapidEnv configuration file \""
+			        + configfile.getAbsolutePath() + "\"", e);
+		} catch (FileNotFoundException e) {
+			throw new RapidEnvConfigurationException("RapidEnv configuration file \""
+			        + configfile.getAbsolutePath() + "\" not found", e);
 		}
 	}
 
