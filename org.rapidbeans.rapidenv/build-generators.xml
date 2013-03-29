@@ -49,6 +49,20 @@
 			modelroot="model"
 			force="${force}"
 			/>
+		<gendtd
+			header="DTD for RapidEnv project part definition"
+			type="org.rapidbeans.rapidenv.config.ProjectPart"
+			dtd="envPartProject.dtd"
+			modelroot="model"
+			force="${force}"
+			/>
+		<gendtd
+			header="DTD for RapidEnv installunit part definition"
+			type="org.rapidbeans.rapidenv.config.InstallunitPart"
+			dtd="envPartInstallunit.dtd"
+			modelroot="model"
+			force="${force}"
+			/>
 		<gencldescr
 			type="org.rapidbeans.rapidenv.config.Project"
 			out="doc/RapidEnvReferenceManualCldescr.xml"

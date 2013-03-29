@@ -427,6 +427,8 @@
 		<zip zipfile="dist/rapidenv-${version}-bin.zip">
 			<fileset dir="dist" includes="bin/*,lib/*"/>
 			<fileset dir="." includes="env.dtd"/>
+			<fileset dir="." includes="envPartProject.dtd"/>
+			<fileset dir="." includes="envPartInstallunit.dtd"/>
 			<fileset dir="dist" includes="license/*"/>
 			<fileset dir="doc/dist" includes="**/*" excludes="apidoc,apidoc/**/*"/>
 		</zip>
@@ -467,12 +469,16 @@
 		<!-- copy test installation -->
 		<copy todir="../environment">
 			<fileset dir="." includes="env.dtd"/>
+			<fileset dir="." includes="envPartProject.dtd"/>
+			<fileset dir="." includes="envPartInstallunit.dtd"/>
 		</copy>
 		<copy todir="../environment/lib">
 			<fileset dir="dist/lib"/>
 		</copy>
 		<copy todir="./../RapidEnvExampleJavaEE/environment">
 			<fileset dir="." includes="env.dtd"/>
+			<fileset dir="." includes="envPartProject.dtd"/>
+			<fileset dir="." includes="envPartInstallunit.dtd"/>
 		</copy>
 		<copy todir="../../RapidEnvExampleJavaEE/environment/lib">
 			<fileset dir="dist/lib"/>
@@ -532,6 +538,8 @@
 		<delete file="doc/RapidEnvReferenceManual.xml"/>
 		<delete file="doc/RapidEnvReferenceManualCldescr.xml"/>
 		<delete file="env.dtd"/>
+		<delete file="envPartProject.dtd"/>
+		<delete file="envPartInstallunit.dtd"/>
 		<delete dir="classes"/>
 		<delete dir="classes_generators"/>
 		<delete dir="classes_test"/>

@@ -27,6 +27,18 @@ import org.junit.Test;
 public class PreprocessorTest {
 
 	@Test
+	public void testEvalIncludeStatementXMLSingleLine() throws IOException {
+		File currentFile = new File("testdata/env/env.xml");
+		assertTrue(currentFile.exists());
+		File includedFileFixture = new File("testdata/env/envincl.xml").getCanonicalFile();
+		assertTrue(includedFileFixture.exists());
+		File includedFile = Preprocessor.evalIncludeStatementXmlSingleLine(currentFile,
+		        "<include file=\"envincl.xml\"/>");
+		assertTrue(includedFile.exists());
+		assertEquals(includedFileFixture, includedFile);
+	}
+
+	@Test
 	public void testEvalIncludeStatementSame() throws IOException {
 		File currentFile = new File("testdata/env/env.xml");
 		assertTrue(currentFile.exists());

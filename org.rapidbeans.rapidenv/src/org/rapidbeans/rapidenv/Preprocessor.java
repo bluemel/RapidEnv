@@ -45,14 +45,21 @@ public class Preprocessor {
 			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(file), readXmlEncoding(file)));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (include && line.trim().startsWith("<?")) {
+				final String trLine = line.trim();
+				if (include && trLine.startsWith("<?")) {
 					// overread
-				} else if (include && line.trim().startsWith("<!DOCTYPE")) {
+				} else if (include && trLine.startsWith("<!DOCTYPE")) {
 					// overread
-				} else if (include && line.trim().length() == 0) {
+				} else if (include && (trLine.equals("<projectpart>") || trLine.equals("</projectpart>"))) {
 					// overread
+				} else if (include && (trLine.equals("<installunitpart>") || trLine.equals("</installunitpart>"))) {
+					// overread
+				} else if (include && trLine.length() == 0) {
+					// overread
+				} else if (trLine.startsWith("<include") && trLine.endsWith("/>")) {
+					readLines(evalIncludeStatementXmlSingleLine(file, trLine), true);
 				} else if (line.trim().startsWith("#include")) {
-					readLines(evalIncludeStatement(file, line.trim()), true);
+					readLines(evalIncludeStatement(file, trLine), true);
 				} else {
 					this.lines.add(line);
 				}
@@ -77,6 +84,30 @@ public class Preprocessor {
 		}
 	}
 
+	static File evalIncludeStatementXmlSingleLine(final File currentFile, final String statement) throws IOException {
+		int pos = statement.indexOf("file");
+		if (pos == -1)
+		{
+			throw new RapidEnvConfigurationException("Problem to parse single line XML include element \""
+			        + statement + " \": attribute \"file\" not found" + "\"");
+		}
+		pos += 4;
+		String path = statement.substring(pos, statement.length() - 2).trim();
+		if (path.startsWith("=")) {
+			path = path.substring(1, path.length()).trim();
+		} else {
+			throw new RapidEnvConfigurationException("Problems to evaluate include statement: " + statement
+			        + "\n  file value not found'\"'");
+		}
+		if (path.startsWith("\"") && path.endsWith("\"")) {
+			path = path.substring(1, path.length() - 1).trim();
+		} else {
+			throw new RapidEnvConfigurationException("Problems to evaluate include statement: " + statement
+			        + "\n  File expression is not embedded in '\"'");
+		}
+		return pathToFile(currentFile, path);
+	}
+
 	static File evalIncludeStatement(final File currentFile, final String statement) throws IOException {
 		String path = statement.substring("#include".length()).trim();
 		if ((path.startsWith("\"") && path.endsWith("\""))
@@ -86,6 +117,10 @@ public class Preprocessor {
 			throw new RapidEnvConfigurationException("Problems to evaluate include statement: " + statement
 			        + "\n  File expression is not embedded in '\"'");
 		}
+		return pathToFile(currentFile, path);
+	}
+
+	private static File pathToFile(final File currentFile, String path) throws IOException {
 		if (!new File(path).isAbsolute()) {
 			path = currentFile.getParentFile().getAbsolutePath().replace(File.separatorChar, '/') + '/' + path;
 		}

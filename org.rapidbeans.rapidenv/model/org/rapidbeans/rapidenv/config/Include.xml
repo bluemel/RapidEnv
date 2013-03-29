@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Include.xml
+ *
+ * Copyright (C) 2010 - 2013 Martin Bluemel
+ *
+ * Creation Date: 03/29/2013
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.Include">
+
+	<description>A pseudo configuration element to include other files containing parts
+of a project (environment) definition.
+Splitting up a project definition in different files has two advantages:
+1) It simply improves the structure and maintainability of a large environment definition.
+2) Partial project definitions might be reused in different environment definitions.
+Include elements are processed in advance and put together into one single big XML document
+by a fuzzy RapidEnv preprocessor. Please note you must write the whole include XML element
+in one single line in order to be processed correctly. Another pseudo element &lt;projectpart&gt;
+will serve as the root element for partial definitions however with the current DTD
+approach &lt;installunit&gt; is a syntactically valid root element as well.</description>
+
+	<property name="file" type="string">
+		<description>A relative or absolute path to the file to be included
+(e. g. &lt;include file="../inc/envincl.xml"/&gt;).</description>
+	</property>
+
+	<codegen mode="simple"/>
+</beantype>

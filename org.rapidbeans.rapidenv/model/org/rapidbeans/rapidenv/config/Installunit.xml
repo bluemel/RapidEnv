@@ -20,10 +20,8 @@
 	idtype="keyprops">
 
 	<description>An installation unit is an installable and configurable unit
-		needed for your development environment e. g
-		the execution platform like JDK,
-		a build tool like Ant,
-		or an IDE like Eclipse.</description>
+needed for your development environment e. g the execution platform like JDK,
+a build tool like Ant, or an IDE like Eclipse.</description>
 
 	<property name="fullyQualifiedName" key="true"
 		transient="true" depends="space,name">
@@ -166,10 +164,9 @@ Per default unused version(s) will always be deinstalled.</description>
 
 	<property name="dependents" type="association"
 		targettype="Installunit" inverse="depends" transient="true">
-		<description>Defines the inverse part of the n to n dependency assocition between installation units.
-Installation of units ww  other units (dependents not null or empty)
-is required before you install dependents (this holds for transitive dependencies
-too).
+		<description>Defines the inverse part of the n to n dependency association between installation units.
+Installation of units with other dependent units (dependents not null or empty)
+is required before you install dependents (this holds for transitive dependencies too).
 </description>
 	</property>
 
@@ -234,6 +231,13 @@ appropriate installation sequence.
 		targettype="PropertyExtensionFromInstallUnit">
 		<description>Defines a path extension defintion coming from this install unit.
 The extension will lead to some migration of the property value during upgrade if it changes.</description>
+	</property>
+
+	<property name="include" type="association"
+		targettype="Include"
+		composition="true"
+		>
+		<description>Pseudo element for including other files containing partial installunit definitions</description>
 	</property>
 
 	<xmlbinding>

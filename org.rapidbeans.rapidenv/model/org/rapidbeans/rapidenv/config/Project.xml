@@ -75,6 +75,11 @@ By default this value is the folder where the renv command is located.</descript
 		<description>The global property definitions.</description>
 	</property>
 
+	<property name="expressionLiteralEscaping" type="boolean"
+		default="false">
+		<description>Set this value to true if you want to use</description>
+	</property>
+
 	<property name="installunits" type="association"
 		targettype="Installunit"
 		composition="true"
@@ -82,9 +87,11 @@ By default this value is the folder where the renv command is located.</descript
 		<description>The install unit definitions</description>
 	</property>
 
-	<property name="expressionLiteralEscaping" type="boolean"
-		default="false">
-		<description>Set this value to true if you want to use</description>
+	<property name="includes" type="association"
+		targettype="Include"
+		composition="true"
+		>
+		<description>Pseudo element for including other files containing one ore more installunit definitions</description>
 	</property>
 
 	<xmlbinding xmlrootelement="project"/>

@@ -12,3 +12,5 @@ gensrc
 target
 testreport
 profile
+envPartInstallunit.dtd
+envPartProject.dtd

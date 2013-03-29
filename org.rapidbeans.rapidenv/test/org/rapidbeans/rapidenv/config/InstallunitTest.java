@@ -75,12 +75,18 @@ public class InstallunitTest {
 	}
 
 	@Test
-	public void testCheckSemanticsOK() {
+	public void testCheckSemanticsOK() throws MalformedURLException, FileNotFoundException {
 		PropertyInterpretedString.lockIntepretation();
-		Document doc = new Document(new File("testdata/env/env.xml"));
+		// Document doc = new Document("test", new
+		// File("testdata/env/env.xml"));
+		File configfile = new File("testdata/env/env.xml");
+		Document doc = new Document("environment_configuration",
+		        TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project"),
+		        configfile.toURI().toURL(),
+		        new Preprocessor(configfile).getInputStream());
 		PropertyInterpretedString.unlockIntepretation();
-		Installunit jdk = ((Project) doc.getRoot())
-		        .findInstallunitConfiguration("jdk");
+		Project project = (Project) doc.getRoot();
+		Installunit jdk = project.findInstallunitConfiguration("jdk");
 		jdk.checkSemantics();
 	}
 
