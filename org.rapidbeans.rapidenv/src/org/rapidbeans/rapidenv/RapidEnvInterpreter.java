@@ -1618,6 +1618,18 @@ public class RapidEnvInterpreter {
 		for (final Installunit unit : installUnits) {
 			switch (command) {
 			case install:
+				if (unit.getDepends() != null) {
+					for (final Installunit unit1 : unit.getDepends()) {
+						if (!installUnits.contains(unit1)) {
+							switch (getInstallationStatus(unit1, command)) {
+							case notinstalled:
+								throw new RapidEnvCmdException("Can not install unit \""
+								        + unit.getFullyQualifiedName() + "\" because it requires unit \""
+								        + unit1.getFullyQualifiedName() + "\" which is not yet installed.");
+							}
+						}
+					}
+				}
 				if (unit.getParentUnit() != null && !installUnits.contains(unit.getParentUnit())) {
 					if (getInstallationStatus(unit, command) != null) {
 						switch (getInstallationStatus(unit.getParentUnit(), command)) {

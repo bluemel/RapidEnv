@@ -333,7 +333,7 @@ public class RapidEnvInterpreterTest {
 			                                                                                                 // the
 			                                                                                                 // "command prompt here"
 			// explorer menu entry
-			        }));
+			}));
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			PrintStream sout = new PrintStream(bStream);
 			env.execute(sin, sout);
@@ -344,14 +344,14 @@ public class RapidEnvInterpreterTest {
 				        env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
 				        new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -371,14 +371,14 @@ public class RapidEnvInterpreterTest {
 				        env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificStatLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
 				        new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -398,14 +398,14 @@ public class RapidEnvInterpreterTest {
 				        env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWin.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
 				        new File("testdata/out/outPropertyToolSpecificInstLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -426,7 +426,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInstSpecLinux.txt"),
 				        bStream);
@@ -434,7 +434,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -454,7 +454,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper
 				        .assertOutput(new File("testdata/out/outPropertyToolSepcificStat2Linux.txt"), bStream);
@@ -462,7 +462,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -482,14 +482,14 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificConfLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(new File(
 				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -509,7 +509,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstWinSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstWinSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper
 				        .assertOutput(new File("testdata/out/outPropertyToolSepcificConfcLinux.txt"), bStream);
@@ -517,7 +517,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInstLinuxSpec.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInstLinuxSpec.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -533,11 +533,11 @@ public class RapidEnvInterpreterTest {
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificConfpWin.txt"), bStream);
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper
 				        .assertOutput(new File("testdata/out/outPropertyToolSepcificConfpLinux.txt"), bStream);
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -557,7 +557,7 @@ public class RapidEnvInterpreterTest {
 				        new File("testdata/out/outPropertyToolSpecificDeinstWin.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificDeinstWin.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificDeinstLinux.txt"),
 				        bStream);
@@ -565,7 +565,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificDeinstLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificDeinstLinux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -605,14 +605,14 @@ public class RapidEnvInterpreterTest {
 				        env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootWin.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificBootLinux.txt"), bStream);
 				RapidEnvTestHelper.assertFilesEqual(
 				        new File("testdata/out/outPropertyToolSpecificBootLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificBootLinux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -632,7 +632,7 @@ public class RapidEnvInterpreterTest {
 				        new File("testdata/out/outPropertyToolSpecificInst02Win.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInst02Win.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificInst02Linux.txt"),
 				        bStream);
@@ -640,7 +640,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificInst02Linux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificInst02Linux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -661,7 +661,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificUpdate02Win.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Win.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyToolSepcificUpdate02Linux.txt"),
 				        bStream);
@@ -669,7 +669,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyToolSpecificUpdate02Linux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyToolSpecificUpdate02Linux.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			default:
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
@@ -689,11 +689,11 @@ public class RapidEnvInterpreterTest {
 		case windows:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
 			        .startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
-		break;
+			break;
 		default:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
 			        .startsWith("/h/opt/maven/bin:"));
-		break;
+			break;
 		}
 	}
 
@@ -708,11 +708,11 @@ public class RapidEnvInterpreterTest {
 		case windows:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
 			        .startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
-		break;
+			break;
 		default:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
 			        .startsWith("/h/opt/maven/bin:"));
-		break;
+			break;
 		}
 	}
 
@@ -737,20 +737,26 @@ public class RapidEnvInterpreterTest {
 		case windows:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
 			        .startsWith(DRIVE_LETTER + ":\\h\\opt\\maven\\bin;"));
-		break;
+			break;
 		default:
 			assertTrue("cmd.path = \"" + env.getPropertyValue("cmd.path") + "\"", env.getPropertyValue("cmd.path")
 			        .startsWith("/h/opt/maven/bin:"));
-		break;
+			break;
 		}
 	}
 
 	@Test
 	public void testInstallFromSourceurlFile() {
+
 		if (new File("testdata/testinstall/myapp").exists()) {
 			FileHelper.deleteDeep(new File("testdata/testinstall/myapp"));
 		}
 		assertFalse(new File("testdata/testinstall/myapp/1.0.2/readme.txt").exists());
+		RapidEnvInterpreter env1 = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envTestInstall.xml", "s", "myapp" }));
+		Installunit myapp = env1.getProject().findInstallunitConfiguration("myapp");
+		assertEquals(InstallStatus.notinstalled, myapp.getInstallationStatus(CmdRenvCommand.stat));
+		assertTrue(myapp.shouldBeInstalled());
 
 		try {
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
@@ -759,6 +765,13 @@ public class RapidEnvInterpreterTest {
 			final PrintStream sout = new PrintStream(bStream);
 			env.execute(System.in, sout);
 			assertTrue(new File("testdata/testinstall/myapp/1.0.2/readme.txt").exists());
+
+			RapidEnvInterpreter env2 = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+			        "testdata/env/envTestInstall.xml", "s", "myapp" }));
+			myapp = env2.getProject().findInstallunitConfiguration("myapp");
+			assertFalse(myapp.shouldBeInstalled());
+			assertEquals(InstallStatus.uptodate, myapp.getInstallationStatus(CmdRenvCommand.stat));
+
 		} finally {
 			if (new File("testdata/testinstall/myapp").exists()) {
 				FileHelper.deleteDeep(new File("testdata/testinstall/myapp"));
@@ -880,6 +893,72 @@ public class RapidEnvInterpreterTest {
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 	}
 
+	@Test(expected = RapidEnvCmdException.class)
+	public void testInstallDependentUnitProhibit() {
+		try
+		{
+			assertFalse(new File("testdata/testtargetdir").exists());
+			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub.xml", "i", "ant" }));
+			final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			final PrintStream sout = new PrintStream(bStream);
+			env.execute(System.in, sout);
+		} catch (RapidEnvCmdException e) {
+			assertEquals("Can not install unit \"org.apache.ant\""
+			        + " because it requires unit \"jdk\" which is not yet installed.",
+			        e.getMessage());
+			assertFalse(new File("testdata/testtargetdir/org/apache/ant/1.8.0/readme.txt").exists());
+			throw e;
+		} finally {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+		}
+	}
+
+	@Test(expected = RapidEnvCmdException.class)
+	public void testInstallDependentUnitProhibitOptional() {
+		try
+		{
+			assertFalse(new File("testdata/testtargetdir").exists());
+			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub.xml", "i", "maven" }));
+			final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			final PrintStream sout = new PrintStream(bStream);
+			env.execute(System.in, sout);
+		} catch (RapidEnvCmdException e) {
+			assertEquals("Can not install unit \"org.apache.maven\""
+			        + " because it requires unit \"jdk\" which is not yet installed.",
+			        e.getMessage());
+			assertFalse(new File("testdata/testtargetdir/org/apache/maven/2.2.1/readme.txt").exists());
+			throw e;
+		} finally {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+		}
+	}
+
+	@Test
+	public void testInstallDependentUnitsAllow() {
+		try
+		{
+			assertFalse(new File("testdata/testtargetdir").exists());
+			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub.xml", "i", "ant", "maven", "jdk" }));
+			final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			final PrintStream sout = new PrintStream(bStream);
+			env.execute(System.in, sout);
+			assertTrue(new File("testdata/testtargetdir/jdk/1.6.0/readme.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/org/apache/ant/1.8.0/readme.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/org/apache/maven/2.2.1/readme.txt").exists());
+		} finally {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+		}
+	}
+
 	/**
 	 * Specify a subunit to process specifically with the command as fully
 	 * qualified name without the parent unit path.
@@ -909,12 +988,12 @@ public class RapidEnvInterpreterTest {
 				assertTrue(e.getMessage().matches(
 				        "RapidEnv configuration file \""
 				                + ".*\\\\org.rapidbeans.rapidenv\\\\testdata\\\\env\\\\envXXX.xml\" " + "not found"));
-			break;
+				break;
 			default:
 				assertTrue(e.getMessage().matches(
 				        "RapidEnv configuration file \"" + ".*/org.rapidbeans.rapidenv/testdata/env/envXXX.xml\" "
 				                + "not found"));
-			break;
+				break;
 			}
 		}
 	}
@@ -974,9 +1053,9 @@ public class RapidEnvInterpreterTest {
 			        env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.cmd"),
 			        env.getProfileCmd());
-		break;
+			break;
 		case linux:
-		break;
+			break;
 		default:
 			fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not supported.");
 		}
@@ -1000,14 +1079,14 @@ public class RapidEnvInterpreterTest {
 			        env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.cmd"),
 			        env.getProfileCmd());
-		break;
+			break;
 		case linux:
 			RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyCommonChangedStatUnix.txt"), bStream);
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatUnix.properties"),
 			        env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.sh"),
 			        env.getProfileCmd());
-		break;
+			break;
 		}
 
 		RapidEnvTestHelper.tearDownProfile(env);
@@ -1039,13 +1118,13 @@ public class RapidEnvInterpreterTest {
 			        env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.cmd"),
 			        env.getProfileCmd());
-		break;
+			break;
 		case linux:
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStatUnix.properties"),
 			        env.getProfileProps());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedStat.sh"),
 			        env.getProfileCmd());
-		break;
+			break;
 		}
 		RapidEnvInterpreter.clearInstance();
 
@@ -1088,7 +1167,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyCommonChangedConfigWin.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedConfig.cmd"),
 				        env.getProfileCmd());
-			break;
+				break;
 			case linux:
 				RapidEnvTestHelper.assertOutput(new File("testdata/out/outPropertyCommonChangedConfigLinux.txt"),
 				        bStream);
@@ -1096,7 +1175,7 @@ public class RapidEnvInterpreterTest {
 				        "testdata/out/outPropertyCommonChangedConfigLinux.properties"), env.getProfileProps());
 				RapidEnvTestHelper.assertFilesEqual(new File("testdata/out/outPropertyCommonChangedConfig.sh"),
 				        env.getProfileCmd());
-			break;
+				break;
 			}
 		} finally {
 			RapidEnvTestHelper.tearDownProfile(env);
