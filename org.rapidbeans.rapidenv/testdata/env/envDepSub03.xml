@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test" installtargetdir="testdata/testtargetdir">
+	<installunit name="test1" version="1.0.0"
+		sourceurl="file:testdata/site/dummy.zip">
+		<subunit name="test11" version="1.1.0"
+			installcontrol="optional"
+			sourceurl="file:testdata/site/dummy.zip"
+			homedir="test11"
+			/>
+		<subunit name="test12" version="1.2.0"
+			installcontrol="optional"
+			sourceurl="file:testdata/site/dummy.zip"
+			homedir="test12"
+			>
+			<subunit name="test121" version="1.1.1"
+				installcontrol="optional"
+				sourceurl="file:testdata/site/dummy.zip"
+				homedir="test121"
+				/>
+			<subunit name="test122" version="1.1.1"
+				sourceurl="file:testdata/site/dummy.zip"
+				homedir="test122"
+				/>
+		</subunit>
+		<subunit name="test13" version="1.1.0"
+			sourceurl="file:testdata/site/dummy.zip"
+			homedir="test13"
+			/>
+		<subunit name="test14" version="1.1.0"
+			installcontrol="optional"
+			sourceurl="file:testdata/site/dummy.zip"
+			homedir="test14"
+			/>
+	</installunit>
+</project>

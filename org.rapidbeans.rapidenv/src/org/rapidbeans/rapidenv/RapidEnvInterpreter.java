@@ -746,8 +746,9 @@ public class RapidEnvInterpreter {
 		if (getProject().getInstallunits() == null) {
 			return;
 		}
+		final List<Installunit> units = getInstallunitsToProcess();
 		if (this.installUnitOrPropertyNamesExplicitelySpecified) {
-			for (final Installunit unit : getInstallunitsToProcess()) {
+			for (final Installunit unit : units) {
 				if (getInstallationStatus(unit, CmdRenvCommand.install) == InstallStatus.notinstalled) {
 					boolean install = true;
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
@@ -772,7 +773,7 @@ public class RapidEnvInterpreter {
 			}
 		} else {
 			int installedUnitsCount = 0;
-			for (final Installunit unit : getInstallunitsToProcess()) {
+			for (final Installunit unit : units) {
 				if (getInstallationStatus(unit, CmdRenvCommand.install) == InstallStatus.notinstalled
 				        && unit.shouldBeInstalled()) {
 					unit.install(this.renvCommand.getInstallunitOrPropertyNames());
@@ -1173,9 +1174,6 @@ public class RapidEnvInterpreter {
 			boolean touchedByInstallunitToProcess = false;
 			if (getInstallunitsToProcess() != null) {
 				for (final Installunit u : getInstallunitsToProcess()) {
-					if (!u.shouldBeInstalled()) {
-						continue;
-					}
 					if (u.getPropextensions() != null) {
 						for (final PropertyExtension propext : u.getPropextensions()) {
 							if (propext instanceof PropertyExtensionFromInstallUnit) {
@@ -1793,6 +1791,17 @@ public class RapidEnvInterpreter {
 	protected void addSubunitsRecursively(final Installunit unit, final List<Installunit> installUnitsToProc,
 	        final CmdRenvCommand cmd) {
 		switch (cmd) {
+		case install:
+			// if (unit.shouldBeInstalled()) {
+			installUnitsToProc.add(unit);
+			// }
+			if (unit.getSubunits() != null) {
+				final List<Installunit> subunits = sortAccordingToDependencies(unit.getSubunits(), cmd);
+				for (final Installunit subunit : subunits) {
+					addSubunitsRecursively(subunit, installUnitsToProc, cmd);
+				}
+			}
+			break;
 		case deinstall:
 			if (unit.getSubunits() != null) {
 				final List<Installunit> subunits = sortAccordingToDependencies(unit.getSubunits(), cmd);

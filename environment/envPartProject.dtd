@@ -1,63 +1,18 @@
 <!--
-	DTD for RapidEnv project definition
+	DTD for RapidEnv project part definition
 	This DTD file is generated out of a RapidBeans model starting by type
-	org.rapidbeans.rapidenv.config.Project
+	org.rapidbeans.rapidenv.config.ProjectPart
 -->
 
-<!-- Element: project
-	The root object for every project environment defined
-	by means of RapidEnv.
+<!-- Element: projectpart
+	The root object for every partial project environment included into
+	other project environment definitions by means of the RapidEnv >include< element.
 	Subelement: property
 		The global property definitions.
 	Subelement: installunit
 		The install unit definitions
-	Subelement: include
-		Pseudo element for including other files containing one ore more installunit definitions
-	Attribute: name
-		The development environment project name
-	Attribute: tag
-		The tag specifies an ID which together with the project name
-		uniquely identifies a development environment on your machine.
-		Since you usually only have more than one development environment
-		concerning the same project on your machine in case you have to
-		work with different branches in parellel this tag will usually
-		specify the branch (e. g. "main"). but it's also possible to work with
-		two different local development environments on the same branch.
-		In this case the tag value has to be specified differently
-		(e. g. "main_a" and main_b").
-	Attribute: installsourceurl
-		The URL where all installation unit packages are taken from
-		by default. If an installunit's "sourceurl" is not defined
-		it automatically defaults to <installsourceurl>/<installunit.space>/<installunit.name>/<installunit.version>
-		whereas each component of "installunit.space" will become a separate subfolder. 
-		Otherwise install units define their specific source URL.
-		This property is not mandatory but you are supposed to
-		ether specify a value for it
-		or to specify "sourceurl" for all the project's installunits.
-	Attribute: installtargetdir
-		The relative or absolute path to the local folder where all install units are installed to by default.
-		If an installunit's "homedir" is not defined the "homedir" automatically defaults to
-		<installtargetdir>/<installunit.space>/<installunit.name>/<installunit.version>
-		whereas each component of "space" will become a separate subfolder. 
-		Otherwise install units define their specific home directory.
-		This property is not mandatory but you are supposed to
-		ether specify a value for it
-		or to specify a "homedir" for all the project's installunits.
-	Attribute: profiledir
-		The folder where all user profiles are located.
-		By default this value is the folder where the renv command is located.
-	Attribute: expressionLiteralEscaping
-		Set this value to true if you want to use
 -->
-<!ELEMENT project (#PCDATA | property | installunit | include)*>
-<!ATTLIST project
-	name CDATA #REQUIRED
-	tag CDATA #IMPLIED
-	installsourceurl CDATA #IMPLIED
-	installtargetdir CDATA #IMPLIED
-	profiledir CDATA #IMPLIED
-	expressionLiteralEscaping (false | true) #IMPLIED
->
+<!ELEMENT projectpart (#PCDATA | property | installunit)*>
 
 <!-- Element: property
 	A property is a named value that is either defined centrally
@@ -2213,26 +2168,6 @@
 -->
 <!ELEMENT includ EMPTY>
 <!ATTLIST includ
-	file CDATA #IMPLIED
->
-
-<!-- Element: include
-	A pseudo configuration element to include other files containing parts
-	of a project (environment) definition.
-	Splitting up a project definition in different files has two advantages:
-	1) It simply improves the structure and maintainability of a large environment definition.
-	2) Partial project definitions might be reused in different environment definitions.
-	Include elements are processed in advance and put together into one single big XML document
-	by a fuzzy RapidEnv preprocessor. Please note you must write the whole include XML element
-	in one single line in order to be processed correctly. Another pseudo element <projectpart>
-	will serve as the root element for partial definitions however with the current DTD
-	approach <installunit> is a syntactically valid root element as well.
-	Attribute: file
-		A relative or absolute path to the file to be included
-		(e. g. <include file="../inc/envincl.xml"/>).
--->
-<!ELEMENT include EMPTY>
-<!ATTLIST include
 	file CDATA #IMPLIED
 >
 

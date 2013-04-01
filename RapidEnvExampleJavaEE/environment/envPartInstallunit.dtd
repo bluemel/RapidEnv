@@ -1,63 +1,49 @@
 <!--
-	DTD for RapidEnv project definition
+	DTD for RapidEnv installunit part definition
 	This DTD file is generated out of a RapidBeans model starting by type
-	org.rapidbeans.rapidenv.config.Project
+	org.rapidbeans.rapidenv.config.InstallunitPart
 -->
 
-<!-- Element: project
-	The root object for every project environment defined
-	by means of RapidEnv.
+<!-- Element: installunitpart
+	The root object for every partial install unit definition included into
+	other project environment definitions by means of the RapidEnv >include< element.
 	Subelement: property
-		The global property definitions.
-	Subelement: installunit
-		The install unit definitions
-	Subelement: include
-		Pseudo element for including other files containing one ore more installunit definitions
-	Attribute: name
-		The development environment project name
-	Attribute: tag
-		The tag specifies an ID which together with the project name
-		uniquely identifies a development environment on your machine.
-		Since you usually only have more than one development environment
-		concerning the same project on your machine in case you have to
-		work with different branches in parellel this tag will usually
-		specify the branch (e. g. "main"). but it's also possible to work with
-		two different local development environments on the same branch.
-		In this case the tag value has to be specified differently
-		(e. g. "main_a" and main_b").
-	Attribute: installsourceurl
-		The URL where all installation unit packages are taken from
-		by default. If an installunit's "sourceurl" is not defined
-		it automatically defaults to <installsourceurl>/<installunit.space>/<installunit.name>/<installunit.version>
-		whereas each component of "installunit.space" will become a separate subfolder. 
-		Otherwise install units define their specific source URL.
-		This property is not mandatory but you are supposed to
-		ether specify a value for it
-		or to specify "sourceurl" for all the project's installunits.
-	Attribute: installtargetdir
-		The relative or absolute path to the local folder where all install units are installed to by default.
-		If an installunit's "homedir" is not defined the "homedir" automatically defaults to
-		<installtargetdir>/<installunit.space>/<installunit.name>/<installunit.version>
-		whereas each component of "space" will become a separate subfolder. 
-		Otherwise install units define their specific home directory.
-		This property is not mandatory but you are supposed to
-		ether specify a value for it
-		or to specify a "homedir" for all the project's installunits.
-	Attribute: profiledir
-		The folder where all user profiles are located.
-		By default this value is the folder where the renv command is located.
-	Attribute: expressionLiteralEscaping
-		Set this value to true if you want to use
+		Installation unit specific property definitions.
+	Subelement: download
+		URLs where to download the installation source
+	Subelement: sourcefilecheck
+		Checks on the source file
+	Subelement: subunit
+		Subunits if the installation unit. Subunits:
+		- can not be installed specifically before their parent units are installed.
+		- will be automatically installed when their parent units are installed.
+		- will be automatically deinstalled when their parent units are deinstalled (no confirmation).
+		- will be usually installed into the parent units installtion location.
+		f you install all units RapidEnv will choose an
+		appropriate installation sequence.
+	Subelement: folder
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: icon
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: propertiesfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: textfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: anttask
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: command
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: xmlfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: installcommand
+		Only valid for and mandatory for install units of mode "execute"
+	Subelement: deinstallcommand
+		Only valid for and mandatory for install units of mode "execute"
+	Subelement: propextension
+		Defines a path extension definition coming from this install unit.
+		The extension will lead to some migration of the property value during upgrade if it changes.
 -->
-<!ELEMENT project (#PCDATA | property | installunit | include)*>
-<!ATTLIST project
-	name CDATA #REQUIRED
-	tag CDATA #IMPLIED
-	installsourceurl CDATA #IMPLIED
-	installtargetdir CDATA #IMPLIED
-	profiledir CDATA #IMPLIED
-	expressionLiteralEscaping (false | true) #IMPLIED
->
+<!ELEMENT installunitpart (#PCDATA | property | download | sourcefilecheck | subunit | folder | icon | propertiesfile | textfile | anttask | command | xmlfile | installcommand | deinstallcommand | propextension)*>
 
 <!-- Element: property
 	A property is a named value that is either defined centrally
@@ -240,197 +226,6 @@
 <!ATTLIST extension
 	propextmode (prepend | append | remove) #IMPLIED
 	value CDATA #REQUIRED
->
-
-<!-- Element: installunit
-	An installation unit is an installable and configurable unit
-	needed for your development environment e. g the execution platform like JDK,
-	a build tool like Ant, or an IDE like Eclipse.
-	Subelement: property
-		Installation unit specific property definitions.
-	Subelement: download
-		URLs where to download the installation source
-	Subelement: sourcefilecheck
-		Checks on the source file
-	Subelement: subunit
-		Subunits if the installation unit. Subunits:
-		- can not be installed specifically before their parent units are installed.
-		- will be automatically installed when their parent units are installed.
-		- will be automatically deinstalled when their parent units are deinstalled (no confirmation).
-		- will be usually installed into the parent units installtion location.
-		f you install all units RapidEnv will choose an
-		appropriate installation sequence.
-	Subelement: folder
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: icon
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: propertiesfile
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: textfile
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: anttask
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: command
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: xmlfile
-		Configurations serve to configure an installation unit in distinct phases.
-	Subelement: installcommand
-		Only valid for and mandatory for install units of mode "execute"
-	Subelement: deinstallcommand
-		Only valid for and mandatory for install units of mode "execute"
-	Subelement: propextension
-		Defines a path extension defintion coming from this install unit.
-		The extension will lead to some migration of the property value during upgrade if it changes.
-	Subelement: includ
-		Pseudo element for including other files containing partial installunit definitions
-	Attribute: space
-		The installation unit name space.
-					Works like a package in Java.
-	Attribute: name
-		The installation unit name.
-	Attribute: version
-		The version that is or should be installed.
-	Attribute: depends
-		Defines the n to n dependency assocition between installation units.
-		Installation of units that depend from other units (depends not null or empty)
-		requires the installation of these units before (this holds for transitive dependencies
-		too).
-		If you install such a unit depending on other ones selectively the required units will be
-		automatically be installed before. If you install all units RapidEnv will choose an
-		appropriate installation sequence.
-		If you deinstall a unit that is required by other ones selectively all other units directly
-		or indirectly requiering this unit will be automatically deinstalled before (after user
-		confirmation).
-	Attribute: sourcetype
-		Defines how to get access to the installation source.
-		Value: url
-						Installation unit source is defined by a url.
-					
-		Value: mavenrepo
-						Installation unit source comes from a Maven repository.
-					
-	Attribute: sourceurl
-		Defines where the installation source comes from.
-		If "sourceurl" is not defined it automatically defaults to
-		project.installsourceurl/space/name/version
-		whereas each component of "space" will become a separate subfolder.
-	Attribute: sourcefile
-		Specifies the source file name in case it is not the
-		default one "<install unit name>-<version>.zip".
-		Usually it is sufficient to define either a source file name or a
-		complete source URL. Complex source URLs on the other hand sometimes make
-		it hard or impossible to figure out the source file name.
-		In this case you simply specify the source file name additionally.
-	Attribute: downloadmode
-		Describes how to load the installation unit's file(s) (installer).
-		Describes the different modes to load from the LAN or Internet.
-		Value: automatic
-			Automatic download
-		Value: manual
-			Manual download
-		Value: never
-			No download at all
-	Attribute: homedir
-		The folder where the unit is installed on your machine.
-		If "homedir" is not defined it automatically defaults to
-		project.installtargetdir/space/name/version
-		whereas each component of "space" will become a separate subfolder.
-	Attribute: osfamily
-		If this value is defined the install unit will exclusively be installed on
-		this type of operating system family otherwise it will be installed operating system independently.
-		Determines the operating system (family).
-		Value: linux
-			The Linux open source operating system.
-		Value: windows
-			Microsoft Windows.
-		Value: mac
-			Apple Mac OS.
-	Attribute: os
-		If this value is defined the install unit will exclusively be installed on
-		this type of operating system otherwise it will be installed operating system independently.
-	Attribute: architecture
-		If this value is defined the install unit will exclusively be installed on
-		this platform architecture otherwise it will be installed platform architecture independently.
-	Attribute: installcontrol
-		Determines if to install or deinstall the installation unit.
-		normal: install and update as usual
-		optional: install only when explicitely specified in the installation or update command.
-		  Update as usual
-		discontinued: deinstall during update, refuse instsllstion snd configuration
-		Value: normal
-						Install and update as usual.
-					
-		Value: optional
-						Install only when explicitely specified in the installation or update command.
-			Update as usual.
-					
-		Value: discontinued
-						Deinstall during update, refuse installtion and configuration.
-					
-	Attribute: installmode
-		Determines how to install the installation unit.
-		Describes the different mode to install software.
-		Value: put
-			Simply put a single file into the specified folder.
-		Value: unpack
-			Unpack a zip, jar, or tar file.
-		Value: execute
-			Execute an installer.
-	Attribute: packaging
-		Determines the type of packaging.
-		Value: zip
-			zip file.
-		Value: jar
-			jar file.
-		Value: tar
-			tar file.
-		Value: ziptar
-			zipped tar file.
-	Attribute: unpackstrategy
-		This property drives the removal of one or more
-		(single) root directories after having unpacked the
-		installation archive file under "homedir()".
-		The default behavior is "removerootdeep" but in most cases "removeroot"
-		will be sufficient and have better performance as well as less problems under Windows file system.
-		Describes the different strategies to unpack an archive file.
-		Value: simple
-			Simply put a single file into the specified folder.
-		Value: removeroot
-			Remove the root folder. Requires the archive to have one
-			single root folder for all files included.
-		Value: removerootdeep
-			Automatically remove one or more root folders in case there are any.
-			Does not require the archive to have one or more root folders for all files included
-			but in case they are there they are removed.
-	Attribute: deinstallunusedmode
-		Determines if or if not to deinstall unused version(s) after upgrade.
-		Per default unused version(s) will always be deinstalled.
-		Value: never
-			never deinstall unused versions
-		Value: always
-			always deinstall unused versions
-		Value: prompt
-			prompt if unused versions should be deinstalled
--->
-<!ELEMENT installunit (#PCDATA | property | download | sourcefilecheck | subunit | folder | icon | propertiesfile | textfile | anttask | command | xmlfile | installcommand | deinstallcommand | propextension | includ)*>
-<!ATTLIST installunit
-	space CDATA #IMPLIED
-	name CDATA #REQUIRED
-	version CDATA #REQUIRED
-	depends CDATA #IMPLIED
-	sourcetype (url | mavenrepo) #IMPLIED
-	sourceurl CDATA #IMPLIED
-	sourcefile CDATA #IMPLIED
-	downloadmode (automatic | manual | never) #IMPLIED
-	homedir CDATA #IMPLIED
-	osfamily (linux | windows | mac) #IMPLIED
-	os (linux | windows_xp | windows_7 | mac) #IMPLIED
-	architecture CDATA #IMPLIED
-	installcontrol (normal | optional | discontinued) #IMPLIED
-	installmode (put | unpack | execute) #IMPLIED
-	packaging (zip | jar | tar | ziptar) #IMPLIED
-	unpackstrategy (simple | removeroot | removerootdeep) #IMPLIED
-	deinstallunusedmode (never | always | prompt) #IMPLIED
 >
 
 <!-- Element: download
@@ -2213,26 +2008,6 @@
 -->
 <!ELEMENT includ EMPTY>
 <!ATTLIST includ
-	file CDATA #IMPLIED
->
-
-<!-- Element: include
-	A pseudo configuration element to include other files containing parts
-	of a project (environment) definition.
-	Splitting up a project definition in different files has two advantages:
-	1) It simply improves the structure and maintainability of a large environment definition.
-	2) Partial project definitions might be reused in different environment definitions.
-	Include elements are processed in advance and put together into one single big XML document
-	by a fuzzy RapidEnv preprocessor. Please note you must write the whole include XML element
-	in one single line in order to be processed correctly. Another pseudo element <projectpart>
-	will serve as the root element for partial definitions however with the current DTD
-	approach <installunit> is a syntactically valid root element as well.
-	Attribute: file
-		A relative or absolute path to the file to be included
-		(e. g. <include file="../inc/envincl.xml"/>).
--->
-<!ELEMENT include EMPTY>
-<!ATTLIST include
 	file CDATA #IMPLIED
 >
 
