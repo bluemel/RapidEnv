@@ -142,14 +142,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			break;
 
 		case notinstalled:
-			if (!this.shouldBeInstalled()) {
-				sign = "-";
-				RapidEnvInterpreter.getInstance().getOut()
-				        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " optional");
-			} else if (this.getInstallcontrol() == InstallControl.discontinued) {
+			if (this.getInstallcontrol() == InstallControl.discontinued) {
 				sign = "-";
 				RapidEnvInterpreter.getInstance().getOut()
 				        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " discontinued");
+			} else if (!this.shouldBeInstalled()) {
+				sign = "-";
+				RapidEnvInterpreter.getInstance().getOut()
+				        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " optional");
 			} else {
 				sign = "!";
 				RapidEnvInterpreter
@@ -1063,8 +1063,6 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				        + Integer.toString(nearestInstalledVersion.compareTo(getVersion())));
 			}
 		}
-		// System.out.println("@@@ installunit \"" + this.getName() +
-		// "\", status = \"" + status.name() + "\"");
 		return status;
 	}
 
@@ -1796,9 +1794,42 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		return new ReadonlyListCollection<Filecheck>(filechecks, this.getProperty("sourcefilechecks").getType());
 	}
 
+	public boolean shouldBeInstalledOld() {
+		final InstallStatus installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this);
+		if (getParentUnit() == null) {
+			if (installStatus == InstallStatus.notinstalled) {
+				if (this.getInstallcontrol() == InstallControl.normal
+				        || ((RapidEnvInterpreter.getInstance().getCommand() == CmdRenvCommand.install || RapidEnvInterpreter
+				                .getInstance().getCommand() == CmdRenvCommand.update)
+				                && RapidEnvInterpreter.getInstance().getInstallunitsToProcess().contains(this) && RapidEnvInterpreter
+				                .getInstance().isInstallUnitsExplicitelySpecified())) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			if (installStatus == InstallStatus.notinstalled) {
+				if (getParentUnit().shouldBeInstalled()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				if (this.getInstallcontrol() == InstallControl.normal) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	}
+
 	/**
-	 * Determine if an installation unit should be installed if it is not
-	 * installed or stay installed in case of an update.
+	 * Determine if an installation unit should be installed or stay installed
+	 * in case of an update.
 	 * 
 	 * @return if the installation unit should be installed or not.
 	 */
@@ -1807,23 +1838,37 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		final InstallControl control = getInstallcontrol();
 
-		if (getParentUnit() == null) {
-			// Top level units should be installed
-			if (control == InstallControl.normal) {
-				// if they a non optional (installcontrol = "normal")
-				shouldBeInstalled = true;
-			} else if (renv.getInstallUnitOrPropertyNamesExplicitelySpecified() == true
-			        && renv.getInstallunitsToProcess().contains(this)) {
-				// or if they are explicitly chosen for installation
-				shouldBeInstalled = true;
+		if (renv.isInstallUnitsExplicitelySpecified()
+		        && renv.getExplicitlyChosenInstallunits().contains(this)) {
+			// explicitly mentioned units should be installed
+			// in case of command "install" or "update"
+			// independent from if they are top level units or subunits
+			shouldBeInstalled = true;
+		} else if (getParentUnit() == null) {
+			if (!renv.isInstallUnitsExplicitelySpecified()) {
+				if (control == InstallControl.normal) {
+					// if they are non optional
+					// and not discontinued (installcontrol = "normal")
+					shouldBeInstalled = true;
+				} else {
+					shouldBeInstalled = false;
+				}
 			} else {
 				shouldBeInstalled = false;
 			}
 		} else {
-			shouldBeInstalled = true;
+			if (getParentUnit().shouldBeInstalled()) {
+				if (control == InstallControl.normal) {
+					// if they are non optional
+					// and not discontinued (installcontrol = "normal")
+					shouldBeInstalled = true;
+				} else {
+					shouldBeInstalled = false;
+				}
+			} else {
+				shouldBeInstalled = false;
+			}
 		}
-		// System.out.println("@@@ installunit \"" + this.getName() +
-		// "\", shouldBeInstalled = " + shouldBeInstalled);
 		return shouldBeInstalled;
 	}
 }

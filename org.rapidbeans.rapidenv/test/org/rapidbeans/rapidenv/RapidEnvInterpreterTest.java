@@ -906,37 +906,57 @@ public class RapidEnvInterpreterTest {
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 	}
 
-	// FIXME make this tst run
+	// FIXME make this test run
 	@Test
 	public void testUpdateUnitsWithSubunits() {
 		try {
 			if (new File("testdata/testtargetdir").exists()) {
 				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
 			}
+
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
-			        "-env", "testdata/env/envDepSub03.xml", "i", "test1" }));
+			        "-env", "testdata/env/envDepSub03.xml", "s" }));
 			ByteArrayOutputStream bosOut = new ByteArrayOutputStream();
 			PrintStream psOut = new PrintStream(bosOut);
 			env.execute(System.in, psOut);
+			assertTrue(env.getProject().findInstallunitConfiguration("test1").shouldBeInstalled());
+			assertFalse(env.getProject().findInstallunitConfiguration("test11").shouldBeInstalled());
+			assertFalse(env.getProject().findInstallunitConfiguration("test12").shouldBeInstalled());
+			assertFalse(env.getProject().findInstallunitConfiguration("test121").shouldBeInstalled());
+			assertFalse(env.getProject().findInstallunitConfiguration("test122").shouldBeInstalled());
+			assertTrue(env.getProject().findInstallunitConfiguration("test13").shouldBeInstalled());
+			assertFalse(env.getProject().findInstallunitConfiguration("test14").shouldBeInstalled());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03.xml", "i", "test1" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
 			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/dummy.txt").exists());
 			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test11").exists());
-//			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test12").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
-//			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
-//
-//			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
-//			        "-env", "testdata/env/envDepSub03.xml", "i", "test11", "test12", "test121" }));
-//			bosOut = new ByteArrayOutputStream();
-//			psOut = new PrintStream(bosOut);
-//			env.execute(System.in, psOut);
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test11/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test121/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test122/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
-//			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
-//
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test12").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03.xml", "s" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03.xml", "i", "test11", "test12", "test121" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test11/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test121/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test122/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
+
 //			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
 //			        "-env", "testdata/env/envDepSub03a.xml", "u", "test1" }));
 //			bosOut = new ByteArrayOutputStream();
@@ -948,7 +968,7 @@ public class RapidEnvInterpreterTest {
 //			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test121/dummy.txt").exists());
 //			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test122/dummy.txt").exists());
 //			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
-//			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
 		} finally {
 			if (new File("testdata/testtargetdir").exists()) {
 				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
@@ -1463,8 +1483,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				// System.out.println(bStream);
-				// System.out.println("----------------");
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
 				        env.getPropertyValue("cmd.path.system"));
 				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
@@ -1480,8 +1498,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				// System.out.println(bStream);
-				// System.out.println("----------------");
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertTrue(bStream.toString().contains(
 				        "cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
@@ -1494,8 +1510,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				// System.out.println(bStream);
-				// System.out.println("----------------");
 
 				// test status after installation of unit otherapp
 				env = new RapidEnvInterpreter(new CmdRenv(
@@ -1504,8 +1518,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				// System.out.println(bStream);
-				// System.out.println("----------------");
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertFalse(bStream.toString()
 				        .contains("toolhome.otherapp: value of common property should be changed"));
@@ -1531,7 +1543,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				// System.out.println(bStream);
 				assertEquals(new File("testdata/testinstall/otherapp/2.0").getAbsolutePath(),
 				        env.getPropertyValue("toolhome.otherapp"));
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
@@ -1551,7 +1562,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				// System.out.println(bStream);
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertFalse(bStream.toString()
 				        .contains("toolhome.otherapp: value of common property should be changed"));

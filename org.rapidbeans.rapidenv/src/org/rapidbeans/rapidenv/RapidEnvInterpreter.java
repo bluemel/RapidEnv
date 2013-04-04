@@ -236,17 +236,39 @@ public class RapidEnvInterpreter {
 	 */
 	private List<Installunit> installUnitsToProcess = null;
 
-	/**
-	 * Indicates if install units or properties were explicitly given as command
-	 * arguments or not.
-	 */
-	private boolean installUnitOrPropertyNamesExplicitelySpecified = false;
+	private List<Installunit> explicitlyChosenInstallunits;
+
+	public List<Installunit> getExplicitlyChosenInstallunits() {
+		if (this.explicitlyChosenInstallunits == null) {
+			this.explicitlyChosenInstallunits = new ArrayList<Installunit>();
+			Collection<String> installUnitOrPropertyNames = this.renvCommand.getInstallunitOrPropertyNames();
+			final Project project = getProject();
+			if (project != null && project.getInstallunits() != null) {
+				for (final String installUnitOrPropertyName : installUnitOrPropertyNames) {
+					final Installunit explChosenUnit = project.findInstallunitConfiguration(installUnitOrPropertyName);
+					if (explChosenUnit != null) {
+						explicitlyChosenInstallunits.add(explChosenUnit);
+					}
+				}
+			}
+		}
+		return this.explicitlyChosenInstallunits;
+	}
 
 	/**
 	 * @return the installUnitOrPropertyNamesExplicitelySpecified
 	 */
-	public boolean getInstallUnitOrPropertyNamesExplicitelySpecified() {
-		return this.installUnitOrPropertyNamesExplicitelySpecified;
+	public boolean isInstallUnitOrPropertyNamesExplicitelySpecified() {
+		final List<String> names = this.renvCommand.getInstallunitOrPropertyNames();
+		return names != null && names.size() > 0;
+	}
+
+	/**
+	 * @return the installUnitOrPropertyNamesExplicitelySpecified
+	 */
+	public boolean isInstallUnitsExplicitelySpecified() {
+		final List<Installunit> eunits = this.getExplicitlyChosenInstallunits();
+		return eunits != null && eunits.size() > 0;
 	}
 
 	/**
@@ -747,9 +769,10 @@ public class RapidEnvInterpreter {
 			return;
 		}
 		final List<Installunit> units = getInstallunitsToProcess();
-		if (this.installUnitOrPropertyNamesExplicitelySpecified) {
+		if (isInstallUnitOrPropertyNamesExplicitelySpecified()) {
 			for (final Installunit unit : units) {
-				if (getInstallationStatus(unit, CmdRenvCommand.install) == InstallStatus.notinstalled) {
+				if (getInstallationStatus(unit, CmdRenvCommand.install) == InstallStatus.notinstalled
+				        && unit.shouldBeInstalled()) {
 					boolean install = true;
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
 						switch (this.runMode) {
@@ -838,7 +861,7 @@ public class RapidEnvInterpreter {
 	 */
 	private boolean execDeinstall() {
 		boolean deinstallAll = false;
-		if (this.installUnitOrPropertyNamesExplicitelySpecified) {
+		if (isInstallUnitsExplicitelySpecified()) {
 			for (final Installunit unit : getInstallunitsToProcess()) {
 				if (getInstallationStatus(unit, CmdRenvCommand.deinstall) != InstallStatus.notinstalled) {
 					unit.deinstall();
@@ -925,7 +948,7 @@ public class RapidEnvInterpreter {
 					if (unit.shouldBeInstalled()) {
 						unit.install(this.renvCommand.getInstallunitOrPropertyNames());
 						updatedUnitsCount++;
-					} else if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
+					} else if (!isInstallUnitsExplicitelySpecified()) {
 						unit.stat();
 					}
 					break;
@@ -953,7 +976,7 @@ public class RapidEnvInterpreter {
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
 						unit.deinstall();
 					} else {
-						if (this.installUnitOrPropertyNamesExplicitelySpecified) {
+						if (isInstallUnitsExplicitelySpecified()) {
 							out.println(" installation unit \"" + unit.getFullyQualifiedName()
 							        + "\" is already up to date");
 						} else {
@@ -967,7 +990,7 @@ public class RapidEnvInterpreter {
 					        + unit.getFullyQualifiedName() + "\"");
 				}
 			}
-			if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
+			if (!isInstallUnitsExplicitelySpecified()) {
 				if (updatedUnitsCount == 0) {
 					out.println("All installation units are up to date");
 				} else {
@@ -993,7 +1016,7 @@ public class RapidEnvInterpreter {
 				switch (getInstallationStatus(unit, CmdRenvCommand.config)) {
 				case notinstalled:
 					unit.stat();
-					if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
+					if (!isInstallUnitsExplicitelySpecified()) {
 						if (!(unit.getInstallcontrol() == InstallControl.optional || unit.getInstallcontrol() == InstallControl.discontinued)) {
 							iudRequieredUnitsCount++;
 						}
@@ -1005,7 +1028,7 @@ public class RapidEnvInterpreter {
 					iudRequieredUnitsCount++;
 					break;
 				case configurationrequired:
-					if (this.installUnitOrPropertyNamesExplicitelySpecified) {
+					if (isInstallUnitsExplicitelySpecified()) {
 						unit.configure(true);
 					} else {
 						if (unit.getInstallcontrol() == InstallControl.discontinued) {
@@ -1019,7 +1042,7 @@ public class RapidEnvInterpreter {
 					}
 					break;
 				case uptodate:
-					if (this.installUnitOrPropertyNamesExplicitelySpecified) {
+					if (isInstallUnitsExplicitelySpecified()) {
 						out.println(" installation unit \"" + unit.getFullyQualifiedName()
 						        + "\" is already up to date and configured");
 					} else {
@@ -1032,7 +1055,7 @@ public class RapidEnvInterpreter {
 					        + unit.getFullyQualifiedName() + "\"");
 				}
 			}
-			if (!this.installUnitOrPropertyNamesExplicitelySpecified) {
+			if (!isInstallUnitsExplicitelySpecified()) {
 				if (configuredUnitsCount == 0 && iudRequieredUnitsCount == 0) {
 					out.println("All installation units are up to date and configured");
 				} else if (configuredUnitsCount == 0 && iudRequieredUnitsCount > 0 || configuredUnitsCount > 0
@@ -1505,7 +1528,6 @@ public class RapidEnvInterpreter {
 		if (installUnitOrPropertyNames == null || installUnitOrPropertyNames.size() == 0) {
 			// or take all top level install units configured
 			// if no specific install units are defined with the command
-			this.installUnitOrPropertyNamesExplicitelySpecified = false;
 			installUnitOrPropertyNames = new ArrayList<String>();
 			if (getProject() != null) {
 				if (getProject().getPropertys() != null) {
@@ -1523,8 +1545,6 @@ public class RapidEnvInterpreter {
 					}
 				}
 			}
-		} else {
-			this.installUnitOrPropertyNamesExplicitelySpecified = true;
 		}
 
 		final InstallunitsAndProperties entitiesToProcess = determineInstallunitsAndPropertiesToProcess(
@@ -1792,9 +1812,7 @@ public class RapidEnvInterpreter {
 	        final CmdRenvCommand cmd) {
 		switch (cmd) {
 		case install:
-			// if (unit.shouldBeInstalled()) {
 			installUnitsToProc.add(unit);
-			// }
 			if (unit.getSubunits() != null) {
 				final List<Installunit> subunits = sortAccordingToDependencies(unit.getSubunits(), cmd);
 				for (final Installunit subunit : subunits) {

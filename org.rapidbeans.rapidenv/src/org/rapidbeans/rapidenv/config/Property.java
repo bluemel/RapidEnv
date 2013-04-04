@@ -581,7 +581,7 @@ public class Property extends RapidBeanBaseProperty {
 				switch (interpreter.getCommand()) {
 				case update:
 				case config:
-					if (interpreter.getInstallUnitOrPropertyNamesExplicitelySpecified()) {
+					if (interpreter.isInstallUnitOrPropertyNamesExplicitelySpecified()) {
 						propValue = CmdLineInteractions.enterValue(interpreter.getIn(), interpreter.getOut(), this,
 						        propValue);
 					} else {

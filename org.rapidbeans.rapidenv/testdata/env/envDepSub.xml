@@ -14,7 +14,6 @@
 		/>
 	<installunit space="org.apache" name="maven" version="2.2.1"
 	  depends="jdk"
-	  installcontrol="optional"
 	  sourceurl="file:testdata/site/myapp/1.0.2/myapp-1.0.2.zip"
 		/>
 	<installunit space="org.rapidenv" name="test01" version="1.0.0" sourceurl="dummy"
