@@ -706,94 +706,104 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is not installed");
 		}
 
-		// execute configurations before deinstallation
-		if (getConfigurations() != null) {
-			for (final Configuration cfg : getConfigurations()) {
-				if (cfg.checkOsfamily() && (cfg.getInstallphase() == ConfigurationPhase.predeinstall)) {
-					cfg.check(true);
+		storeData(InstallState.deinstalling);
+
+		final InstallunitData data = this.getData();
+		if (data.getUsedbyenviroments() != null && data.getUsedbyenviroments().size() > 0) {
+			// do not use storeData() here for it will add the unwanted project
+			// reference
+			data.setInstallstate(InstallState.installed);
+			this.dataDoc.save();
+		} else {
+			// execute configurations before deinstallation
+			if (getConfigurations() != null) {
+				for (final Configuration cfg : getConfigurations()) {
+					if (cfg.checkOsfamily() && (cfg.getInstallphase() == ConfigurationPhase.predeinstall)) {
+						cfg.check(true);
+					}
 				}
 			}
-		}
 
-		// execute deinstallation
-		final File homedir = getHomedirAsFile();
-		if (!homedir.exists()) {
-			throw new RapidEnvException("Homedir \"" + getHomedir() + " of installation unit \""
-			        + getFullyQualifiedName() + "\" does not exist.");
-		}
-		switch (getInstallmode()) {
-		case unpack:
-			RapidEnvInterpreter
-			        .getInstance()
-			        .getOut()
-			        .println(
-			                "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
-			                        + " by deleting local folder " + homedir.getAbsolutePath() + "...");
-			FileHelper.deleteDeep(homedir);
-			// remove folder above if named like the tool itself
-			if (homedir.getName().equals(getVersion().toString())
-			        && homedir.getParentFile().getName().equals(getName())
-			        && homedir.getParentFile().list().length == 0) {
-				if (!homedir.getParentFile().delete()) {
-					RapidEnvInterpreter.log(Level.WARNING, "Failed to delete folder \""
-					        + homedir.getParentFile().getAbsolutePath() + "\"");
+			// execute deinstallation
+			final File homedir = getHomedirAsFile();
+			if (!homedir.exists()) {
+				throw new RapidEnvException("Homedir \"" + getHomedir() + " of installation unit \""
+				        + getFullyQualifiedName() + "\" does not exist.");
+			}
+			switch (getInstallmode()) {
+			case unpack:
+				RapidEnvInterpreter
+				        .getInstance()
+				        .getOut()
+				        .println(
+				                "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
+				                        + " by deleting local folder " + homedir.getAbsolutePath() + "...");
+				FileHelper.deleteDeep(homedir);
+				// remove folder above if named like the tool itself
+				if (homedir.getName().equals(getVersion().toString())
+				        && homedir.getParentFile().getName().equals(getName())
+				        && homedir.getParentFile().list().length == 0) {
+					if (!homedir.getParentFile().delete()) {
+						RapidEnvInterpreter.log(Level.WARNING, "Failed to delete folder \""
+						        + homedir.getParentFile().getAbsolutePath() + "\"");
+					}
+				}
+				break;
+			case put:
+				final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
+				        + ".jar";
+				final File targetFile = new File(getHomedirAsFile(), targetFileName);
+				if (!targetFile.exists()) {
+					throw new RapidEnvException("Target file \"" + targetFile.getAbsolutePath() + "\" does not exist");
+				}
+				RapidEnvInterpreter
+				        .getInstance()
+				        .getOut()
+				        .println(
+				                "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
+				                        + " by deleting file " + targetFile.getAbsolutePath() + "...");
+				if (!targetFile.delete()) {
+					throw new RapidEnvException("Failed to delete file " + targetFile.getAbsolutePath());
+				}
+				break;
+			case execute:
+				getDeinstallcommand().execute();
+				break;
+			default:
+				throw new AssertionError("Unexpected installation mode \"" + getInstallmode().name() + "\"");
+			}
+
+			// execute configurations after deinstallation
+			if (getConfigurations() != null) {
+				for (final Configuration cfg : getConfigurations()) {
+					if (cfg.checkOsfamily() && (cfg.getInstallphase() == ConfigurationPhase.postdeinstall)) {
+						cfg.check(true);
+					}
 				}
 			}
-			break;
-		case put:
-			final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
-			        + ".jar";
-			final File targetFile = new File(getHomedirAsFile(), targetFileName);
-			if (!targetFile.exists()) {
-				throw new RapidEnvException("Target file \"" + targetFile.getAbsolutePath() + "\" does not exist");
-			}
-			RapidEnvInterpreter
-			        .getInstance()
-			        .getOut()
-			        .println(
-			                "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
-			                        + " by deleting file " + targetFile.getAbsolutePath() + "...");
-			if (!targetFile.delete()) {
-				throw new RapidEnvException("Failed to delete file " + targetFile.getAbsolutePath());
-			}
-			break;
-		case execute:
-			getDeinstallcommand().execute();
-			break;
-		default:
-			throw new AssertionError("Unexpected installation mode \"" + getInstallmode().name() + "\"");
-		}
 
-		// execute configurations after deinstallation
-		if (getConfigurations() != null) {
-			for (final Configuration cfg : getConfigurations()) {
-				if (cfg.checkOsfamily() && (cfg.getInstallphase() == ConfigurationPhase.postdeinstall)) {
-					cfg.check(true);
-				}
-			}
-		}
-
-		// remove all configuration files after deinstallation that are
-		// still existent except they are explicitly marked that this
-		// shall not happen.
-		if (getConfigurations() != null) {
-			for (final Configuration cfg : getConfigurations()) {
-				if (cfg instanceof ConfigFile) {
-					final File file = ((ConfigFile) cfg).getPathAsFile();
-					if (((ConfigFile) cfg).getDeleteafterdeinstall() && file.exists()) {
-						if (!file.delete()) {
-							RapidEnvInterpreter.log(Level.WARNING,
-							        "Failed to delete configuration file \"" + file.getAbsolutePath() + "\"");
+			// remove all configuration files after deinstallation that are
+			// still existent except they are explicitly marked that this
+			// shall not happen.
+			if (getConfigurations() != null) {
+				for (final Configuration cfg : getConfigurations()) {
+					if (cfg instanceof ConfigFile) {
+						final File file = ((ConfigFile) cfg).getPathAsFile();
+						if (((ConfigFile) cfg).getDeleteafterdeinstall() && file.exists()) {
+							if (!file.delete()) {
+								RapidEnvInterpreter.log(Level.WARNING,
+								        "Failed to delete configuration file \"" + file.getAbsolutePath() + "\"");
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// remove (shell link) icons
-		if (!keepIcons) {
-			removeIcons();
-			removeSpecificProperties();
+			// remove (shell link) icons
+			if (!keepIcons) {
+				removeIcons();
+				removeSpecificProperties();
+			}
 		}
 	}
 
@@ -1400,7 +1410,26 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					        && thisInstallData.getVersion().equals(getVersion())
 					        && (thisInstallData.getInstallstate() == InstallState.installed || (thisInstallData
 					                .getInstallstate() == InstallState.installing && command == CmdRenvCommand.deinstall))) {
-						installedVersions.add(thisInstallData.getVersion());
+						// quick hack for KDG environment
+						// installedVersions.add(otherInstallData.getVersion());
+						if (getFullyQualifiedName(true).equals("jdk"))
+						{
+							if (getProject().getName().equals("WAD")) {
+								if (thisInstallData.getVersion().toString().contains("-R"))
+								{
+									installedVersions.add(thisInstallData.getVersion());
+								}
+							} else if (getProject().getName().equals("WSS")) {
+								if (!thisInstallData.getVersion().toString().contains("-R"))
+								{
+									installedVersions.add(thisInstallData.getVersion());
+								}
+							} else {
+								installedVersions.add(thisInstallData.getVersion());
+							}
+						} else {
+							installedVersions.add(thisInstallData.getVersion());
+						}
 					}
 				} else {
 					// Fallback to maintain downward compatibility
@@ -1426,7 +1455,26 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					final InstallunitData otherInstallData = (InstallunitData) otherDataDoc.getRoot();
 					if (otherInstallData != null && otherInstallData.getFullname().equals(getFullyQualifiedName())
 					        && otherInstallData.getInstallstate() == InstallState.installed) {
-						installedVersions.add(otherInstallData.getVersion());
+						// quick hack for KDG environment
+						// installedVersions.add(otherInstallData.getVersion());
+						if (getFullyQualifiedName(true).equals("jdk"))
+						{
+							if (getProject().getName().equals("WAD")) {
+								if (otherInstallData.getVersion().toString().contains("-R"))
+								{
+									installedVersions.add(otherInstallData.getVersion());
+								}
+							} else if (getProject().getName().equals("WSS")) {
+								if (!otherInstallData.getVersion().toString().contains("-R"))
+								{
+									installedVersions.add(otherInstallData.getVersion());
+								}
+							} else {
+								installedVersions.add(otherInstallData.getVersion());
+							}
+						} else {
+							installedVersions.add(otherInstallData.getVersion());
+						}
 					}
 				}
 			}
@@ -1498,7 +1546,38 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			installdata.setVersion(getVersion());
 		}
 		installdata.setInstallstate(installstate);
+		switch (installstate)
+		{
+		case installing:
+		case deinstalling:
+			final ReferencingProject currentReferencingProject = findCurrentReferencingProject(installdata);
+			if (currentReferencingProject != null)
+			{
+				installdata.removeUsedbyenviroment(currentReferencingProject);
+			}
+			break;
+		case installed:
+			final ReferencingProject currentEnvironment = new ReferencingProject(
+			        RapidEnvInterpreter.getInstance().getEnvironmentConfigurationFile().getAbsolutePath());
+			installdata.addUsedbyenviroment(currentEnvironment);
+			break;
+		}
 		this.dataDoc.save();
+	}
+
+	private ReferencingProject findCurrentReferencingProject(final InstallunitData installdata) {
+		final File currentEnvFile = RapidEnvInterpreter.getInstance().getEnvironmentConfigurationFile();
+		if (installdata.getUsedbyenviroments() != null)
+		{
+			for (final ReferencingProject refProject : installdata.getUsedbyenviroments()) {
+				final String refProjectFilePath = refProject.getEnvfile().getAbsolutePath();
+				final String currentEnvFilePath = currentEnvFile.getAbsolutePath();
+				if (refProjectFilePath.equals(currentEnvFilePath)) {
+					return refProject;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

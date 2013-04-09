@@ -18,7 +18,7 @@
 
 <beantype name="org.rapidbeans.rapidenv.config.InstallunitData">
 
-	<description>The data describing and persisting the install unit's state..</description>
+	<description>The data describing and persisting the install unit's state.</description>
 
 	<property name="fullname" type="string"
 		mandatory="true"
@@ -35,6 +35,12 @@
 	<property name="installstate" type="choice"
 		enum="InstallState">
 		<description>The install unit's installation state.</description>
+	</property>
+
+	<property name="usedbyenviroments" type="association"
+		targettype="ReferencingProject"
+		composition="true"
+		>
 	</property>
 
 	<xmlbinding xmlrootelement="installunitdata"/>

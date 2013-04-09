@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
- * RapidEnv: FileCopyCondition.xml
+ * RapidEnv: ReferencingProject.xml
  *
- * Copyright (C) 2010 Martin Bluemel
+ * Copyright (C) 2005 - 2013 Martin Bluemel
  *
- * Creation Date: 09/09/2010
+ * Creation Date: 04/09/2013
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
@@ -16,18 +16,13 @@
  * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 -->
 
-<enumtype name="org.rapidbeans.rapidenv.config.file.FileCopyCondition">
-	<description>Defines under which condition to copy a file to
-an installation folder.</description>
-	<enum name="notexist">
-		<description>Copy only if the target file does not exist.
-The file can be changed individually after installation.</description>
-	</enum>
-	<enum name="sourcenewer">
-		<description>Copy only if the source file is newer that the target file.</description>
-	</enum>
-	<enum name="diff">
-		<description>Copy every time the target file differs from the source file.
-This is the strictest rule.</description>
-	</enum>
-</enumtype>
+<beantype name="org.rapidbeans.rapidenv.config.ReferencingProject">
+
+	<description>A RapidEnv project referencing / using this installed installation unit version.</description>
+
+	<property name="envfile" type="file" mustExist="false"
+		>
+		<description>The file with the environment definition.</description>
+	</property>
+
+</beantype>

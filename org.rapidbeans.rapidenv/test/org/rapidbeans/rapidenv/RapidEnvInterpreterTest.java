@@ -35,6 +35,8 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.logging.Level;
 
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -589,9 +591,10 @@ public class RapidEnvInterpreterTest {
 		RapidEnvInterpreter.clearInstance();
 
 		try {
-
+			FileHelper.copyFile(new File("testdata/env/envPropsToolSpecific02.xml"),
+			        new File("testdata/testinstall/env.xml"), true);
 			// boot that thing
-			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific02.xml",
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/testinstall/env.xml",
 			        "b" }));
 			// do not create the "command prompt here" explorer menu entry
 			SequenceInputStream sin = new SequenceInputStream(new InputStreamLines(new String[] { "xyz", "n" }));
@@ -622,8 +625,8 @@ public class RapidEnvInterpreterTest {
 			sin = new SequenceInputStream(new InputStreamLines(new String[] { "/a/b/c" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
-			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/envPropsToolSpecific02.xml",
-			        "i" }));
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+			        "testdata/testinstall/env.xml", "i" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
@@ -650,8 +653,10 @@ public class RapidEnvInterpreterTest {
 			sin = new SequenceInputStream(new InputStreamLines(new String[] { "/a/b/c" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
+			FileHelper.copyFile(new File("testdata/env/envPropsToolSpecificOtherPropvalCommon.xml"),
+			        new File("testdata/testinstall/env.xml"), true);
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/envPropsToolSpecificOtherPropvalCommon.xml", "u", "otherapp" }));
+			        "testdata/testinstall/env.xml", "u", "otherapp" }));
 			env.execute(sin, sout);
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
@@ -674,6 +679,9 @@ public class RapidEnvInterpreterTest {
 				fail("Platform \"" + PlatformHelper.getOsfamily().name() + "\" not yet tested");
 			}
 		} finally {
+			if (new File("testdata/testinstall/env.xml").exists()) {
+				Assert.assertTrue(new File("testdata/testinstall/env.xml").delete());
+			}
 			RapidEnvTestHelper.tearDownProfile(env);
 		}
 	}
@@ -1245,7 +1253,6 @@ public class RapidEnvInterpreterTest {
 	public void testPathWithExtesionsInstallunitHomedir() throws IOException {
 
 		try {
-
 			// set up the profile
 			// cmd.path=/x1:/x2:/x3 (linux) or \x1;x2\x3 (win)
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",

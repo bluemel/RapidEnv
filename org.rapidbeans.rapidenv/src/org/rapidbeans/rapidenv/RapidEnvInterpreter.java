@@ -815,6 +815,18 @@ public class RapidEnvInterpreter {
 
 	private Map<String, Map<CmdRenvCommand, InstallStatus>> installStatusMap = new HashMap<String, Map<CmdRenvCommand, InstallStatus>>();
 
+	private File environmentConfigurationFile;
+
+	/**
+	 * @return the environmentConfigurationFile
+	 */
+	public File getEnvironmentConfigurationFile() {
+		if (this.environmentConfigurationFile == null) {
+			this.environmentConfigurationFile = this.renvCommand.getConfigfile();
+		}
+		return this.environmentConfigurationFile;
+	}
+
 	/**
 	 * Centralized install status determination equipped with a result cache
 	 * since this determination is used very often and is very expensive.
@@ -1457,15 +1469,16 @@ public class RapidEnvInterpreter {
 		}
 
 		// load the configuration file
-		final File configfile = cmd.getConfigfile();
-		log(Level.FINE, "reading environment configfile: \"" + configfile.getAbsolutePath() + "\"");
+		this.environmentConfigurationFile = cmd.getConfigfile();
+		log(Level.FINE, "reading environment configfile: \"" + this.environmentConfigurationFile.getAbsolutePath()
+		        + "\"");
 		TypeRapidBean.forName(Project.class.getName());
 		try {
 			PropertyInterpretedString.lockIntepretation();
 			this.configDoc = new Document("environment_configuration",
 			        TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project"),
-			        configfile.toURI().toURL(),
-			        new Preprocessor(configfile).getInputStream());
+			        this.environmentConfigurationFile.toURI().toURL(),
+			        new Preprocessor(this.environmentConfigurationFile).getInputStream());
 			PropertyInterpretedString.unlockIntepretation();
 			getProject().checkSemantics();
 			getProject().updateToolMap();
@@ -1483,17 +1496,17 @@ public class RapidEnvInterpreter {
 					        + notFoundPath + "\" not found", e);
 				} else {
 					throw new RapidEnvConfigurationException("RapidEnv configuration file \""
-					        + configfile.getAbsolutePath() + "\" not found", e);
+					        + this.environmentConfigurationFile.getAbsolutePath() + "\" not found", e);
 				}
 			} else {
 				throw e;
 			}
 		} catch (MalformedURLException e) {
 			throw new RapidEnvConfigurationException("Malformed URL for RapidEnv configuration file \""
-			        + configfile.getAbsolutePath() + "\"", e);
+			        + this.environmentConfigurationFile.getAbsolutePath() + "\"", e);
 		} catch (FileNotFoundException e) {
 			throw new RapidEnvConfigurationException("RapidEnv configuration file \""
-			        + configfile.getAbsolutePath() + "\" not found", e);
+			        + this.environmentConfigurationFile.getAbsolutePath() + "\" not found", e);
 		}
 	}
 

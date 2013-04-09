@@ -560,12 +560,12 @@
 		an installation folder.
 		Value: notexist
 			Copy only if the target file does not exist.
-			The file can be changed indiviually after installation.
+			The file can be changed individually after installation.
 		Value: sourcenewer
 			Copy only if the source file is newer that the target file.
 		Value: diff
 			Copy every time the target file differs from the source file.
-			THis ist the strictest rule.
+			This is the strictest rule.
 	Attribute: encoding
 		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
 				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
@@ -1093,12 +1093,12 @@
 		an installation folder.
 		Value: notexist
 			Copy only if the target file does not exist.
-			The file can be changed indiviually after installation.
+			The file can be changed individually after installation.
 		Value: sourcenewer
 			Copy only if the source file is newer that the target file.
 		Value: diff
 			Copy every time the target file differs from the source file.
-			THis ist the strictest rule.
+			This is the strictest rule.
 	Attribute: encoding
 		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
 				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
@@ -1277,12 +1277,12 @@
 		an installation folder.
 		Value: notexist
 			Copy only if the target file does not exist.
-			The file can be changed indiviually after installation.
+			The file can be changed individually after installation.
 		Value: sourcenewer
 			Copy only if the source file is newer that the target file.
 		Value: diff
 			Copy every time the target file differs from the source file.
-			THis ist the strictest rule.
+			This is the strictest rule.
 	Attribute: encoding
 		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
 				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
@@ -1676,12 +1676,12 @@
 		an installation folder.
 		Value: notexist
 			Copy only if the target file does not exist.
-			The file can be changed indiviually after installation.
+			The file can be changed individually after installation.
 		Value: sourcenewer
 			Copy only if the source file is newer that the target file.
 		Value: diff
 			Copy every time the target file differs from the source file.
-			THis ist the strictest rule.
+			This is the strictest rule.
 	Attribute: encoding
 		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
 				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
