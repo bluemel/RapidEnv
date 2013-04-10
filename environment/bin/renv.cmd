@@ -24,23 +24,24 @@
 :# initialize RapidEnv environment variables
 
 :# RAPID_ENV_HOME is the parent folder of where this script is located
+if defined RAPID_ENV_HOME goto RAPID_ENV_HOME_OK
 set RAPID_ENV_HOME=%~dp0
 set RAPID_ENV_HOME=%RAPID_ENV_HOME:~0,-5%
-pushd %RAPID_ENV_HOME%
+:RAPID_ENV_HOME_OK
 
-:# RAPID_ENV_PROFILES_HOME is the path where the user / machine environment profiles are located
-set RAPID_ENV_PROFILES_HOME=%RAPID_ENV_HOME%\profile
-
-:# RAPID_ENV_PROFILE is the common file name part for both profiles:
+:# RAPID_ENV_PROFILE is the common file name part for both profiles including absolute path:
 :# the properties and the environment variable set up shell script
-set RAPID_ENV_PROFILE=%RAPID_ENV_PROFILES_HOME%\renv_%USERNAME%_%COMPUTERNAME%
+if not defined RAPID_ENV_PROFILE set RAPID_ENV_PROFILE=%RAPID_ENV_HOME%\profile\renv_%USERNAME%_%COMPUTERNAME%
+
+if not defined RAPID_ENV_LIBDIR set RAPID_ENV_LIBDIR=%RAPID_ENV_HOME%\lib
+
+pushd %RAPID_ENV_HOME%
 
 :# find Java to execute renv
 set JAVA=java
 if exist "%ProgramFiles%\Java\jre5\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre5\bin\java.exe
 if exist "%ProgramFiles%\Java\jre6\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre6\bin\java.exe
 if exist "%ProgramFiles%\Java\jre7\bin\java.exe" set JAVA=%ProgramFiles%\Java\jre7\bin\java.exe
-if "%JAVA%" == "java" echo WARNING no standard JRE 5 or 6 or 7 installation found
 if "%1" == "-v" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 
@@ -48,10 +49,10 @@ if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 set RAPID_ENV_COMMAND="%JAVA%"
 if defined HTTP_PROXY_HOST set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyHost=%HTTP_PROXY_HOST%
 if defined HTTP_PROXY_PORT set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyPort=%HTTP_PROXY_PORT%
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -classpath "%RAPID_ENV_HOME%\lib\rapidenv-1.3.5d.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\rapidbeans-framework-0.9.7.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_HOME%\lib\ant-1.8.2.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -classpath "%RAPID_ENV_LIBDIR%\rapidenv-1.3.5d.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\rapidbeans-framework-0.9.7.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\ant-1.8.2.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv -env %RAPID_ENV_HOME%\env.xml
 
 :# if there is not already an RapidEnv profile for this user and this host do the set up
 if not exist "%RAPID_ENV_PROFILE%.cmd" call :SETUPENV %*
