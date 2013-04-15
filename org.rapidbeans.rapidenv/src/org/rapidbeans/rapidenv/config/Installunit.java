@@ -143,9 +143,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		case notinstalled:
 			if (this.getInstallcontrol() == InstallControl.discontinued) {
-				sign = "-";
-				RapidEnvInterpreter.getInstance().getOut()
-				        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " discontinued");
+				if (RapidEnvInterpreter.getInstance().getLogLevel().intValue() < Level.INFO.intValue())
+				{
+					sign = "-";
+					RapidEnvInterpreter
+					        .getInstance()
+					        .getOut()
+					        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " discontinued");
+				}
 			} else if (!this.shouldBeInstalled()) {
 				sign = "-";
 				RapidEnvInterpreter.getInstance().getOut()
