@@ -31,7 +31,9 @@ set RAPID_ENV_HOME=%RAPID_ENV_HOME:~0,-5%
 
 :# RAPID_ENV_PROFILE is the common file name part for both profiles including absolute path:
 :# the properties and the environment variable set up shell script
-if not defined RAPID_ENV_PROFILE set RAPID_ENV_PROFILE=%RAPID_ENV_HOME%\profile\renv_%USERNAME%_%COMPUTERNAME%
+set RAPID_ENV_PROFILES_HOME=%RAPID_ENV_HOME%\profile
+if not exist "%RAPID_ENV_PROFILES_HOME%" mkdir "%RAPID_ENV_PROFILES_HOME%"
+set RAPID_ENV_PROFILE=%RAPID_ENV_PROFILES_HOME%\renv_%USERNAME%_%COMPUTERNAME%
 
 if not defined RAPID_ENV_LIBDIR set RAPID_ENV_LIBDIR=%RAPID_ENV_HOME%\lib
 
