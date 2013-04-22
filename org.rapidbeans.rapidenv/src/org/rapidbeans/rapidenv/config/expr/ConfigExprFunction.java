@@ -27,7 +27,7 @@ import org.rapidbeans.core.type.TypePropertyString;
 import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
@@ -99,7 +99,7 @@ public abstract class ConfigExprFunction extends RapidBeanBaseConfigExprFunction
 	 * @param escapeLiterals
 	 *            - determines if literals should be escaped or not
 	 */
-	protected void init(final Installunit enclosingUnit, final Property enclosingProp, final String argumentsString,
+	protected void init(final Installunit enclosingUnit, final EnvProperty enclosingProp, final String argumentsString,
 	        final boolean escapeLiterals) {
 		setEnclosingInstallUnit(enclosingUnit);
 		setEnclosingProperty(enclosingProp);
@@ -231,12 +231,12 @@ public abstract class ConfigExprFunction extends RapidBeanBaseConfigExprFunction
 	 *            if escaping literals is desired or not
 	 * @return the created Function Expression instance.
 	 */
-	public static ConfigExprFunction createInstance(final Installunit enclosingUnit, final Property enclosingProp,
+	public static ConfigExprFunction createInstance(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcName, final String funcContent, final boolean escapeLiterals) {
 		try {
 			final Class<?> configClass = Class.forName("org.rapidbeans.rapidenv.config.expr.ConfigExprFunction"
 			        + StringHelper.upperFirstCharacter(funcName));
-			final Class<?>[] constructorArgTypes = { Installunit.class, Property.class, String.class, Boolean.class };
+			final Class<?>[] constructorArgTypes = { Installunit.class, EnvProperty.class, String.class, Boolean.class };
 			final Constructor<?> constructor = configClass.getConstructor(constructorArgTypes);
 			final Object[] constructorArgs = { enclosingUnit, enclosingProp, funcContent, escapeLiterals };
 			final ConfigExprFunction instance = (ConfigExprFunction) constructor.newInstance(constructorArgs);

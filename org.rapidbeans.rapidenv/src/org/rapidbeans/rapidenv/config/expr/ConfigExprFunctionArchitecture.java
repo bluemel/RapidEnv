@@ -24,7 +24,7 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
@@ -83,7 +83,7 @@ public class ConfigExprFunctionArchitecture extends RapidBeanBaseConfigExprFunct
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionArchitecture(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionArchitecture(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

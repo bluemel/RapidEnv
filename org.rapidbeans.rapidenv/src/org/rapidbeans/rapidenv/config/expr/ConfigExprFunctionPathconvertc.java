@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Function Expression to determine a platform specific canonical (absolute and
@@ -56,7 +56,7 @@ public class ConfigExprFunctionPathconvertc extends RapidBeanBaseConfigExprFunct
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionPathconvertc(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionPathconvertc(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

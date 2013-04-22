@@ -29,7 +29,6 @@ import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.RunMode;
 import org.rapidbeans.rapidenv.config.EnvProperty;
-import org.rapidbeans.rapidenv.config.Property;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
@@ -38,11 +37,6 @@ import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
  * @author Martin Bluemel
  */
 public class CmdLineInteractions {
-
-	public static String enterValue(final InputStream in, final PrintStream out, final EnvProperty prop,
-	        final String defaultValue) {
-		throw new AssertionError("FIXME");
-	}
 
 	/**
 	 * Prompt for entering a value and read it.
@@ -57,7 +51,7 @@ public class CmdLineInteractions {
 	 *            the default value take if nothing is entered
 	 * @return the value entered or the default value if nothing is entered
 	 */
-	public static String enterValue(final InputStream in, final PrintStream out, final Property prop,
+	public static String enterValue(final InputStream in, final PrintStream out, final EnvProperty prop,
 	        final String defaultValue) {
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		String newValue = null;

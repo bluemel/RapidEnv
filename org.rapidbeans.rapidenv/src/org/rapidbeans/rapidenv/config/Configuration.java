@@ -51,10 +51,10 @@ public abstract class Configuration extends RapidBeanBaseConfiguration {
 		return installunit;
 	}
 
-	public Property getParentPropertyRenv() {
-		Property property = null;
-		if (this.getParentBean() instanceof Property) {
-			property = (Property) this.getParentBean();
+	public EnvProperty getParentPropertyRenv() {
+		EnvProperty property = null;
+		if (this.getParentBean() instanceof EnvProperty) {
+			property = (EnvProperty) this.getParentBean();
 		}
 		return property;
 	}

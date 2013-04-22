@@ -171,7 +171,7 @@ is required before you install dependents (this holds for transitive dependencie
 	</property>
 
 	<property name="propertys" type="association"
-		targettype="Property"
+		targettype="EnvProperty"
 		composition="true"
 		>
 		<description>Installation unit specific property definitions.</description>

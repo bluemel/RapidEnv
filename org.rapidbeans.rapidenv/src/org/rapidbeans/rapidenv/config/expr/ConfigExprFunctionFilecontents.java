@@ -26,7 +26,7 @@ import java.util.List;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Function Expression to determine the contents of a given file.
@@ -48,7 +48,7 @@ public class ConfigExprFunctionFilecontents extends RapidBeanBaseConfigExprFunct
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionFilecontents(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionFilecontents(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

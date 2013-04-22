@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
@@ -52,7 +52,7 @@ public final class ConfigExprParser {
 	 *            if escaping literals is desired or not
 	 */
 	public static final void parse(final ConfigExpr expr, final Installunit enclosingUnit,
-	        final Property enclosingProp, final String expressionString, final boolean escapeLiterals) {
+	        final EnvProperty enclosingProp, final String expressionString, final boolean escapeLiterals) {
 		int len = expressionString.length();
 		char c;
 		ConfigExprSplitResult splitResult = null;

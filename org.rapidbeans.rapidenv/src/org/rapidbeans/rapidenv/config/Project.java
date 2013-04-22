@@ -36,7 +36,7 @@ import org.rapidbeans.rapidenv.config.expr.ConfigExprTopLevel;
  */
 public class Project extends RapidBeanBaseProject {
 
-	private Map<String, Property> propertyMap = null;
+	private Map<String, EnvProperty> propertyMap = null;
 
 	private Map<String, Installunit> installunitMap = null;
 
@@ -44,10 +44,10 @@ public class Project extends RapidBeanBaseProject {
 	 * @return value of Property 'propertys'
 	 */
 	@Override
-	public ReadonlyListCollection<Property> getPropertys() {
-		final List<Property> props = new ArrayList<Property>();
+	public ReadonlyListCollection<EnvProperty> getPropertys() {
+		final List<EnvProperty> props = new ArrayList<EnvProperty>();
 		if (super.getPropertys() != null) {
-			for (final Property prop : super.getPropertys()) {
+			for (final EnvProperty prop : super.getPropertys()) {
 				props.add(prop);
 			}
 		}
@@ -56,14 +56,14 @@ public class Project extends RapidBeanBaseProject {
 				addLocalProps(props, installunit);
 			}
 		}
-		return new ReadonlyListCollection<Property>(props, this.getType().getPropertyType("properties"));
+		return new ReadonlyListCollection<EnvProperty>(props, this.getType().getPropertyType("properties"));
 	}
 
-	private void addLocalProps(final List<Property> props, final Installunit installunit) {
+	private void addLocalProps(final List<EnvProperty> props, final Installunit installunit) {
 		if (installunit == null || installunit.getPropertys() == null) {
 			return;
 		}
-		for (final Property prop : installunit.getPropertys()) {
+		for (final EnvProperty prop : installunit.getPropertys()) {
 			if (!props.contains(prop)) {
 				props.add(prop);
 			}
@@ -84,15 +84,15 @@ public class Project extends RapidBeanBaseProject {
 	 * 
 	 * @return the property configuration with the specified name
 	 */
-	public Property findPropertyConfiguration(final String propertyName) {
+	public EnvProperty findPropertyConfiguration(final String propertyName) {
 		if (this.propertyMap == null || getPropertys() == null || this.propertyMap.size() != getPropertys().size()) {
 			updatePropertyMap();
 		}
-		Property found = this.propertyMap.get(propertyName);
+		EnvProperty found = this.propertyMap.get(propertyName);
 		if (found != null) {
 			return found;
 		}
-		for (final Property current : this.propertyMap.values()) {
+		for (final EnvProperty current : this.propertyMap.values()) {
 			if (found == null) {
 				if (current.getFullyQualifiedName().equals(propertyName)) {
 					found = current;
@@ -150,9 +150,9 @@ public class Project extends RapidBeanBaseProject {
 	 * Initialize the property map.
 	 */
 	public void updatePropertyMap() {
-		this.propertyMap = new HashMap<String, Property>();
+		this.propertyMap = new HashMap<String, EnvProperty>();
 		if (getPropertys() != null) {
-			for (final Property prop : getPropertys()) {
+			for (final EnvProperty prop : getPropertys()) {
 				this.propertyMap.put(prop.getFullyQualifiedName(), prop);
 			}
 		}
@@ -176,7 +176,7 @@ public class Project extends RapidBeanBaseProject {
 	public boolean atLeastOnePersonalProperty() {
 		boolean atLeastOneIndiviualProperty = false;
 		if (getPropertys() != null) {
-			for (final Property propCfg : getPropertys()) {
+			for (final EnvProperty propCfg : getPropertys()) {
 				if (propCfg.getCategory() == PropertyCategory.personal) {
 					atLeastOneIndiviualProperty = true;
 					break;

@@ -69,7 +69,7 @@ By default this value is the folder where the renv command is located.</descript
 	</property>
 
 	<property name="propertys" type="association"
-		targettype="Property"
+		targettype="EnvProperty"
 		composition="true"
 		>
 		<description>The global property definitions.</description>

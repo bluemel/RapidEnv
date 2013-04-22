@@ -102,11 +102,11 @@ public class PropertyInterpretedString extends PropertyString {
 		}
 	}
 
-	private Property getEnclosingProperty() {
+	private EnvProperty getEnclosingProperty() {
 		RapidBean bean = getBean();
 		while (bean != null) {
-			if (bean instanceof Property) {
-				return (Property) bean;
+			if (bean instanceof EnvProperty) {
+				return (EnvProperty) bean;
 			} else {
 				bean = bean.getParentBean();
 			}

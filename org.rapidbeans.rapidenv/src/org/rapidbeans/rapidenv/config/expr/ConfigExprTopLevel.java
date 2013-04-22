@@ -19,7 +19,7 @@ package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * The Top Level ConfigfileChange Expression just serves as a root node for the
@@ -43,7 +43,7 @@ public class ConfigExprTopLevel extends RapidBeanBaseConfigExprTopLevel {
 	 * @param escapeLiterals
 	 *            determine if literals should be escaped or not
 	 */
-	public ConfigExprTopLevel(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprTopLevel(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String experssionString, final boolean escapeLiterals) {
 		super();
 		setEnclosingInstallUnit(enclosingUnit);

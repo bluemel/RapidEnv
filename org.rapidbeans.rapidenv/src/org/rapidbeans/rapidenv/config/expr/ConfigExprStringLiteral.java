@@ -20,7 +20,7 @@ package org.rapidbeans.rapidenv.config.expr;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * A Constant String Expression can be defined implicitly and explicitly<br>
@@ -54,7 +54,7 @@ public class ConfigExprStringLiteral extends RapidBeanBaseConfigExprStringLitera
 	 * @param text
 	 *            the string with text
 	 */
-	public ConfigExprStringLiteral(final Installunit enclosingUnit, final Property enclosingProp, final String text) {
+	public ConfigExprStringLiteral(final Installunit enclosingUnit, final EnvProperty enclosingProp, final String text) {
 		super();
 		setEnclosingInstallUnit(enclosingUnit);
 		setEnclosingProperty(enclosingProp);

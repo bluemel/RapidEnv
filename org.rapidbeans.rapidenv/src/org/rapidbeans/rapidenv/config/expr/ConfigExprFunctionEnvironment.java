@@ -19,7 +19,7 @@ package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Usage of function environment() is discouraged. In RapidEnv you are supposed
@@ -44,7 +44,7 @@ public class ConfigExprFunctionEnvironment extends RapidBeanBaseConfigExprFuncti
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionEnvironment(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionEnvironment(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

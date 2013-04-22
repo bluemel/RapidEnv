@@ -21,7 +21,7 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Used to insert the scheduled install unit version into strings.
@@ -42,7 +42,7 @@ public class ConfigExprFunctionVersion extends RapidBeanBaseConfigExprFunctionVe
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionVersion(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionVersion(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

@@ -21,7 +21,7 @@ import java.io.File;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Function Expression to determine platform independently an platform specific
@@ -75,7 +75,7 @@ public class ConfigExprFunctionPathconvert extends RapidBeanBaseConfigExprFuncti
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionPathconvert(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionPathconvert(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

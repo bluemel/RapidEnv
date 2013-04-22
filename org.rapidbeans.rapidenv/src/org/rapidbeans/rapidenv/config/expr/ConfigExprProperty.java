@@ -21,7 +21,7 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Used to insert RapidEnv property values into strings. For example:<br>
@@ -50,7 +50,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 	 * @param escapeLiterals
 	 *            if literals should be escaped or not
 	 */
-	public ConfigExprProperty(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprProperty(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 			final ConfigExpr childExpression, final boolean escapeLiterals) {
 		super();
 		setEnclosingInstallUnit(enclosingUnit);
@@ -77,7 +77,7 @@ public class ConfigExprProperty extends RapidBeanBaseConfigExprProperty {
 			value = renv.getPropertyValuePersisted(propertyName);
 		}
 		if (value == null) {
-			final Property prop = renv.getProject().findPropertyConfiguration(propertyName);
+			final EnvProperty prop = renv.getProject().findPropertyConfiguration(propertyName);
 			if (prop != null && prop.getValue() != null) {
 				value = prop.getValue();
 			}

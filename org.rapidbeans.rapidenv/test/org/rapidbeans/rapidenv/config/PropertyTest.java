@@ -58,7 +58,7 @@ public class PropertyTest {
 	public void testLoadProperties() {
 		Document doc = new Document(new File("testdata/env/envWithPathext.xml"));
 		Project project = (Project) doc.getRoot();
-		Property cmdPath = project.findPropertyConfiguration("cmd.path");
+		EnvProperty cmdPath = project.findPropertyConfiguration("cmd.path");
 		Assert.assertEquals(2, cmdPath.getSpecificvalues().size());
 		switch (PlatformHelper.getOsfamily()) {
 		case windows:

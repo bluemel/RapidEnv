@@ -915,7 +915,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	private void removeSpecificProperties() {
 		if (getPropertys() != null) {
 			final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
-			for (final Property prop : getPropertys()) {
+			for (final EnvProperty prop : getPropertys()) {
 				if (interpreter.getPropertyValue(prop.getFullyQualifiedName()) == null) {
 					RapidEnvInterpreter.log(Level.WARNING, "Tool specific property \"" + prop.getFullyQualifiedName()
 					        + "\" was not defined.");

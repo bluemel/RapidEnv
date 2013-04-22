@@ -21,7 +21,7 @@
 other project environment definitions by means of the RapidEnv &gt;include&lt; element.</description>
 
 	<property name="propertys" type="association"
-		targettype="Property"
+		targettype="EnvProperty"
 		composition="true"
 		>
 		<description>Installation unit specific property definitions.</description>

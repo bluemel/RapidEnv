@@ -55,7 +55,7 @@ import org.rapidbeans.rapidenv.config.Environment;
 import org.rapidbeans.rapidenv.config.InstallControl;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.PropertyExtension;
 import org.rapidbeans.rapidenv.config.PropertyExtensionFromInstallUnit;
 import org.rapidbeans.rapidenv.config.PropertyInterpretedString;
@@ -281,12 +281,12 @@ public class RapidEnvInterpreter {
 	/**
 	 * The subset of properties to process during the interpreter execution.
 	 */
-	private List<Property> propertiesToProcess = null;
+	private List<EnvProperty> propertiesToProcess = null;
 
 	/**
 	 * @return the properties to process
 	 */
-	public List<Property> getPropertiesToProcess() {
+	public List<EnvProperty> getPropertiesToProcess() {
 		return propertiesToProcess;
 	}
 
@@ -750,7 +750,7 @@ public class RapidEnvInterpreter {
 		if (getPropertiesToProcess().size() > 0) {
 			this.out.println("\nProperties:");
 		}
-		for (final Property property : getPropertiesToProcess()) {
+		for (final EnvProperty property : getPropertiesToProcess()) {
 			property.stat();
 		}
 		if (getInstallunitsToProcess().size() > 0) {
@@ -946,7 +946,7 @@ public class RapidEnvInterpreter {
 	private void execUpdate() {
 		if (getPropertiesToProcess().size() > 0) {
 			this.out.println("\nProperties:");
-			for (final Property property : getPropertiesToProcess()) {
+			for (final EnvProperty property : getPropertiesToProcess()) {
 				final String propValue = property.update();
 				setPropertyValue(property.getFullyQualifiedName(), propValue);
 			}
@@ -1015,7 +1015,7 @@ public class RapidEnvInterpreter {
 	private void execConfig() {
 		if (getPropertiesToProcess().size() > 0) {
 			this.out.println("\nProperties:");
-			for (final Property property : getPropertiesToProcess()) {
+			for (final EnvProperty property : getPropertiesToProcess()) {
 				final String propValue = property.update();
 				setPropertyValue(property.getFullyQualifiedName(), propValue);
 			}
@@ -1108,7 +1108,7 @@ public class RapidEnvInterpreter {
 
 	private boolean profileChanged() {
 		if (getProject().getPropertys() != null) {
-			for (final Property prop : getProject().getPropertys()) {
+			for (final EnvProperty prop : getProject().getPropertys()) {
 				// new property added
 				if (getPropertyValuePersisted(prop.getFullyQualifiedName()) == null) {
 					return true;
@@ -1144,7 +1144,7 @@ public class RapidEnvInterpreter {
 		case command:
 		case batch:
 			if (getProject().getPropertys() != null) {
-				for (final Property propCfg : getProject().getPropertys()) {
+				for (final EnvProperty propCfg : getProject().getPropertys()) {
 					initProperty(cmd, propCfg);
 				}
 				// for (final Installunit unit : getProject().getInstallunits())
@@ -1173,7 +1173,7 @@ public class RapidEnvInterpreter {
 		}
 	}
 
-	private void initProperty(final CmdRenvCommand cmd, final Property propCfg) {
+	private void initProperty(final CmdRenvCommand cmd, final EnvProperty propCfg) {
 		String propValue = null;
 		switch (cmd) {
 		case boot:
@@ -1332,7 +1332,7 @@ public class RapidEnvInterpreter {
 					wrCmd.write("export RAPID_ENV_HOME=\"" + System.getenv("RAPID_ENV_HOME") + "\"" + LF);
 					break;
 				}
-				for (final Property prop : getProject().getPropertys()) {
+				for (final EnvProperty prop : getProject().getPropertys()) {
 					final String propName = prop.getFullyQualifiedName();
 					final String propValue = getPropertyValue(propName);
 					if (propValue != null) {
@@ -1520,9 +1520,9 @@ public class RapidEnvInterpreter {
 		if (e.getInstance() instanceof Installunit) {
 			throw new RapidEnvConfigurationException("Tool \""
 			        + ((Installunit) e.getInstance()).getFullyQualifiedName() + "\" specified twice", e);
-		} else if (e.getInstance() instanceof Property) {
+		} else if (e.getInstance() instanceof EnvProperty) {
 			throw new RapidEnvConfigurationException("Property \""
-			        + ((Property) e.getInstance()).getFullyQualifiedName() + "\" specified twice", e);
+			        + ((EnvProperty) e.getInstance()).getFullyQualifiedName() + "\" specified twice", e);
 		} else {
 			throw e;
 		}
@@ -1544,7 +1544,7 @@ public class RapidEnvInterpreter {
 			installUnitOrPropertyNames = new ArrayList<String>();
 			if (getProject() != null) {
 				if (getProject().getPropertys() != null) {
-					for (final Property property : getProject().getPropertys()) {
+					for (final EnvProperty property : getProject().getPropertys()) {
 						if (property.getParentInstallunit() == null
 						        || (getInstallationStatus(property.getParentInstallunit(), command) != InstallStatus.notinstalled && getInstallationStatus(
 						                property.getParentInstallunit(), command) != InstallStatus.deinstallrequired)) {
@@ -1578,7 +1578,7 @@ public class RapidEnvInterpreter {
 		// TODO: later on replace this by only taking used (includes also
 		// transitively used) properties.
 		if (this.installUnitsToProcess.size() > 0) {
-			for (final Property prop : getProject().getPropertys()) {
+			for (final EnvProperty prop : getProject().getPropertys()) {
 				if (!this.propertiesToProcess.contains(prop)) {
 					this.propertiesToProcess.add(prop);
 				}
@@ -1855,12 +1855,12 @@ public class RapidEnvInterpreter {
 	}
 
 	private class InstallunitsAndProperties {
-		protected List<Property> properties = null;
+		protected List<EnvProperty> properties = null;
 
 		protected List<Installunit> installunits = null;
 
 		public InstallunitsAndProperties() {
-			this.properties = new ArrayList<Property>();
+			this.properties = new ArrayList<EnvProperty>();
 			this.installunits = new ArrayList<Installunit>();
 		}
 	}
@@ -1877,11 +1877,11 @@ public class RapidEnvInterpreter {
 
 		final InstallunitsAndProperties result = new InstallunitsAndProperties();
 		final Map<String, Installunit> installUnitsToProcMap = new HashMap<String, Installunit>();
-		final Map<String, Property> propertiesToProcMap = new HashMap<String, Property>();
+		final Map<String, EnvProperty> propertiesToProcMap = new HashMap<String, EnvProperty>();
 
 		// iterate over all install unit names
 		for (final String installUnitOrPropertyName : installUnitOrPropertyNames) {
-			Property property = null;
+			EnvProperty property = null;
 			Installunit unit = null;
 			try {
 				property = getProject().findPropertyConfiguration(installUnitOrPropertyName);

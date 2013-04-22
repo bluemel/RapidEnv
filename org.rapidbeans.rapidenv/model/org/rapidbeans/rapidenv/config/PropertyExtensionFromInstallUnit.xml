@@ -21,7 +21,7 @@
 	<description>A path extension definition coming from an install unit.
 This extension will lead to some migration of the property value during upgrade if it changes.</description>
 	<property name="property" type="association"
-		targettype="Property" maxmult="1" inverse="installunitextensions">
+		targettype="EnvProperty" maxmult="1" inverse="installunitextensions">
 		<description>The property to be modified by this extension</description>
 	</property>
 	<!--<codegen mode="split"/>-->

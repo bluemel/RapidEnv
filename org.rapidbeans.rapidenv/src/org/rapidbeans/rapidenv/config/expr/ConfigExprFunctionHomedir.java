@@ -22,7 +22,7 @@ import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**
@@ -69,7 +69,7 @@ public class ConfigExprFunctionHomedir extends RapidBeanBaseConfigExprFunctionHo
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionHomedir(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionHomedir(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

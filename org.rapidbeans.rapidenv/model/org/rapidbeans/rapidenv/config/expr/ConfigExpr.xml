@@ -26,7 +26,7 @@
 		maxmult="1"/>
 
 	<property name="enclosingProperty" type="association"
-		targettype="org.rapidbeans.rapidenv.config.Property"
+		targettype="org.rapidbeans.rapidenv.config.EnvProperty"
 		maxmult="1"/>
 
 	<property name="childs" type="association" composition="true"

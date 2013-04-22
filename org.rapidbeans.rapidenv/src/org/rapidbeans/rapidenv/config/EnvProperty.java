@@ -1,5 +1,5 @@
 /*
- * RapidEnv: Property.java
+ * RapidEnv: EnvProperty.java
  *
  * Copyright (C) 2010 Martin Bluemel
  *

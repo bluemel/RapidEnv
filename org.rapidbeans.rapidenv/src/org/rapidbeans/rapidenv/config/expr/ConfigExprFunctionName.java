@@ -19,7 +19,7 @@ package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Function Expression to determine the hostname platform indepently.
@@ -43,7 +43,7 @@ public class ConfigExprFunctionName extends
 		if (enclosingUnit != null) {
 			name = enclosingUnit.getName();
 		} else {
-			final Property enclosingProp = getEnclosingProperty();
+			final EnvProperty enclosingProp = getEnclosingProperty();
 			if (enclosingProp != null) {
 				name = enclosingProp.getName();
 			}
@@ -65,7 +65,7 @@ public class ConfigExprFunctionName extends
 	 *            if escaping literals is desired or not
 	 */
 	public ConfigExprFunctionName(final Installunit enclosingUnit,
-	        final Property enclosingProp, final String funcContent,
+	        final EnvProperty enclosingProp, final String funcContent,
 	        final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

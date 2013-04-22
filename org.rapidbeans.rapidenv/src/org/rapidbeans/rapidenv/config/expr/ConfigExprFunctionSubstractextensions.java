@@ -24,7 +24,7 @@ import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.PropertyExtension;
 import org.rapidbeans.rapidenv.config.PropertyValueType;
 
@@ -38,7 +38,7 @@ public class ConfigExprFunctionSubstractextensions extends RapidBeanBaseConfigEx
 	 * @return the interpreted path expression
 	 */
 	public String interpret() {
-		final Property prop = this.getEnclosingProperty();
+		final EnvProperty prop = this.getEnclosingProperty();
 		if (prop == null) {
 			throw new RapidEnvException("ERROR while trying to interpret expression."
 			        + "\n  No enclosing property defined");
@@ -86,7 +86,7 @@ public class ConfigExprFunctionSubstractextensions extends RapidBeanBaseConfigEx
 	 * @param escapeLiterals
 	 *            if escaping literals is desired or not
 	 */
-	public ConfigExprFunctionSubstractextensions(final Installunit enclosingUnit, final Property enclosingProp,
+	public ConfigExprFunctionSubstractextensions(final Installunit enclosingUnit, final EnvProperty enclosingProp,
 	        final String funcContent, final Boolean escapeLiterals) {
 		super();
 		init(enclosingUnit, enclosingProp, funcContent, escapeLiterals);

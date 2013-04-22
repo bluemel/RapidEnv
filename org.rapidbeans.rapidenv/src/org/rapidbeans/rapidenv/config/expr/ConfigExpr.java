@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.rapidbeans.core.basic.RapidBean;
 import org.rapidbeans.rapidenv.config.Installunit;
-import org.rapidbeans.rapidenv.config.Property;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * The parent class of each configuration expression. Configuration expressions
@@ -92,7 +92,7 @@ public abstract class ConfigExpr extends RapidBeanBaseConfigExpr {
 	 *            if literals should be escaped
 	 * @return the expanded string
 	 */
-	public static String expand(final Installunit enclosingUnit, final Property enclosingProp, final String s,
+	public static String expand(final Installunit enclosingUnit, final EnvProperty enclosingProp, final String s,
 	        final boolean escapeLiterals) {
 		String s1 = s;
 		if (enclosingUnit != null) {
