@@ -28,6 +28,7 @@ import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.RunMode;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.Property;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
@@ -37,6 +38,11 @@ import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
  * @author Martin Bluemel
  */
 public class CmdLineInteractions {
+
+	public static String enterValue(final InputStream in, final PrintStream out, final EnvProperty prop,
+	        final String defaultValue) {
+		throw new AssertionError("FIXME");
+	}
 
 	/**
 	 * Prompt for entering a value and read it.
@@ -52,7 +58,7 @@ public class CmdLineInteractions {
 	 * @return the value entered or the default value if nothing is entered
 	 */
 	public static String enterValue(final InputStream in, final PrintStream out, final Property prop,
-			final String defaultValue) {
+	        final String defaultValue) {
 		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		String newValue = null;
 		RapidEnvInterpreter.log(Level.FINER, "START enterValue for property: " + prop.getFullyQualifiedName());
@@ -94,18 +100,18 @@ public class CmdLineInteractions {
 							if (prop.getCreateIfNotExist()) {
 								if (!new File(newValue).exists()) {
 									if (promptYesNo(in, out, prop.getFiletype().name() + " " + newValue
-											+ " does not exist. Create it?", true)) {
+									        + " does not exist. Create it?", true)) {
 										switch (prop.getFiletype()) {
 										case directory:
 											if (!new File(newValue).mkdirs()) {
 												throw new RapidEnvException("Failed to creat directory \"" + newValue
-														+ "\"");
+												        + "\"");
 											}
 											break;
 										case file:
 											if (!new File(newValue).createNewFile()) {
 												throw new RapidEnvException("Failed to create file \"" + newValue
-														+ "\"");
+												        + "\"");
 											}
 											break;
 										}
@@ -114,7 +120,7 @@ public class CmdLineInteractions {
 							}
 							if (!new File(newValue).exists()) {
 								out.println("  Invalid input: " + prop.getFiletype().name() + " " + newValue
-										+ " does not exist.");
+								        + " does not exist.");
 								ok = false;
 							}
 						}
@@ -160,7 +166,7 @@ public class CmdLineInteractions {
 	 * @return the value entered or the default value if nothing is entered
 	 */
 	protected static String enterValue(final RapidEnvInterpreter interpreter, final InputStream in,
-			final PrintStream out, final String msg, final String defaultValue) {
+	        final PrintStream out, final String msg, final String defaultValue) {
 		if (interpreter.getRunMode() == RunMode.batch) {
 			return defaultValue;
 		}
@@ -193,9 +199,9 @@ public class CmdLineInteractions {
 	 * @return true if the answer is yes or false if the answer is no
 	 */
 	public static boolean promptYesNo(final InputStream in, final PrintStream out, final String question,
-			final boolean defaultValue) {
+	        final boolean defaultValue) {
 		if (RapidEnvInterpreter.getInstance() != null
-				&& RapidEnvInterpreter.getInstance().getRunMode() == RunMode.batch) {
+		        && RapidEnvInterpreter.getInstance().getRunMode() == RunMode.batch) {
 			return true;
 		}
 		boolean ret = defaultValue;

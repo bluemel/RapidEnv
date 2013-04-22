@@ -998,11 +998,18 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 			if (deinstall) {
 				for (final Version version : installedVersions) {
+					RapidEnvInterpreter.log(Level.FINE, "Deinstalling version \"" + version.toString()
+					        + "\" of unit \"" + getFullyQualifiedName() + "\"...");
+					RapidEnvInterpreter.log(Level.FINE, " homedir \"" + getHomedir() + "\"...");
 					deinstall(version, true);
 				}
 			}
 		}
 
+		RapidEnvInterpreter.log(Level.FINE, "Installing version \"" + this.getVersion() + "\" of unit \""
+		        + getFullyQualifiedName() + "\"...");
+		RapidEnvInterpreter.log(Level.FINE, " homedir = \"" + getHomedir() + "\"");
+		RapidEnvInterpreter.log(Level.FINE, " homedir.exists() = \"" + getHomedirAsFile().exists() + "\"");
 		install(false, new ArrayList<String>());
 	}
 
@@ -1093,6 +1100,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		// heuristics: the unpack folder is the only one without a
 		// .renvstate.xml file.
 		for (final File dir : homedir.getParentFile().listFiles()) {
+			RapidEnvInterpreter.log(Level.FINER, "Investigating folder \"" + dir.getAbsolutePath() + "\"...");
+			RapidEnvInterpreter.log(Level.FINER, "  - isDirectory() = \"" + dir.isDirectory() + "\"");
+			RapidEnvInterpreter.log(Level.FINER, "  - contained files:");
+			for (final File file : dir.listFiles()) {
+				RapidEnvInterpreter.log(Level.FINER, "    * " + file.getAbsolutePath());
+			}
+			RapidEnvInterpreter.log(Level.FINER,
+			        "  - containsFileWithName(\".renvstate.xml\") = \""
+			                + FileHelper.containsFileWithName(dir.listFiles(), ".renvstate.xml") + "\"...");
 			if (dir.isDirectory() && (!FileHelper.containsFileWithName(dir.listFiles(), ".renvstate.xml"))) {
 				if (!dir.equals(homedir)) {
 					if (unpackDir == null) {
@@ -1103,22 +1119,29 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						                + "\".");
 					}
 				}
-				break;
 			}
+		}
+		if (unpackDir != null) {
+			RapidEnvInterpreter.log(Level.FINE, "unpackDir = \"" + unpackDir.getAbsolutePath() + "\"");
 		}
 		if (unpackDir == null) {
 			throw new RapidEnvException("Could not determine unpacked root folder to rename in directory \"" + homedir
 			        + "\".");
 		}
-		RapidEnvInterpreter.log(Level.FINE, "- movig file \".renvstate.xml\" from \"" + homedir + "\" to \""
+		RapidEnvInterpreter.log(Level.FINE, "- moving file \".renvstate.xml\" from \"" + homedir + "\" to \""
 		        + unpackDir + "\" ...");
-		if (!new File(homedir, ".renvstate.xml").renameTo(new File(unpackDir, ".renvstate.xml"))) {
-			throw new RapidEnvException("Problems to move file \".renvstate.xml\" from \"" + homedir + "\" to \""
-			        + unpackDir + "\".");
-		}
-		RapidEnvInterpreter.log(Level.FINE, "- deleting directory \"" + homedir.getAbsolutePath() + "\" ...");
-		if (!homedir.delete()) {
-			throw new RapidEnvException("Problems to delete directory \"" + homedir + "\".");
+		if (homedir.exists()) {
+			if (new File(homedir, ".renvstate.xml").exists()) {
+				if (!new File(homedir, ".renvstate.xml").renameTo(new File(unpackDir, ".renvstate.xml"))) {
+					throw new RapidEnvException("Problems to move file \".renvstate.xml\" from \"" + homedir
+					        + "\" to \""
+					        + unpackDir + "\".");
+				}
+			}
+			RapidEnvInterpreter.log(Level.FINE, "- deleting directory \"" + homedir.getAbsolutePath() + "\" ...");
+			if (!homedir.delete()) {
+				throw new RapidEnvException("Problems to delete directory \"" + homedir + "\".");
+			}
 		}
 		RapidEnvInterpreter.log(Level.FINE, "- renaming directory \"" + unpackDir + "\" to \"" + homedir.getName()
 		        + "\" ...");
@@ -1493,15 +1516,20 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * @return the data describing the install unit's state.
 	 */
 	public InstallunitData getData() {
-		if (this.dataDoc == null) {
-			if (getHomedirAsFile().exists()) {
-				this.dataDoc = getDataDoc(getHomedirAsFile());
-				if (this.dataDoc == null) {
+		try {
+			if (this.dataDoc == null
+			        || (!this.dataDoc.getUrl().equals(getHomedirAsFile().toURI().toURL()))) {
+				if (getHomedirAsFile().exists()) {
+					this.dataDoc = getDataDoc(getHomedirAsFile());
+					if (this.dataDoc == null) {
+						initNewDataDoc();
+					}
+				} else {
 					initNewDataDoc();
 				}
-			} else {
-				initNewDataDoc();
 			}
+		} catch (MalformedURLException e) {
+			throw new RapidEnvException(e);
 		}
 		return (InstallunitData) this.dataDoc.getRoot();
 	}
@@ -1543,7 +1571,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 *            the install unit's state.
 	 */
 	private void storeData(final InstallState installstate) {
-		final InstallunitData installdata = this.getData();
+		final InstallunitData installdata = getData();
 		if (installdata.getFullname() == null) {
 			installdata.setFullname(getFullyQualifiedName());
 		}
@@ -1567,6 +1595,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			installdata.addUsedbyenviroment(currentEnvironment);
 			break;
 		}
+		RapidEnvInterpreter.log(Level.FINER, "Storing installation state: \"" + installdata.getInstallstate().name()
+		        + "\" to \"" + this.dataDoc.getUrl().toString() + "\"");
 		this.dataDoc.save();
 	}
 
