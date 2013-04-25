@@ -78,6 +78,11 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		boolean configured = false;
 
 		if (getSourceurl() != null) {
+			RapidEnvInterpreter.log(Level.FINER,
+			        "general check of \"" + this.getClass().getName()
+			                + "\"\n  src = \"" + url.toString()
+			                + "\"\n  tgt = \""
+			                + targetfile.getAbsolutePath() + "\"...");
 			if (url.getProtocol().equals("file")) {
 				sourcefile = new File(url.getFile());
 				if (!sourcefile.exists()) {
@@ -110,6 +115,9 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 				        + "for file configuration property \"sourceurl\".");
 			}
 		} else {
+			RapidEnvInterpreter.log(Level.FINER,
+			        "general check of \"" + this.getClass().getName()
+			                + "\"\n  tgt = \"" + targetfile.getAbsolutePath() + "\"...");
 			if (!targetfile.exists()) {
 				if (execute) {
 					try {
@@ -152,7 +160,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 						return false;
 					}
 				}
-			break;
+				break;
 
 			case diff:
 				boolean equal = false;
@@ -421,13 +429,13 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 		switch (getNewline()) {
 		case platform:
 			newlineChars = PlatformHelper.getLineFeed();
-		break;
+			break;
 		case lf:
 			newlineChars = "\n";
-		break;
+			break;
 		case crlf:
 			newlineChars = "\r\n";
-		break;
+			break;
 		default:
 			throw new RapidEnvException("Can not interpret " + getNewline().name());
 		}
