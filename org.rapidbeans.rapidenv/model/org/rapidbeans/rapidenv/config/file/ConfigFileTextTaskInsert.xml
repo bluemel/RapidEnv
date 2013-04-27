@@ -43,5 +43,5 @@ the first occurrence of this line.</description>
 or after (append)</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

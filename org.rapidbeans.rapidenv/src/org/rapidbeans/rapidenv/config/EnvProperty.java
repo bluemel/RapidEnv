@@ -145,21 +145,9 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 					for (int i = size - 1; i >= 0; i--) {
 						final PropertyExtensionFromInstallUnit extfu = extfus.get(i);
 						final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
-						// System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-						// System.out.println("@@@ property = " +
-						// this.getFullyQualifiedName());
-						// System.out.println("@@@ parentInstallUnit = " +
-						// parentInstallUnit.getFullyQualifiedName());
 						final String value = normalize(extfu.getValue());
-						// System.out.println("@@@ extension value = " + value);
 						final InstallStatus parentInstallUnitInstallStatus = env.getInstallationStatus(
 						        parentInstallUnit, CmdRenvCommand.stat);
-						// System.out.println("@@@ parentInstallUnit.getInstallcontrol() = "
-						// + parentInstallUnit.getInstallcontrol().name());
-						// System.out.println("@@@ env.getCommand() = " +
-						// env.getCommand().name());
-						// System.out.println("@@@ parentInstallUnitInstallStatus = "
-						// + parentInstallUnitInstallStatus.name());
 						switch (parentInstallUnitInstallStatus) {
 						case deinstallrequired:
 							removePathExtension(pathComponents, extfu.getPropextmode(), value);
@@ -236,12 +224,34 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	 */
 	private boolean relevantParentUnitInstallState(final Installunit parentInstallUnit,
 	        final InstallStatus parentInstallUnitInstallStatus) {
-		return parentInstallUnit.getInstallcontrol() == InstallControl.normal
-		        || (parentInstallUnit.getInstallcontrol() == InstallControl.optional && (parentInstallUnit
-		                .shouldBeInstalled()
-		                || parentInstallUnitInstallStatus == InstallStatus.uptodate
-		                || parentInstallUnitInstallStatus == InstallStatus.configurationrequired
-		                || parentInstallUnitInstallStatus == InstallStatus.upgraderequired || parentInstallUnitInstallStatus == InstallStatus.downgraderequired));
+//		return parentInstallUnit.getInstallcontrol() == InstallControl.normal
+//		        || (parentInstallUnit.getInstallcontrol() == InstallControl.optional && (parentInstallUnit
+//		                .shouldBeInstalled()
+//		                || parentInstallUnitInstallStatus == InstallStatus.uptodate
+//		                || parentInstallUnitInstallStatus == InstallStatus.configurationrequired
+//		                || parentInstallUnitInstallStatus == InstallStatus.upgraderequired || parentInstallUnitInstallStatus == InstallStatus.downgraderequired));
+		boolean relevant = false;
+		switch (parentInstallUnitInstallStatus) {
+		case configurationrequired:
+		case deinstallrequired:
+		case downgraderequired:
+		case upgraderequired:
+		case uptodate:
+			relevant = true;
+			break;
+		case notinstalled:
+			final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
+			if (renv != null) {
+				final CmdRenvCommand command = renv.getCommand();
+				switch (command) {
+				case install:
+				case update:
+					relevant = parentInstallUnit.shouldBeInstalled();
+					break;
+				}
+			}
+		}
+		return relevant;
 	}
 
 	public Installunit getParentInstallunit() {
@@ -543,8 +553,6 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	 * @return the new (updated) property value
 	 */
 	public String update() {
-		// System.out.println("@@@ updating property " +
-		// this.getFullyQualifiedName() + "!!!");
 		final String propName = getFullyQualifiedName();
 		String propValue = getValue();
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();

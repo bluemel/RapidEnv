@@ -1033,11 +1033,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	@Override
 	public Packaging getPackaging() {
 		if (super.getPackaging() == null) {
-			final String extension = StringHelper.splitLast(getSourceurl(), ".");
-			for (final Packaging current : Packaging.values()) {
-				if (current.getExtension().equals(extension)) {
-					super.setPackaging(current);
-					break;
+			final String sourceurl = getSourceurl();
+			if (sourceurl != null) {
+				final String extension = StringHelper.splitLast(sourceurl, ".");
+				for (final Packaging current : Packaging.values()) {
+					if (current.getExtension().equals(extension)) {
+						super.setPackaging(current);
+						break;
+					}
 				}
 			}
 		}
@@ -1943,7 +1946,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Determine if an installation unit should be installed or stay installed
-	 * in case of an update.
+	 * in case of install or update.
 	 * 
 	 * @return if the installation unit should be installed or not.
 	 */

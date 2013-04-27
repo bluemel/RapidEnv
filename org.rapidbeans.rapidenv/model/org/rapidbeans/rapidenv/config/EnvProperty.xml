@@ -133,5 +133,5 @@ case the install unit is upgraded.</description>
 		<property name="description" bindingtype="element"/>
 	</xmlbinding>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

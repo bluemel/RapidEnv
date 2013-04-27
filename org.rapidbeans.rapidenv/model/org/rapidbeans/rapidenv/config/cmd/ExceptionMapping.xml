@@ -38,5 +38,5 @@
 		>
 		<description>The error messages in different languages</description>
 	</property>
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

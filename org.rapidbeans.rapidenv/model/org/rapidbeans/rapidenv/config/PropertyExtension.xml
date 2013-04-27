@@ -30,5 +30,5 @@ The platform specific path separator is automatically used in order to prepend o
 		<description>The environment variable's (default) value.
 Could be platform specific when using the "osfamily" attribute.</description>
 	</property>
-	<!--<codegen mode="split"/>-->
+	<codegen mode="simple" implementation="strict"/>
 </beantype>

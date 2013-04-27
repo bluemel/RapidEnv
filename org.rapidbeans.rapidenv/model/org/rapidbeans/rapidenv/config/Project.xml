@@ -95,5 +95,5 @@ By default this value is the folder where the renv command is located.</descript
 	</property>
 
 	<xmlbinding xmlrootelement="project"/>
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

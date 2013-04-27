@@ -25,5 +25,5 @@
 		<description>Specifies the line(s) to delete</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

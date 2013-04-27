@@ -113,5 +113,5 @@ diff:        strict binding to the source file (manual changes are excluded)</de
 executed whenever a configuration on this file or folder has been performed</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

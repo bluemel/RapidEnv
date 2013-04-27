@@ -23,5 +23,5 @@
 		<description>A single exception mapping</description>
 	</property>
 	<xmlbinding xmlrootelement="exceptionmap"/>
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

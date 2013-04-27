@@ -26,4 +26,5 @@
 		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
 		<description>The message text.</description>
 	</property>
+	<codegen implementation="strict"/>
 </beantype>

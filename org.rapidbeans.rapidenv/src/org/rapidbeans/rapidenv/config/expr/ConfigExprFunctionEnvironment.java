@@ -70,7 +70,7 @@ public class ConfigExprFunctionEnvironment extends RapidBeanBaseConfigExprFuncti
 	/**
 	 * the bean's type (class variable).
 	 */
-	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionHomedir.class);
+	private static TypeRapidBean type = TypeRapidBean.createInstance(ConfigExprFunctionEnvironment.class);
 
 	/**
 	 * @return the bean's type

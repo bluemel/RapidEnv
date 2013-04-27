@@ -259,6 +259,6 @@ The extension will lead to some migration of the property value during upgrade i
 		</property>
 	</xmlbinding>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict" />
 
 </beantype>

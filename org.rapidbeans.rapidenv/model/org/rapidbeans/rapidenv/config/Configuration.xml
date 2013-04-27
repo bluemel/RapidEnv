@@ -65,6 +65,6 @@ after this configuration has been performed</description>
 		transient="true"
 		multiline="true"/>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 
 </beantype>

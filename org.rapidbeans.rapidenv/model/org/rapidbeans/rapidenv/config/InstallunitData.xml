@@ -44,5 +44,6 @@
 	</property>
 
 	<xmlbinding xmlrootelement="installunitdata"/>
+	<codegen mode="simple" implementation="strict"/>
 
 </beantype>

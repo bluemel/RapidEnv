@@ -49,6 +49,6 @@ quoted in the command line string automatically. In some cases however you might
 want to suppress this default behaviour. In these cases set this property to "false"</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 
 </beantype>

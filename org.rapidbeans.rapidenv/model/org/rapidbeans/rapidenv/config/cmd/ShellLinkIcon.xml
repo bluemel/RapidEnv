@@ -68,6 +68,6 @@
 		<description>Determines if the icon should show up in the start menu</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 
 </beantype>

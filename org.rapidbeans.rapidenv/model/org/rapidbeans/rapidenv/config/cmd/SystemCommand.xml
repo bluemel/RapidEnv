@@ -110,6 +110,6 @@ after the command execution ended with errors (return != 0)</description>
 to have automatic user input</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 
 </beantype>

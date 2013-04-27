@@ -35,6 +35,6 @@ or already done.
 If ist is undefined the configuration is valid for all platforms without specific definition.</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 
 </beantype>

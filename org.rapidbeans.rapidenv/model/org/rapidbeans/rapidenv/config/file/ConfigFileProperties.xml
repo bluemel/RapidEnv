@@ -36,6 +36,6 @@
 		</property>
 	</xmlbinding>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 
 </beantype>

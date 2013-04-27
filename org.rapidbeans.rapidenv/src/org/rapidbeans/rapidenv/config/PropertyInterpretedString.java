@@ -81,11 +81,11 @@ public class PropertyInterpretedString extends PropertyString {
 				return new ConfigExprTopLevel(getEnclosingUnit(), getEnclosingProperty(), s, false).interpret();
 			} else {
 				return new ConfigExprTopLevel(getEnclosingUnit(), getEnclosingProperty(), s, env.getProject()
-						.getExpressionLiteralEscaping()).interpret();
+				        .getExpressionLiteralEscaping()).interpret();
 			}
 		} catch (RapidEnvException e) {
 			if (e.getCause() != null && e.getCause().getCause() != null
-					&& e.getCause().getCause() instanceof ClassNotFoundException) {
+			        && e.getCause().getCause() instanceof ClassNotFoundException) {
 				String funcname = e.getCause().getCause().getMessage();
 				final String msg = e.getCause().getMessage();
 				final int pos = msg.indexOf("ConfigExprFunction");
@@ -93,12 +93,12 @@ public class PropertyInterpretedString extends PropertyString {
 					funcname = msg.substring(pos + "ConfigExprFunction".length());
 				}
 				throw new RapidEnvConfigurationException("Problem while interpreting value\n" + "  \"" + s + "\"\n"
-						+ "  for attribute \"" + this.getBean().getType().getNameShort() + "." + this.getName()
-						+ "\":\n" + "  No interpreter class found for function \"" + funcname + "()\".", e);
+				        + "  for attribute \"" + this.getBean().getType().getNameShort() + "." + this.getName()
+				        + "\":\n" + "  No interpreter class found for function \"" + funcname + "()\".", e);
 			}
 			throw new RapidEnvConfigurationException("Problem while interpreting value\n" + "  \"" + s
-					+ "\"\n  for attribute \"" + this.getBean().getType().getNameShort() + "." + this.getName() + "\"",
-					e);
+			        + "\"\n  for attribute \"" + this.getBean().getType().getNameShort() + "." + this.getName() + "\"",
+			        e);
 		}
 	}
 

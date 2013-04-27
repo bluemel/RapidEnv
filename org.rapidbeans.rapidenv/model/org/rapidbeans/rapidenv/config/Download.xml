@@ -37,4 +37,6 @@ If it is undefined the definition is valid for all platforms without specific de
 		<description>The URL where you can download the file.</description>
 	</property>
 
+	<codegen implementation="strict"/>
+
 </beantype>

@@ -35,6 +35,5 @@ other project environment definitions by means of the RapidEnv &gt;include&lt; e
 	</property>
 
 	<xmlbinding xmlrootelement="projectpart"/>
-
-	<codegen mode="simple"/>
+	<codegen mode="simple" implementation="strict"/>
 </beantype>

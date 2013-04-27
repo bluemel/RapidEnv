@@ -26,4 +26,5 @@
 		<description>If this value is defined the environment variable will become a platform specific one.
 If it is undefined the definition is valid for all platforms without specific definition.</description>
 	</property>
+	<codegen implementation="strict"/>
 </beantype>

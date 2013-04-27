@@ -40,4 +40,5 @@ If not defined the value will be taken from the parent property node's value att
 	<xmlbinding>
 		<property name="value" bindingtype="element"/>
 	</xmlbinding>
+	<codegen implementation="strict"/>
 </beantype>

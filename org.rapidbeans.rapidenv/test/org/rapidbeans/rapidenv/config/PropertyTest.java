@@ -18,14 +18,15 @@
 package org.rapidbeans.rapidenv.config;
 
 import java.io.File;
-
-import junit.framework.Assert;
+import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.type.RapidBeansTypeLoader;
 import org.rapidbeans.core.util.FileHelper;
+import org.rapidbeans.core.util.OperatingSystemFamily;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.datasource.Document;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
@@ -41,9 +42,9 @@ public class PropertyTest {
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-				"org.rapidbeans.rapidenv.config.Project", true);
+		        "org.rapidbeans.rapidenv.config.Project", true);
 		CmdRenv cmd = new CmdRenv(
-				new String[] { "-env", "testdata/env/env.xml" });
+		        new String[] { "-env", "testdata/env/env.xml" });
 		new RapidEnvInterpreter(cmd);
 	}
 
@@ -59,18 +60,17 @@ public class PropertyTest {
 		Document doc = new Document(new File("testdata/env/envWithPathext.xml"));
 		Project project = (Project) doc.getRoot();
 		EnvProperty cmdPath = project.findPropertyConfiguration("cmd.path");
-		Assert.assertEquals(2, cmdPath.getSpecificvalues().size());
+		List<PropertyValue> specValues = cmdPath.getSpecificvalues();
+		Assert.assertEquals(2, specValues.size());
+		Assert.assertEquals(OperatingSystemFamily.windows, specValues.get(0).getOsfamily());
+		Assert.assertEquals(OperatingSystemFamily.linux, specValues.get(1).getOsfamily());
+		String value = cmdPath.getValue();
 		switch (PlatformHelper.getOsfamily()) {
 		case windows:
-			Assert.assertTrue(
-					cmdPath.getValue(),
-					cmdPath.getValue().substring(2)
-							.startsWith("\\h\\opt\\maven\\bin;"));
+			Assert.assertTrue(value, value.substring(2).startsWith("\\h\\opt\\maven\\bin;"));
 			break;
 		case linux:
-			String expected = cmdPath.getValue();
-			Assert.assertTrue(expected,
-					expected.startsWith("/h/opt/maven/bin:"));
+			Assert.assertTrue(value, value.startsWith("/h/opt/maven/bin:"));
 			break;
 		}
 	}

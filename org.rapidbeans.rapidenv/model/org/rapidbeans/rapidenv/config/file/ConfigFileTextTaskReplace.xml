@@ -30,5 +30,5 @@
 		<description>Specifies the text to insert instead of the replaced text.</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

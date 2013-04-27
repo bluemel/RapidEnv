@@ -1213,7 +1213,12 @@ public class RapidEnvInterpreter {
 						for (final PropertyExtension propext : u.getPropextensions()) {
 							if (propext instanceof PropertyExtensionFromInstallUnit) {
 								final PropertyExtensionFromInstallUnit pu = (PropertyExtensionFromInstallUnit) propext;
-								if (pu.getProperty().equals(propCfg)) {
+								if (pu.getProperty() == null) {
+									throw new RapidEnvConfigurationException("Property extension, install unit = \""
+									        + u.getFullyQualifiedName() + "\", value = \"" + pu.getValue()
+									        + "\" has no property.");
+								}
+								if (pu.getProperty() != null && pu.getProperty().equals(propCfg)) {
 									touchedByInstallunitToProcess = true;
 									break;
 								}

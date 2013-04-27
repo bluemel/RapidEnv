@@ -33,46 +33,6 @@
 	<xsl:value-of select="substring($string, 2, string-length($string) - 1)"/>
 </xsl:template>
 
-<xsl:template name="String.escapeHtmlChars">
-	<xsl:param name="string"/>
-	<xsl:value-of select="$string"/>
-	<xsl:call-template name="String.replace">
-		<xsl:with-param name="string"><xsl:value-of select="$string"/></xsl:with-param>
-		<xsl:with-param name="from"><xsl:value-of select="'&amp;'"/></xsl:with-param>
-		<xsl:with-param name="to"><xsl:value-of select="'&amp;amp;'"/></xsl:with-param>
-	</xsl:call-template>
-</xsl:template>
-
-<!-- *********************************************************************** -->
-<!-- * primitive line wrapper                                              * -->
-<!-- *********************************************************************** -->
-<xsl:template name="String.replace">
-	<xsl:param name="string"/>
-	<xsl:param name="from"/>
-	<xsl:param name="to"/>
-
-	<xsl:choose>
-		<xsl:when test="contains($string, $from)">
-			<xsl:variable name="before">
-				<xsl:value-of select="substring-before($string, $from)"/>
-			</xsl:variable>
-			<xsl:variable name="after">
-				<xsl:value-of select="substring($string, string-length($before) + string-length($from) + 1)"/>
-			</xsl:variable>
-			<xsl:value-of select="$before"/>
-			<xsl:value-of select="$to"/>
-			<xsl:call-template name="String.replace">
-				<xsl:with-param name="string"><xsl:value-of select="$after"/></xsl:with-param>
-				<xsl:with-param name="from"><xsl:value-of select="$from"/></xsl:with-param>
-				<xsl:with-param name="to"><xsl:value-of select="$to"/></xsl:with-param>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="$string"/>
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
-
 <!-- *********************************************************************** -->
 <!-- * primitive line wrapper                                              * -->
 <!-- *********************************************************************** -->

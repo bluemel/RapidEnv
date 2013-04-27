@@ -25,4 +25,5 @@
 		<description>The file with the environment definition.</description>
 	</property>
 
+	<codegen mode="simple" implementation="strict"/>
 </beantype>

@@ -101,6 +101,5 @@ The extension will lead to some migration of the property value during upgrade i
 				xmlelement="icon"/>
 		</property>
 	</xmlbinding>
-
-	<codegen mode="simple"/>
+	<codegen mode="simple" implementation="strict"/>
 </beantype>

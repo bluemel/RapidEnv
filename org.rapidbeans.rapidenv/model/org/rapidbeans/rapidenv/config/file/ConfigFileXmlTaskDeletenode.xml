@@ -27,5 +27,5 @@
 value has to be set.</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>

@@ -104,7 +104,7 @@ public abstract class ConfigExpr extends RapidBeanBaseConfigExpr {
 	/**
 	 * property references initialization.
 	 */
-	protected void initProperties() {
+	public void initProperties() {
 		super.initProperties();
 	}
 

@@ -34,5 +34,5 @@ approach &lt;installunit&gt; is a syntactically valid root element as well.</des
 (e. g. &lt;include file="../inc/envincl.xml"/&gt;).</description>
 	</property>
 
-	<codegen mode="simple"/>
+	<codegen mode="simple" implementation="strict"/>
 </beantype>

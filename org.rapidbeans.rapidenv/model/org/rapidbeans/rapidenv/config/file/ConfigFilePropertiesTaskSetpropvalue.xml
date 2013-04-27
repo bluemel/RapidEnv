@@ -42,5 +42,5 @@ Creates the property if not already present.</description>
 Defaults to "RapidEnv project ((project name))".</description>
 	</property>
 
-	<codegen mode="split"/>
+	<codegen mode="split" implementation="strict"/>
 </beantype>
