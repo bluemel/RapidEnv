@@ -1433,7 +1433,6 @@ public class RapidEnvInterpreter {
 	}
 
 	private void init(final CmdRenv cmd) {
-
 		if (this.ant == null) {
 			this.ant = new AntGateway();
 		}

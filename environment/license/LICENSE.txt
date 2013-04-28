@@ -1,4 +1,4 @@
-RapidEnv 1.3.5b is released under the terms of the
+RapidEnv 1.3.5g is released under the terms of the
 Lesser GNU Public License (LGPL).
 
 For details see files license-lgpl-3.0.txt and license-lgpl-3.0.html.

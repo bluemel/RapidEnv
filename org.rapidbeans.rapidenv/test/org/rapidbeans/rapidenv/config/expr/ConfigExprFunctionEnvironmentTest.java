@@ -17,6 +17,7 @@
 package org.rapidbeans.rapidenv.config.expr;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -36,8 +37,12 @@ import org.rapidbeans.rapidenv.config.Installunit;
  */
 public class ConfigExprFunctionEnvironmentTest {
 
+	static Level platformHelperLevel = null;
+
 	@BeforeClass
 	public static void setUpClass() {
+		platformHelperLevel = PlatformHelper.getLogger().getLevel();
+		PlatformHelper.getLogger().setLevel(Level.WARNING);
 		if (!new File("profile").exists()) {
 			new File("profile").mkdir();
 		}
@@ -50,6 +55,7 @@ public class ConfigExprFunctionEnvironmentTest {
 	public static void tearDownClass() {
 		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
+		PlatformHelper.getLogger().setLevel(platformHelperLevel);
 	}
 
 	/**

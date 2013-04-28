@@ -96,6 +96,8 @@ public class ExceptionMap extends RapidBeanBaseExceptionMap {
 		final TypeRapidBean beanType = TypeRapidBean.forName("org.rapidbeans.rapidenv.config.cmd.ExceptionMap");
 		Document doc = new Document("map", beanType,
 		        ExceptionMap.class.getClassLoader().getResource(
+		                "org/rapidbeans/rapidenv/commandlineErrorMappings.xml"),
+		        ExceptionMap.class.getClassLoader().getResourceAsStream(
 		                "org/rapidbeans/rapidenv/commandlineErrorMappings.xml"));
 		return (ExceptionMap) doc.getRoot();
 	}

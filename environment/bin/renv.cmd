@@ -31,7 +31,9 @@ set RAPID_ENV_HOME=%RAPID_ENV_HOME:~0,-5%
 
 :# RAPID_ENV_PROFILE is the common file name part for both profiles including absolute path:
 :# the properties and the environment variable set up shell script
-if not defined RAPID_ENV_PROFILE set RAPID_ENV_PROFILE=%RAPID_ENV_HOME%\profile\renv_%USERNAME%_%COMPUTERNAME%
+set RAPID_ENV_PROFILES_HOME=%RAPID_ENV_HOME%\profile
+if not exist "%RAPID_ENV_PROFILES_HOME%" mkdir "%RAPID_ENV_PROFILES_HOME%"
+set RAPID_ENV_PROFILE=%RAPID_ENV_PROFILES_HOME%\renv_%USERNAME%_%COMPUTERNAME%
 
 if not defined RAPID_ENV_LIBDIR set RAPID_ENV_LIBDIR=%RAPID_ENV_HOME%\lib
 
@@ -49,8 +51,8 @@ if "%1" == "-verbose" if not "%JAVA%" == "java" echo using JRE "%JAVA%"
 set RAPID_ENV_COMMAND="%JAVA%"
 if defined HTTP_PROXY_HOST set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyHost=%HTTP_PROXY_HOST%
 if defined HTTP_PROXY_PORT set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyPort=%HTTP_PROXY_PORT%
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -classpath "%RAPID_ENV_LIBDIR%\rapidenv-1.3.5d.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\rapidbeans-framework-0.9.7.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -classpath "%RAPID_ENV_LIBDIR%\rapidenv-1.3.5g.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\rapidbeans-framework-0.9.10.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\ant-1.8.2.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
 

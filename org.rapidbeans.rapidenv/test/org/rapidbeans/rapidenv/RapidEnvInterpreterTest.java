@@ -1503,8 +1503,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-				System.out.println(bStream);
 				assertEquals("pathComponent1" + File.pathSeparator + "pathComponent2",
 				        env.getPropertyValue("cmd.path.system"));
 				assertEquals(new File("testdata/testinstall/myapp/1.0.2").getAbsolutePath() + File.separator + "bin"
@@ -1520,8 +1518,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-				System.out.println(bStream);
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertTrue(bStream.toString().contains(
 				        "cmd.path.system = \"pathComponent1" + File.pathSeparator + "pathComponent2\""));
@@ -1534,8 +1530,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-				System.out.println(bStream);
 
 				// test status after installation of unit otherapp
 				env = new RapidEnvInterpreter(new CmdRenv(
@@ -1544,8 +1538,6 @@ public class RapidEnvInterpreterTest {
 				bStream = new ByteArrayOutputStream();
 				sout = new PrintStream(bStream);
 				env.execute(sin, sout);
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-				System.out.println(bStream);
 				assertTrue(bStream.toString().contains("toolhome.myapp = \""));
 				assertFalse(bStream.toString()
 				        .contains("toolhome.otherapp: value of common property should be changed"));
