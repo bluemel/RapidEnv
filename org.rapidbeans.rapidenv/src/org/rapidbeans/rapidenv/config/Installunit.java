@@ -67,16 +67,16 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * Print the current status of this installation unit
 	 */
 	public void stat() {
+		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		InstallStatus installStatus = null;
-		if (RapidEnvInterpreter.getInstance() != null) {
-			installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this, CmdRenvCommand.stat);
+		if (renv != null) {
+			installStatus = renv.getInstallationStatus(this, CmdRenvCommand.stat);
 		} else {
 			installStatus = getInstallationStatus(CmdRenvCommand.stat);
 		}
 		String sign = null;
 
 		switch (installStatus) {
-
 		case uptodate:
 			if (getInstallcontrol() == InstallControl.discontinued) {
 				sign = "!";
@@ -90,7 +90,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				sign = "!";
 			}
 			if (getInstallcontrol() == InstallControl.discontinued) {
-				RapidEnvInterpreter.getInstance().getOut()
+				renv.getOut()
 				        .println("  " + sign + " " + getFullyQualifiedName() + " should be deinstalled");
 			} else {
 				String issue = null;
@@ -110,23 +110,23 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				                + getNearestInstalledVersion(CmdRenvCommand.stat));
 				final List<Version> installedVersions = findInstalledVersions(CmdRenvCommand.stat);
 				if (installedVersions.size() == 1) {
-					RapidEnvInterpreter.getInstance().getOut().println();
+					renv.getOut().println();
 				} else {
-					RapidEnvInterpreter.getInstance().getOut().print(" (");
+					renv.getOut().print(" (");
 					int i = 0;
 					for (final Version version : installedVersions) {
 						if (!version.equals(getVersion())) {
 							if (i > 0) {
-								RapidEnvInterpreter.getInstance().getOut().print(", ");
+								renv.getOut().print(", ");
 							}
-							RapidEnvInterpreter.getInstance().getOut().print(version.toString());
+							renv.getOut().print(version.toString());
 							i++;
 						}
 					}
-					RapidEnvInterpreter.getInstance().getOut().println(")");
+					renv.getOut().println(")");
 				}
 				if (issue != null) {
-					RapidEnvInterpreter.getInstance().getOut().println("    " + issue);
+					renv.getOut().println("    " + issue);
 				}
 			}
 			break;
@@ -143,7 +143,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		case notinstalled:
 			if (this.getInstallcontrol() == InstallControl.discontinued) {
-				if (RapidEnvInterpreter.getInstance().getLogLevel().intValue() < Level.INFO.intValue())
+				if (renv.getLogLevel().intValue() < Level.INFO.intValue())
 				{
 					sign = "-";
 					RapidEnvInterpreter
@@ -153,7 +153,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 			} else if (!this.shouldBeInstalled()) {
 				sign = "-";
-				RapidEnvInterpreter.getInstance().getOut()
+				renv.getOut()
 				        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " optional");
 			} else {
 				sign = "!";
@@ -210,6 +210,36 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		default:
 			throw new AssertionError("unexpected installation status \"" + installStatus.name());
+		}
+	}
+
+	public void updateinstallunitsPart() {
+		// downward compatibility: record the installation lifecycle state
+		// of all installation units installed so far
+		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
+		InstallStatus installStatus = null;
+		if (renv != null) {
+			installStatus = renv.getInstallationStatus(this, CmdRenvCommand.stat);
+		} else {
+			installStatus = getInstallationStatus(CmdRenvCommand.stat);
+		}
+		final Installations insts = renv.getInstallations();
+		final InstallunitData data = insts.findInstallunit(getFullyQualifiedName());
+		if (data == null) {
+			InstallState state = null;
+			if (getRenvstateFile(getHomedirAsFile()).exists()) {
+				state = this.getData().getInstallstate();
+				insts.addInstallunit(getFullyQualifiedName(), state, getVersion());
+			} else {
+				switch (installStatus) {
+				case notinstalled:
+					break;
+				default:
+					state = InstallState.installed;
+					storeData(state);
+					insts.addInstallunit(getFullyQualifiedName(), state, getVersion());
+				}
+			}
 		}
 	}
 
@@ -532,6 +562,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			installedSuccessfully = true;
 
 			storeData(InstallState.installed);
+			renv.removeFromStatusMap(this);
 
 			// execute configurations after installation
 			if (getConfigurations() != null) {
@@ -700,9 +731,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 *            determines if to keep icons (in case of update) or not.
 	 */
 	public void deinstall(final boolean keepIcons) {
+		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		InstallStatus installStatus = null;
-		if (RapidEnvInterpreter.getInstance() != null) {
-			installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this, CmdRenvCommand.deinstall);
+		if (renv != null) {
+			installStatus = renv.getInstallationStatus(this, CmdRenvCommand.deinstall);
 		} else {
 			installStatus = getInstallationStatus(CmdRenvCommand.deinstall);
 		}
@@ -713,13 +745,30 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		storeData(InstallState.deinstalling);
 
+		if (getSubunits() != null) {
+			for (final Installunit subunit : getSubunits()) {
+				InstallStatus subunitInstallStatus = null;
+				if (renv != null) {
+					subunitInstallStatus = renv.getInstallationStatus(subunit,
+					        CmdRenvCommand.deinstall);
+				} else {
+					subunitInstallStatus = subunit.getInstallationStatus(CmdRenvCommand.deinstall);
+				}
+				if (!subunitInstallStatus.equals(InstallStatus.notinstalled)) {
+					subunit.deinstall();
+				}
+			}
+		}
+
 		final InstallunitData data = this.getData();
-		if (data.getUsedbyenviroments() != null && data.getUsedbyenviroments().size() > 0) {
-			// do not use storeData() here for it will add the unwanted project
-			// reference
-			data.setInstallstate(InstallState.installed);
-			this.dataDoc.save();
-		} else {
+		final List<ReferencingProject> usedByEnvironments = data.getUsedbyenviroments();
+		final File envConfigFile = renv.getEnvironmentConfigurationFile();
+		if (data.getUsedbyenviroments() == null
+		        || data.getUsedbyenviroments().size() > 0
+		        || (usedByEnvironments.size() == 1
+		        && (!usedByEnvironments.get(0).getEnvfile().equals(envConfigFile)))) {
+			// deinstall if the unit is not needed by any other environment
+
 			// execute configurations before deinstallation
 			if (getConfigurations() != null) {
 				for (final Configuration cfg : getConfigurations()) {
@@ -761,12 +810,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				if (!targetFile.exists()) {
 					throw new RapidEnvException("Target file \"" + targetFile.getAbsolutePath() + "\" does not exist");
 				}
-				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
-				                        + " by deleting file " + targetFile.getAbsolutePath() + "...");
+				renv.getOut().println(
+				        "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
+				                + " by deleting file " + targetFile.getAbsolutePath() + "...");
 				if (!targetFile.delete()) {
 					throw new RapidEnvException("Failed to delete file " + targetFile.getAbsolutePath());
 				}
@@ -809,6 +855,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				removeIcons();
 				removeSpecificProperties();
 			}
+
+			// remove entry from the installations list
+			renv.getInstallations().removeInstallunit(
+			        getFullyQualifiedName());
+
+			// remove entry from status map since the installation state has
+			// changed now
+			renv.removeFromStatusMap(this);
 		}
 	}
 
@@ -941,10 +995,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	}
 
 	public void updowngrade() {
-
+		final RapidEnvInterpreter renv = RapidEnvInterpreter.getInstance();
 		InstallStatus installStatus = null;
-		if (RapidEnvInterpreter.getInstance() != null) {
-			installStatus = RapidEnvInterpreter.getInstance().getInstallationStatus(this, CmdRenvCommand.update);
+		if (renv != null) {
+			installStatus = renv.getInstallationStatus(this, CmdRenvCommand.update);
 		} else {
 			installStatus = getInstallationStatus(CmdRenvCommand.update);
 		}
@@ -952,6 +1006,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		if (installStatus == InstallStatus.notinstalled) {
 			throw new RapidEnvException("Installation unit \"" + getFullyQualifiedName() + "\" is not installed");
 		}
+
+		List<Installunit> installedSubunits = new ArrayList<Installunit>();
 
 		// determine versions of this installation unit currently installed
 		// and if they should be deinstalled
@@ -981,14 +1037,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						i++;
 					}
 				}
-				switch (RapidEnvInterpreter.getInstance().getRunMode()) {
+				switch (renv.getRunMode()) {
 				case command:
-					deinstall = CmdLineInteractions.promptYesNo(RapidEnvInterpreter.getInstance().getIn(),
-					        RapidEnvInterpreter.getInstance().getOut(), "Deinstall old " + sversion + " "
+					deinstall = CmdLineInteractions.promptYesNo(renv.getIn(),
+					        renv.getOut(), "Deinstall old " + sversion + " "
 					                + getFullyQualifiedName() + " " + ivList + "?", true);
 					break;
 				default:
-					throw new AssertionError("Run mode \"" + RapidEnvInterpreter.getInstance().getRunMode().name()
+					throw new AssertionError("Run mode \"" + renv.getRunMode().name()
 					        + " not yet supported");
 				}
 				break;
@@ -1001,6 +1057,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					RapidEnvInterpreter.log(Level.FINE, "Deinstalling version \"" + version.toString()
 					        + "\" of unit \"" + getFullyQualifiedName() + "\"...");
 					RapidEnvInterpreter.log(Level.FINE, " homedir \"" + getHomedir() + "\"...");
+					retrieveInstalledSubunitsRecursively(this, installedSubunits);
 					deinstall(version, true);
 				}
 			}
@@ -1011,19 +1068,55 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		RapidEnvInterpreter.log(Level.FINE, " homedir = \"" + getHomedir() + "\"");
 		RapidEnvInterpreter.log(Level.FINE, " homedir.exists() = \"" + getHomedirAsFile().exists() + "\"");
 		install(false, new ArrayList<String>());
+		for (final Installunit subunit : installedSubunits)
+		{
+			final InstallStatus status = renv.getInstallationStatus(subunit);
+			switch (status)
+			{
+			case notinstalled:
+			case upgraderequired:
+			case downgraderequired:
+				subunit.install(null);
+				break;
+			}
+		}
+	}
+
+	private void retrieveInstalledSubunitsRecursively(final Installunit installunit,
+	        List<Installunit> installedOptionalSubunits) {
+		if (installunit.getSubunits() != null)
+		{
+			for (final Installunit subunit : installunit.getSubunits())
+			{
+				final InstallStatus status = RapidEnvInterpreter.getInstance().getInstallationStatus(subunit);
+				switch (status)
+				{
+				case uptodate:
+				case upgraderequired:
+				case downgraderequired:
+				case configurationrequired:
+					installedOptionalSubunits.add(subunit);
+					break;
+				}
+				// do recursion after adding (breadth-first not depth-first)
+				retrieveInstalledSubunitsRecursively(subunit, installedOptionalSubunits);
+			}
+		}
 	}
 
 	public void configure(final boolean execute) {
 		if (getConfigurations() != null) {
-			RapidEnvInterpreter
-			        .getInstance()
-			        .getOut()
-			        .println("  ! " + getFullyQualifiedName() + " " + getNearestInstalledVersion(CmdRenvCommand.config));
+			RapidEnvInterpreter.getInstance().getOut().println(
+			        "  ! " + getFullyQualifiedName() + " "
+			                + getNearestInstalledVersion(CmdRenvCommand.config));
 			for (final Configuration cfg : getConfigurations()) {
 				if (cfg.getInstallphase() == ConfigurationPhase.config && cfg.checkOsfamily()) {
 					cfg.check(true);
 				}
 			}
+		}
+		if (execute) {
+			RapidEnvInterpreter.getInstance().removeFromStatusMap(this);
 		}
 	}
 
@@ -1414,102 +1507,111 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 */
 	private List<Version> findInstalledVersions(final CmdRenvCommand command) {
 		final List<Version> installedVersions = new ArrayList<Version>();
-		final File homedir = getHomedirAsFile();
-		if (homedir == null) {
-			return installedVersions;
-		}
-		switch (getInstallmode()) {
 
-		case put:
-			final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
-			        + ".jar";
-			if (homedir.exists()) {
-				for (final File file : homedir.listFiles(new FileFilterRegExp(targetFileName))) {
-					String sversion = StringHelper.splitLast(file.getName(), "-");
-					sversion = sversion.substring(0, sversion.length() - 4);
-					installedVersions.add(new Version(sversion));
-				}
+		if (RapidEnvInterpreter.getInstance().getEnvironmentInstallationsFile().exists()) {
+			final InstallunitData data =
+			        RapidEnvInterpreter.getInstance().getInstallations().findInstallunit(getFullyQualifiedName());
+			if (data != null && data.getInstallstate() == InstallState.installed) {
+				installedVersions.add(data.getVersion());
 			}
-			break;
+		} else {
+			final File homedir = getHomedirAsFile();
+			if (homedir == null) {
+				return installedVersions;
+			}
+			switch (getInstallmode()) {
 
-		case unpack:
-			if (homedir.exists()) {
-				final Document thisDataDoc = getDataDoc(homedir);
-				if (thisDataDoc != null) {
-					final InstallunitData thisInstallData = (InstallunitData) thisDataDoc.getRoot();
-					if (thisInstallData.getFullname().equals(getFullyQualifiedName())
-					        && thisInstallData.getVersion().equals(getVersion())
-					        && (thisInstallData.getInstallstate() == InstallState.installed || (thisInstallData
-					                .getInstallstate() == InstallState.installing && command == CmdRenvCommand.deinstall))) {
-						// quick hack for KDG environment
-						// installedVersions.add(otherInstallData.getVersion());
-						if (getFullyQualifiedName(true).equals("jdk"))
-						{
-							if (getProject().getName().equals("WAD")) {
-								if (thisInstallData.getVersion().toString().contains("-R"))
-								{
-									installedVersions.add(thisInstallData.getVersion());
-								}
-							} else if (getProject().getName().equals("WSS")) {
-								if (!thisInstallData.getVersion().toString().contains("-R"))
-								{
+			case put:
+				final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
+				        + ".jar";
+				if (homedir.exists()) {
+					for (final File file : homedir.listFiles(new FileFilterRegExp(targetFileName))) {
+						String sversion = StringHelper.splitLast(file.getName(), "-");
+						sversion = sversion.substring(0, sversion.length() - 4);
+						installedVersions.add(new Version(sversion));
+					}
+				}
+				break;
+
+			case unpack:
+				if (homedir.exists()) {
+					final Document thisDataDoc = getDataDoc(homedir);
+					if (thisDataDoc != null) {
+						final InstallunitData thisInstallData = (InstallunitData) thisDataDoc.getRoot();
+						if (thisInstallData.getFullname().equals(getFullyQualifiedName())
+						        && thisInstallData.getVersion().equals(getVersion())
+						        && (thisInstallData.getInstallstate() == InstallState.installed || (thisInstallData
+						                .getInstallstate() == InstallState.installing && command == CmdRenvCommand.deinstall))) {
+							// quick hack for KDG environment
+							// installedVersions.add(otherInstallData.getVersion());
+							if (getFullyQualifiedName(true).equals("jdk"))
+							{
+								if (getProject().getName().equals("WAD")) {
+									if (thisInstallData.getVersion().toString().contains("-R"))
+									{
+										installedVersions.add(thisInstallData.getVersion());
+									}
+								} else if (getProject().getName().equals("WSS")) {
+									if (!thisInstallData.getVersion().toString().contains("-R"))
+									{
+										installedVersions.add(thisInstallData.getVersion());
+									}
+								} else {
 									installedVersions.add(thisInstallData.getVersion());
 								}
 							} else {
 								installedVersions.add(thisInstallData.getVersion());
 							}
-						} else {
-							installedVersions.add(thisInstallData.getVersion());
+						}
+					} else {
+						// Fallback to maintain downward compatibility
+						if (homedir.getName().matches("\\A[0-9.]*\\z")) {
+							RapidEnvInterpreter.log(Level.INFO, "Migrating project \"" + getFullyQualifiedName()
+							        + "\" by generating new data file!");
+							initNewDataDoc();
+							getData().setVersion(new Version(homedir.getName()));
+							storeData(InstallState.installed);
 						}
 					}
-				} else {
-					// Fallback to maintain downward compatibility
-					if (homedir.getName().matches("\\A[0-9.]*\\z")) {
-						RapidEnvInterpreter.log(Level.INFO, "Migrating project \"" + getFullyQualifiedName()
-						        + "\" by generating new data file!");
-						initNewDataDoc();
-						getData().setVersion(new Version(homedir.getName()));
-						storeData(InstallState.installed);
-					}
 				}
-			}
-			final File homedirParent = homedir.getParentFile();
-			if (homedirParent.exists()) {
-				for (final File subdir : homedirParent.listFiles()) {
-					if (subdir.equals(homedir)) {
-						continue;
-					}
-					final Document otherDataDoc = getDataDoc(subdir);
-					if (otherDataDoc == null) {
-						continue;
-					}
-					final InstallunitData otherInstallData = (InstallunitData) otherDataDoc.getRoot();
-					if (otherInstallData != null && otherInstallData.getFullname().equals(getFullyQualifiedName())
-					        && otherInstallData.getInstallstate() == InstallState.installed) {
-						// quick hack for KDG environment
-						// installedVersions.add(otherInstallData.getVersion());
-						if (getFullyQualifiedName(true).equals("jdk"))
-						{
-							if (getProject().getName().equals("WAD")) {
-								if (otherInstallData.getVersion().toString().contains("-R"))
-								{
-									installedVersions.add(otherInstallData.getVersion());
-								}
-							} else if (getProject().getName().equals("WSS")) {
-								if (!otherInstallData.getVersion().toString().contains("-R"))
-								{
+				final File homedirParent = homedir.getParentFile();
+				if (homedirParent.exists()) {
+					for (final File subdir : homedirParent.listFiles()) {
+						if (subdir.equals(homedir)) {
+							continue;
+						}
+						final Document otherDataDoc = getDataDoc(subdir);
+						if (otherDataDoc == null) {
+							continue;
+						}
+						final InstallunitData otherInstallData = (InstallunitData) otherDataDoc.getRoot();
+						if (otherInstallData != null && otherInstallData.getFullname().equals(getFullyQualifiedName())
+						        && otherInstallData.getInstallstate() == InstallState.installed) {
+							// quick hack for KDG environment
+							// installedVersions.add(otherInstallData.getVersion());
+							if (getFullyQualifiedName(true).equals("jdk"))
+							{
+								if (getProject().getName().equals("WAD")) {
+									if (otherInstallData.getVersion().toString().contains("-R"))
+									{
+										installedVersions.add(otherInstallData.getVersion());
+									}
+								} else if (getProject().getName().equals("WSS")) {
+									if (!otherInstallData.getVersion().toString().contains("-R"))
+									{
+										installedVersions.add(otherInstallData.getVersion());
+									}
+								} else {
 									installedVersions.add(otherInstallData.getVersion());
 								}
 							} else {
 								installedVersions.add(otherInstallData.getVersion());
 							}
-						} else {
-							installedVersions.add(otherInstallData.getVersion());
 						}
 					}
 				}
+				break;
 			}
-			break;
 		}
 
 		return installedVersions;
@@ -1601,6 +1703,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		RapidEnvInterpreter.log(Level.FINER, "Storing installation state: \"" + installdata.getInstallstate().name()
 		        + "\" to \"" + this.dataDoc.getUrl().toString() + "\"");
 		this.dataDoc.save();
+
+		RapidEnvInterpreter.getInstance().getInstallations().addInstallunit(
+		        getFullyQualifiedName(), installstate, getVersion()
+		        );
+
+		RapidEnvInterpreter.getInstance().saveInstallations();
 	}
 
 	private ReferencingProject findCurrentReferencingProject(final InstallunitData installdata) {
@@ -1749,6 +1857,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 */
 	public boolean isSubunit() {
 		return getParentBean() instanceof Installunit;
+	}
+
+	/**
+	 * Determine if this installation unit is a subunit.
+	 * 
+	 * @return true if this installation unit is a subunit and false otherwise
+	 */
+	public boolean isTopLevelUnit() {
+		return !(getParentBean() instanceof Installunit);
 	}
 
 	/**
@@ -1987,5 +2104,16 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			}
 		}
 		return shouldBeInstalled;
+	}
+
+	public boolean isParentUnitOf(final Installunit unit) {
+		Installunit curUnit = unit;
+		while (curUnit != null && curUnit.getParentBean() instanceof Installunit) {
+			if (curUnit.getParentBean() == this) {
+				return true;
+			}
+			curUnit = (Installunit) curUnit.getParentBean();
+		}
+		return false;
 	}
 }

@@ -16,12 +16,13 @@
  * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 -->
 
-<beantype name="org.rapidbeans.rapidenv.config.InstallunitData">
+<beantype name="org.rapidbeans.rapidenv.config.InstallunitData"
+  idtype="keyprops">
 
 	<description>The data describing and persisting the install unit's state.</description>
 
 	<property name="fullname" type="string"
-		mandatory="true"
+		key="true"
 		>
 		<description>The fully qualified name.</description>
 	</property>

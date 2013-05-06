@@ -272,4 +272,12 @@ public class Project extends RapidBeanBaseProject {
 	public TypeRapidBean getType() {
 		return type;
 	}
+
+	public List<Installunit> findAllInstallunits(String string) {
+		final List<Installunit> installunits = new ArrayList<Installunit>();
+		for (final RapidBean bean : getContainer().findBeansByType("org.rapidbeans.rapidenv.config.Installunit")) {
+			installunits.add((Installunit) bean);
+		}
+		return installunits;
+	}
 }

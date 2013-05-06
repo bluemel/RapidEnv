@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -51,11 +52,12 @@ import org.rapidbeans.core.util.StringHelper.FillMode;
 import org.rapidbeans.datasource.Document;
 import org.rapidbeans.rapidenv.cmd.CmdLineInteractions;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.Environment;
 import org.rapidbeans.rapidenv.config.InstallControl;
+import org.rapidbeans.rapidenv.config.Installations;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
-import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.PropertyExtension;
 import org.rapidbeans.rapidenv.config.PropertyExtensionFromInstallUnit;
 import org.rapidbeans.rapidenv.config.PropertyInterpretedString;
@@ -388,18 +390,23 @@ public class RapidEnvInterpreter {
 				execBoot();
 				break;
 			case stat:
+				ensureEnvironmentInstallunits();
 				execStat();
 				break;
 			case install:
+				ensureEnvironmentInstallunits();
 				execInstall();
 				break;
 			case deinstall:
+				ensureEnvironmentInstallunits();
 				deinstallAll = execDeinstall();
 				break;
 			case update:
+				ensureEnvironmentInstallunits();
 				execUpdate();
 				break;
 			case config:
+				ensureEnvironmentInstallunits();
 				execConfig();
 				break;
 			case help:
@@ -432,6 +439,18 @@ public class RapidEnvInterpreter {
 			}
 		} finally {
 			this.timeEnd = System.currentTimeMillis();
+		}
+	}
+
+	private void ensureEnvironmentInstallunits() {
+		if (!getEnvironmentInstallationsFile().exists()) {
+			if (getProject() != null && getProject().getInstallunits() != null) {
+				for (final Installunit installunit : getProject().findAllInstallunits(
+				        "org.rapidbeans.rapidenv.config.Installunit")) {
+					installunit.updateinstallunitsPart();
+				}
+			}
+			saveInstallations();
 		}
 	}
 
@@ -815,7 +834,11 @@ public class RapidEnvInterpreter {
 
 	private Map<String, Map<CmdRenvCommand, InstallStatus>> installStatusMap = new HashMap<String, Map<CmdRenvCommand, InstallStatus>>();
 
-	private File environmentConfigurationFile;
+	private File environmentConfigurationFile = null;
+
+	private File environmentInstallationsFile = null;
+
+	private Document installationsDocument = null;
 
 	/**
 	 * @return the environmentConfigurationFile
@@ -825,6 +848,38 @@ public class RapidEnvInterpreter {
 			this.environmentConfigurationFile = this.renvCommand.getConfigfile();
 		}
 		return this.environmentConfigurationFile;
+	}
+
+	public File getEnvironmentInstallationsFile() {
+		if (this.environmentInstallationsFile == null) {
+			this.environmentInstallationsFile = new File(
+			        getProject().getProfiledir(), ".renvinstall.xml");
+		}
+		return this.environmentInstallationsFile;
+	}
+
+	public Installations getInstallations() {
+		if (this.installationsDocument == null) {
+			final File file = getEnvironmentInstallationsFile();
+			if (!file.exists()) {
+				this.installationsDocument = new Document(new Installations());
+				try {
+					this.installationsDocument.setUrl(file.toURI().toURL());
+				} catch (MalformedURLException e) {
+					throw new RapidEnvException(e);
+				}
+			} else
+			{
+				this.installationsDocument = new Document(
+				        TypeRapidBean.forName(Installations.class.getName()), file);
+			}
+		}
+		return (Installations) this.installationsDocument.getRoot();
+	}
+
+	public void saveInstallations() {
+		getInstallations();
+		this.installationsDocument.save();
 	}
 
 	/**
@@ -849,10 +904,10 @@ public class RapidEnvInterpreter {
 	 *            the RapidEnv command that is currently executed
 	 * @return the installation status of the given installation unit
 	 */
-	public InstallStatus getInstallationStatus(Installunit installunit, CmdRenvCommand cmd) {
+	public InstallStatus getInstallationStatus(final Installunit installunit, final CmdRenvCommand cmd) {
 		InstallStatus status = null;
-		Map<CmdRenvCommand, InstallStatus> commandMap = this.installStatusMap.get(installunit
-		        .getFullyQualifiedName(true));
+		Map<CmdRenvCommand, InstallStatus> commandMap = this.installStatusMap.get(
+		        installunit.getFullyQualifiedName(true));
 		if (commandMap == null) {
 			commandMap = new HashMap<CmdRenvCommand, InstallStatus>();
 			status = installunit.getInstallationStatus(cmd);
@@ -866,6 +921,15 @@ public class RapidEnvInterpreter {
 			}
 		}
 		return status;
+	}
+
+	public void removeFromStatusMap(final Installunit installunit) {
+		final Map<CmdRenvCommand, InstallStatus> commandMap = this.installStatusMap.get(
+		        installunit.getFullyQualifiedName(true));
+		if (commandMap != null) {
+			this.installStatusMap.remove(installunit.getFullyQualifiedName(true));
+		}
+
 	}
 
 	/**
@@ -1807,12 +1871,35 @@ public class RapidEnvInterpreter {
 
 		// take top level units and subunits in defined order
 		final List<Installunit> installUnitsToProc2 = new ArrayList<Installunit>();
-		for (final Installunit unit : installUnitsToProc) {
-			if ((!unit.isSubunit()) || (!parentUnitIn(unit, installUnitsToProc))) {
-				addSubunitsRecursively(unit, installUnitsToProc2, cmd);
+		switch (getCommand()) {
+		case update:
+			final Iterator<Installunit> iter = installUnitsToProc.iterator();
+			while (iter.hasNext()) {
+				final Installunit unit1 = iter.next();
+				deleteSubunits(unit1, installUnitsToProc);
+				installUnitsToProc2.add(unit1);
 			}
+			break;
+		default:
+			for (final Installunit unit2 : installUnitsToProc) {
+				if (unit2.isTopLevelUnit() || (!parentUnitIn(unit2, installUnitsToProc))) {
+					addSubunitsRecursively(unit2, installUnitsToProc2, cmd);
+				}
+			}
+			break;
 		}
 		return installUnitsToProc2;
+	}
+
+	private void deleteSubunits(final Installunit unit, final List<Installunit> installUnitsToProc) {
+		for (final Installunit unit1 : installUnitsToProc) {
+			if (unit1 == unit) {
+				continue;
+			}
+			if (unit.isParentUnitOf(unit1)) {
+				installUnitsToProc.remove(unit1);
+			}
+		}
 	}
 
 	private boolean parentUnitIn(Installunit unit, List<Installunit> installUnitsToProc) {

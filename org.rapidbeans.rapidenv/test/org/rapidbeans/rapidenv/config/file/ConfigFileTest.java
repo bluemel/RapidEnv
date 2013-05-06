@@ -39,6 +39,7 @@ import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.RapidEnvTestHelper;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
 import org.rapidbeans.rapidenv.config.InstallState;
+import org.rapidbeans.rapidenv.config.Installations;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.InstallunitData;
 import org.rapidbeans.rapidenv.config.Project;
@@ -56,24 +57,35 @@ public class ConfigFileTest {
 		data.setInstallstate(InstallState.installed);
 		Document doc = new Document(data);
 		doc.setUrl(new File(
-				"testdata/testinstall/org/apache/maven/2.1.2/.renvstate.xml")
-				.toURI().toURL());
+		        "testdata/testinstall/org/apache/maven/2.1.2/.renvstate.xml").toURI().toURL());
 		doc.save();
+
+		Installations insts = new Installations();
+		data = new InstallunitData();
+		data.setFullname("org.apache.maven");
+		data.setVersion(new Version("2.1.2"));
+		data.setInstallstate(InstallState.installed);
+		insts.addInstallunit(data);
+		doc = new Document(insts);
+		doc.setUrl(new File("testdata/env/.renvinstall.xml").toURI().toURL());
+		doc.save();
+
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-				"org.rapidbeans.rapidenv.config.Project", true);
+		        "org.rapidbeans.rapidenv.config.Project", true);
 	}
 
 	@AfterClass
 	public static void tearDownClass() {
 		CmdRenv cmd = new CmdRenv(
-				new String[] { "-env", "testdata/env/env.xml" });
+		        new String[] { "-env", "testdata/env/env.xml" });
 		RapidEnvTestHelper.tearDownProfile(new RapidEnvInterpreter(cmd));
 		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 		new File("renv_" + PlatformHelper.username() + "_"
-				+ PlatformHelper.hostname() + ".cmd").delete();
+		        + PlatformHelper.hostname() + ".cmd").delete();
 		new File("renv_" + PlatformHelper.username() + "_"
-				+ PlatformHelper.hostname() + ".properties").delete();
+		        + PlatformHelper.hostname() + ".properties").delete();
+		new File("testdata/env/.renvinstall.xml").delete();
 	}
 
 	@Test
@@ -87,17 +99,17 @@ public class ConfigFileTest {
 		ConfigFile file = (ConfigFile) unit.getConfigurations().get(0);
 		Assert.assertEquals("conf/settings.xml", file.getPath());
 		Assert.assertEquals("file:testdata/conf/mavensettings1.xml", file
-				.getSourceurlAsUrl().toString());
+		        .getSourceurlAsUrl().toString());
 	}
 
 	@Test
 	public void testConfigAddFileCheckCopyNotexistNotExistent() {
 		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(
-				new String[] { "-env", "testdata/env/envFile01.xml", "s" }));
+		        new String[] { "-env", "testdata/env/envFile01.xml", "s" }));
 		Project project = interpreter.getProject();
 		Installunit unit = project.findInstallunitConfiguration("maven");
 		Assert.assertSame(InstallStatus.configurationrequired,
-				interpreter.getInstallationStatus(unit, CmdRenvCommand.stat));
+		        interpreter.getInstallationStatus(unit, CmdRenvCommand.stat));
 		ConfigFile file = (ConfigFile) unit.getConfigurations().get(0);
 		final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		final PrintStream sout = new PrintStream(bStream);
@@ -105,7 +117,7 @@ public class ConfigFileTest {
 		Assert.assertEquals(false, file.check(false));
 		String issue = file.getIssue();
 		Assert.assertTrue("Issue does not start with \"File\"",
-				issue.startsWith("File to configure "));
+		        issue.startsWith("File to configure "));
 		Assert.assertTrue(issue.endsWith(" does not exist."));
 	}
 
@@ -113,27 +125,27 @@ public class ConfigFileTest {
 	public void testConfigAddFileCheckCopyNotexistExistent() throws IOException {
 		try {
 			RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
-					new CmdRenv(new String[] { "-env",
-							"testdata/env/envFile01.xml", "s" }));
+			        new CmdRenv(new String[] { "-env",
+			                "testdata/env/envFile01.xml", "s" }));
 			Project project = interpreter.getProject();
 			Installunit unit = project.findInstallunitConfiguration("maven");
 			ConfigFile fileConfiguration = (ConfigFile) unit
-					.getConfigurations().get(0);
+			        .getConfigurations().get(0);
 			final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			final PrintStream sout = new PrintStream(bStream);
 			// create the file before testing if configuration is necessary
 			new File("testdata/testinstall/org/apache/maven/2.1.2/conf")
-					.mkdirs();
+			        .mkdirs();
 			Assert.assertTrue(new File(
-					"testdata/testinstall/org/apache/maven/2.1.2/conf/settings.xml")
-					.createNewFile());
+			        "testdata/testinstall/org/apache/maven/2.1.2/conf/settings.xml")
+			        .createNewFile());
 			interpreter.execute(System.in, sout);
 			Assert.assertEquals("configuration should be ok", true,
-					fileConfiguration.check(false));
+			        fileConfiguration.check(false));
 			Assert.assertNull(fileConfiguration.getIssue());
 		} finally {
 			FileHelper.deleteDeep(new File(
-					"testdata/testinstall/org/apache/maven/2.1.2/conf"));
+			        "testdata/testinstall/org/apache/maven/2.1.2/conf"));
 		}
 	}
 }

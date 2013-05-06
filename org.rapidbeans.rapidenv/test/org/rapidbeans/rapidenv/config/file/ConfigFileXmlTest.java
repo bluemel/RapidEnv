@@ -38,6 +38,7 @@ import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.RapidEnvTestHelper;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
 import org.rapidbeans.rapidenv.config.InstallState;
+import org.rapidbeans.rapidenv.config.Installations;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.InstallunitData;
 import org.rapidbeans.rapidenv.config.Project;
@@ -47,10 +48,10 @@ public class ConfigFileXmlTest {
 
 	@BeforeClass
 	public static void setUpClass() throws MalformedURLException {
+		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		if (!new File("profile").exists()) {
 			new File("profile").mkdir();
 		}
-		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
 		InstallunitData data = new InstallunitData();
@@ -59,25 +60,44 @@ public class ConfigFileXmlTest {
 		data.setInstallstate(InstallState.installed);
 		Document doc = new Document(data);
 		doc.setUrl(new File(
-				"testdata/testinstall/org/apache/maven/2.1.2/.renvstate.xml")
-				.toURI().toURL());
+		        "testdata/testinstall/org/apache/maven/2.1.2/.renvstate.xml")
+		        .toURI().toURL());
 		doc.save();
+
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-				"org.rapidbeans.rapidenv.config.Project", true);
+		        "org.rapidbeans.rapidenv.config.Project", true);
+		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
+		        new CmdRenv(new String[] { "-env", "testdata/env/envFileXml01.xml", "s" }));
+		if (interpreter.getEnvironmentInstallationsFile().exists()) {
+			Assert.assertTrue(interpreter.getEnvironmentInstallationsFile().delete());
+		}
+
+		Installations is = interpreter.getInstallations();
+		InstallunitData data1 = new InstallunitData();
+		data1.setFullname("org.apache.maven");
+		data1.setVersion(new Version("2.1.2"));
+		data1.setInstallstate(InstallState.installed);
+		is.addInstallunit(data1);
+		interpreter.saveInstallations();
 	}
 
 	@AfterClass
 	public static void tearDownClass() {
 		CmdRenv cmd = new CmdRenv(
-				new String[] { "-env", "testdata/env/env.xml" });
+		        new String[] { "-env", "testdata/env/env.xml" });
 		RapidEnvTestHelper.tearDownProfile(new RapidEnvInterpreter(cmd));
-		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 		File file1 = new File("renv_" + PlatformHelper.username() + "_"
-				+ PlatformHelper.hostname() + ".properties");
+		        + PlatformHelper.hostname() + ".properties");
 		file1.delete();
 		new File("renv_" + PlatformHelper.username() + "_"
-				+ PlatformHelper.hostname() + ".cmd").delete();
+		        + PlatformHelper.hostname() + ".cmd").delete();
+		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
+		        new CmdRenv(new String[] { "-env", "testdata/env/envFileXml01.xml", "s" }));
+		if (interpreter.getEnvironmentInstallationsFile().exists()) {
+			Assert.assertTrue(interpreter.getEnvironmentInstallationsFile().delete());
+		}
+		new File("../../env.dtd").delete();
 	}
 
 	@Test
@@ -88,7 +108,7 @@ public class ConfigFileXmlTest {
 		ConfigFileXml file = (ConfigFileXml) unit.getConfigurations().get(0);
 		Assert.assertNotNull(file.getTasks());
 		final ConfigFileXmlTaskSetnodevalue task0 = (ConfigFileXmlTaskSetnodevalue) file
-				.getTasks().get(0);
+		        .getTasks().get(0);
 		Assert.assertEquals("//settings/proxies/proxy/active", task0.getPath());
 		Assert.assertEquals("false", task0.getValue());
 	}
@@ -100,16 +120,14 @@ public class ConfigFileXmlTest {
 	 */
 	@Test
 	public void testConfigSetnodevalueCheckConfigRequired()
-			throws FileNotFoundException {
+	        throws FileNotFoundException {
 		File cfgfile = null;
 		try {
 			RapidEnvInterpreter interpreter = new RapidEnvInterpreter(
-					new CmdRenv(new String[] { "-env",
-							"testdata/env/envFileXml01.xml", "s" }));
+			        new CmdRenv(new String[] { "-env", "testdata/env/envFileXml01.xml", "s" }));
 			Project project = interpreter.getProject();
 			Installunit unit = project.findInstallunitConfiguration("maven");
-			ConfigFile fileConfig = (ConfigFile) unit.getConfigurations()
-					.get(0);
+			ConfigFile fileConfig = (ConfigFile) unit.getConfigurations().get(0);
 			Assert.assertEquals("conf/settings.xml", fileConfig.getPath());
 			File source = new File(fileConfig.getSourceurlAsUrl().getFile());
 			cfgfile = fileConfig.getPathAsFile();
@@ -122,48 +140,48 @@ public class ConfigFileXmlTest {
 			Assert.assertFalse(fileConfig.getOk());
 
 			interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] {
-					"-env", "testdata/env/envFileXml01.xml", "c" }));
+			        "-env", "testdata/env/envFileXml01.xml", "c" }));
 			bStream = new ByteArrayOutputStream();
 			sout = new PrintStream(bStream);
 			interpreter.execute(System.in, sout);
 			ConfigFileEditorXml editor = new ConfigFileEditorXml(null, cfgfile);
 			Assert.assertEquals("false",
-					editor.retrieveNode("//settings/proxies/proxy/active")
-							.getFirstChild().getNodeValue());
+			        editor.retrieveNode("//settings/proxies/proxy/active")
+			                .getFirstChild().getNodeValue());
 			Assert.assertEquals("myproto",
-					editor.retrieveNode("//settings/proxies/proxy/protocol")
-							.getFirstChild().getNodeValue());
+			        editor.retrieveNode("//settings/proxies/proxy/protocol")
+			                .getFirstChild().getNodeValue());
 			Assert.assertEquals("myserver1",
-					editor.retrieveNode("//settings/servers/server[1]/id")
-							.getFirstChild().getNodeValue());
+			        editor.retrieveNode("//settings/servers/server[1]/id")
+			                .getFirstChild().getNodeValue());
 			Assert.assertEquals("yyy",
-					editor.retrieveNode("//settings/testnode02/@attr1")
-							.getNodeValue());
+			        editor.retrieveNode("//settings/testnode02/@attr1")
+			                .getNodeValue());
 			Assert.assertEquals("hello1",
-					editor.retrieveNode("//settings/localRepository/@testattr")
-							.getNodeValue());
+			        editor.retrieveNode("//settings/localRepository/@testattr")
+			                .getNodeValue());
 			Assert.assertEquals(
-					"hello2",
-					editor.retrieveNode("//settings/localRepository/@testattr2")
-							.getNodeValue());
+			        "hello2",
+			        editor.retrieveNode("//settings/localRepository/@testattr2")
+			                .getNodeValue());
 			Assert.assertEquals(
-					"hello first",
-					editor.retrieveNode(
-							"//settings/emptytestnode01/firstnewsubelement")
-							.getFirstChild().getNodeValue());
+			        "hello first",
+			        editor.retrieveNode(
+			                "//settings/emptytestnode01/firstnewsubelement")
+			                .getFirstChild().getNodeValue());
 			Assert.assertEquals(
-					"hello attr",
-					editor.retrieveNode(
-							"//settings/emptytestnode01/firstnewsubelement/@test1")
-							.getFirstChild().getNodeValue());
+			        "hello attr",
+			        editor.retrieveNode(
+			                "//settings/emptytestnode01/firstnewsubelement/@test1")
+			                .getFirstChild().getNodeValue());
 			// TODO RENV insert a new XML element /attribute (optionally before
 			// or after another specified XML element / attr) with a set of
 			// identifying attributes (=> do not insert if it is already there)
 			Assert.assertNotNull(editor.retrieveNode("//settings/testnode01"));
 			Assert.assertNull(editor
-					.retrieveNode("//settings/testnode01/subnodetodelete"));
+			        .retrieveNode("//settings/testnode01/subnodetodelete"));
 			Assert.assertNull(editor
-					.retrieveNode("//settings/testnode01/@attr1"));
+			        .retrieveNode("//settings/testnode01/@attr1"));
 		} finally {
 			if (cfgfile != null && cfgfile.exists()) {
 				Assert.assertTrue(cfgfile.delete());
@@ -176,20 +194,20 @@ public class ConfigFileXmlTest {
 		File fileToConfigure = new File("testdata/conf/workbenchTest.xml");
 		try {
 			FileHelper.copyFile(new File("testdata/conf/workbench.xml"),
-					fileToConfigure);
+			        fileToConfigure);
 			String path = "//workbench/window/coolbarLayout/coolItem"
-					+ "[@id='org.eclipse.wst.server.ui.editor']" + "/@itemType";
+			        + "[@id='org.eclipse.wst.server.ui.editor']" + "/@itemType";
 			ConfigFileXml configFile = new ConfigFileXml();
 			configFile.setPath(fileToConfigure.getAbsolutePath());
 			final ConfigFileEditorXml editor = new ConfigFileEditorXml(
-					configFile, fileToConfigure);
+			        configFile, fileToConfigure);
 			editor.setNodeValue(path, "typePlaceholder", true);
 			editor.save();
 			Node root = XmlHelper.getDocumentTopLevel(fileToConfigure);
 			Assert.assertEquals("typePlaceholder", XmlHelper.getNodeValue(root,
-					"window/coolbarLayout/coolItem"
-							+ "[@id='org.eclipse.wst.server.ui.editor']"
-							+ "/@itemType"));
+			        "window/coolbarLayout/coolItem"
+			                + "[@id='org.eclipse.wst.server.ui.editor']"
+			                + "/@itemType"));
 		} finally {
 			if (fileToConfigure.exists()) {
 				Assert.assertTrue(fileToConfigure.delete());

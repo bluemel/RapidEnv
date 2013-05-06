@@ -39,6 +39,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rapidbeans.core.type.TypePropertyCollection;
@@ -77,12 +78,26 @@ public class RapidEnvInterpreterTest {
 	@AfterClass
 	public static void tearDownClass() {
 		FileHelper.deleteDeep(new File("profile"));
-		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
+		FileHelper.deleteDeep(new File("../../env.dtd"));
+	}
+
+	@Before
+	public void setUp() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envPropsPath04.xml", "i" }));
+		if (env.getEnvironmentInstallationsFile().exists()) {
+			env.getEnvironmentInstallationsFile().delete();
+		}
 	}
 
 	@After
 	public void tearDown() {
+		RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
+		        "testdata/env/envPropsPath04.xml", "i" }));
+		if (env.getEnvironmentInstallationsFile().exists()) {
+			env.getEnvironmentInstallationsFile().delete();
+		}
 		RapidEnvInterpreter.clearInstance();
 	}
 
@@ -918,7 +933,8 @@ public class RapidEnvInterpreterTest {
 		assertEquals("org.apache.ant/xalan.serializer", env.getInstallunitsToProcess().get(0).getFullyQualifiedName());
 	}
 
-	// FIXME make this test run
+	// Complex test installing and updating successively units with partially
+	// mandatory and partially optional subunits
 	@Test
 	public void testUpdateUnitsWithSubunits() {
 		try {
@@ -931,6 +947,17 @@ public class RapidEnvInterpreterTest {
 			ByteArrayOutputStream bosOut = new ByteArrayOutputStream();
 			PrintStream psOut = new PrintStream(bosOut);
 			env.execute(System.in, psOut);
+			String sOut = bosOut.toString().replace("\r\n", "\n");
+			Assert.assertEquals("\nRapidEnv development environment\n"
+			        + "  Project: test, Tag: main\n\n"
+			        + "Install units:\n"
+			        + "  ! test1 1.0.0 installation required\n"
+			        + "  - test1/test11 1.1.0 optional\n"
+			        + "  - test1/test12 1.2.0 optional\n"
+			        + "  - test1/test12/test121 1.1.1 optional\n"
+			        + "  - test1/test12/test122 1.1.1 optional\n"
+			        + "  ! test1/test13 1.1.0 installation required\n"
+			        + "  - test1/test14 1.1.0 optional\n", sOut);
 			assertTrue(env.getProject().findInstallunitConfiguration("test1").shouldBeInstalled());
 			assertFalse(env.getProject().findInstallunitConfiguration("test11").shouldBeInstalled());
 			assertFalse(env.getProject().findInstallunitConfiguration("test12").shouldBeInstalled());
@@ -955,32 +982,46 @@ public class RapidEnvInterpreterTest {
 			bosOut = new ByteArrayOutputStream();
 			psOut = new PrintStream(bosOut);
 			env.execute(System.in, psOut);
+			sOut = bosOut.toString().replace("\r\n", "\n");
+			Assert.assertEquals("\nRapidEnv development environment\n"
+			        + "  Project: test, Tag: main\n\n"
+			        + "Install units:\n"
+			        + "  = test1 1.0.0\n"
+			        + "  - test1/test11 1.1.0 optional\n"
+			        + "  - test1/test12 1.2.0 optional\n"
+			        + "  - test1/test12/test121 1.1.1 optional\n"
+			        + "  - test1/test12/test122 1.1.1 optional\n"
+			        + "  = test1/test13 1.1.0\n"
+			        + "  - test1/test14 1.1.0 optional\n", sOut);
 
 			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
-			        "-env", "testdata/env/envDepSub03.xml", "i", "test11", "test12", "test121" }));
+			        "-env", "testdata/env/envDepSub03.xml", "i", "test11", "test12" }));
 			bosOut = new ByteArrayOutputStream();
 			psOut = new PrintStream(bosOut);
 			env.execute(System.in, psOut);
 			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/dummy.txt").exists());
 			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test11/dummy.txt").exists());
 			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/dummy.txt").exists());
-			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test121/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test12/test121/dummy.txt").exists());
 			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test122/dummy.txt").exists());
 			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
 			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
 
-//			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
-//			        "-env", "testdata/env/envDepSub03a.xml", "u", "test1" }));
-//			bosOut = new ByteArrayOutputStream();
-//			psOut = new PrintStream(bosOut);
-//			env.execute(System.in, psOut);
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test11/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test121/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test12/test122/dummy.txt").exists());
-//			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
-			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03a.xml", "u", "test1" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			// Only these optional subunits should be installed that where
+			// installed before
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test11/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test12/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/2.0.0/test12/test121/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test12/test122/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test13/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/2.0.0/test14").exists());
 		} finally {
 			if (new File("testdata/testtargetdir").exists()) {
 				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
@@ -1673,6 +1714,68 @@ public class RapidEnvInterpreterTest {
 	public void testLogLevelDebug() {
 		assertEquals(Level.FINER, new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml",
 		        "-debug", "s" })).getLogLevel());
+	}
+
+	@Test
+	public void testInitEnvironmentInstallunitsFileWithLocalData() {
+		try {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+
+			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03.xml", "i", "test1" }));
+			ByteArrayOutputStream bosOut = new ByteArrayOutputStream();
+			PrintStream psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test11").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test12").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/1.0.0/test13/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0/test14").exists());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03.xml", "s" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			String sOut = bosOut.toString().replace("\r\n", "\n");
+			Assert.assertEquals("\nRapidEnv development environment\n"
+			        + "  Project: test, Tag: main\n\n"
+			        + "Install units:\n"
+			        + "  = test1 1.0.0\n"
+			        + "  - test1/test11 1.1.0 optional\n"
+			        + "  - test1/test12 1.2.0 optional\n"
+			        + "  - test1/test12/test121 1.1.1 optional\n"
+			        + "  - test1/test12/test122 1.1.1 optional\n"
+			        + "  = test1/test13 1.1.0\n"
+			        + "  - test1/test14 1.1.0 optional\n", sOut);
+
+			Assert.assertTrue(env.getEnvironmentInstallationsFile().exists());
+			Assert.assertTrue(env.getEnvironmentInstallationsFile().delete());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03.xml", "s" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			sOut = bosOut.toString().replace("\r\n", "\n");
+			Assert.assertEquals("\nRapidEnv development environment\n"
+			        + "  Project: test, Tag: main\n\n"
+			        + "Install units:\n"
+			        + "  = test1 1.0.0\n"
+			        + "  - test1/test11 1.1.0 optional\n"
+			        + "  - test1/test12 1.2.0 optional\n"
+			        + "  - test1/test12/test121 1.1.1 optional\n"
+			        + "  - test1/test12/test122 1.1.1 optional\n"
+			        + "  = test1/test13 1.1.0\n"
+			        + "  - test1/test14 1.1.0 optional\n", sOut);
+
+		} finally {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+		}
 	}
 
 	/**
