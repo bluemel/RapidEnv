@@ -1022,6 +1022,56 @@ public class RapidEnvInterpreterTest {
 			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test12/test122/dummy.txt").exists());
 			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test13/dummy.txt").exists());
 			assertFalse(new File("testdata/testtargetdir/test1/2.0.0/test14").exists());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03a.xml", "d", "test13" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			// Only these optional subunits should be installed that where
+			// installed before
+			assertFalse(new File("testdata/testtargetdir/test1/1.0.0").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test11/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test12/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/2.0.0/test12/test121/dummy.txt").exists());
+			assertTrue(new File("testdata/testtargetdir/test1/2.0.0/test12/test122/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/2.0.0/test13/dummy.txt").exists());
+			assertFalse(new File("testdata/testtargetdir/test1/2.0.0/test14").exists());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03a.xml", "s" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			sOut = bosOut.toString().replace("\r\n", "\n");
+			Assert.assertEquals("\nRapidEnv development environment\n"
+			        + "  Project: test, Tag: main\n\n"
+			        + "Install units:\n"
+			        + "  = test1 2.0.0\n"
+			        + "  = test1/test11 1.1.0\n"
+			        + "  = test1/test12 1.2.1\n"
+			        + "  - test1/test12/test121 1.1.1 optional\n"
+			        + "  = test1/test12/test122 1.1.1\n"
+			        + "  ! test1/test13 1.2.0 installation required\n"
+			        + "  - test1/test14 1.1.0 optional\n", sOut);
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envDepSub03a2.xml", "s" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			sOut = bosOut.toString().replace("\r\n", "\n");
+			Assert.assertEquals("\nRapidEnv development environment\n"
+			        + "  Project: test, Tag: main\n\n"
+			        + "Install units:\n"
+			        + "  = test1 2.0.0\n"
+			        + "  = test1/test11 1.1.0\n"
+			        + "  = test1/test12 1.2.1\n"
+			        + "  - test1/test12/test121 1.1.1 optional\n"
+			        + "  = test1/test12/test122 1.1.1\n"
+			        + "  ! test1/test13 1.2.0 installation required\n"
+			        + "  - test1/test14 1.1.0 optional\n", sOut);
 		} finally {
 			if (new File("testdata/testtargetdir").exists()) {
 				FileHelper.deleteDeep(new File("testdata/testtargetdir"));

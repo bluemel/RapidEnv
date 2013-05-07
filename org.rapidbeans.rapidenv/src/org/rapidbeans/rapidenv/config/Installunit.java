@@ -2091,7 +2091,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				shouldBeInstalled = false;
 			}
 		} else {
-			if (getParentUnit().shouldBeInstalled()) {
+			if (getParentUnit().shouldBeInstalled() || getParentUnit().isInstalled()) {
 				if (control == InstallControl.normal) {
 					// if they are non optional
 					// and not discontinued (installcontrol = "normal")
@@ -2104,6 +2104,19 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			}
 		}
 		return shouldBeInstalled;
+	}
+
+	private boolean isInstalled() {
+		final Installations insts = RapidEnvInterpreter.getInstance().getInstallations();
+		if (insts == null) {
+			return false;
+		}
+		final InstallunitData data = insts.findInstallunit(getFullyQualifiedName());
+		if (data == null) {
+			return false;
+		}
+		final InstallState state = data.getInstallstate();
+		return state == InstallState.installed;
 	}
 
 	public boolean isParentUnitOf(final Installunit unit) {
