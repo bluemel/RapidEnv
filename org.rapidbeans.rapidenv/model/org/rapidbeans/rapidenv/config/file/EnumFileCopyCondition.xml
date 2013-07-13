@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
- * RapidEnv: FileCopyCondition.xml
+ * RapidEnv: EnumFileCopyCondition.xml
  *
  * Copyright (C) 2010 Martin Bluemel
  *
@@ -16,7 +16,7 @@
  * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 -->
 
-<enumtype name="org.rapidbeans.rapidenv.config.file.FileCopyCondition">
+<enumtype name="org.rapidbeans.rapidenv.config.file.EnumFileCopyCondition">
 	<description>Defines under which condition to copy a file to
 an installation folder.</description>
 	<enum name="notexist">
@@ -29,5 +29,8 @@ The file can be changed individually after installation.</description>
 	<enum name="diff">
 		<description>Copy every time the target file differs from the source file.
 This is the strictest rule.</description>
+	</enum>
+	<enum name="delete">
+	  <description>Delete the file or folder if it exists.</description>
 	</enum>
 </enumtype>

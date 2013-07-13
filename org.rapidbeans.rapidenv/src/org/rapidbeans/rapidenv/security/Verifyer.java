@@ -33,7 +33,7 @@ import org.rapidbeans.rapidenv.config.cmd.ExceptionMap;
  */
 public class Verifyer {
 
-	public static String hashValue(final File file, final Hashalgorithm hashalg) {
+	public static String hashValue(final File file, final EnumHashalgorithm hashalg) {
 		InputStream fis = null;
 		try {
 			fis = new FileInputStream(file);

@@ -16,7 +16,7 @@
  * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 -->
 
-<enumtype name="org.rapidbeans.rapidenv.security.Hashalgorithm">
+<enumtype name="org.rapidbeans.rapidenv.security.EnumHashalgorithm">
 	<description>The hash algorithm to use for checksum computing</description>
 	<enum name="MD5">
 		<description>MD5 hash algorithm</description>

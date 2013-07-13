@@ -66,7 +66,7 @@ import org.rapidbeans.rapidenv.config.cmd.Argument;
 import org.rapidbeans.rapidenv.config.cmd.CommandExecutionResult;
 import org.rapidbeans.rapidenv.config.cmd.ExceptionMap;
 import org.rapidbeans.rapidenv.config.cmd.SystemCommand;
-import org.rapidbeans.rapidenv.security.Hashalgorithm;
+import org.rapidbeans.rapidenv.security.EnumHashalgorithm;
 import org.rapidbeans.rapidenv.security.Verifyer;
 
 /**
@@ -456,7 +456,7 @@ public class RapidEnvInterpreter {
 
 	private void execHashvalue() {
 		try {
-			final Hashalgorithm hashalg = Hashalgorithm
+			final EnumHashalgorithm hashalg = EnumHashalgorithm
 			        .valueOf(this.renvCommand.getInstallunitOrPropertyNames().get(0));
 			final File file = new File(this.renvCommand.getInstallunitOrPropertyNames().get(1));
 			this.out.println(Verifyer.hashValue(file, hashalg));
@@ -464,7 +464,7 @@ public class RapidEnvInterpreter {
 			final String messagePattern = "No enum const class org.rapidbeans.rapidenv.security.Hashalgorithm.";
 			if (e.getMessage().startsWith(messagePattern)) {
 				final StringBuilder halgList = new StringBuilder();
-				for (final Hashalgorithm halg : Hashalgorithm.values()) {
+				for (final EnumHashalgorithm halg : EnumHashalgorithm.values()) {
 					if (halgList.length() > 0) {
 						halgList.append("\", \"");
 					} else {

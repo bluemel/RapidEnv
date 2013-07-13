@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="testdata/testinstall"
+	>
+	<installunit name="myapp" version="1.0.2"
+		sourceurl="file:testdata/site/myapp/1.0.2/myapp-1.0.2.zip"
+		unpackstrategy="removeroot"
+		>
+		<textfile path="testfile1.txt" copycondition="delete"/>
+		<folder path="folder1" copycondition="delete"/>
+	</installunit>
+</project>

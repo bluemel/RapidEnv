@@ -1828,6 +1828,36 @@ public class RapidEnvInterpreterTest {
 		}
 	}
 
+	@Test
+	public void testDeleteConfigFileAndFolder() {
+		try {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envMyappSimple.xml", "i", "myapp" }));
+			ByteArrayOutputStream bosOut = new ByteArrayOutputStream();
+			PrintStream psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			assertTrue(new File("testdata/testinstall/myapp/1.0.2").exists());
+			assertTrue(new File("testdata/testinstall/myapp/1.0.2/testfile1.txt").exists());
+			assertTrue(new File("testdata/testinstall/myapp/1.0.2/folder1/testfile2.txt").exists());
+
+			env = new RapidEnvInterpreter(new CmdRenv(new String[] {
+			        "-env", "testdata/env/envFileFolderDel.xml", "u", "myapp" }));
+			bosOut = new ByteArrayOutputStream();
+			psOut = new PrintStream(bosOut);
+			env.execute(System.in, psOut);
+			assertTrue(new File("testdata/testinstall/myapp/1.0.2").exists());
+			assertFalse(new File("testdata/testinstall/myapp/1.0.2/testfile1.txt").exists());
+			assertFalse(new File("testdata/testinstall/myapp/1.0.2/folder1").exists());
+		} finally {
+			if (new File("testdata/testtargetdir").exists()) {
+				FileHelper.deleteDeep(new File("testdata/testtargetdir"));
+			}
+		}
+	}
+
 	/**
 	 * Test helper class to simulate multiple input lines.
 	 * 

@@ -67,7 +67,7 @@ Set this value to false if you want to prevent this default behavior.</descripti
 	</property>
 
 	<property name="copycondition" type="choice"
-		enum="FileCopyCondition"
+		enum="EnumFileCopyCondition"
 		default="sourcenewer">
 		<description>The condition when the source is copied over the target:
 notexist:    when the target does not exist
