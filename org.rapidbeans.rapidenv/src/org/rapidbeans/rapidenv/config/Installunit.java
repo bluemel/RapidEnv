@@ -1241,9 +1241,31 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		}
 		RapidEnvInterpreter.log(Level.FINE, "- renaming directory \"" + unpackDir + "\" to \"" + homedir.getName()
 		        + "\" ...");
-		if (!unpackDir.renameTo(homedir)) {
-			throw new RapidEnvException("Problems to rename directory \"" + unpackDir + "\" to \"" + homedir.getName()
-			        + "\".");
+		renameWithRetries(unpackDir, homedir, 5, 3000);
+	}
+
+	private void renameWithRetries(final File from, final File to, final int maxRetries, final int waitTimeMillis) {
+		int retryCount = 0;
+		boolean renameSucceeded = false;
+		while ((!renameSucceeded) && retryCount < maxRetries)
+		{
+			if (from.renameTo(to)) {
+				renameSucceeded = true;
+			} else {
+				try {
+					Thread.sleep(waitTimeMillis);
+				} catch (InterruptedException e) {
+					throw new RapidEnvException(e);
+				}
+				retryCount++;
+				RapidEnvInterpreter.log(Level.FINE,
+				        "- Problems renaming directory \"" + from.getAbsolutePath() + "\" to \"" + to.getName()
+				                + "\", retryCount = " + Integer.toString(retryCount));
+			}
+		}
+		if (!renameSucceeded) {
+			throw new RapidEnvException("Problems to rename directory \"" + from.getAbsolutePath() + "\" to \""
+			        + to.getAbsolutePath() + "\".");
 		}
 	}
 
