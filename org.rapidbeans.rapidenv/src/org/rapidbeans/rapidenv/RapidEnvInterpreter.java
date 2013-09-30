@@ -547,9 +547,11 @@ public class RapidEnvInterpreter {
 			osw = new OutputStreamWriter(new FileOutputStream(tmpfile));
 			final String rapidEnvHome = System.getenv("RAPID_ENV_HOME");
 			osw.write("Windows Registry Editor Version 5.00" + lf + lf
-			        + "[HKEY_CLASSES_ROOT\\Directory\\shell\\RapidEnv_" + getProject().getName() + "_"
+			        + "[HKEY_CURRENT_USER\\Software\\Classes\\Directory\\shell\\RapidEnv_"
+			        + getProject().getName() + "_"
 			        + getProject().getTag() + "]" + lf + "@=\"" + getProject().getName() + " Command Prompt "
-			        + getProject().getTag() + "\"" + lf + lf + "[HKEY_CLASSES_ROOT\\Directory\\shell\\" + "RapidEnv_"
+			        + getProject().getTag() + "\"" + lf + lf
+			        + "[HKEY_CURRENT_USER\\Software\\Classes\\Directory\\shell\\RapidEnv_"
 			        + getProject().getName() + "_" + getProject().getTag() + "\\command]" + lf + "@=\"cmd.exe /K"
 			        + " title " + getProject().getName() + " " + getProject().getTag() + " Command Prompt"
 			        + " & cd /D \\\"%L\\\"" + " & call \\\"" + rapidEnvHome.replace("\\", "\\\\").replace("\"", "\\\"")
