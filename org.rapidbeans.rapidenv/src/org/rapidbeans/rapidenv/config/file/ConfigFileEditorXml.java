@@ -87,25 +87,6 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 	}
 
 	/**
-	 * retrieves a node in an XML DOM Tree traversing the tree from a given
-	 * node.
-	 * 
-	 * @param node
-	 *            - the node
-	 * @param pattern
-	 *            - the pattern
-	 * @return the attribute XML node
-	 */
-	public final Node retrieveNode(final Node node, final String pattern) {
-		this.load();
-		if (pattern.startsWith("/")) {
-			throw new RapidEnvException("wrong pattern \"" + pattern + "\" for retrieveNode(Node, String).\n"
-			        + "Pattern must not start with start with \"/\"");
-		}
-		return XmlHelper.getNode(node, pattern);
-	}
-
-	/**
 	 * retrieves a node value in an XML DOM Tree.
 	 * 
 	 * @param pattern
