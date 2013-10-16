@@ -10,6 +10,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/ant/ant/1.8.2/ant-1.8.2.jar" sourcepath="/M2_REPO/org/apache/ant/ant/1.8.2/ant-1.8.2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/rapidbeans/rapidbeans-framework/0.9.10/rapidbeans-framework-0.9.10.jar" sourcepath="/M2_REPO/org/rapidbeans/rapidbeans-framework/0.9.10/rapidbeans-framework-0.9.10-src.zip"/>
+	<classpathentry kind="var" path="M2_REPO/org/rapidbeans/rapidbeans-framework/0.9.11/rapidbeans-framework-0.9.11.jar" sourcepath="/M2_REPO/org/rapidbeans/rapidbeans-framework/0.9.11/rapidbeans-framework-0.9.11-src.zip"/>
 	<classpathentry kind="output" path="classes_eclipse"/>
 </classpath>

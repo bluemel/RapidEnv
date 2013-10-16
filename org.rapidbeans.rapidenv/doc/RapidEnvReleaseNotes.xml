@@ -28,11 +28,14 @@
 	<sect2>
 		<title>1.3.5</title>
 		<para>
-			Issue date: 04/01/2013
+			Issue date: 01/01/2014
 		</para>
 		<itemizedlist>
 			<listitem>
 				<para>Added include mechanism for splitting up large environment definitions and reusage of partial definitions.</para>
+			</listitem>
+			<listitem>
+				<para>Using real XPath expression evaluation built into the JDK now for XML file configurations.</para>
 			</listitem>
 			<listitem>
 				<para>Fixed installation prevention in case of not installed dependencies.</para>

@@ -57,7 +57,7 @@ public class Artifact {
 	 */
 	public static List<Artifact> parse(final InputStream is) {
 		final List<Artifact> artifacts = new ArrayList<Artifact>();
-		final Node root = XmlHelper.getDocumentTopLevel(is).getNextSibling();
+		final Node root = XmlHelper.getDocumentTopLevel(is, true).getNextSibling();
 		final Node nartifacts = XmlHelper.getFirstSubnode(root, "artifacts");
 		final Node[] nartifactArray = XmlHelper.getSubnodes(nartifacts, "artifact");
 		for (final Node nartifact : nartifactArray) {

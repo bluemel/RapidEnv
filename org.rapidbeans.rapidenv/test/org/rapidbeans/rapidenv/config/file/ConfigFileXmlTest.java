@@ -130,10 +130,12 @@ public class ConfigFileXmlTest {
 			ConfigFile fileConfig = (ConfigFile) unit.getConfigurations().get(0);
 			Assert.assertEquals("conf/settings.xml", fileConfig.getPath());
 			File source = new File(fileConfig.getSourceurlAsUrl().getFile());
+			System.out.println("source = \"" + source.getAbsolutePath() + "\"");
 			cfgfile = fileConfig.getPathAsFile();
 			Assert.assertFalse(cfgfile.exists());
 			Assert.assertTrue(cfgfile.getParentFile().mkdirs());
 			FileHelper.copyFile(source, cfgfile);
+			System.out.println("cfgfile = \"" + cfgfile.getAbsolutePath() + "\"");
 			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 			PrintStream sout = new PrintStream(bStream);
 			interpreter.execute(System.in, sout);
@@ -174,9 +176,6 @@ public class ConfigFileXmlTest {
 			        editor.retrieveNode(
 			                "//settings/emptytestnode01/firstnewsubelement/@test1")
 			                .getFirstChild().getNodeValue());
-			// TODO RENV insert a new XML element /attribute (optionally before
-			// or after another specified XML element / attr) with a set of
-			// identifying attributes (=> do not insert if it is already there)
 			Assert.assertNotNull(editor.retrieveNode("//settings/testnode01"));
 			Assert.assertNull(editor
 			        .retrieveNode("//settings/testnode01/subnodetodelete"));

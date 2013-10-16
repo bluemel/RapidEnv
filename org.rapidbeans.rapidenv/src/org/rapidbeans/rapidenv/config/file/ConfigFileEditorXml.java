@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -166,11 +167,11 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 	 *            the value string
 	 */
 	public final void setElementValue(final String nodePath, final String value, final boolean createIfNotExist) {
-		final ConfigFileXml fileCfg = (ConfigFileXml) getConfigfile();
+		this.load();
 		final Node node = XmlHelper.getNode(this.document, nodePath);
 		if (node == null) {
 			if (createIfNotExist) {
-				appendNewElementNode(nodePath, value, fileCfg);
+				appendNewElementNode(nodePath, value);
 			} else {
 				throw new RapidEnvException("XML node \"" + nodePath + "\" not found in file "
 				        + getConfigfile().getPathAsFile().getAbsolutePath());
@@ -181,57 +182,58 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 		this.setChangedSomething();
 	}
 
-	/**
-	 * @param nodePath
-	 * @param value
-	 * @param fileCfg
-	 */
-	private void appendNewElementNode(final String nodePath, final String value, final ConfigFileXml fileCfg) {
-		final String parentNodePath = StringHelper.splitBeforeLast(nodePath, "/");
+	private Node appendNewElementNode(final String nodePath, final String value) {
+		Node newChild = null;
+		String nodePathWithoutTrailingCondition = nodePath;
+		if (nodePathWithoutTrailingCondition.endsWith("]")) {
+			nodePathWithoutTrailingCondition = StringHelper.splitBeforeLast(nodePath, "[");
+		}
+		final String parentNodePath = StringHelper.splitBeforeLast(nodePathWithoutTrailingCondition, "/");
 		Node parentNode = XmlHelper.getNode(this.document, parentNodePath);
 		if (parentNode == null) {
-			appendNewElementNode(parentNodePath, null, fileCfg);
-			parentNode = XmlHelper.getNode(this.document, parentNodePath);
+			if ((!parentNodePath.equals("//")) && (!parentNodePath.equals("/"))) {
+				String parentNodePathWithoutTrailingCondition = parentNodePath;
+				if (parentNodePathWithoutTrailingCondition.endsWith("]")) {
+					parentNodePathWithoutTrailingCondition = StringHelper.splitBeforeLast(parentNodePath, "[");
+				}
+				parentNode = appendNewElementNode(parentNodePathWithoutTrailingCondition, null);
+			} else {
+				if (getConfigfile() != null) {
+					throw new RapidEnvException("Failed to create parent node" + " of XML node \"" + nodePath
+					        + "\" in file "
+					        + getConfigfile().getPathAsFile().getAbsolutePath());
+				} else {
+					throw new RapidEnvException("Failed to create parent node" + " of XML node \"" + nodePath + "\"");
+				}
+			}
 		}
-		if (parentNode == null) {
-			throw new RapidEnvException("Failed to create parent node" + " of XML node \"" + nodePath + "\" in file "
-			        + getConfigfile().getPathAsFile().getAbsolutePath());
-		} else {
-			indentXmlAppendBefore(fileCfg, parentNode);
-			final Map<String, String> idAttrs = XmlHelper.parseIdAttrs(nodePath);
-			String newChildName = null;
-			newChildName = StringHelper.splitLast(nodePath, "/");
-			if (idAttrs.size() > 0) {
-				newChildName = StringHelper.splitBeforeLast(newChildName, "[");
-			}
-			RapidEnvInterpreter.log(Level.FINER, "Creating XML-Element \"" + newChildName + "\"...");
-			final Node newChild = this.document.createElement(newChildName);
-			if (value != null) {
-				final Node textnode = this.document.createTextNode(value);
-				newChild.appendChild(textnode);
-			}
-			for (final Entry<String, String> entry : idAttrs.entrySet()) {
-				final Attr attribute = this.document.createAttribute(entry.getKey());
-				attribute.setValue(entry.getValue());
-				newChild.getAttributes().setNamedItem(attribute);
-			}
-			parentNode.appendChild(newChild);
-			indentXmlAppendAfter(fileCfg, parentNode, newChild);
+		indentXmlAppendBefore(parentNode);
+		String newChildName = StringHelper.splitLast(nodePath, "/");
+		if (newChildName.contains("[")) {
+			newChildName = StringHelper.splitBeforeLast(newChildName, "[");
 		}
+		RapidEnvInterpreter.log(Level.FINER, "Creating XML-Element \"" + newChildName + "\"...");
+		newChild = this.document.createElement(newChildName);
+		if (value != null) {
+			final Node textnode = this.document.createTextNode(value);
+			newChild.appendChild(textnode);
+		}
+		final Map<String, String> idAttrs = XmlHelper.parseIdAttrs(nodePath);
+		for (final Entry<String, String> entry : idAttrs.entrySet()) {
+			final Attr attribute = this.document.createAttribute(entry.getKey());
+			attribute.setValue(entry.getValue());
+			newChild.getAttributes().setNamedItem(attribute);
+		}
+		parentNode.appendChild(newChild);
+		indentXmlAppendAfter(parentNode, newChild);
+		return newChild;
 	}
 
-	/**
-	 * @param fileCfg
-	 *            the XML file configuration
-	 * @param parentNode
-	 *            the parent node
-	 * @param newNode
-	 *            the new node if called after or null if called before
-	 */
-	private void indentXmlAppendBefore(final ConfigFileXml fileCfg, Node parentNode) {
-		if (fileCfg.getAddeleminnewline()) {
+	private void indentXmlAppendBefore(Node parentNode) {
+		final ConfigFileXml fileCfg = (ConfigFileXml) getConfigfile();
+		if (fileCfg != null && fileCfg.getAddeleminnewline()) {
 
-			int indent = countIndentBeforeAccordingToParent(fileCfg, parentNode, 0);
+			int indent = countIndentBeforeAccordingToParent(parentNode, 0);
 
 			final Node lastChild = parentNode.getLastChild();
 			if (lastChild != null && lastChild instanceof TextImpl) {
@@ -251,7 +253,6 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 	}
 
 	/**
-	 * @param fileCfg
 	 * @param parentNode
 	 *            the parent node to investigate
 	 * @param depth
@@ -259,35 +260,33 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 	 * 
 	 * @return the indent count
 	 */
-	private int countIndentBeforeAccordingToParent(final ConfigFileXml fileCfg, Node parentNode, final int depth) {
-		int indent = -1;
+	private int countIndentBeforeAccordingToParent(Node parentNode, final int depth) {
+		int indent = 1;
 		final Node siblingBeforeParent = parentNode.getPreviousSibling();
+		final ConfigFileXml fileCfg = (ConfigFileXml) getConfigfile();
 		if (siblingBeforeParent instanceof TextImpl) {
 			if (fileCfg.getIndent() != null && fileCfg.getIndent().length() > 0) {
 				indent = countIndent(((TextImpl) siblingBeforeParent).getData(), fileCfg.getIndent()) + depth + 1;
-			} else {
-				indent = 0;
 			}
 		} else if (parentNode.getParentNode() == null) {
 			indent = depth;
 		} else if (siblingBeforeParent == parentNode.getParentNode()) {
-			indent = countIndentBeforeAccordingToParent(fileCfg, parentNode.getParentNode(), depth + 1);
+			indent = countIndentBeforeAccordingToParent(parentNode.getParentNode(), depth + 1);
 		}
 		return indent;
 	}
 
 	/**
-	 * @param fileCfg
-	 *            the XML file configuration
 	 * @param parentNode
 	 *            the parent node
 	 * @param newNode
 	 *            the new node if called after or null if called before
 	 */
-	private void indentXmlAppendAfter(final ConfigFileXml fileCfg, final Node parentNode, final Node newNode) {
+	private void indentXmlAppendAfter(final Node parentNode, final Node newNode) {
 
-		if (fileCfg.getAddeleminnewline()) {
-			int indent = -1;
+		final ConfigFileXml fileCfg = (ConfigFileXml) getConfigfile();
+		if (fileCfg != null && fileCfg.getAddeleminnewline()) {
+			int indent = 0;
 			final Node siblingBeforeParent = parentNode.getPreviousSibling();
 			if (siblingBeforeParent instanceof TextImpl) {
 				indent = countIndent(((TextImpl) siblingBeforeParent).getData(), fileCfg.getIndent());
@@ -309,7 +308,7 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 	}
 
 	private int countIndent(final String text, final String indent) {
-		int count = 0;
+		int count = 1;
 		final int index = text.indexOf('\n');
 		if (index != -1 && text.trim().length() == 0) {
 			final String indentAfterLf = text.substring(index + 1);
@@ -359,7 +358,7 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 				}
 			}
 			final Element element = (Element) parentNode;
-			if (fileCfg.getAddattrinnewline()) {
+			if (fileCfg != null && fileCfg.getAddattrinnewline()) {
 				throw new RapidEnvException("Sorry! addattrinnemwline is not yet supported.");
 				// parentNode.appendChild(this.document.createTextNode("\n"));
 				// final Attr newAttrNode =
@@ -375,28 +374,36 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 		this.setChangedSomething();
 	}
 
-	public void deleteNode(final String path) {
+	public void deleteNode(final String xPathExpression) {
 		this.load();
-		final Node node = XmlHelper.getNode(this.document, path);
+		final Node node = XmlHelper.getNode(this.document, xPathExpression);
 		if (node == null) {
-			RapidEnvInterpreter.log(Level.WARNING, "XML node \"" + path + "\" already deleted.");
-		}
-		final Node parentNode = XmlHelper.getNode(this.document, StringHelper.splitBeforeLast(path, "/"));
-		if (parentNode == null) {
-			throw new RapidEnvException("Refused to delete the top level element \"" + node.getNodeName()
-			        + "\" of XML file \"" + getFile().getAbsolutePath() + "\"");
-		}
-		final Node previousTextnode = node.getPreviousSibling();
-		if (node instanceof DeferredAttrImpl) {
-			parentNode.getAttributes().removeNamedItem(node.getNodeName());
+			RapidEnvInterpreter.log(Level.WARNING, "XML node \"" + xPathExpression + "\" already deleted.");
 		} else {
-			parentNode.removeChild(node);
+			Node parentNode = node.getParentNode();
+			if (parentNode == null) {
+				String xPathExpressionWithoutCondition = xPathExpression;
+				if (xPathExpressionWithoutCondition.endsWith("]")) {
+					xPathExpressionWithoutCondition = StringHelper.splitBeforeLast(xPathExpression, "[");
+				}
+				final String parentPath = StringHelper.splitBeforeLast(xPathExpressionWithoutCondition, "/");
+				parentNode = XmlHelper.getNode(this.document, parentPath);
+			}
+			if (parentNode instanceof Document) {
+				throw new RapidEnvException("Refused to delete the top level element \"" + node.getNodeName()
+				        + "\" of XML file \"" + getFile().getAbsolutePath() + "\"");
+			}
+			final Node previousTextnode = node.getPreviousSibling();
+			if (node instanceof DeferredAttrImpl) {
+				parentNode.getAttributes().removeNamedItem(node.getNodeName());
+			} else {
+				parentNode.removeChild(node);
+			}
+			if (previousTextnode != null && previousTextnode.getNodeType() == Node.TEXT_NODE) {
+				parentNode.removeChild(previousTextnode);
+			}
+			this.setChangedSomething();
 		}
-		if (previousTextnode != null && previousTextnode.getNodeType() == Node.TEXT_NODE) {
-			// final String text = previousTextnode.getNodeValue();
-			parentNode.removeChild(previousTextnode);
-		}
-		this.setChangedSomething();
 	}
 
 	/**
@@ -408,10 +415,11 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 		if (this.document != null) {
 			return;
 		}
-
 		try {
 			final InputStream is = new FileInputStream(this.getFile());
 			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setValidating(false);
+			dbf.setNamespaceAware(false);
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			this.document = db.parse(is);
 		} catch (IOException e) {
@@ -423,22 +431,26 @@ public class ConfigFileEditorXml extends ConfigFileEditor {
 		}
 	}
 
-	/**
-	 * save only is perfomed if the changed flag is set.
-	 */
 	protected final void save() {
 		if (!this.getChangedSomething()) {
 			return;
 		}
-
 		try {
-			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
-
-			// Write the DOM document to a file
+			final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			if (getConfigfile() != null && getConfigfile().getEncoding() != null) {
+				final String encoding = getConfigfile().getEncoding().name();
+				transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
+			}
+			if (getConfigfile() != null && ((ConfigFileXml) getConfigfile()).getStandalone() != null) {
+				final String standalone = ((ConfigFileXml) getConfigfile()).getStandalone().name();
+				transformer.setOutputProperty(OutputKeys.STANDALONE, standalone);
+			}
+			if (getConfigfile() != null && ((ConfigFileXml) getConfigfile()).getIndent() != null) {
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			}
 			final Source source = new DOMSource(this.document);
 			final Result result = new StreamResult(this.getFile());
-			xformer.transform(source, result);
-
+			transformer.transform(source, result);
 		} catch (TransformerException e) {
 			throw new RapidEnvException(e);
 		}
