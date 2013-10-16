@@ -56,16 +56,13 @@ public class ConfigFileXmlTaskDeletenode extends RapidBeanBaseConfigFileXmlTaskD
 			if (execute) {
 				final String msg = "    XML node \"" + getPath() + "\"" + " is not existing in file "
 				        + fileCfg.getPathAsFile().getAbsolutePath();
-				if (!silent) {
-					interpreter.getOut().println(msg);
-				}
 				RapidEnvInterpreter.log(Level.FINE, msg);
+				fileCfg.setIssue(msg);
 				ok = false;
 			} else {
 				final String msg = "    XML node \"" + getPath() + "\" is already deleted in file "
 				        + fileCfg.getPathAsFile().getAbsolutePath();
 				RapidEnvInterpreter.log(Level.FINE, msg);
-				fileCfg.setIssue(msg);
 				ok = true;
 			}
 		} else {
