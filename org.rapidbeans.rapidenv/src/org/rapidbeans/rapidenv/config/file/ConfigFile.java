@@ -219,7 +219,7 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 							throw new RapidEnvException("Problems while trying to delete " + tmpfile.getAbsolutePath());
 						}
 					} else {
-						equal = FileHelper.filesEqual(sourcefile, targetfile);
+						equal = FileHelper.filesEqual(sourcefile, targetfile, true, false);
 					}
 
 					if (!equal) {
