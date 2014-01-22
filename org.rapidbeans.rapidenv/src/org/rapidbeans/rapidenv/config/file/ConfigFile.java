@@ -234,10 +234,12 @@ public abstract class ConfigFile extends RapidBeanBaseConfigFile {
 							String msg;
 							if (this.getTasks() != null && this.getTasks().size() > 0) {
 								msg = "File to configure \"" + targetfile.getAbsolutePath()
-								        + "\" differs from sourcefile including changes.";
+								        + "\" differs from sourcefile \""
+								        + sourcefile.getAbsolutePath() + "\" including changes.";
 							} else {
 								msg = "File to configure \"" + targetfile.getAbsolutePath()
-								        + "\" differs from sourcefile.";
+								        + "\" differs from sourcefile \""
+								        + sourcefile.getAbsolutePath() + "\".";
 							}
 							RapidEnvInterpreter.log(Level.FINE, msg);
 							setIssue(msg);
