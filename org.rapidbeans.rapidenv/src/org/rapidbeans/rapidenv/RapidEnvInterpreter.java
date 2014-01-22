@@ -317,8 +317,12 @@ public class RapidEnvInterpreter {
 		if (PlatformHelper.getOsfamily() != OperatingSystemFamily.linux) {
 			throw new AssertionError("Unexpected Operating system (family) " + PlatformHelper.getOsName() + "\"");
 		}
-		LinuxDesktop desktop = LinuxDesktop.kde;
-		if (System.getenv("WINDOWMANAGER").endsWith("kde")) {
+		LinuxDesktop desktop = LinuxDesktop.none;
+		final String windowManager = System.getenv("WINDOWMANAGER");
+		if (windowManager == null || windowManager.trim().length() == 0)
+		{
+			desktop = LinuxDesktop.none;
+		} else if (System.getenv("WINDOWMANAGER").endsWith("kde")) {
 			desktop = LinuxDesktop.kde;
 		} else if (System.getenv("WINDOWMANAGER").endsWith("gnome")) {
 			desktop = LinuxDesktop.gnome;
