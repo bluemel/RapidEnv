@@ -51,10 +51,10 @@
 	####################################################################
 -->
 	<path id="project.classpath">
-		<pathelement location="${env.M2_REPO}/junit/junit/${version.junit}/junit-${version.junit}.jar"/>
-		<pathelement location="${env.M2_REPO}/org/apache/ant/ant/${version.ant}/ant-${version.ant}.jar"/>
 		<pathelement location="${env.M2_REPO}/org/rapidbeans/rapidbeans-framework/${version.rapidbeans-framework}/rapidbeans-framework-${version.rapidbeans-framework}.jar"/>
-		<pathelement location="jar/jshortcut-${version.jshortcut}.jar"/>
+		<pathelement location="${env.M2_REPO}/org/apache/commons/commons-compress/${version.commons-compress}/commons-compress-${version.commons-compress}.jar"/>
+		<pathelement location="${env.M2_REPO}/org/apache/ant/ant/${version.ant}/ant-${version.ant}.jar"/>
+		<pathelement location="${env.M2_REPO}/junit/junit/${version.junit}/junit-${version.junit}.jar"/>
 		<pathelement location="dist/lib/rapidenv-${version}.jar"/>
 	</path>
 

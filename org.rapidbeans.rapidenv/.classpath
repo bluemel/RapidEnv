@@ -9,6 +9,7 @@
 	<classpathentry kind="src" path="srcgenerators"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-compress/1.7/commons-compress-1.7.jar" sourcepath="/M2_REPO/commons-compress/commons-compress/1.7/commons-compress-1.7-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/ant/ant/1.8.2/ant-1.8.2.jar" sourcepath="/M2_REPO/org/apache/ant/ant/1.8.2/ant-1.8.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/rapidbeans/rapidbeans-framework/0.9.11/rapidbeans-framework-0.9.11.jar" sourcepath="/M2_REPO/org/rapidbeans/rapidbeans-framework/0.9.11/rapidbeans-framework-0.9.11-src.zip"/>
 	<classpathentry kind="output" path="classes_eclipse"/>
