@@ -422,6 +422,8 @@
 				includes="rapidbeans-framework-${version.rapidbeans-framework}.jar"/>
 			<fileset dir="${env.M2_REPO}/org/apache/ant/ant/${version.ant}"
 				includes="ant-${version.ant}.jar"/>
+			<fileset dir="${env.M2_REPO}/org/apache/commons/commons-compress/${version.commons-compress}"
+				includes="commons-compress-${version.commons-compress}.jar"/>
 		</copy>
 
 		<zip zipfile="dist/rapidenv-${version}-bin.zip">
@@ -462,7 +464,7 @@
 				<filter token="version" value="${version}"/>
 				<filter token="version.rapidbeans-framework" value="${version.rapidbeans-framework}"/>
 				<filter token="version.ant" value="${version.ant}"/>
-				<filter token="version.jshortcut" value="${version.jshortcut}"/>
+				<filter token="version.commons-compress" value="${version.commons-compress}"/>
 			</filterset>
 		</copy>
 
