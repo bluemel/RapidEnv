@@ -33,6 +33,7 @@ import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.tools.ant.taskdefs.Untar.UntarCompressionMethod;
 import org.rapidbeans.core.util.PlatformHelper;
+import org.rapidbeans.rapidenv.config.cmd.Argument;
 import org.rapidbeans.rapidenv.config.cmd.CommandExecutionResult;
 import org.rapidbeans.rapidenv.config.cmd.SystemCommand;
 
@@ -92,21 +93,29 @@ public class Unpacker {
 	 */
 	public void unpack(final File packedFile, final File dest) {
 		try {
-			if (packedFile.getName().endsWith(".zip") || packedFile.getName().endsWith(".jar")
+			if (packedFile.getName().endsWith(".zip")
+					|| packedFile.getName().endsWith(".jar")
 					|| packedFile.getName().endsWith(".war")) {
 				this.ant.expand(packedFile, dest);
 			} else if (packedFile.getName().endsWith(".tar")) {
 				// this.ant.unpack(packedFile, dest,
-				// (UntarCompressionMethod) UntarCompressionMethod.getInstance(UntarCompressionMethod.class, "none"));
+				// (UntarCompressionMethod)
+				// UntarCompressionMethod.getInstance(UntarCompressionMethod.class,
+				// "none"));
 				unpackArchive(packedFile, dest, false);
-			} else if (packedFile.getName().endsWith(".tar.gz") || packedFile.getName().endsWith(".tgz")) {
+			} else if (packedFile.getName().endsWith(".tar.gz")
+					|| packedFile.getName().endsWith(".tgz")) {
 				// this.ant.unpack(packedFile, dest,
-				// (UntarCompressionMethod) UntarCompressionMethod.getInstance(UntarCompressionMethod.class, "gzip"));
+				// (UntarCompressionMethod)
+				// UntarCompressionMethod.getInstance(UntarCompressionMethod.class,
+				// "gzip"));
 				unpackArchive(packedFile, dest, true);
-			} else if (packedFile.getName().endsWith("tar.bz2") || packedFile.getName().endsWith(".bz2")) {
+			} else if (packedFile.getName().endsWith("tar.bz2")
+					|| packedFile.getName().endsWith(".bz2")) {
 				this.ant.unpack(packedFile, dest,
-						(UntarCompressionMethod) UntarCompressionMethod.getInstance(UntarCompressionMethod.class,
-								"bzip2"));
+						(UntarCompressionMethod) UntarCompressionMethod
+								.getInstance(UntarCompressionMethod.class,
+										"bzip2"));
 			}
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
@@ -117,12 +126,14 @@ public class Unpacker {
 		}
 	}
 
-	private void unpackArchive(final File file, final File dest, final boolean compressed)
-			throws IOException, ArchiveException, CompressorException {
+	private void unpackArchive(final File file, final File dest,
+			final boolean compressed) throws IOException, ArchiveException,
+			CompressorException {
 		if (!dest.exists()) {
 			if (!dest.mkdirs()) {
 				throw new RapidEnvException(
-						"Error while trying to create destination directory: " + dest.getAbsolutePath());
+						"Error while trying to create destination directory: "
+								+ dest.getAbsolutePath());
 			}
 		}
 		InputStream uncompressedIs = null;
@@ -130,27 +141,36 @@ public class Unpacker {
 		try {
 			if (compressed) {
 				uncompressedIs = new BufferedInputStream(
-						new CompressorStreamFactory().createCompressorInputStream(new BufferedInputStream(
-								new FileInputStream(file))));
+						new CompressorStreamFactory()
+								.createCompressorInputStream(new BufferedInputStream(
+										new FileInputStream(file))));
 			} else {
-				uncompressedIs = new BufferedInputStream(new FileInputStream(file));
+				uncompressedIs = new BufferedInputStream(new FileInputStream(
+						file));
 			}
-			is = new ArchiveStreamFactory().createArchiveInputStream(uncompressedIs);
+			is = new ArchiveStreamFactory()
+					.createArchiveInputStream(uncompressedIs);
 			ArchiveEntry entry = null;
 			while ((entry = is.getNextEntry()) != null) {
 				final File outFile = new File(dest, entry.getName());
 				FileMode fileMode = null;
 				if (entry instanceof TarArchiveEntry) {
 					fileMode = new FileMode(((TarArchiveEntry) entry).getMode());
-					RapidEnvInterpreter.log(Level.FINE, "unpacking tar entry: " + outFile.getAbsolutePath()
-							+ ", Mode: " + fileMode.toString() + ", " + fileMode.toChmodStringFull());
+					RapidEnvInterpreter.log(Level.FINE,
+							"unpacking tar entry: " + outFile.getAbsolutePath()
+									+ ", Mode: " + fileMode.toString() + ", "
+									+ fileMode.toChmodStringFull());
 				} else {
-					RapidEnvInterpreter.log(Level.FINE, "unpacking file entry: " + outFile.getAbsolutePath());
+					RapidEnvInterpreter.log(
+							Level.FINE,
+							"unpacking file entry: "
+									+ outFile.getAbsolutePath());
 				}
 				if (entry.isDirectory() && (!outFile.exists())) {
 					if (!outFile.mkdirs()) {
-						throw new RapidEnvException("Error while trying to create directory: "
-								+ outFile.getAbsolutePath());
+						throw new RapidEnvException(
+								"Error while trying to create directory: "
+										+ outFile.getAbsolutePath());
 					}
 				} else {
 					FileOutputStream os = null;
@@ -179,22 +199,27 @@ public class Unpacker {
 	}
 
 	private void setOutFileMode(final File file, final FileMode fileMode) {
-		switch (PlatformHelper.getOsfamily())
-		{
+		switch (PlatformHelper.getOsfamily()) {
 		case linux:
 			final String smode = fileMode.toChmodStringFull();
-			final SystemCommand cmd = new SystemCommand("chmod " + smode + " " + file.getAbsolutePath());
+			final SystemCommand cmd = new SystemCommand();
+			cmd.setExecutable("chmod");
+			cmd.addArgument(new Argument(smode));
+			cmd.addArgument(new Argument(file.getAbsolutePath()));
+			cmd.setSilent(true);
 			final CommandExecutionResult result = cmd.execute();
-			if (result.getReturncode() != 0)
-			{
-				throw new RapidEnvException("Error while trying to set mode \"" + smode + "\" for file: "
-						+ file.getAbsolutePath());
+			if (result.getReturncode() != 0) {
+				throw new RapidEnvException("Error while trying to set mode \""
+						+ smode + "\" for file: " + file.getAbsolutePath());
 			}
 			break;
 		default:
-			file.setReadable(fileMode.isUr() || fileMode.isGr() || fileMode.isOr());
-			file.setWritable(fileMode.isUw() || fileMode.isGw() || fileMode.isOw());
-			file.setExecutable(fileMode.isUx() || fileMode.isGx() || fileMode.isOx());
+			file.setReadable(fileMode.isUr() || fileMode.isGr()
+					|| fileMode.isOr());
+			file.setWritable(fileMode.isUw() || fileMode.isGw()
+					|| fileMode.isOw());
+			file.setExecutable(fileMode.isUx() || fileMode.isGx()
+					|| fileMode.isOx());
 			break;
 		}
 	}
