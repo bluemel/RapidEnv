@@ -405,7 +405,7 @@
 				<filter token="version" value="${version}"/>
 				<filter token="version.rapidbeans-framework" value="${version.rapidbeans-framework}"/>
 				<filter token="version.ant" value="${version.ant}"/>
-				<filter token="version.jshortcut" value="${version.jshortcut}"/>
+				<filter token="version.commons-compress" value="${version.commons-compress}"/>
 			</filterset>
 		</copy>
 

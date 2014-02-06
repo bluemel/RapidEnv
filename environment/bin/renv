@@ -154,7 +154,7 @@ if [ ${RAPID_ENV_SCRIPT_RETURN_CODE} -lt 0 ]; then
 
   export RAPID_ENV_COMMAND="\"${JAVA}\" -classpath \"${RAPID_ENV_HOME_FOR_CLASSPATH}/rapidenv-1.3.5.jar"
   export RAPID_ENV_COMMAND="${RAPID_ENV_COMMAND}${PATH_SEPARATOR}${RAPID_ENV_HOME_FOR_CLASSPATH}/rapidbeans-framework-0.9.11.jar"
-  export RAPID_ENV_COMMAND="${RAPID_ENV_COMMAND}${PATH_SEPARATOR}${RAPID_ENV_HOME_FOR_CLASSPATH}/commons-compress-@version.commons-compress@.jar"
+  export RAPID_ENV_COMMAND="${RAPID_ENV_COMMAND}${PATH_SEPARATOR}${RAPID_ENV_HOME_FOR_CLASSPATH}/commons-compress-1.7.jar"
   export RAPID_ENV_COMMAND="${RAPID_ENV_COMMAND}${PATH_SEPARATOR}${RAPID_ENV_HOME_FOR_CLASSPATH}/ant-1.8.2.jar"
   export RAPID_ENV_COMMAND="${RAPID_ENV_COMMAND}\" org.rapidbeans.rapidenv.cmd.CmdRenv"
 
