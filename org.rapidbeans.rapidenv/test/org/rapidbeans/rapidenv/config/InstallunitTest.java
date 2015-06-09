@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,7 +38,7 @@ import org.rapidbeans.rapidenv.Preprocessor;
 public class InstallunitTest {
 
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws InterruptedException {
 		if (!new File("profile").exists()) {
 			new File("profile").mkdir();
 		}
@@ -48,6 +47,7 @@ public class InstallunitTest {
 				"org.rapidbeans.rapidenv.config.Project", true);
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
+		Thread.sleep(200);
 	}
 
 	@AfterClass

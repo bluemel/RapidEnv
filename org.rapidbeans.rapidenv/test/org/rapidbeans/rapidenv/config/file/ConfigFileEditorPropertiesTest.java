@@ -35,18 +35,20 @@ public class ConfigFileEditorPropertiesTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-		if (!new File("profile").exists()) {
-			new File("profile").mkdir();
-		}
+		FileHelper.deleteDeep(new File("profile"));
+		new File("profile").mkdir();
+		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
+		FileHelper.deleteDeep(new File("testdata/testinstall"));
 		new File("testdata/testinstall").mkdir();
 		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
-		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-				"org.rapidbeans.rapidenv.config.Project", true);
+		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding(
+				"project", "org.rapidbeans.rapidenv.config.Project", true);
 	}
 
 	@AfterClass
 	public static void tearDownClass() {
+		FileHelper.deleteDeep(new File("profile"));
 		FileHelper.deleteDeep(new File("../../env.dtd"));
 		FileHelper.deleteDeep(new File("testdata/testinstall"));
 	}
@@ -58,8 +60,8 @@ public class ConfigFileEditorPropertiesTest {
 		Installunit unit = project.findInstallunitConfiguration("maven");
 		ConfigFileProperties file = (ConfigFileProperties) unit.getConfigurations().get(0);
 		Assert.assertNotNull(file.getTasks());
-		final ConfigFilePropertiesTaskSetpropvalue task0 = (ConfigFilePropertiesTaskSetpropvalue) file.getTasks()
-				.get(0);
+		final ConfigFilePropertiesTaskSetpropvalue task0 =
+				(ConfigFilePropertiesTaskSetpropvalue) file.getTasks().get(0);
 		Assert.assertEquals("prop.1", task0.getName());
 		Assert.assertEquals("xyz", task0.getValue());
 	}

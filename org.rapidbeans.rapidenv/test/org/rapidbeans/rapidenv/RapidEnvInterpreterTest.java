@@ -134,7 +134,7 @@ public class RapidEnvInterpreterTest {
 		try {
 			assertEquals("Start TestMySQL", icon.getTitle());
 			if (PlatformHelper.getOsfamily() == OperatingSystemFamily.windows) {
-				assertEquals(System.getenv("SystemRoot") + "/System32/cmd.exe", icon.getExecutable());
+				assertEquals(System.getenv("SystemRoot") + "/system32/cmd.exe", icon.getExecutable());
 			}
 			assertEquals(env.getProject().findInstallunitConfiguration("mysql").getHomedirAsFile().getAbsolutePath()
 					+ "/bin", icon.getExecutein());

@@ -15,12 +15,13 @@ import org.rapidbeans.rapidenv.cmd.CmdRenv;
 public class ConfigExprFunctionTest {
 
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws InterruptedException {
 		if (!new File("profile").exists()) {
 			new File("profile").mkdir();
 		}
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
+		Thread.sleep(200);
 	}
 
 	@AfterClass
@@ -36,7 +37,7 @@ public class ConfigExprFunctionTest {
 	@Test
 	public void testExprFunctionHostnameSepWithLiteral() {
 		Assert.assertEquals("xxx" + PlatformHelper.hostname() + "yyy",
-		        ConfigExpr.expand(null, null, "xxx''hostname()yyy", false));
+				ConfigExpr.expand(null, null, "xxx''hostname()yyy", false));
 	}
 
 	/**
@@ -46,9 +47,9 @@ public class ConfigExprFunctionTest {
 	@Test
 	public void testExprFunctionHostnameSepWithEmptyVariable() {
 		(new RapidEnvInterpreter(new CmdRenv(new String[] { "-env", "testdata/env/env.xml", "s" }))).setPropertyValue(
-		        "EMPTY", "");
+				"EMPTY", "");
 		Assert.assertEquals("xxx" + PlatformHelper.hostname() + "yyy",
-		        ConfigExpr.expand(null, null, "xxx${EMPTY}hostname()yyy", false));
+				ConfigExpr.expand(null, null, "xxx${EMPTY}hostname()yyy", false));
 	}
 
 	@Test
@@ -86,7 +87,7 @@ public class ConfigExprFunctionTest {
 	@Test
 	public void testSplitArgumentsFunctionComplex() {
 		List<String> splitResult = ConfigExprFunction.splitArguments("pathconvert('a:b\\c\\d', '/'), ':', '\\\\:'",
-		        true);
+				true);
 		Assert.assertEquals("pathconvert('a:b\\c\\d', '/')", splitResult.get(0));
 		Assert.assertEquals("':'", splitResult.get(1));
 		Assert.assertEquals("'\\:'", splitResult.get(2));
@@ -95,7 +96,7 @@ public class ConfigExprFunctionTest {
 	@Test
 	public void testSplitArgumentsFunction02() {
 		List<String> splitResult = ConfigExprFunction.splitArguments(
-		        "${wd}'/testdata/ant/ant_win.properties', \\n\\r=", false);
+				"${wd}'/testdata/ant/ant_win.properties', \\n\\r=", false);
 		Assert.assertEquals("${wd}'/testdata/ant/ant_win.properties'", splitResult.get(0));
 		Assert.assertEquals("\\n\\r=", splitResult.get(1));
 	}
