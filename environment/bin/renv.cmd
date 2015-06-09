@@ -52,9 +52,9 @@ set RAPID_ENV_COMMAND="%JAVA%"
 if defined HTTP_PROXY_HOST set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyHost=%HTTP_PROXY_HOST%
 if defined HTTP_PROXY_PORT set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -Dhttp.proxyPort=%HTTP_PROXY_PORT%
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND% -classpath "%RAPID_ENV_LIBDIR%\rapidenv-1.3.5.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\rapidbeans-framework-0.9.11.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\rapidbeans-framework-0.9.12.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\commons-compress-1.7.jar
-set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\ant-1.8.2.jar
+set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%;%RAPID_ENV_LIBDIR%\ant-1.9.5.jar
 set RAPID_ENV_COMMAND=%RAPID_ENV_COMMAND%" org.rapidbeans.rapidenv.cmd.CmdRenv
 
 :# if there is not already an RapidEnv profile for this user and this host do the set up
