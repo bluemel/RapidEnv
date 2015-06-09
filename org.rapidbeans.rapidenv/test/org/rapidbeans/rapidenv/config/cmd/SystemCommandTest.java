@@ -1,10 +1,10 @@
 /*
  * RapidEnv: SystemCommandTest.java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 10/02/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -20,7 +20,7 @@ package org.rapidbeans.rapidenv.config.cmd;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,7 +44,7 @@ public class SystemCommandTest {
 		new File("testdata/testinstall").mkdir();
 		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-		        "org.rapidbeans.rapidenv.config.Project", true);
+				"org.rapidbeans.rapidenv.config.Project", true);
 	}
 
 	@AfterClass
@@ -66,7 +66,7 @@ public class SystemCommandTest {
 			// cmd.setInput("XXX\n\n\n");
 			// result = cmd.execute();
 			// Assert.assertEquals("x = \"XXX\"\n", result.getStdout());
-			// break;
+			break;
 		case windows:
 			// cmd = new SystemCommand();
 			// cmd.setExecutable("cmd.exe");
@@ -77,14 +77,17 @@ public class SystemCommandTest {
 			// cmd.setInput("XXX\n\n\n");
 			// result = cmd.execute();
 			// Assert.assertEquals("x = \"XXX\"\n", result.getStdout());
-			// break;
+			break;
+		default:
+			Assert.fail("Unexpected os familiy: " + PlatformHelper.getOsfamily().name());
+			break;
 		}
 	}
 
 	@Test
 	public void testReadConfiguration() {
 		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envSystemCommand01.xml", "s" }));
+				"testdata/env/envSystemCommand01.xml", "s" }));
 		Project project = interpreter.getProject();
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
@@ -109,7 +112,7 @@ public class SystemCommandTest {
 	@Test
 	public void testExecuteSynchronously() {
 		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envSystemCommand01.xml", "s" }));
+				"testdata/env/envSystemCommand01.xml", "s" }));
 		Project project = interpreter.getProject();
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
@@ -148,7 +151,7 @@ public class SystemCommandTest {
 	@Test
 	public void testExecuteSynchronouslyBatch() {
 		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envSystemCommand01.xml", "s" }));
+				"testdata/env/envSystemCommand01.xml", "s" }));
 		Project project = interpreter.getProject();
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
@@ -174,7 +177,7 @@ public class SystemCommandTest {
 	public void testExecuteCheckSuccessContainsmatch() {
 		Assert.assertTrue("hallihallo!!!\n".matches(".*halli.*\n.*"));
 		RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-		        "testdata/env/envSystemCommand01.xml", "s" }));
+				"testdata/env/envSystemCommand01.xml", "s" }));
 		Project project = interpreter.getProject();
 		Installunit unit = project.findInstallunitConfiguration("unit01");
 		Assert.assertNotNull(unit);
@@ -199,7 +202,7 @@ public class SystemCommandTest {
 	/**
 	 * Test passing arguments to a Windows script interpreted by cmd.exe. The
 	 * SystemCommand is built by the program.
-	 * 
+	 *
 	 * Please note the limitation that cmd.exe will keep surrounding quotes in
 	 * arguments. The script called in this test testArgPassing.cmd demonstrates
 	 * how to strip them afterwards.
@@ -221,8 +224,8 @@ public class SystemCommandTest {
 			CommandExecutionResult result = cmd.execute();
 			Assert.assertEquals(0, result.getReturncode());
 			Assert.assertEquals("Test Argument passing:\n" + "argument 1: @xxx@\n" + "argument 2: @\"a b c\"@\n"
-			        + "argument 3: @\"\\\"x\\\" \\\"y\\\" \\\"z\\\"\"@\n" + "argument 2': @a b c@\n"
-			        + "argument 3': @\"x\" \"y\" \"z\"@\n", result.getStdout());
+					+ "argument 3: @\"\\\"x\\\" \\\"y\\\" \\\"z\\\"\"@\n" + "argument 2': @a b c@\n"
+					+ "argument 3': @\"x\" \"y\" \"z\"@\n", result.getStdout());
 			Assert.assertEquals("", result.getStderr());
 			break;
 		case linux:
@@ -237,7 +240,7 @@ public class SystemCommandTest {
 	/**
 	 * Test passing arguments to a Windows script interpreted by cmd.exe. The
 	 * SystemCommand is read from an environment configuration file.
-	 * 
+	 *
 	 * Please note the limitation that cmd.exe will keep surrounding quotes in
 	 * arguments. The script called in this test testArgPassing.cmd demonstrates
 	 * how to strip them afterwards.
@@ -248,15 +251,15 @@ public class SystemCommandTest {
 		case windows:
 
 			RapidEnvInterpreter interpreter = new RapidEnvInterpreter(new CmdRenv(new String[] { "-env",
-			        "testdata/env/envSystemCommand01.xml", "s" }));
+					"testdata/env/envSystemCommand01.xml", "s" }));
 			Project project = interpreter.getProject();
 			Installunit unit = project.findInstallunitConfiguration("unit01");
 			SystemCommand cmd = (SystemCommand) unit.getConfigurations().get(6);
 			CommandExecutionResult result = cmd.execute();
 			Assert.assertEquals(0, result.getReturncode());
 			Assert.assertEquals("Test Argument passing:\n" + "argument 1: @xxx@\n" + "argument 2: @\"a b c\"@\n"
-			        + "argument 3: @\"\\\"x\\\" \\\"y\\\" \\\"z\\\"\"@\n" + "argument 2': @a b c@\n"
-			        + "argument 3': @\"x\" \"y\" \"z\"@\n", result.getStdout());
+					+ "argument 3: @\"\\\"x\\\" \\\"y\\\" \\\"z\\\"\"@\n" + "argument 2': @a b c@\n"
+					+ "argument 3': @\"x\" \"y\" \"z\"@\n", result.getStdout());
 			Assert.assertEquals("", result.getStderr());
 			break;
 		case linux:
@@ -271,7 +274,7 @@ public class SystemCommandTest {
 	/**
 	 * Test passing arguments to a Windows VBS script interpreted by the Windows
 	 * Scripting Host (cscript.exe). The SystemCommand is built by the programm
-	 * 
+	 *
 	 * Please note the limitation that cscript.exe ist not capable to receive
 	 * quotes in arguments. The VBS script called in this test
 	 * testArgPassing.vbs demonstrates how to overcome this problem.
@@ -285,7 +288,7 @@ public class SystemCommandTest {
 			SystemCommand cmd = new SystemCommand();
 			cmd.setExecutable("cscript.exe");
 			cmd.addArgument(new Argument(new File("testdata\\scripts\\windows\\testArgPassing.vbs").getAbsolutePath(),
-			        false));
+					false));
 			cmd.addArgument(new Argument("//Nologo", false));
 			cmd.addArgument(new Argument("xxx", false));
 			cmd.addArgument(new Argument("a b c", false));
@@ -294,8 +297,8 @@ public class SystemCommandTest {
 			CommandExecutionResult result = cmd.execute();
 			Assert.assertEquals(0, result.getReturncode());
 			Assert.assertEquals("Test Argument passing:\n" + "argument 1: @xxx@\n" + "argument 2: @a b c@\n"
-			        + "argument 3: @/C &quot;echo Hello&quot;@\n" + "argument 3': @/C \"echo Hello\"@\n",
-			        result.getStdout());
+					+ "argument 3: @/C &quot;echo Hello&quot;@\n" + "argument 3': @/C \"echo Hello\"@\n",
+					result.getStdout());
 			Assert.assertEquals("", result.getStderr());
 			break;
 

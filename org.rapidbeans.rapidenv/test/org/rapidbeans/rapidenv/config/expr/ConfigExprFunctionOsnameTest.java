@@ -1,10 +1,10 @@
 /*
  * RapidEnv: .java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 05/30/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -36,7 +36,7 @@ public class ConfigExprFunctionOsnameTest {
 		Installunit jdk = new Installunit("jdk");
 		jdk.setVersion(new Version("1.2.3"));
 		Assert.assertEquals("xxx-" + PlatformHelper.getOsfamily().name() + "-" + PlatformHelper.getArchName() + "yyy",
-		        ConfigExpr.expand(jdk, null, "xxx-''osname()-''architecture()yyy", false));
+				ConfigExpr.expand(jdk, null, "xxx-''osname()-''architecture()yyy", false));
 	}
 
 	@Test
@@ -47,8 +47,12 @@ public class ConfigExprFunctionOsnameTest {
 		case windows:
 			if (PlatformHelper.getArchName().equals("x86")) {
 				Assert.assertEquals("eclipse-modeling-indigo-win32.zip", ConfigExpr.expand(eclipse, null,
-				        "eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
-				                + "''architecture('x86=;x86_64=-x86_64')" + ".zip", false));
+						"eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
+								+ "''architecture('x86=;x86_64=-x86_64')" + ".zip", false));
+			} else if (PlatformHelper.getArchName().equals("amd64")) {
+				Assert.assertEquals("eclipse-modeling-indigo-win32-x86_64.zip", ConfigExpr.expand(eclipse, null,
+						"eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
+								+ "''architecture('x86=;amd64=-x86_64')" + ".zip", false));
 			} else {
 				Assert.fail("Architecture \"" + PlatformHelper.getArchName() + "\" not yet tested");
 			}
@@ -56,8 +60,8 @@ public class ConfigExprFunctionOsnameTest {
 		case linux:
 			if (PlatformHelper.getArchName().equals("i386")) {
 				Assert.assertEquals("eclipse-modeling-indigo-linux-gtk.zip", ConfigExpr.expand(eclipse, null,
-				        "eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
-				                + "''architecture('i386=;x86_64=-x86_64')" + ".zip", false));
+						"eclipse-modeling-indigo-" + "''osname('windows=win32;linux=linux-gtk')"
+								+ "''architecture('i386=;x86_64=-x86_64')" + ".zip", false));
 			} else {
 				Assert.fail("Architecture \"" + PlatformHelper.getArchName() + "\" not yet tested");
 			}

@@ -1,10 +1,10 @@
 /*
  * RapidEnv: EnvProperty.java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 07/27/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -147,14 +147,14 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 						final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
 						final String value = normalize(extfu.getValue());
 						final InstallStatus parentInstallUnitInstallStatus = env.getInstallationStatus(
-						        parentInstallUnit, CmdRenvCommand.stat);
+								parentInstallUnit, CmdRenvCommand.stat);
 						switch (parentInstallUnitInstallStatus) {
 						case deinstallrequired:
 							removePathExtension(pathComponents, extfu.getPropextmode(), value);
 							break;
 						default:
 							if (relevantParentUnitInstallState(parentInstallUnit, parentInstallUnitInstallStatus)
-							        && extfu.getPropextmode() == PropertyExtensionMode.prepend) {
+									&& extfu.getPropextmode() == PropertyExtensionMode.prepend) {
 								addPathExtension(pathComponents, extfu.getPropextmode(), value);
 							}
 							break;
@@ -167,13 +167,13 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 						final Installunit parentInstallUnit = (Installunit) extfu.getParentBean();
 						final String value = normalize(extfu.getValue());
 						final InstallStatus parentInstallUnitInstallStatus = env.getInstallationStatus(
-						        parentInstallUnit, CmdRenvCommand.install);
+								parentInstallUnit, CmdRenvCommand.install);
 						switch (parentInstallUnitInstallStatus) {
 						case deinstallrequired:
 							break;
 						default:
 							if (relevantParentUnitInstallState(parentInstallUnit, parentInstallUnitInstallStatus)
-							        && extfu.getPropextmode() == PropertyExtensionMode.append) {
+									&& extfu.getPropextmode() == PropertyExtensionMode.append) {
 								addPathExtension(pathComponents, extfu.getPropextmode(), value);
 							}
 							break;
@@ -212,18 +212,18 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	 * Determines if the parent installation unit of a path extension is in a
 	 * relevant state (considering also the installation command) so that it
 	 * should be effective or not.
-	 * 
+	 *
 	 * @param parentInstallUnit
 	 *            the parent installation unit of the specific path extension to
 	 *            check
 	 * @param parentInstallUnitInstallStatus
 	 *            has to be already determined by the caller
-	 * 
+	 *
 	 * @return f the parent installation unit of a path extension is in a
 	 *         relevant state so that it should be effective or not
 	 */
 	private boolean relevantParentUnitInstallState(final Installunit parentInstallUnit,
-	        final InstallStatus parentInstallUnitInstallStatus) {
+			final InstallStatus parentInstallUnitInstallStatus) {
 //		return parentInstallUnit.getInstallcontrol() == InstallControl.normal
 //		        || (parentInstallUnit.getInstallcontrol() == InstallControl.optional && (parentInstallUnit
 //		                .shouldBeInstalled()
@@ -248,6 +248,9 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 				case update:
 					relevant = parentInstallUnit.shouldBeInstalled();
 					break;
+				default:
+					// do nothing
+					break;
 				}
 			}
 		}
@@ -263,7 +266,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	}
 
 	private void removePathExtension(final List<String> pathComponents, final PropertyExtensionMode extMode,
-	        final String extvalue) {
+			final String extvalue) {
 		final int index = pathComponents.indexOf(extvalue);
 		if (index != -1) {
 			pathComponents.remove(index);
@@ -271,7 +274,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	}
 
 	private void addPathExtension(final List<String> pathComponents, final PropertyExtensionMode extMode,
-	        final String extvalue) throws AssertionError {
+			final String extvalue) throws AssertionError {
 		switch (extMode) {
 		case append:
 			pathComponents.add(extvalue);
@@ -329,7 +332,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 						}
 					} else {
 						final String sPathnorm = sPath.replace('/', File.separatorChar).replace('\\',
-						        File.separatorChar);
+								File.separatorChar);
 						if (map.get(sPathnorm) == null) {
 							list.add(sPathnorm);
 							map.put(sPathnorm, pathfile);
@@ -357,7 +360,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	/**
 	 * @param os
 	 *            defines a specific operation system (family).
-	 * 
+	 *
 	 * @return the specific value for the given operation system
 	 */
 	public synchronized PropertyValue getSpecificvalue(final OperatingSystemFamily os) {
@@ -373,7 +376,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 	/**
 	 * @param os
 	 *            defines a specific operation system (family).
-	 * 
+	 *
 	 * @return the environment variable definitions associated to this property
 	 */
 	public synchronized Environment getEnvironment(final OperatingSystemFamily os) {
@@ -398,15 +401,15 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 			if (env.getOsfamily() == null) {
 				if (this.environmentCommon != null) {
 					throw new RapidEnvConfigurationException(
-					        "More than one general (OS independent) environment definition" + " for property \""
-					                + getFullyQualifiedName() + "\"");
+							"More than one general (OS independent) environment definition" + " for property \""
+									+ getFullyQualifiedName() + "\"");
 				}
 				this.environmentCommon = env;
 			} else {
 				if (this.environmentsOsSpecific.get(env.getOsfamily()) != null) {
 					throw new RapidEnvConfigurationException("More than one OS specific environment definition"
-					        + " for property \"" + getFullyQualifiedName() + "\"" + " for OS (familiy) \""
-					        + env.getOsfamily() + "\"");
+							+ " for property \"" + getFullyQualifiedName() + "\"" + " for OS (familiy) \""
+							+ env.getOsfamily() + "\"");
 				}
 				this.environmentsOsSpecific.put(env.getOsfamily(), env);
 			}
@@ -423,15 +426,15 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 				if (value.getOsfamily() == null) {
 					if (this.specificValueCommon != null) {
 						throw new RapidEnvConfigurationException(
-						        "More than one general (OS independent) specific value definition" + " for property \""
-						                + getFullyQualifiedName() + "\"");
+								"More than one general (OS independent) specific value definition" + " for property \""
+										+ getFullyQualifiedName() + "\"");
 					}
 					this.specificValueCommon = value;
 				} else {
 					if (this.specificvaluesOsSpecific.get(value.getOsfamily()) != null) {
 						throw new RapidEnvConfigurationException("More than one OS specific value definition"
-						        + " for property \"" + getFullyQualifiedName() + "\"" + " for OS (familiy) \""
-						        + value.getOsfamily() + "\"");
+								+ " for property \"" + getFullyQualifiedName() + "\"" + " for OS (familiy) \""
+								+ value.getOsfamily() + "\"");
 					}
 					this.specificvaluesOsSpecific.put(value.getOsfamily(), value);
 				}
@@ -448,7 +451,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 
 	/**
 	 * constructor out of a string.
-	 * 
+	 *
 	 * @param s
 	 *            the string
 	 */
@@ -458,7 +461,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 
 	/**
 	 * constructor out of a string array.
-	 * 
+	 *
 	 * @param sa
 	 *            the string array
 	 */
@@ -493,22 +496,22 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 				if (this.getParentInstallunit() == null || this.getParentInstallunit().shouldBeInstalled()) {
 					if (interpreter.getOut() != null) {
 						interpreter.getOut().println(
-						        "  ! " + getPrintName(interpreter) + ": " + "new common property with value \""
-						                + propValue + "\"" + " should be introduced.");
+								"  ! " + getPrintName(interpreter) + ": " + "new common property with value \""
+										+ propValue + "\"" + " should be introduced.");
 					}
 				}
 			} else if (!propValuePersisted.equals(propValue)) {
 				if (interpreter.getOut() != null) {
 					if (propValue.length() > 20) {
 						interpreter.getOut().println(
-						        "  ! " + getPrintName(interpreter) + ": "
-						                + "value of common property should be changed\n" + "    from \""
-						                + propValuePersisted + "\"\n      to \"" + propValue + "\"");
+								"  ! " + getPrintName(interpreter) + ": "
+										+ "value of common property should be changed\n" + "    from \""
+										+ propValuePersisted + "\"\n      to \"" + propValue + "\"");
 					} else {
 						interpreter.getOut().println(
-						        "  ! " + getPrintName(interpreter) + ": "
-						                + "value of common property should be changed\n" + "    from \""
-						                + propValuePersisted + "\"\n      to \"" + propValue + "\"");
+								"  ! " + getPrintName(interpreter) + ": "
+										+ "value of common property should be changed\n" + "    from \""
+										+ propValuePersisted + "\"\n      to \"" + propValue + "\"");
 					}
 				}
 			} else {
@@ -522,8 +525,8 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 				if (this.getParentInstallunit() == null || this.getParentInstallunit().shouldBeInstalled()) {
 					if (interpreter.getOut() != null) {
 						interpreter.getOut().println(
-						        "  ! " + getPrintName(interpreter) + ": "
-						                + "new personal property needs to be specified");
+								"  ! " + getPrintName(interpreter) + ": "
+										+ "new personal property needs to be specified");
 					}
 				}
 				propValue = null;
@@ -549,7 +552,7 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 
 	/**
 	 * Update / Configure the given property's value.
-	 * 
+	 *
 	 * @return the new (updated) property value
 	 */
 	public String update() {
@@ -566,13 +569,13 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 			if (propValuePersisted == null) {
 				if (interpreter.getOut() != null) {
 					interpreter.getOut().println(
-					        "  - introduced property \"" + propName + "\" with value \"" + propValue + "\"");
+							"  - introduced property \"" + propName + "\" with value \"" + propValue + "\"");
 				}
 			} else if (!propValuePersisted.equals(propValue)) {
 				if (interpreter.getOut() != null) {
 					interpreter.getOut().println(
-					        "  - changed value of property \"" + propName + "\"\n" + "    from \"" + propValuePersisted
-					                + "\"\n" + "      to \"" + propValue + "\"");
+							"  - changed value of property \"" + propName + "\"\n" + "    from \"" + propValuePersisted
+									+ "\"\n" + "      to \"" + propValue + "\"");
 				}
 			} else {
 				if (interpreter.getOut() != null) {
@@ -582,26 +585,26 @@ public class EnvProperty extends RapidBeanBaseEnvProperty {
 			break;
 		case personal:
 			if (propValuePersisted == null
-			        || (interpreter.getPropertiesToProcess() != null
-			                && interpreter.getProject().getPropertys() != null
-			                && interpreter.getPropertiesToProcess().size() < interpreter.getProject().getPropertys()
-			                        .size() && interpreter.getPropertiesToProcess().contains(this))) {
+					|| (interpreter.getPropertiesToProcess() != null
+							&& interpreter.getProject().getPropertys() != null
+							&& interpreter.getPropertiesToProcess().size() < interpreter.getProject().getPropertys()
+									.size() && interpreter.getPropertiesToProcess().contains(this))) {
 				switch (interpreter.getCommand()) {
 				case update:
 				case config:
 					if (interpreter.isInstallUnitOrPropertyNamesExplicitelySpecified()) {
 						propValue = CmdLineInteractions.enterValue(interpreter.getIn(), interpreter.getOut(), this,
-						        propValue);
+								propValue);
 					} else {
 						if (interpreter.getOut() != null) {
 							interpreter.getOut().println(
-							        "  = " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
+									"  = " + getPrintName(interpreter) + " = " + "\"" + propValue + "\"");
 						}
 					}
 					break;
 				default:
 					propValue = CmdLineInteractions.enterValue(interpreter.getIn(), interpreter.getOut(), this,
-					        propValue);
+							propValue);
 					break;
 				}
 			} else {

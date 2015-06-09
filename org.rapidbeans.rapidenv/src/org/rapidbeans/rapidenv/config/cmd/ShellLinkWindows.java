@@ -1,10 +1,10 @@
 /*
  * RapidEnv: ShellLinkWindows.java
- *
+ * 
  * Copyright (C) 2011 Martin Bluemel
- *
+ * 
  * Creation Date: 08/15/2011
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -102,7 +102,7 @@ public class ShellLinkWindows {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param shorcutFile
 	 *            the shortcut file. Usually ends with ".lnk".
 	 */
@@ -112,7 +112,7 @@ public class ShellLinkWindows {
 
 	/**
 	 * Create a new or modify an existing windows shortcut.
-	 * 
+	 *
 	 * @throws ShortcutFileAlreadyExistsException
 	 */
 	public void save() {
@@ -123,9 +123,9 @@ public class ShellLinkWindows {
 		command.setExecutable("cscript.exe");
 
 		final File devEnvScriptFile = new File(
-		        "scripts/windows/shortcutWrite.vbs");
+				"scripts/windows/shortcutWrite.vbs");
 		File scriptFile = new File(System.getenv("RAPID_ENV_HOME")
-		        + File.separator + "bin" + File.separator + "shortcutWrite.vbs");
+				+ File.separator + "bin" + File.separator + "shortcutWrite.vbs");
 		if (devEnvScriptFile.exists()) {
 			scriptFile = devEnvScriptFile;
 		}
@@ -141,8 +141,8 @@ public class ShellLinkWindows {
 
 		if (this.targetPath == null) {
 			throw new RapidEnvConfigurationException(
-			        "No target path specified for windows icon \""
-			                + this.file.getAbsolutePath() + "\"");
+					"No target path specified for windows icon \""
+							+ this.file.getAbsolutePath() + "\"");
 		}
 		command.addArgument(new Argument(this.targetPath.getAbsolutePath()));
 
@@ -167,25 +167,25 @@ public class ShellLinkWindows {
 
 		if (this.workingDirectory == null) {
 			throw new RapidEnvConfigurationException(
-			        "No working directory specified for windows icon \""
-			                + this.file.getAbsolutePath() + "\"");
+					"No working directory specified for windows icon \""
+							+ this.file.getAbsolutePath() + "\"");
 		}
 		final Argument argWorkingDirectory = new Argument(
-		        this.workingDirectory.getAbsolutePath());
+				this.workingDirectory.getAbsolutePath());
 		command.addArgument(argWorkingDirectory);
 
 		String iconLocation;
 		if (this.iconFile == null) {
-			iconLocation = "%SystemRoot%" + File.separator + "system32"
-			        + File.separator + "csript.exe" + ",0";
+			iconLocation = "%SystemRoot%" + File.separator + "System32"
+					+ File.separator + "csript.exe" + ",0";
 		} else {
 			iconLocation = this.iconFile.getAbsolutePath() + ","
-			        + Integer.toString(this.iconNumber);
+					+ Integer.toString(this.iconNumber);
 		}
 		command.addArgument(new Argument(iconLocation));
 
 		command.addArgument(new Argument(Integer.toString(this.windowStyle
-		        .ordinal() + 1)));
+				.ordinal() + 1)));
 
 		StringBuffer hotkey = new StringBuffer();
 		if (this.hotKey != null && this.hotKey.size() > 0) {
@@ -204,9 +204,9 @@ public class ShellLinkWindows {
 		final CommandExecutionResult result = command.execute();
 		if (result.getReturncode() != 0) {
 			throw new RapidEnvCmdExecutionException(
-			        "Error during writing windows shortcut \""
-			                + getFile().getAbsolutePath() + ": "
-			                + result.getStderr(), result.getReturncode());
+					"Error during writing windows shortcut \""
+							+ getFile().getAbsolutePath() + ": "
+							+ result.getStderr(), result.getReturncode());
 		}
 	}
 
@@ -234,7 +234,7 @@ public class ShellLinkWindows {
 
 	/**
 	 * Read an existing windows shortcut.
-	 * 
+	 *
 	 * @throws ShortcutFileNotFoundException
 	 */
 	public void load() {
@@ -249,10 +249,10 @@ public class ShellLinkWindows {
 		final SystemCommand command = new SystemCommand();
 		command.setExecutable("cscript.exe");
 		File scriptFile = new File(System.getenv("RAPID_ENV_HOME")
-		        + File.separator + "bin" + File.separator + "shortcutRead.vbs");
+				+ File.separator + "bin" + File.separator + "shortcutRead.vbs");
 		if (!scriptFile.exists()) {
 			final File devEnvScriptFile = new File(
-			        "scripts/windows/shortcutRead.vbs");
+					"scripts/windows/shortcutRead.vbs");
 			if (devEnvScriptFile.exists()) {
 				scriptFile = devEnvScriptFile;
 			}
@@ -266,47 +266,47 @@ public class ShellLinkWindows {
 		final CommandExecutionResult result = command.execute();
 		if (result.getReturncode() != 0) {
 			throw new RapidEnvCmdExecutionException(
-			        "Error during reading windows shortcut \""
-			                + getFile().getAbsolutePath() + ": "
-			                + result.getStderr(), result.getReturncode());
+					"Error during reading windows shortcut \""
+							+ getFile().getAbsolutePath() + ": "
+							+ result.getStderr(), result.getReturncode());
 		}
 
 		// parse standard out into a Properties (Map) object.
 		final Properties props = new Properties();
 		try {
 			props.load(new StringReader(StringHelper.escape(result.getStdout(),
-			        new EscapeMap(new String[] { "\\", "\\\\" }))));
+					new EscapeMap(new String[] { "\\", "\\\\" }))));
 		} catch (IOException e) {
 			throw new RapidEnvException(
-			        "IO exception while reading standard out: "
-			                + e.getMessage(), e);
+					"IO exception while reading standard out: "
+							+ e.getMessage(), e);
 		}
 
 		// read in the shortcut details (properties)
 		this.description = props.getProperty("Description").replace("\\\\\"",
-		        "\\\"");
-		// TargetPath=C:\WINNT\system32\cmd.exe
+				"\\\"");
+		// TargetPath=C:\WINNT\System32\cmd.exe
 		this.targetPath = new File(props.getProperty("TargetPath"));
 		// Arguments=/C "echo Hello shortcut!& pause"
 		final String argstrings = props.getProperty("Arguments").replace(
-		        "\\\\\"", "\\\"");
+				"\\\\\"", "\\\"");
 		if (this.arguments != null) {
 			this.arguments.clear();
 		}
 		for (final StringHelper.SplitToken token : StringHelper
-		        .splitQuotedIsQuoted(argstrings)) {
+				.splitQuotedIsQuoted(argstrings)) {
 			final Argument arg = new Argument(token.getToken());
 			if (token.isQuoted()) {
 				arg.setQuoted(true);
 			}
 			addArgument(arg);
 		}
-		// WorkingDirectory=C:\WINNT\system32
+		// WorkingDirectory=C:\WINNT\System32
 		this.workingDirectory = new File(props.getProperty("WorkingDirectory"));
 		// IconLocation=D:\Projects\RapidBeans\org.rapidbeans.rapidenv\testdata\shelllink\test.ico,0
 		final String iconLocation = props.getProperty("IconLocation");
 		final List<String> iconLocationList = StringHelper.split(iconLocation,
-		        ",");
+				",");
 		this.iconFile = new File(iconLocationList.get(0));
 		this.iconNumber = Integer.parseInt(iconLocationList.get(1));
 		// WindowStyle=1
@@ -322,7 +322,7 @@ public class ShellLinkWindows {
 			}
 			try {
 				final Field field = KeyEvent.class.getField("VK_"
-				        + key.toUpperCase());
+						+ key.toUpperCase());
 				final int keyCode = field.getInt(KeyEvent.class);
 				this.hotKey.add(keyCode);
 			} catch (SecurityException e) {
@@ -403,7 +403,7 @@ public class ShellLinkWindows {
 
 	/**
 	 * Add a command argument for this shortcut.
-	 * 
+	 *
 	 * @param arg
 	 *            the argument to add
 	 */
@@ -493,17 +493,17 @@ public class ShellLinkWindows {
 
 		// German
 		File startMenuFolder = new File(System.getenv("USERPROFILE")
-		        + File.separator + "Startmen" + UUML_LOWER);
+				+ File.separator + "Startmen" + UUML_LOWER);
 		if (startMenuFolder.exists()) {
 			return startMenuFolder;
 		}
 
 		// English / Default
 		startMenuFolder = new File(System.getenv("USERPROFILE")
-		        + File.separator + "Start Menu");
+				+ File.separator + "Start Menu");
 		RapidEnvInterpreter.log(Level.FINE,
-		        "start menu folder 2: " + startMenuFolder.getAbsolutePath()
-		                + ": " + startMenuFolder.exists());
+				"start menu folder 2: " + startMenuFolder.getAbsolutePath()
+						+ ": " + startMenuFolder.exists());
 
 		return startMenuFolder;
 	}

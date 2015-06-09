@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rapidbeans.rapidenv.config.cmd;
 
@@ -31,7 +31,7 @@ public class ShellLinkWindowsTest {
 		new File("testdata/testinstall").mkdir();
 		new File("testdata/testinstall/org/apache/maven/2.1.2").mkdirs();
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-		        "org.rapidbeans.rapidenv.config.Project", true);
+				"org.rapidbeans.rapidenv.config.Project", true);
 	}
 
 	@AfterClass
@@ -41,8 +41,7 @@ public class ShellLinkWindowsTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.rapidbeans.rapidenv.config.cmd.ShellLinkWindows#save()}.
+	 * Test method for {@link org.rapidbeans.rapidenv.config.cmd.ShellLinkWindows#save()}.
 	 */
 	@Test
 	public void testCreateProgrammatically() {
@@ -56,12 +55,12 @@ public class ShellLinkWindowsTest {
 		ShellLinkWindows shellLink = new ShellLinkWindows(linkFile);
 		shellLink.setDescription("This is a second \"test shortcut\".");
 		shellLink.setTargetPath(new File(System.getenv("SYSTEMROOT")
-		        + File.separator + "system32" + File.separator + "cmd.exe"));
+				+ File.separator + "System32" + File.separator + "cmd.exe"));
 		shellLink.setWorkingDirectory(new File(System.getenv("SYSTEMROOT")
-		        + File.separator + "system32"));
+				+ File.separator + "System32"));
 		shellLink.addArgument(new Argument("/C"));
 		shellLink.addArgument(new Argument("echo Hello \"My Folks\"!& pause",
-		        true));
+				true));
 		shellLink.setIconFile(new File("testdata/shelllink/test.ico"));
 		shellLink.setIconNumber(3);
 		List<Integer> hotKey = new ArrayList<Integer>();
@@ -74,31 +73,30 @@ public class ShellLinkWindowsTest {
 		ShellLinkWindows shellLinkRead = new ShellLinkWindows(linkFile);
 		shellLinkRead.load();
 		assertEquals("This is a second \"test shortcut\".",
-		        shellLinkRead.getDescription());
+				shellLinkRead.getDescription());
 		assertEquals(new File(System.getenv("SYSTEMROOT") + File.separator
-		        + "system32"), shellLinkRead.getWorkingDirectory());
+				+ "System32"), shellLinkRead.getWorkingDirectory());
 		final List<Argument> args = shellLinkRead.getArguments();
 		assertEquals(2, args.size());
 		assertEquals("/C", args.get(0).getValue());
 		assertEquals(false, args.get(0).getQuoted());
 		assertEquals("echo Hello \"My Folks\"!& pause", shellLinkRead
-		        .getArguments().get(1).getValue());
+				.getArguments().get(1).getValue());
 		assertEquals(true, args.get(1).getQuoted());
 		assertEquals(new File("testdata/shelllink/test.ico").getAbsolutePath(),
-		        shellLinkRead.getIconFile().getAbsolutePath());
+				shellLinkRead.getIconFile().getAbsolutePath());
 		assertEquals(3, shellLinkRead.getIconNumber());
 		assertEquals(KeyEvent.VK_ALT, shellLinkRead.getHotKey().get(0)
-		        .intValue());
+				.intValue());
 		assertEquals(KeyEvent.VK_SHIFT, shellLinkRead.getHotKey().get(1)
-		        .intValue());
+				.intValue());
 		assertEquals(KeyEvent.VK_A, shellLinkRead.getHotKey().get(2).intValue());
 
 		assertTrue(linkFile.delete());
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.rapidbeans.rapidenv.config.cmd.ShellLinkWindows#load()}.
+	 * Test method for {@link org.rapidbeans.rapidenv.config.cmd.ShellLinkWindows#load()}.
 	 */
 	@Test
 	public void testReadWindows() {
@@ -106,45 +104,45 @@ public class ShellLinkWindowsTest {
 			return;
 		}
 		ShellLinkWindows shellLink = new ShellLinkWindows(new File(
-		        "testdata/shelllink/testRead.lnk"));
+				"testdata/shelllink/testRead.lnk"));
 		shellLink.load();
 		assertEquals("This is a test shortcut for reading shortcuts.",
-		        shellLink.getDescription());
+				shellLink.getDescription());
 		assertEquals(new File("testdata/shelllink/testRead.lnk"),
-		        shellLink.getFile());
+				shellLink.getFile());
 		assertEquals(new File(System.getenv("SYSTEMROOT") + File.separator
-		        + "system32" + File.separator + "cmd.exe"),
-		        shellLink.getTargetPath());
+				+ "System32" + File.separator + "cmd.exe"),
+				shellLink.getTargetPath());
 		switch (PlatformHelper.getOs())
 		{
 		case windows_xp:
-			assertEquals(System.getenv("SYSTEMROOT") + File.separator + "system32",
-			        shellLink.getWorkingDirectory().getAbsolutePath());
+			assertEquals(System.getenv("SYSTEMROOT") + File.separator + "System32",
+					shellLink.getWorkingDirectory().getAbsolutePath());
 			break;
 		default:
 			assertEquals(System.getenv("SYSTEMROOT") + File.separator + "System32",
-			        shellLink.getWorkingDirectory().getAbsolutePath());
+					shellLink.getWorkingDirectory().getAbsolutePath());
 			break;
 		}
 		assertEquals(2, shellLink.getArguments().size());
 		assertEquals("/C", shellLink.getArguments().get(0).getValue());
 		assertFalse(shellLink.getArguments().get(0).getQuoted());
 		assertEquals("echo Hello shortcut!& pause", shellLink.getArguments()
-		        .get(1).getValue());
+				.get(1).getValue());
 		assertTrue(shellLink.getArguments().get(1).getQuoted());
 		assertTrue(shellLink
-		        .getIconFile()
-		        .getAbsolutePath()
-		        .endsWith(
-		                "testdata" + File.separator + "shelllink"
-		                        + File.separator + "test.ico"));
+				.getIconFile()
+				.getAbsolutePath()
+				.endsWith(
+						"testdata" + File.separator + "shelllink"
+								+ File.separator + "test.ico"));
 		assertEquals(0, shellLink.getIconNumber());
 		assertSame(ShortcutWindowStyle.maximizedFocus,
-		        shellLink.getWindowStyle());
+				shellLink.getWindowStyle());
 		assertEquals(3, shellLink.getHotKey().size());
 		assertEquals(new Integer(KeyEvent.VK_ALT), shellLink.getHotKey().get(0));
 		assertEquals(new Integer(KeyEvent.VK_CONTROL), shellLink.getHotKey()
-		        .get(1));
+				.get(1));
 		assertEquals(new Integer(KeyEvent.VK_K), shellLink.getHotKey().get(2));
 	}
 

@@ -1,10 +1,10 @@
 /*
  * RapidEnv: PropertyTest.java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 09/02/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -42,9 +42,9 @@ public class PropertyTest {
 		FileHelper.copyFile(new File("env.dtd"), new File("../../env.dtd"));
 		new File("testdata/testinstall").mkdir();
 		RapidBeansTypeLoader.getInstance().addXmlRootElementBinding("project",
-		        "org.rapidbeans.rapidenv.config.Project", true);
+				"org.rapidbeans.rapidenv.config.Project", true);
 		CmdRenv cmd = new CmdRenv(
-		        new String[] { "-env", "testdata/env/env.xml" });
+				new String[] { "-env", "testdata/env/env.xml" });
 		new RapidEnvInterpreter(cmd);
 	}
 
@@ -71,6 +71,9 @@ public class PropertyTest {
 			break;
 		case linux:
 			Assert.assertTrue(value, value.startsWith("/h/opt/maven/bin:"));
+			break;
+		default:
+			Assert.fail("not expected osfamily" + PlatformHelper.getOsfamily().name());
 			break;
 		}
 	}

@@ -1,10 +1,10 @@
 /*
  * RapidEnv: Installunit.java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 06/03/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -53,7 +53,7 @@ import org.rapidbeans.rapidenv.security.Verifyer;
 
 /**
  * The central class for RapidEnv installation units.
- * 
+ *
  * @author Martin Bluemel
  */
 public class Installunit extends RapidBeanBaseInstallunit {
@@ -91,23 +91,23 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			}
 			if (getInstallcontrol() == InstallControl.discontinued) {
 				renv.getOut()
-				        .println("  " + sign + " " + getFullyQualifiedName() + " should be deinstalled");
+						.println("  " + sign + " " + getFullyQualifiedName() + " should be deinstalled");
 			} else {
 				String issue = null;
 				if (getConfigurations() != null) {
 					for (final Configuration cfg : getConfigurations()) {
 						if (cfg.getInstallphase() == ConfigurationPhase.config && cfg.checkOsfamily()
-						        && (cfg.getIssue() != null)) {
+								&& (cfg.getIssue() != null)) {
 							issue = cfg.getIssue();
 							break;
 						}
 					}
 				}
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .print("  " + sign + " " + getFullyQualifiedName() + " "
-				                + getNearestInstalledVersion(CmdRenvCommand.stat));
+						.getInstance()
+						.getOut()
+						.print("  " + sign + " " + getFullyQualifiedName() + " "
+								+ getNearestInstalledVersion(CmdRenvCommand.stat));
 				final List<Version> installedVersions = findInstalledVersions(CmdRenvCommand.stat);
 				if (installedVersions.size() == 1) {
 					renv.getOut().println();
@@ -134,11 +134,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		case deinstallrequired:
 			sign = "!";
 			RapidEnvInterpreter
-			        .getInstance()
-			        .getOut()
-			        .println(
-			                "  " + sign + " " + getFullyQualifiedName() + " " + getVersion()
-			                        + " deinstallation required");
+					.getInstance()
+					.getOut()
+					.println(
+							"  " + sign + " " + getFullyQualifiedName() + " " + getVersion()
+									+ " deinstallation required");
 			break;
 
 		case notinstalled:
@@ -147,22 +147,22 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				{
 					sign = "-";
 					RapidEnvInterpreter
-					        .getInstance()
-					        .getOut()
-					        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " discontinued");
+							.getInstance()
+							.getOut()
+							.println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " discontinued");
 				}
 			} else if (!this.shouldBeInstalled()) {
 				sign = "-";
 				renv.getOut()
-				        .println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " optional");
+						.println("  " + sign + " " + getFullyQualifiedName() + " " + getVersion() + " optional");
 			} else {
 				sign = "!";
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  " + sign + " " + getFullyQualifiedName() + " " + getVersion()
-				                        + " installation required");
+						.getInstance()
+						.getOut()
+						.println(
+								"  " + sign + " " + getFullyQualifiedName() + " " + getVersion()
+										+ " installation required");
 			}
 			break;
 
@@ -170,20 +170,20 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			if (getInstallcontrol() == InstallControl.discontinued) {
 				sign = "=";
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  " + sign + " " + getFullyQualifiedName() + " "
-				                        + getNearestInstalledVersion(CmdRenvCommand.update) + " should be deinstalled");
+						.getInstance()
+						.getOut()
+						.println(
+								"  " + sign + " " + getFullyQualifiedName() + " "
+										+ getNearestInstalledVersion(CmdRenvCommand.update) + " should be deinstalled");
 			} else {
 				sign = "!";
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  " + sign + " " + getFullyQualifiedName() + " "
-				                        + getNearestInstalledVersion(CmdRenvCommand.update)
-				                        + " upgrade required to version " + getVersion().toString());
+						.getInstance()
+						.getOut()
+						.println(
+								"  " + sign + " " + getFullyQualifiedName() + " "
+										+ getNearestInstalledVersion(CmdRenvCommand.update)
+										+ " upgrade required to version " + getVersion().toString());
 			}
 			break;
 
@@ -191,20 +191,20 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			if (getInstallcontrol() == InstallControl.discontinued) {
 				sign = "=";
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  " + sign + " " + getFullyQualifiedName() + " "
-				                        + getNearestInstalledVersion(CmdRenvCommand.update) + " should be deinstalled");
+						.getInstance()
+						.getOut()
+						.println(
+								"  " + sign + " " + getFullyQualifiedName() + " "
+										+ getNearestInstalledVersion(CmdRenvCommand.update) + " should be deinstalled");
 			} else {
 				sign = "!";
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  " + sign + " " + getFullyQualifiedName() + " "
-				                        + getNearestInstalledVersion(CmdRenvCommand.update)
-				                        + " downgrade required to version " + getVersion().toString());
+						.getInstance()
+						.getOut()
+						.println(
+								"  " + sign + " " + getFullyQualifiedName() + " "
+										+ getNearestInstalledVersion(CmdRenvCommand.update)
+										+ " downgrade required to version " + getVersion().toString());
 			}
 			break;
 
@@ -265,7 +265,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		if (renv == null || renv.getCommand() == CmdRenvCommand.install) {
 			if (this.getInstallcontrol() == InstallControl.optional
-			        && (!chosenUnits.contains(this.getFullyQualifiedName()))) {
+					&& (!chosenUnits.contains(this.getFullyQualifiedName()))) {
 				boolean explicitlyChosen = false;
 				for (final String unitName : chosenUnits) {
 					final Installunit unit = renv.getProject().findInstallunitConfiguration(unitName);
@@ -276,7 +276,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 				if (!explicitlyChosen) {
 					RapidEnvInterpreter.log(Level.FINE, "Skipping installation of unit \"" + getFullyQualifiedName()
-					        + "\"" + " because it has not been explicitly chosen.");
+							+ "\"" + " because it has not been explicitly chosen.");
 					return;
 				}
 			}
@@ -292,12 +292,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			// create the home directory
 			if (homedir.exists()) {
 				RapidEnvInterpreter.log(Level.FINE, "Home directory \"" + homedir.getAbsolutePath()
-				        + "\" already exists.");
+						+ "\" already exists.");
 			} else {
 				RapidEnvInterpreter.log(Level.FINE, "Creating home directory \"" + homedir.getAbsolutePath() + "\"...");
 				if (!homedir.mkdirs()) {
 					throw new RapidEnvException("Problem while trying to creat home directory \""
-					        + homedir.getAbsolutePath() + "\"");
+							+ homedir.getAbsolutePath() + "\"");
 				}
 				createdHomedir = true;
 			}
@@ -310,7 +310,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				RapidEnvInterpreter.log(Level.FINE, "sourceurl: \"" + sourceurl + "\"");
 				if (sourceurl == null) {
 					throw new RapidEnvConfigurationException("No source URL specified for" + " install unit \""
-					        + getFullyQualifiedName() + "\"");
+							+ getFullyQualifiedName() + "\"");
 				}
 				if (sourceurl.getProtocol().equals("file")) {
 					RapidEnvInterpreter.log(Level.FINE, "Determining local source file from file source URL...");
@@ -320,11 +320,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						final URL projectInstallsoureurl = getProject().getInstallsourceurlAsUrl();
 						if (projectInstallsoureurl != null) {
 							localsourcefile = new File(projectInstallsoureurl.getFile(), getFullyQualifiedName()
-							        .replace('.', '/')
-							        + File.separator
-							        + getVersion().toString()
-							        + File.separator
-							        + new File(sourceurl.getFile()).getName());
+									.replace('.', '/')
+									+ File.separator
+									+ getVersion().toString()
+									+ File.separator
+									+ new File(sourceurl.getFile()).getName());
 						}
 					}
 					if (localsourcefile == null) {
@@ -336,11 +336,11 @@ public class Installunit extends RapidBeanBaseInstallunit {
 									FileHelper.mkdirs(localsourcefile.getParentFile());
 								}
 								RapidEnvInterpreter
-								        .getInstance()
-								        .getOut()
-								        .println(
-								                "Copying \"" + localsourcefile.getAbsolutePath() + "\" from \""
-								                        + new File(path).getAbsolutePath() + "\"");
+										.getInstance()
+										.getOut()
+										.println(
+												"Copying \"" + localsourcefile.getAbsolutePath() + "\" from \""
+														+ new File(path).getAbsolutePath() + "\"");
 								copyFile(new File(path), localsourcefile, true, true);
 								RapidEnvInterpreter.log(Level.FINE, "copied");
 							}
@@ -350,50 +350,50 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				} else if (sourceurl.getProtocol().equals("http")) {
 					RapidEnvInterpreter.log(Level.FINE, "Determining local source file from HTTP source URL...");
 					if (getProject().getInstallsourceurl() != null
-					        && getProject().getInstallsourceurlAsUrl().getProtocol().equals("file")) {
+							&& getProject().getInstallsourceurlAsUrl().getProtocol().equals("file")) {
 						if (getSourcefile() != null) {
 							localsourcefile = new File(getProject().getInstallsourceurlAsUrl().getFile(),
-							        getFullyQualifiedName().replace('.', '/') + File.separator
-							                + getVersion().toString() + File.separator
-							                + interpret(getSourcefile(), renv.getAnt()));
+									getFullyQualifiedName().replace('.', '/') + File.separator
+											+ getVersion().toString() + File.separator
+											+ interpret(getSourcefile(), renv.getAnt()));
 						} else {
 							localsourcefile = new File(getProject().getInstallsourceurlAsUrl().getFile(),
-							        getFullyQualifiedName().replace('.', '/') + File.separator
-							                + getVersion().toString() + File.separator
-							                + new File(sourceurl.getFile()).getName());
+									getFullyQualifiedName().replace('.', '/') + File.separator
+											+ getVersion().toString() + File.separator
+											+ new File(sourceurl.getFile()).getName());
 						}
 						if (!localsourcefile.getParentFile().exists()) {
 							if (!localsourcefile.getParentFile().mkdirs()) {
 								throw new RapidEnvException("Could not create directory "
-								        + localsourcefile.getParentFile());
+										+ localsourcefile.getParentFile());
 							}
 						} else if (!localsourcefile.getParentFile().isDirectory()) {
 							throw new RapidEnvException("Local source file parent " + localsourcefile.getParentFile()
-							        + " is no directory.");
+									+ " is no directory.");
 						}
 					} else {
 						localsourcefile = new File(System.getProperty("java.io.tmpdir"), new File(getProject()
-						        .getInstallsourceurlAsUrl().getFile()).getName());
+								.getInstallsourceurlAsUrl().getFile()).getName());
 						removeLocalsourcefile = true;
 					}
 					if (!localsourcefile.exists()) {
 						RapidEnvInterpreter.log(Level.FINE, "Local source file \"" + localsourcefile.getAbsolutePath()
-						        + "\" does not yet exist.");
+								+ "\" does not yet exist.");
 
 						switch (this.getDownloadmode()) {
 						case automatic:
 							RapidEnvInterpreter
-							        .getInstance()
-							        .getOut()
-							        .println(
-							                "Downloading source URL " + getSourceurl().toString() + "\n"
-							                        + "  to local source file " + localsourcefile.getAbsolutePath()
-							                        + "...");
+									.getInstance()
+									.getOut()
+									.println(
+											"Downloading source URL " + getSourceurl().toString() + "\n"
+													+ "  to local source file " + localsourcefile.getAbsolutePath()
+													+ "...");
 							final long timeStart = System.currentTimeMillis();
 							HttpDownload.download(getSourceurlAsUrl(), localsourcefile, getSourcefilechecks());
 							final double duration = (System.currentTimeMillis() - timeStart) / 1000;
 							RapidEnvInterpreter.getInstance().getOut()
-							        .println("  Download finished after " + duration + " s");
+									.println("  Download finished after " + duration + " s");
 							break;
 
 						case manual:
@@ -403,42 +403,42 @@ public class Installunit extends RapidBeanBaseInstallunit {
 							if (RapidEnvInterpreter.getInstance().getPropertyValue("rapid.env.browser") != null) {
 								SystemCommand command = new SystemCommand();
 								command.setExecutable(RapidEnvInterpreter.getInstance().getPropertyValue(
-								        "rapid.env.browser"));
+										"rapid.env.browser"));
 								command.addArgument(new Argument(getSourceurlAsUrl().toString()));
 								command.setAsync(true);
 								command.execute();
 							}
 							throw new RapidEnvCmdException("\n" + "Manual download required for installation unit \""
-							        + getFullyQualifiedName() + "\"\n" + "  from URL:    "
-							        + getSourceurlAsUrl().toString() + "\n" + "  into folder: "
-							        + localsourcefile.getParentFile().getAbsolutePath() + "\n" + "  into file:   "
-							        + localsourcefile.getName(), ExceptionMap.INFOCODE_DOWNLOAD_MANUAL_REQUIRED);
+									+ getFullyQualifiedName() + "\"\n" + "  from URL:    "
+									+ getSourceurlAsUrl().toString() + "\n" + "  into folder: "
+									+ localsourcefile.getParentFile().getAbsolutePath() + "\n" + "  into file:   "
+									+ localsourcefile.getName(), ExceptionMap.INFOCODE_DOWNLOAD_MANUAL_REQUIRED);
 
 						case never:
 							throw new RapidEnvCmdException("Download from URL \"" + getSourceurlAsUrl().toString()
-							        + "\"\n" + "  is forbidden.", ExceptionMap.ERRORCODE_DOWNLOAD_FORBIDDEN);
+									+ "\"\n" + "  is forbidden.", ExceptionMap.ERRORCODE_DOWNLOAD_FORBIDDEN);
 						}
 					}
 				} else {
 					throw new RapidEnvException("Source URL protocol different to \"file\" not yet supported");
 				}
 				RapidEnvInterpreter.log(Level.FINE,
-				        "Local source file from URL: \"" + localsourcefile.getAbsolutePath() + "\"...");
+						"Local source file from URL: \"" + localsourcefile.getAbsolutePath() + "\"...");
 				break;
 
 			case mavenrepo:
 				final String mavenLocalRepoPath = System.getenv("MAVEN_REPO");
 				if (mavenLocalRepoPath == null) {
 					throw new RapidEnvConfigurationException("In Order to support installation units"
-					        + " of source type \"" + getSourcetype().name()
-					        + "\"\nplease define environment variable \"MAVEN_REPO\".");
+							+ " of source type \"" + getSourcetype().name()
+							+ "\"\nplease define environment variable \"MAVEN_REPO\".");
 				}
 				localsourcefile = new File(mavenLocalRepoPath + File.separatorChar
-				        + getSpace().replace('.', File.separatorChar) + File.separatorChar + getName()
-				        + File.separatorChar + getVersion().toString() + File.separatorChar + getName() + '-'
-				        + getVersion().toString() + ".zip");
+						+ getSpace().replace('.', File.separatorChar) + File.separatorChar + getName()
+						+ File.separatorChar + getVersion().toString() + File.separatorChar + getName() + '-'
+						+ getVersion().toString() + ".zip");
 				RapidEnvInterpreter.log(Level.FINE,
-				        "Local source file from Maven repository: \"" + localsourcefile.getAbsolutePath() + "\"...");
+						"Local source file from Maven repository: \"" + localsourcefile.getAbsolutePath() + "\"...");
 				break;
 
 			default:
@@ -452,7 +452,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					if (cfg.checkOsfamily() && (cfg.getInstallphase() == ConfigurationPhase.preinstall)) {
 						if (renv != null) {
 							RapidEnvInterpreter.log(Level.FINE, "Checking configuration \"" + cfg.getClass().getName()
-							        + "\".");
+									+ "\".");
 						}
 						cfg.check(true);
 					}
@@ -466,13 +466,13 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				// prefer the (automatically packaged) standard archive file if
 				// the local source file is no archive
 				if ((!localsourcefile.getName().endsWith(".zip")) && (!localsourcefile.getName().endsWith(".tar"))
-				        && (!localsourcefile.getName().endsWith(".jar"))
-				        && (!localsourcefile.getName().endsWith(".gzip"))
-				        && (!localsourcefile.getName().endsWith(".tgz"))
-				        && (!localsourcefile.getName().endsWith(".b2zip"))) {
+						&& (!localsourcefile.getName().endsWith(".jar"))
+						&& (!localsourcefile.getName().endsWith(".gzip"))
+						&& (!localsourcefile.getName().endsWith(".tgz"))
+						&& (!localsourcefile.getName().endsWith(".b2zip"))) {
 					final File localsourcefiledir = localsourcefile.getParentFile();
 					final String standardArchiveFileName = getName() + "-" + getVersion() + "-"
-					        + PlatformHelper.getOsfamily().name() + "-" + PlatformHelper.getArchName();
+							+ PlatformHelper.getOsfamily().name() + "-" + PlatformHelper.getArchName();
 					if (new File(localsourcefiledir, standardArchiveFileName + ".zip").exists()) {
 						localsourcefile = new File(localsourcefiledir, standardArchiveFileName + ".zip");
 					} else if (new File(localsourcefiledir, standardArchiveFileName + ".tar").exists()) {
@@ -488,8 +488,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					}
 				}
 				if ((getSourcefile() != null && localsourcefile.getName().equals(getSourcefile()))
-				        || (getSourceurlAsUrl() != null && localsourcefile.getName().equals(
-				                getSourceurlAsUrl().getFile()))) {
+						|| (getSourceurlAsUrl() != null && localsourcefile.getName().equals(
+								getSourceurlAsUrl().getFile()))) {
 					for (final Filecheck check : getSourcefilechecks()) {
 						final String checksum = Verifyer.hashValue(localsourcefile, check.getHashalgorithm());
 						if (checksum.equals(check.getHashvalue())) {
@@ -499,17 +499,17 @@ public class Installunit extends RapidBeanBaseInstallunit {
 							}
 						} else {
 							throw new RapidEnvException("File \"" + localsourcefile.getAbsolutePath()
-							        + "\" has an icorrect" + " hash value \"" + checksum + "\".");
+									+ "\" has an icorrect" + " hash value \"" + checksum + "\".");
 						}
 					}
 				}
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "installing " + getFullyQualifiedName() + " " + this.getVersion().toString()
-				                        + " by unpacking file " + localsourcefile.getAbsolutePath() + "\n"
-				                        + "  into local folder " + homedir.getAbsolutePath() + "...");
+						.getInstance()
+						.getOut()
+						.println(
+								"installing " + getFullyQualifiedName() + " " + this.getVersion().toString()
+										+ " by unpacking file " + localsourcefile.getAbsolutePath() + "\n"
+										+ "  into local folder " + homedir.getAbsolutePath() + "...");
 				final Unpacker unpacker = new Unpacker(renv.getAnt());
 				switch (getUnpackstrategy()) {
 				case simple:
@@ -524,14 +524,14 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 			case put:
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "installing " + getFullyQualifiedName() + " " + this.getVersion().toString()
-				                        + " by copying file " + localsourcefile.getAbsolutePath() + "\n"
-				                        + "  into local folder " + homedir.getAbsolutePath() + "...");
+						.getInstance()
+						.getOut()
+						.println(
+								"installing " + getFullyQualifiedName() + " " + this.getVersion().toString()
+										+ " by copying file " + localsourcefile.getAbsolutePath() + "\n"
+										+ "  into local folder " + homedir.getAbsolutePath() + "...");
 				final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
-				        + ".jar";
+						+ ".jar";
 				final File targetFile = new File(homedir, targetFileName);
 				if (targetFile.exists()) {
 					throw new RapidEnvException("Target file \"" + targetFile.getAbsolutePath() + "\" already exists");
@@ -568,7 +568,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			if (getConfigurations() != null) {
 				for (final Configuration cfg : getConfigurations()) {
 					if (cfg.checkOsfamily()
-					        && (cfg.getInstallphase() == ConfigurationPhase.postinstall || cfg.getInstallphase() == ConfigurationPhase.config)) {
+							&& (cfg.getInstallphase() == ConfigurationPhase.postinstall || cfg.getInstallphase() == ConfigurationPhase.config)) {
 						cfg.check(true);
 					}
 				}
@@ -596,7 +596,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					syscmd.getExecutableAsFile().exists();
 				} catch (RapidEnvException e) {
 					robocopy = false;
-					syscmd.setExecutable(System.getenv("SystemRoot") + "\\system32\\cmd.exe");
+					syscmd.setExecutable(System.getenv("SystemRoot") + "\\System32\\cmd.exe");
 				}
 				if (robocopy) {
 					RapidEnvInterpreter.log(Level.FINER, "Using robopy");
@@ -607,31 +607,31 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					RapidEnvInterpreter.log(Level.FINER, "Using \"copy\" command");
 					syscmd.addArgument(new Argument("/C"));
 					syscmd.addArgument(new Argument("copy /Y " + src.getAbsolutePath().replace('/', '\\') + " "
-					        + tgt.getAbsolutePath().replace('/', '\\')));
+							+ tgt.getAbsolutePath().replace('/', '\\')));
 				}
 				syscmd.setSilent(true);
 				final CommandExecutionResult result = syscmd.execute();
 				if (robocopy) {
 					if (result.getReturncode() != 0 && result.getReturncode() != 1) {
 						throw new RapidEnvException("Failed to copy file \"" + src.getAbsolutePath() + "\" to \""
-						        + tgt.getAbsolutePath() + "\"");
+								+ tgt.getAbsolutePath() + "\"");
 					}
 					if (!src.getName().equalsIgnoreCase(tgt.getName())) {
-						syscmd.setExecutable(System.getenv("SystemRoot") + "\\system32\\cmd.exe");
+						syscmd.setExecutable(System.getenv("SystemRoot") + "\\System32\\cmd.exe");
 						syscmd.setWorkingdir(tgt.getParent());
 						syscmd.addArgument(new Argument("/C"));
 						syscmd.addArgument(new Argument("rename \"" + src.getName() + "\" \"" + tgt.getName() + "\""));
 						final CommandExecutionResult result2 = syscmd.execute();
 						if (result2.getReturncode() != 0) {
 							throw new RapidEnvException("Failed to rename file \"" + tgt.getParent().replace('/', '\\')
-							        + "\\" + src.getName() + "\" to \"" + tgt.getAbsolutePath().replace('/', '\\')
-							        + "\"");
+									+ "\\" + src.getName() + "\" to \"" + tgt.getAbsolutePath().replace('/', '\\')
+									+ "\"");
 						}
 					}
 				} else {
 					if (result.getReturncode() != 0) {
 						throw new RapidEnvException("Faild to copy file \"" + src.getAbsolutePath() + "\" to \""
-						        + tgt.getAbsolutePath() + "\"");
+								+ tgt.getAbsolutePath() + "\"");
 					}
 				}
 				break;
@@ -645,15 +645,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			case windows:
 				RapidEnvInterpreter.log(Level.FINER, "Using \"copy\" command");
 				final SystemCommand syscmd = new SystemCommand();
-				syscmd.setExecutable(System.getenv("SystemRoot") + "\\system32\\cmd.exe");
+				syscmd.setExecutable(System.getenv("SystemRoot") + "\\System32\\cmd.exe");
 				syscmd.addArgument(new Argument("/C"));
 				syscmd.addArgument(new Argument("copy /Y " + src.getAbsolutePath().replace('/', '\\') + " "
-				        + tgt.getAbsolutePath().replace('/', '\\')));
+						+ tgt.getAbsolutePath().replace('/', '\\')));
 				syscmd.setSilent(true);
 				final CommandExecutionResult result = syscmd.execute();
 				if (result.getReturncode() != 0) {
 					throw new RapidEnvException("Failed to copy file \"" + src.getAbsolutePath() + "\" to \""
-					        + tgt.getAbsolutePath() + "\"");
+							+ tgt.getAbsolutePath() + "\"");
 				}
 				break;
 			default:
@@ -726,7 +726,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Deinstall the current version of this install unit.
-	 * 
+	 *
 	 * @param keepIcons
 	 *            determines if to keep icons (in case of update) or not.
 	 */
@@ -750,7 +750,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				InstallStatus subunitInstallStatus = null;
 				if (renv != null) {
 					subunitInstallStatus = renv.getInstallationStatus(subunit,
-					        CmdRenvCommand.deinstall);
+							CmdRenvCommand.deinstall);
 				} else {
 					subunitInstallStatus = subunit.getInstallationStatus(CmdRenvCommand.deinstall);
 				}
@@ -764,9 +764,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		final List<ReferencingProject> usedByEnvironments = data.getUsedbyenviroments();
 		final File envConfigFile = renv.getEnvironmentConfigurationFile();
 		if (data.getUsedbyenviroments() == null
-		        || data.getUsedbyenviroments().size() > 0
-		        || (usedByEnvironments.size() == 1
-		        && (!usedByEnvironments.get(0).getEnvfile().equals(envConfigFile)))) {
+				|| data.getUsedbyenviroments().size() > 0
+				|| (usedByEnvironments.size() == 1
+				&& (!usedByEnvironments.get(0).getEnvfile().equals(envConfigFile)))) {
 			// deinstall if the unit is not needed by any other environment
 
 			// execute configurations before deinstallation
@@ -782,37 +782,37 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			final File homedir = getHomedirAsFile();
 			if (!homedir.exists()) {
 				throw new RapidEnvException("Homedir \"" + getHomedir() + " of installation unit \""
-				        + getFullyQualifiedName() + "\" does not exist.");
+						+ getFullyQualifiedName() + "\" does not exist.");
 			}
 			switch (getInstallmode()) {
 			case unpack:
 				RapidEnvInterpreter
-				        .getInstance()
-				        .getOut()
-				        .println(
-				                "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
-				                        + " by deleting local folder " + homedir.getAbsolutePath() + "...");
+						.getInstance()
+						.getOut()
+						.println(
+								"  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
+										+ " by deleting local folder " + homedir.getAbsolutePath() + "...");
 				FileHelper.deleteDeep(homedir);
 				// remove folder above if named like the tool itself
 				if (homedir.getName().equals(getVersion().toString())
-				        && homedir.getParentFile().getName().equals(getName())
-				        && homedir.getParentFile().list().length == 0) {
+						&& homedir.getParentFile().getName().equals(getName())
+						&& homedir.getParentFile().list().length == 0) {
 					if (!homedir.getParentFile().delete()) {
 						RapidEnvInterpreter.log(Level.WARNING, "Failed to delete folder \""
-						        + homedir.getParentFile().getAbsolutePath() + "\"");
+								+ homedir.getParentFile().getAbsolutePath() + "\"");
 					}
 				}
 				break;
 			case put:
 				final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
-				        + ".jar";
+						+ ".jar";
 				final File targetFile = new File(getHomedirAsFile(), targetFileName);
 				if (!targetFile.exists()) {
 					throw new RapidEnvException("Target file \"" + targetFile.getAbsolutePath() + "\" does not exist");
 				}
 				renv.getOut().println(
-				        "  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
-				                + " by deleting file " + targetFile.getAbsolutePath() + "...");
+						"  deinstalling " + getFullyQualifiedName() + " " + this.getVersion().toString()
+								+ " by deleting file " + targetFile.getAbsolutePath() + "...");
 				if (!targetFile.delete()) {
 					throw new RapidEnvException("Failed to delete file " + targetFile.getAbsolutePath());
 				}
@@ -843,7 +843,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						if (((ConfigFile) cfg).getDeleteafterdeinstall() && file.exists()) {
 							if (!file.delete()) {
 								RapidEnvInterpreter.log(Level.WARNING,
-								        "Failed to delete configuration file \"" + file.getAbsolutePath() + "\"");
+										"Failed to delete configuration file \"" + file.getAbsolutePath() + "\"");
 							}
 						}
 					}
@@ -858,7 +858,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 			// remove entry from the installations list
 			renv.getInstallations().removeInstallunit(
-			        getFullyQualifiedName());
+					getFullyQualifiedName());
 
 			// remove entry from status map since the installation state has
 			// changed now
@@ -871,7 +871,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * set the (scheduled) version of the install unit to the unit to deinstall
 	 * in order to get all expressions using version() or homedir() interpreted
 	 * correctly.
-	 * 
+	 *
 	 * @param version
 	 *            the version to deinstall
 	 */
@@ -906,9 +906,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					}
 				}
 				final File startmenuFolderProjectname = new File(ShellLinkWindows.getStartMenuFolder(), intepreter
-				        .getProject().getName());
+						.getProject().getName());
 				final File startmenuFolderProjectag = new File(ShellLinkWindows.getStartMenuFolder(), intepreter
-				        .getProject().getName() + File.separator + intepreter.getProject().getTag());
+						.getProject().getName() + File.separator + intepreter.getProject().getTag());
 				iconFile = new File(startmenuFolderProjectag, interpret(icon.getTitle(), intepreter.getAnt()) + ".lnk");
 				if (iconFile.exists()) {
 					if (iconFile.delete()) {
@@ -920,12 +920,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				if (startmenuFolderProjectag.exists() && startmenuFolderProjectag.listFiles().length == 0) {
 					if (!startmenuFolderProjectag.delete()) {
 						throw new RapidEnvException("Problems to delete folder \""
-						        + startmenuFolderProjectag.getAbsolutePath() + "\"");
+								+ startmenuFolderProjectag.getAbsolutePath() + "\"");
 					}
 					if (startmenuFolderProjectname.exists() && startmenuFolderProjectname.listFiles().length == 0) {
 						if (!startmenuFolderProjectname.delete()) {
 							throw new RapidEnvException("Problems to delete folder \""
-							        + startmenuFolderProjectname.getAbsolutePath() + "\"");
+									+ startmenuFolderProjectname.getAbsolutePath() + "\"");
 						}
 					}
 				}
@@ -934,30 +934,32 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			case linux:
 				final File desktopFolderLinux = new File(PlatformHelper.userhome() + File.separator + "Desktop");
 				final File desktopIconFileLinux = new File(desktopFolderLinux, interpret(icon.getTitle(),
-				        intepreter.getAnt())
-				        + ".desktop");
+						intepreter.getAnt())
+						+ ".desktop");
 				if (desktopIconFileLinux.exists()) {
 					if (desktopIconFileLinux.delete()) {
 						intepreter.getOut().println(
-						        "  deleted desktop icon file \"" + desktopIconFileLinux.getAbsolutePath() + "\"");
+								"  deleted desktop icon file \"" + desktopIconFileLinux.getAbsolutePath() + "\"");
 					} else {
 						throw new RapidEnvException("Problems to delete desktop icon file \""
-						        + desktopIconFileLinux.getAbsolutePath() + "\"");
+								+ desktopIconFileLinux.getAbsolutePath() + "\"");
 					}
 				}
 				final File startmenuFolderLinux = new File(PlatformHelper.userhome() + File.separator
-				        + ".local/share/applications");
+						+ ".local/share/applications");
 				final File startmenuIconFileLinux = new File(startmenuFolderLinux, interpret(icon.getTitle(),
-				        intepreter.getAnt()) + ".desktop");
+						intepreter.getAnt()) + ".desktop");
 				if (startmenuIconFileLinux.exists()) {
 					if (startmenuIconFileLinux.delete()) {
 						intepreter.getOut().println(
-						        "  deleted start menu icon file \"" + startmenuIconFileLinux.getAbsolutePath() + "\"");
+								"  deleted start menu icon file \"" + startmenuIconFileLinux.getAbsolutePath() + "\"");
 					} else {
 						throw new RapidEnvException("Problems to delete start menu icon file \""
-						        + startmenuIconFileLinux.getAbsolutePath() + "\"");
+								+ startmenuIconFileLinux.getAbsolutePath() + "\"");
 					}
 				}
+				break;
+			default:
 				break;
 			}
 		}
@@ -972,10 +974,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			for (final EnvProperty prop : getPropertys()) {
 				if (interpreter.getPropertyValue(prop.getFullyQualifiedName()) == null) {
 					RapidEnvInterpreter.log(Level.WARNING, "Tool specific property \"" + prop.getFullyQualifiedName()
-					        + "\" was not defined.");
+							+ "\" was not defined.");
 				} else {
 					interpreter.getOut().println(
-					        "    removing specific property \"" + prop.getFullyQualifiedName() + "\" ...");
+							"    removing specific property \"" + prop.getFullyQualifiedName() + "\" ...");
 					interpreter.removeProperty(prop.getFullyQualifiedName());
 				}
 			}
@@ -1040,12 +1042,12 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				switch (renv.getRunMode()) {
 				case command:
 					deinstall = CmdLineInteractions.promptYesNo(renv.getIn(),
-					        renv.getOut(), "Deinstall old " + sversion + " "
-					                + getFullyQualifiedName() + " " + ivList + "?", true);
+							renv.getOut(), "Deinstall old " + sversion + " "
+									+ getFullyQualifiedName() + " " + ivList + "?", true);
 					break;
 				default:
 					throw new AssertionError("Run mode \"" + renv.getRunMode().name()
-					        + " not yet supported");
+							+ " not yet supported");
 				}
 				break;
 			default:
@@ -1055,7 +1057,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			if (deinstall) {
 				for (final Version version : installedVersions) {
 					RapidEnvInterpreter.log(Level.FINE, "Deinstalling version \"" + version.toString()
-					        + "\" of unit \"" + getFullyQualifiedName() + "\"...");
+							+ "\" of unit \"" + getFullyQualifiedName() + "\"...");
 					RapidEnvInterpreter.log(Level.FINE, " homedir \"" + getHomedir() + "\"...");
 					retrieveInstalledSubunitsRecursively(this, installedSubunits);
 					deinstall(version, true);
@@ -1064,7 +1066,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		}
 
 		RapidEnvInterpreter.log(Level.FINE, "Installing version \"" + this.getVersion() + "\" of unit \""
-		        + getFullyQualifiedName() + "\"...");
+				+ getFullyQualifiedName() + "\"...");
 		RapidEnvInterpreter.log(Level.FINE, " homedir = \"" + getHomedir() + "\"");
 		RapidEnvInterpreter.log(Level.FINE, " homedir.exists() = \"" + getHomedirAsFile().exists() + "\"");
 		install(false, new ArrayList<String>());
@@ -1078,12 +1080,15 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			case downgraderequired:
 				subunit.install(null);
 				break;
+			default:
+				// do nothing
+				break;
 			}
 		}
 	}
 
 	private void retrieveInstalledSubunitsRecursively(final Installunit installunit,
-	        List<Installunit> installedOptionalSubunits) {
+			List<Installunit> installedOptionalSubunits) {
 		if (installunit.getSubunits() != null)
 		{
 			for (final Installunit subunit : installunit.getSubunits())
@@ -1097,6 +1102,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				case configurationrequired:
 					installedOptionalSubunits.add(subunit);
 					break;
+				default:
+					break;
 				}
 				// do recursion after adding (breadth-first not depth-first)
 				retrieveInstalledSubunitsRecursively(subunit, installedOptionalSubunits);
@@ -1107,8 +1114,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	public void configure(final boolean execute) {
 		if (getConfigurations() != null) {
 			RapidEnvInterpreter.getInstance().getOut().println(
-			        "  ! " + getFullyQualifiedName() + " "
-			                + getNearestInstalledVersion(CmdRenvCommand.config));
+					"  ! " + getFullyQualifiedName() + " "
+							+ getNearestInstalledVersion(CmdRenvCommand.config));
 			for (final Configuration cfg : getConfigurations()) {
 				if (cfg.getInstallphase() == ConfigurationPhase.config && cfg.checkOsfamily()) {
 					cfg.check(true);
@@ -1142,10 +1149,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Determines the installation status of this install unit.
-	 * 
+	 *
 	 * @param command
 	 *            the command as working context
-	 * 
+	 *
 	 * @return the installation status
 	 */
 	public InstallStatus getInstallationStatus(final CmdRenvCommand command) {
@@ -1168,7 +1175,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				if (getConfigurations() != null) {
 					for (final Configuration cfg : getConfigurations()) {
 						if (cfg.getInstallphase() == ConfigurationPhase.config && cfg.checkOsfamily()
-						        && (!cfg.check(false))) {
+								&& (!cfg.check(false))) {
 							stat = InstallStatus.configurationrequired;
 							break;
 						}
@@ -1178,7 +1185,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				break;
 			default:
 				throw new AssertionError("Unexpected compareTo result "
-				        + Integer.toString(nearestInstalledVersion.compareTo(getVersion())));
+						+ Integer.toString(nearestInstalledVersion.compareTo(getVersion())));
 			}
 		}
 		return status;
@@ -1186,7 +1193,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Rename the singular root folder below the given directory.
-	 * 
+	 *
 	 * @param dir
 	 *            the top level directory / folder
 	 */
@@ -1203,16 +1210,16 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				RapidEnvInterpreter.log(Level.FINER, "    * " + file.getAbsolutePath());
 			}
 			RapidEnvInterpreter.log(Level.FINER,
-			        "  - containsFileWithName(\".renvstate.xml\") = \""
-			                + FileHelper.containsFileWithName(dir.listFiles(), ".renvstate.xml") + "\"...");
+					"  - containsFileWithName(\".renvstate.xml\") = \""
+							+ FileHelper.containsFileWithName(dir.listFiles(), ".renvstate.xml") + "\"...");
 			if (dir.isDirectory() && (!FileHelper.containsFileWithName(dir.listFiles(), ".renvstate.xml"))) {
 				if (!dir.equals(homedir)) {
 					if (unpackDir == null) {
 						unpackDir = dir;
 					} else {
 						throw new RapidEnvException(
-						        "Could not determine uniquely unpacked root folder to rename in directory \"" + homedir
-						                + "\".");
+								"Could not determine uniquely unpacked root folder to rename in directory \"" + homedir
+										+ "\".");
 					}
 				}
 			}
@@ -1222,16 +1229,16 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		}
 		if (unpackDir == null) {
 			throw new RapidEnvException("Could not determine unpacked root folder to rename in directory \"" + homedir
-			        + "\".");
+					+ "\".");
 		}
 		RapidEnvInterpreter.log(Level.FINE, "- moving file \".renvstate.xml\" from \"" + homedir + "\" to \""
-		        + unpackDir + "\" ...");
+				+ unpackDir + "\" ...");
 		if (homedir.exists()) {
 			if (new File(homedir, ".renvstate.xml").exists()) {
 				if (!new File(homedir, ".renvstate.xml").renameTo(new File(unpackDir, ".renvstate.xml"))) {
 					throw new RapidEnvException("Problems to move file \".renvstate.xml\" from \"" + homedir
-					        + "\" to \""
-					        + unpackDir + "\".");
+							+ "\" to \""
+							+ unpackDir + "\".");
 				}
 			}
 			RapidEnvInterpreter.log(Level.FINE, "- deleting directory \"" + homedir.getAbsolutePath() + "\" ...");
@@ -1240,7 +1247,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			}
 		}
 		RapidEnvInterpreter.log(Level.FINE, "- renaming directory \"" + unpackDir + "\" to \"" + homedir.getName()
-		        + "\" ...");
+				+ "\" ...");
 		renameWithRetries(unpackDir, homedir, 5, 3000);
 	}
 
@@ -1259,13 +1266,13 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				}
 				retryCount++;
 				RapidEnvInterpreter.log(Level.FINE,
-				        "- Problems renaming directory \"" + from.getAbsolutePath() + "\" to \"" + to.getName()
-				                + "\", retryCount = " + Integer.toString(retryCount));
+						"- Problems renaming directory \"" + from.getAbsolutePath() + "\" to \"" + to.getName()
+								+ "\", retryCount = " + Integer.toString(retryCount));
 			}
 		}
 		if (!renameSucceeded) {
 			throw new RapidEnvException("Problems to rename directory \"" + from.getAbsolutePath() + "\" to \""
-			        + to.getAbsolutePath() + "\".");
+					+ to.getAbsolutePath() + "\".");
 		}
 	}
 
@@ -1273,7 +1280,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * Remove all singular root folders below the given directory. E.g. if under
 	 * folder "unpack" we find a singular root folder "eclipse" the content of
 	 * eclipse will be moved upwards into "unpack" and eclipse will be removed.
-	 * 
+	 *
 	 * @param dir
 	 *            the top level directory / folder
 	 */
@@ -1303,47 +1310,47 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 			File renamedContentFile = null;
 			RapidEnvInterpreter.log(Level.FINE, "Removing lowest root directory \"" + rootdirLowest.getAbsolutePath()
-			        + "\" below directory \"" + dir.getAbsolutePath() + "\"...");
+					+ "\" below directory \"" + dir.getAbsolutePath() + "\"...");
 			RapidEnvInterpreter.log(Level.FINE, "Most upper root directory is \"" + rootdirMostUpper.getAbsolutePath()
-			        + "\"");
+					+ "\"");
 			for (final File contentFile : rootdirLowest.listFiles()) {
 				if (contentFile.getName().equals(rootdirMostUpper.getName())) {
 					renamedContentFile = new File(contentFile.getParentFile(), contentFile.getName() + ".tmp.rmrdirs");
 					RapidEnvInterpreter.log(Level.FINER, "Renaming file / directory \"" + contentFile.getAbsolutePath()
-					        + "\" to \"" + contentFile.getName() + ".tmp.rmrdirs" + "\"...");
+							+ "\" to \"" + contentFile.getName() + ".tmp.rmrdirs" + "\"...");
 					renameFile(contentFile, renamedContentFile,
-					        "Problems to rename content file \"" + contentFile.getAbsolutePath() + "\" to name \""
-					                + contentFile.getName() + ".tmp.rmrdirs" + "\".");
+							"Problems to rename content file \"" + contentFile.getAbsolutePath() + "\" to name \""
+									+ contentFile.getName() + ".tmp.rmrdirs" + "\".");
 					RapidEnvInterpreter.log(Level.FINER, "Moving renamed content file / directory \""
-					        + renamedContentFile.getAbsolutePath() + "\" below directory \"" + dir.getAbsolutePath()
-					        + "\"...");
+							+ renamedContentFile.getAbsolutePath() + "\" below directory \"" + dir.getAbsolutePath()
+							+ "\"...");
 					renameFile(
-					        renamedContentFile,
-					        new File(dir, renamedContentFile.getName()),
-					        "Problems moving renamed content file / directory \""
-					                + renamedContentFile.getAbsolutePath() + "\" below directory \""
-					                + dir.getAbsolutePath() + "\"..." + "\".");
+							renamedContentFile,
+							new File(dir, renamedContentFile.getName()),
+							"Problems moving renamed content file / directory \""
+									+ renamedContentFile.getAbsolutePath() + "\" below directory \""
+									+ dir.getAbsolutePath() + "\"..." + "\".");
 				} else {
 					RapidEnvInterpreter.log(Level.FINER, "Moving file / directory \"" + contentFile.getAbsolutePath()
-					        + "\" below directory \"" + dir.getAbsolutePath() + "\"...");
+							+ "\" below directory \"" + dir.getAbsolutePath() + "\"...");
 					renameFile(contentFile, new File(dir, contentFile.getName()),
-					        "Problems moving content file / directory \"" + contentFile.getAbsolutePath()
-					                + "\" below directory \"" + dir.getAbsolutePath() + "\"..." + "\".");
+							"Problems moving content file / directory \"" + contentFile.getAbsolutePath()
+									+ "\" below directory \"" + dir.getAbsolutePath() + "\"..." + "\".");
 				}
 			}
 			RapidEnvInterpreter.log(Level.FINER, "Deleting directory \"" + dir.getAbsolutePath() + "\"...");
 			if (rootdirMostUpper.delete() == false) {
 				throw new RapidEnvCmdException("Problems to delete root directory \""
-				        + rootdirMostUpper.getAbsolutePath() + "\".");
+						+ rootdirMostUpper.getAbsolutePath() + "\".");
 			}
 			if (renamedContentFile != null) {
 				final File renamedMovedContentFile = new File(dir, renamedContentFile.getName());
 				RapidEnvInterpreter.log(Level.FINER,
-				        "Renaming file / directory \"" + renamedMovedContentFile.getAbsolutePath() + "\" to \""
-				                + rootdirMostUpper.getName() + "\"...");
+						"Renaming file / directory \"" + renamedMovedContentFile.getAbsolutePath() + "\" to \""
+								+ rootdirMostUpper.getName() + "\"...");
 				renameFile(renamedMovedContentFile, new File(dir, rootdirMostUpper.getName()),
-				        "Problems to rename renamed moved content file \"" + renamedMovedContentFile.getAbsolutePath()
-				                + "\" to name \"" + rootdirMostUpper.getName() + "\".");
+						"Problems to rename renamed moved content file \"" + renamedMovedContentFile.getAbsolutePath()
+								+ "\" to name \"" + rootdirMostUpper.getName() + "\".");
 			}
 		}
 	}
@@ -1410,7 +1417,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			return new File(getHomedir()).getCanonicalFile();
 		} catch (IOException e) {
 			throw new RapidEnvConfigurationException("Configuration problem of property \"homedir\" in installunit \""
-			        + getFullyQualifiedName() + "\"", e);
+					+ getFullyQualifiedName() + "\"", e);
 		}
 	}
 
@@ -1447,17 +1454,17 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			return new URL(sourceurl);
 		} catch (MalformedURLException e) {
 			throw new RapidEnvConfigurationException(
-			        "Configuration problem of property \"sourceurl\" in installunit \"" + getFullyQualifiedName()
-			                + "\"\n" + "  Malformed URL: \"" + getSourceurl().toString() + "\"", e);
+					"Configuration problem of property \"sourceurl\" in installunit \"" + getFullyQualifiedName()
+							+ "\"\n" + "  Malformed URL: \"" + getSourceurl().toString() + "\"", e);
 		}
 	}
 
 	/**
 	 * Interpret a configuration expression.
-	 * 
+	 *
 	 * @param expression
 	 *            the configuration expression to interpret
-	 * 
+	 *
 	 * @return the interpreted (expanded) configuration expression
 	 */
 	private String interpret(final String expression, final AntGateway ant) {
@@ -1480,24 +1487,24 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 */
 	public void checkSemantics() {
 		if (getSourcetype() == InstallunitSourceType.url && getProject().getInstallsourceurl() == null
-		        && getSourceurl() == null) {
+				&& getSourceurl() == null) {
 			throw new RapidEnvConfigurationException("No source URL defined for installunit \""
-			        + getFullyQualifiedName() + "\".\n" + "Please ether define this property or"
-			        + " define the project's global install source URL");
+					+ getFullyQualifiedName() + "\".\n" + "Please ether define this property or"
+					+ " define the project's global install source URL");
 		}
 		if (getHomedir() == null) {
 			throw new RapidEnvConfigurationException("No home directory defined for installunit \""
-			        + getFullyQualifiedName() + "\".\n" + "Please ether define this property or"
-			        + " define the project's global install target directory");
+					+ getFullyQualifiedName() + "\".\n" + "Please ether define this property or"
+					+ " define the project's global install target directory");
 		}
 		if (getInstallmode() == InstallMode.execute) {
 			if (getInstallcommand() == null) {
 				throw new RapidEnvConfigurationException("No install command defined vor install unit \""
-				        + getFullyQualifiedName() + "\" of install mode \"" + getInstallmode().name() + "\"");
+						+ getFullyQualifiedName() + "\" of install mode \"" + getInstallmode().name() + "\"");
 			}
 			if (getDeinstallcommand() == null) {
 				throw new RapidEnvConfigurationException("No deinstall command defined vor install unit \""
-				        + getFullyQualifiedName() + "\" of install mode \"" + getInstallmode().name() + "\"");
+						+ getFullyQualifiedName() + "\" of install mode \"" + getInstallmode().name() + "\"");
 			}
 		}
 	}
@@ -1507,10 +1514,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * nearest to the scheduled one. This function is based on the convention
 	 * that an install unit's home directory path always end with the version
 	 * number as separate folder.
-	 * 
+	 *
 	 * @param command
 	 *            the command as working context
-	 * 
+	 *
 	 * @return the nearest installed version or null if no version at all is
 	 *         installed
 	 */
@@ -1524,7 +1531,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Search for already installed versions.
-	 * 
+	 *
 	 * @return a list of already installed versions
 	 */
 	private List<Version> findInstalledVersions(final CmdRenvCommand command) {
@@ -1532,7 +1539,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 		if (RapidEnvInterpreter.getInstance().getEnvironmentInstallationsFile().exists()) {
 			final InstallunitData data =
-			        RapidEnvInterpreter.getInstance().getInstallations().findInstallunit(getFullyQualifiedName());
+					RapidEnvInterpreter.getInstance().getInstallations().findInstallunit(getFullyQualifiedName());
 			if (data != null && data.getInstallstate() == InstallState.installed) {
 				installedVersions.add(data.getVersion());
 			}
@@ -1545,7 +1552,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 			case put:
 				final String targetFileName = StringHelper.splitLast(getFullyQualifiedName(), "/") + '-' + getVersion()
-				        + ".jar";
+						+ ".jar";
 				if (homedir.exists()) {
 					for (final File file : homedir.listFiles(new FileFilterRegExp(targetFileName))) {
 						String sversion = StringHelper.splitLast(file.getName(), "-");
@@ -1561,9 +1568,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					if (thisDataDoc != null) {
 						final InstallunitData thisInstallData = (InstallunitData) thisDataDoc.getRoot();
 						if (thisInstallData.getFullname().equals(getFullyQualifiedName())
-						        && thisInstallData.getVersion().equals(getVersion())
-						        && (thisInstallData.getInstallstate() == InstallState.installed || (thisInstallData
-						                .getInstallstate() == InstallState.installing && command == CmdRenvCommand.deinstall))) {
+								&& thisInstallData.getVersion().equals(getVersion())
+								&& (thisInstallData.getInstallstate() == InstallState.installed || (thisInstallData
+										.getInstallstate() == InstallState.installing && command == CmdRenvCommand.deinstall))) {
 							// quick hack for KDG environment
 							// installedVersions.add(otherInstallData.getVersion());
 							if (getFullyQualifiedName(true).equals("jdk"))
@@ -1589,7 +1596,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						// Fallback to maintain downward compatibility
 						if (homedir.getName().matches("\\A[0-9.]*\\z")) {
 							RapidEnvInterpreter.log(Level.INFO, "Migrating project \"" + getFullyQualifiedName()
-							        + "\" by generating new data file!");
+									+ "\" by generating new data file!");
 							initNewDataDoc();
 							getData().setVersion(new Version(homedir.getName()));
 							storeData(InstallState.installed);
@@ -1608,7 +1615,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 						}
 						final InstallunitData otherInstallData = (InstallunitData) otherDataDoc.getRoot();
 						if (otherInstallData != null && otherInstallData.getFullname().equals(getFullyQualifiedName())
-						        && otherInstallData.getInstallstate() == InstallState.installed) {
+								&& otherInstallData.getInstallstate() == InstallState.installed) {
 							// quick hack for KDG environment
 							// installedVersions.add(otherInstallData.getVersion());
 							if (getFullyQualifiedName(true).equals("jdk"))
@@ -1633,6 +1640,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					}
 				}
 				break;
+			default:
+				break;
 			}
 		}
 
@@ -1645,7 +1654,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	public InstallunitData getData() {
 		try {
 			if (this.dataDoc == null
-			        || (!this.dataDoc.getUrl().equals(getHomedirAsFile().toURI().toURL()))) {
+					|| (!this.dataDoc.getUrl().equals(getHomedirAsFile().toURI().toURL()))) {
 				if (getHomedirAsFile().exists()) {
 					this.dataDoc = getDataDoc(getHomedirAsFile());
 					if (this.dataDoc == null) {
@@ -1669,7 +1678,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			final File dataFile = getRenvstateFile(homedir);
 			if (dataFile.exists()) {
 				final Document doc = new Document(
-				        TypeRapidBean.forName("org.rapidbeans.rapidenv.config.InstallunitData"), dataFile);
+						TypeRapidBean.forName("org.rapidbeans.rapidenv.config.InstallunitData"), dataFile);
 				return doc;
 			}
 		}
@@ -1693,7 +1702,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Persist the install unit's state.
-	 * 
+	 *
 	 * @param installstate
 	 *            the install unit's state.
 	 */
@@ -1718,17 +1727,17 @@ public class Installunit extends RapidBeanBaseInstallunit {
 			break;
 		case installed:
 			final ReferencingProject currentEnvironment = new ReferencingProject(
-			        RapidEnvInterpreter.getInstance().getEnvironmentConfigurationFile().getAbsolutePath());
+					RapidEnvInterpreter.getInstance().getEnvironmentConfigurationFile().getAbsolutePath());
 			installdata.addUsedbyenviroment(currentEnvironment);
 			break;
 		}
 		RapidEnvInterpreter.log(Level.FINER, "Storing installation state: \"" + installdata.getInstallstate().name()
-		        + "\" to \"" + this.dataDoc.getUrl().toString() + "\"");
+				+ "\" to \"" + this.dataDoc.getUrl().toString() + "\"");
 		this.dataDoc.save();
 
 		RapidEnvInterpreter.getInstance().getInstallations().addInstallunit(
-		        getFullyQualifiedName(), installstate, getVersion()
-		        );
+				getFullyQualifiedName(), installstate, getVersion()
+				);
 
 		RapidEnvInterpreter.getInstance().saveInstallations();
 	}
@@ -1750,10 +1759,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Construct the install unit's state file.
-	 * 
+	 *
 	 * @param homedir
 	 *            the directory to investigate
-	 * 
+	 *
 	 * @return the file storing the installation unit's state
 	 */
 	private File getRenvstateFile(final File homedir) {
@@ -1764,7 +1773,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * The installation root folder per default is<br/>
 	 * &lt;project installation target file&gt;/&lt;name space
 	 * folders&gt;/&lt;name&gt;.
-	 * 
+	 *
 	 * @return the default installation root folder
 	 */
 	private String getDefaultHomedirPath() {
@@ -1797,7 +1806,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 * The installation source URL per default is<br/>
 	 * &lt;project installation source URL&gt;/&lt;name space
 	 * folders&gt;/&lt;name&gt;.
-	 * 
+	 *
 	 * @return the default installation root folder
 	 */
 	private String getDefaultSourceurl() {
@@ -1817,7 +1826,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 				url += '/' + getName() + '/' + getVersion().toString() + '/' + getName() + "-" + getVersion() + ".zip";
 			} else {
 				url += '/' + getFullyQualifiedName(true) + '/' + getVersion().toString() + '/' + getName() + "-"
-				        + getVersion() + ".zip";
+						+ getVersion() + ".zip";
 			}
 		}
 		return url;
@@ -1833,7 +1842,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * constructor out of a string.
-	 * 
+	 *
 	 * @param s
 	 *            the string
 	 */
@@ -1844,7 +1853,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * constructor out of a string array.
-	 * 
+	 *
 	 * @param sa
 	 *            the string array
 	 */
@@ -1874,7 +1883,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Determine if this installation unit is a subunit.
-	 * 
+	 *
 	 * @return true if this installation unit is a subunit and false otherwise
 	 */
 	public boolean isSubunit() {
@@ -1883,7 +1892,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Determine if this installation unit is a subunit.
-	 * 
+	 *
 	 * @return true if this installation unit is a subunit and false otherwise
 	 */
 	public boolean isTopLevelUnit() {
@@ -1904,7 +1913,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Retrieve the install unit's parent units.
-	 * 
+	 *
 	 * @return a list of parent units of this install units starting with the
 	 *         top level unit.
 	 */
@@ -1921,7 +1930,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 
 	/**
 	 * Swap a list of units quickly without allocating new memory.
-	 * 
+	 *
 	 * @param units
 	 *            the units to swap
 	 */
@@ -2055,10 +2064,10 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		if (getParentUnit() == null) {
 			if (installStatus == InstallStatus.notinstalled) {
 				if (this.getInstallcontrol() == InstallControl.normal
-				        || ((RapidEnvInterpreter.getInstance().getCommand() == CmdRenvCommand.install || RapidEnvInterpreter
-				                .getInstance().getCommand() == CmdRenvCommand.update)
-				                && RapidEnvInterpreter.getInstance().getInstallunitsToProcess().contains(this) && RapidEnvInterpreter
-				                .getInstance().isInstallUnitsExplicitelySpecified())) {
+						|| ((RapidEnvInterpreter.getInstance().getCommand() == CmdRenvCommand.install || RapidEnvInterpreter
+								.getInstance().getCommand() == CmdRenvCommand.update)
+								&& RapidEnvInterpreter.getInstance().getInstallunitsToProcess().contains(this) && RapidEnvInterpreter
+								.getInstance().isInstallUnitsExplicitelySpecified())) {
 					return true;
 				} else {
 					return false;
@@ -2086,7 +2095,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	/**
 	 * Determine if an installation unit should be installed or stay installed
 	 * in case of install or update.
-	 * 
+	 *
 	 * @return if the installation unit should be installed or not.
 	 */
 	public boolean shouldBeInstalled() {
@@ -2095,7 +2104,7 @@ public class Installunit extends RapidBeanBaseInstallunit {
 		final InstallControl control = getInstallcontrol();
 
 		if (renv.isInstallUnitsExplicitelySpecified()
-		        && renv.getExplicitlyChosenInstallunits().contains(this)) {
+				&& renv.getExplicitlyChosenInstallunits().contains(this)) {
 			// explicitly mentioned units should be installed
 			// in case of command "install" or "update"
 			// independent from if they are top level units or subunits

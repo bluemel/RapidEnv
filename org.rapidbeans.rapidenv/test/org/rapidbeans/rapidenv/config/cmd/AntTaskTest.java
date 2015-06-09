@@ -1,10 +1,10 @@
 /*
  * RapidEnv: AntTaskTest.java
- *
+ * 
  * Copyright (C) 2011 Martin Bluemel
- *
+ * 
  * Creation Date: 12/12/2011
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -20,7 +20,7 @@ package org.rapidbeans.rapidenv.config.cmd;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.tools.ant.taskdefs.Copy;
 import org.junit.AfterClass;
@@ -71,7 +71,7 @@ public class AntTaskTest {
 
 			Assert.assertTrue(new File("testdata/unpack/artifacts1.xml").exists());
 			RapidEnvTestHelper.assertFilesEqual(new File("testdata/unpack/artifacts.xml"), new File(
-			        "testdata/unpack/artifacts1.xml"));
+					"testdata/unpack/artifacts1.xml"));
 		} finally {
 			if (new File("testdata/unpack/artifacts1.xml").exists()) {
 				Assert.assertTrue(new File("testdata/unpack/artifacts1.xml").delete());

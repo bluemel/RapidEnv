@@ -1,10 +1,10 @@
 /*
  * RapidEnv: RapidEnvInterpreter.java
- *
+ * 
  * Copyright (C) 2010 - 2013 Martin Bluemel
- *
+ * 
  * Creation Date: 05/25/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -71,7 +71,7 @@ import org.rapidbeans.rapidenv.security.Verifyer;
 
 /**
  * The central interpreter for RapidEnv commands.
- * 
+ *
  * @author Martin Bluemel
  */
 public class RapidEnvInterpreter {
@@ -94,7 +94,7 @@ public class RapidEnvInterpreter {
 	/**
 	 * @param name
 	 *            the property name
-	 * 
+	 *
 	 * @return the property value or null if the property is not defined
 	 */
 	public String getPropertyValue(final String name) {
@@ -103,7 +103,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * For test reasons only.
-	 * 
+	 *
 	 * @param name
 	 *            the property name
 	 * @param value
@@ -116,7 +116,7 @@ public class RapidEnvInterpreter {
 	/**
 	 * @param name
 	 *            the property name
-	 * 
+	 *
 	 *            Remove the property value with the given name.
 	 */
 	public void removeProperty(final String name) {
@@ -139,7 +139,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Caution. Use only for testing reasons.
-	 * 
+	 *
 	 * @param logger
 	 *            the logger to set
 	 */
@@ -149,7 +149,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Convenience to get the current log level
-	 * 
+	 *
 	 * @return the global logger's level.
 	 */
 	public Level getLogLevel() {
@@ -158,7 +158,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Log a message using the given log level.
-	 * 
+	 *
 	 * @param level
 	 *            the log level to use
 	 * @param msg
@@ -225,7 +225,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Set the output stream for test reasons.
-	 * 
+	 *
 	 * @param out
 	 *            the new output stream
 	 */
@@ -314,7 +314,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Determines the Linux desktop currently used.
-	 * 
+	 *
 	 * @return the Linux desktop currently used
 	 */
 	public static LinuxDesktop getLinuxDesktop() {
@@ -990,7 +990,7 @@ public class RapidEnvInterpreter {
 	/**
 	 * Centralized install status determination equipped with a result cache
 	 * since this determination is used very often and is very expensive.
-	 * 
+	 *
 	 * @param installunit
 	 *            the installation unit to investigate.
 	 * @return the installation status of the given installation unit
@@ -1002,7 +1002,7 @@ public class RapidEnvInterpreter {
 	/**
 	 * Centralized install status determination equipped with a result cache
 	 * since this determination is used very often and is very expensive.
-	 * 
+	 *
 	 * @param installunit
 	 *            the installation unit to investigate.
 	 * @param cmd
@@ -1336,7 +1336,7 @@ public class RapidEnvInterpreter {
 	 * get the (default) values by interpreting the values from the environment
 	 * definition file and ask for user definition in case of "personal"
 	 * variables.
-	 * 
+	 *
 	 * @param cmd
 	 *            the renv command
 	 */
@@ -1649,7 +1649,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param cmd
 	 *            the command to execute.
 	 */
@@ -1659,7 +1659,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * For test reasons create with logger mock.
-	 * 
+	 *
 	 * @param cmd
 	 *            the command to execute
 	 * @param logger
@@ -1672,7 +1672,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * For test reasons create with changed ant gateway.
-	 * 
+	 *
 	 * @param cmd
 	 *            the command to execute
 	 * @param ant
@@ -1783,7 +1783,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Evaluate a ValidationInstanceAssocTwiceException.
-	 * 
+	 *
 	 * @param e
 	 *            the exception to evaluate.
 	 */
@@ -1803,7 +1803,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Needed privately and for testing.
-	 * 
+	 *
 	 * @param command
 	 *            the command issued
 	 */
@@ -1929,6 +1929,14 @@ public class RapidEnvInterpreter {
 					installunits.add(extremeUnitIndex, unit);
 				}
 				break;
+			case boot:
+			case config:
+			case hashvalue:
+			case help:
+			case stat:
+			case version:
+				// do nothing
+				break;
 			}
 		}
 		return installunits;
@@ -1950,6 +1958,12 @@ public class RapidEnvInterpreter {
 												+ "\" because it requires unit \""
 												+ unit1.getFullyQualifiedName()
 												+ "\" which is not yet installed.");
+							case configurationrequired:
+							case deinstallrequired:
+							case downgraderequired:
+							case upgraderequired:
+							case uptodate:
+								break;
 							}
 						}
 					}
@@ -1980,6 +1994,13 @@ public class RapidEnvInterpreter {
 											+ "\" because parent unit \""
 											+ unit.getParentUnit()
 											+ "\" is not up to date (downgrade is required).");
+						case configurationrequired:
+						case deinstallrequired:
+						case uptodate:
+							// do nothing
+							break;
+						default:
+							break;
 						}
 					}
 				}
@@ -1991,6 +2012,10 @@ public class RapidEnvInterpreter {
 					for (final Installunit unit1 : unit.getDependents()) {
 						if (!installUnits.contains(unit1)) {
 							switch (getInstallationStatus(unit1, command)) {
+							case deinstallrequired:
+							case notinstalled:
+								// do nothing
+								break;
 							case uptodate:
 							case upgraderequired:
 							case configurationrequired:
@@ -2108,12 +2133,12 @@ public class RapidEnvInterpreter {
 	/**
 	 * Complete install units to process according to the command, the subunits,
 	 * and the dependencies.
-	 * 
+	 *
 	 * @param installUnitsToProc
 	 *            the install units to process
 	 * @param cmd
 	 *            the command
-	 * 
+	 *
 	 * @return the completed and sorted list
 	 */
 	protected List<Installunit> completeAndSortInstallunitsToProcess(
@@ -2337,7 +2362,7 @@ public class RapidEnvInterpreter {
 
 	/**
 	 * Print out the statistics
-	 * 
+	 *
 	 * @return the statistics string
 	 */
 	public String getStatisicsAsString() {

@@ -1,10 +1,10 @@
 /*
  * RapidEnv: CmdRenv.java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 05/20/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -37,14 +37,14 @@ import org.rapidbeans.rapidenv.config.cmd.ExceptionMapping;
 
 /**
  * The main class interpreting an "renv" command line
- * 
+ *
  * @author Martin Bluemel
  */
 public class CmdRenv {
 
 	/**
 	 * The command main method.
-	 * 
+	 *
 	 * @param args
 	 *            all command line arguments
 	 */
@@ -55,9 +55,8 @@ public class CmdRenv {
 		try {
 			final LogManager lm = LogManager.getLogManager();
 			try {
-				lm.readConfiguration(CmdRenv.class.getClassLoader()
-						.getResourceAsStream(
-								"org/rapidbeans/rapidenv/logging.properties"));
+				lm.readConfiguration(CmdRenv.class.getClassLoader().getResourceAsStream(
+						"org/rapidbeans/rapidenv/logging.properties"));
 			} catch (SecurityException e) {
 				throw new RapidEnvException(e);
 			} catch (FileNotFoundException e) {
@@ -186,7 +185,7 @@ public class CmdRenv {
 
 	/**
 	 * constructor of the command line interpreter.
-	 * 
+	 *
 	 * @param args
 	 *            all arguments from the command line
 	 */
@@ -235,10 +234,10 @@ public class CmdRenv {
 
 	/**
 	 * Parse an option
-	 * 
+	 *
 	 * @param string
 	 *            the option string
-	 * 
+	 *
 	 * @return the count of option arguments
 	 */
 	private int parseOption(final String[] args, final int pos) {
@@ -271,10 +270,10 @@ public class CmdRenv {
 
 	/**
 	 * Parse a command.
-	 * 
+	 *
 	 * @param string
 	 *            the command string.
-	 * 
+	 *
 	 * @return the command enum
 	 */
 	private CmdRenvCommand parseCommand(final String string) {
@@ -301,10 +300,10 @@ public class CmdRenv {
 
 	/**
 	 * Parse an argument for help command given in different variants.
-	 * 
+	 *
 	 * @param arg
 	 *            the argument string to parse
-	 * 
+	 *
 	 * @return if a help command has been detected
 	 */
 	private boolean parseHelp(String arg) {
@@ -321,10 +320,10 @@ public class CmdRenv {
 
 	/**
 	 * Parse an argument for version command given in different variants.
-	 * 
+	 *
 	 * @param arg
 	 *            the argument string to parse
-	 * 
+	 *
 	 * @return if a help command has been detected
 	 */
 	private boolean parseVersion(String arg) {

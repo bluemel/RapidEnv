@@ -1,10 +1,10 @@
 /*
  * RapidEnv: ConfigFileEditorXmlTest.java
- *
+ * 
  * Copyright (C) 2011 Martin Bluemel
- *
+ * 
  * Creation Date: 10/29/2011
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -34,7 +34,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.ComparisonFailure;
 import org.junit.Test;
@@ -53,9 +53,7 @@ import org.xml.sax.SAXException;
 public class ConfigFileEditorXmlTest {
 
 	/**
-	 * Test method for
-	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
-	 * .
+	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)} .
 	 */
 	@Test
 	public void testRetrieveNodeTopLevel() {
@@ -67,9 +65,7 @@ public class ConfigFileEditorXmlTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
-	 * .
+	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)} .
 	 */
 	@Test
 	public void testRetrieveSubnode() {
@@ -99,9 +95,7 @@ public class ConfigFileEditorXmlTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
-	 * .
+	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)} .
 	 */
 	@Test
 	public void testRetrieveSubnodeWithSpecAttribute() {
@@ -112,17 +106,15 @@ public class ConfigFileEditorXmlTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)}
-	 * .
+	 * Test method for {@link org.rapidbeans.rapidenv.config.file.ConfigFileEditorXml#retrieveNode(java.lang.String)} .
 	 */
 	@Test
 	public void testRetrieveSubnodeWithSpecAttributeComplex() {
 		File testfile = new File("testdata/conf/textXmlComplex01.xml");
 		ConfigFileEditorXml editor = new ConfigFileEditorXml(null, testfile);
 		Node node = editor.retrieveNode("//workbench/window/page/views"
-		        + "/view[@id='org.eclipse.jdt.ui.PackageExplorer']" + "/viewState/customFilters/xmlDefinedFilters"
-		        + "/child[@filterId='org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*']" + "/@isEnabled");
+				+ "/view[@id='org.eclipse.jdt.ui.PackageExplorer']" + "/viewState/customFilters/xmlDefinedFilters"
+				+ "/child[@filterId='org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*']" + "/@isEnabled");
 		Assert.assertEquals("false", node.getNodeValue());
 	}
 
@@ -137,7 +129,7 @@ public class ConfigFileEditorXmlTest {
 
 	@Test
 	public void testJaxpDomFormatting() throws ParserConfigurationException, SAXException, IOException,
-	        TransformerException {
+			TransformerException {
 		File testfile = new File("testdata/conf/web1.xml");
 		if (testfile.exists()) {
 			Assert.assertTrue(testfile.delete());
@@ -230,7 +222,7 @@ public class ConfigFileEditorXmlTest {
 		editor.setNodeValue("//settings/emptytestnode01/firstnewsubelement/@test1", "hello attr", true);
 		editor.setNodeValue("//settings/emptytestnode01/secondsubelement", "hello second", true);
 		editor.setNodeValue("//settings/emptytestnode02/firstnewsubelement/firstnewsubsubelement",
-		        "hello first subsub", true);
+				"hello first subsub", true);
 		editor.save();
 		try
 		{
@@ -311,10 +303,10 @@ public class ConfigFileEditorXmlTest {
 		try
 		{
 			FileTestHelper.verifyFilesEqual(new File("testdata/conf/webDeletedNodeWithSubnodeCondition.xml"), testfile,
-			        true, true);
+					true, true);
 		} catch (ComparisonFailure e) {
 			FileTestHelper.verifyFilesEqual(new File("testdata/conf/webDeletedNodeWithSubnodeConditionAlt.xml"),
-			        testfile, true, true);
+					testfile, true, true);
 		}
 		Assert.assertTrue(testfile.delete());
 	}
@@ -339,10 +331,10 @@ public class ConfigFileEditorXmlTest {
 		try
 		{
 			FileTestHelper.verifyFilesEqual(new File("testdata/conf/webDeletedNodeWithSubnodeCondition.xml"), testfile,
-			        true, true);
+					true, true);
 		} catch (ComparisonFailure e) {
 			FileTestHelper.verifyFilesEqual(new File("testdata/conf/webDeletedNodeWithSubnodeConditionAlt.xml"),
-			        testfile, true, true);
+					testfile, true, true);
 		}
 		Assert.assertTrue(testfile.delete());
 	}
@@ -377,6 +369,6 @@ public class ConfigFileEditorXmlTest {
 	@Test
 	public void testParseIdAttrs() {
 		XmlHelper.parseIdAttrs("//xxx/yyy[@id='org.eclipse.wst.server.ui.editor'"
-		        + " and @name='JBoss 6.0 Runtime Server']");
+				+ " and @name='JBoss 6.0 Runtime Server']");
 	}
 }

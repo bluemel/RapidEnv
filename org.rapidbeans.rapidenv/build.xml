@@ -77,7 +77,7 @@
 -->
 	<target name="resolve" unless="build.resolved"
 		description="resolve dependencies using maven">
-		<exec osfamily="windows" command="${env.M2_HOME}/bin/mvn.bat test"/>
+		<exec osfamily="windows" command="${env.M2_HOME}/bin/mvn.cmd test"/>
 		<exec osfamily="unix" command="${env.M2_HOME}/bin/mvn test"/>
 	</target>
 

@@ -1,10 +1,10 @@
 /*
  * RapidEnv: ShellLinkIcon.java
- *
+ * 
  * Copyright (C) 2011 Martin Bluemel
- *
+ * 
  * Creation Date: 06/03/2011
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -40,11 +40,11 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 	/**
 	 * Check if the file configuration has been performed properly or not
-	 * 
+	 *
 	 * @param execute
 	 *            if false only execute the check if the configuration is
 	 *            necessary if true execute the configuration if necessary
-	 * 
+	 *
 	 * @return if the configuration has been performed properly or not
 	 */
 	@Override
@@ -56,35 +56,35 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				desktopFolder = new File(System.getenv("USERPROFILE") + "\\Desktop");
-			break;
+				break;
 			case linux:
 				desktopFolder = new File(System.getenv("HOME") + "/Desktop");
-			break;
+				break;
 			default:
 				throw new RapidEnvException("Icons are not supported for OS \"" + PlatformHelper.getOsfamily().name()
-				        + "\".");
+						+ "\".");
 			}
 			if (this.getShowondesktop()) {
 				switch (PlatformHelper.getOsfamily()) {
 				case windows:
 					ok = checkShellLink(execute, getTitle(), desktopFolder);
-				break;
+					break;
 				case linux:
 					switch (RapidEnvInterpreter.getLinuxDesktop()) {
 					case kde:
 						ok = checkShellLink(execute, getTitle(), desktopFolder);
-					break;
+						break;
 					case gnome:
 						ok = checkShellLink(execute, getTitle(), desktopFolder);
-					break;
+						break;
 					default:
 						RapidEnvInterpreter.log(Level.FINE, "No start menu shell link icon \"" + getTitle()
-						        + "\" for Linux desktop \"" + RapidEnvInterpreter.getLinuxDesktop().name());
+								+ "\" for Linux desktop \"" + RapidEnvInterpreter.getLinuxDesktop().name());
 					}
-				break;
+					break;
 				default:
 					throw new RapidEnvException("Icons are not supported for OS \""
-					        + PlatformHelper.getOsfamily().name() + "\".");
+							+ PlatformHelper.getOsfamily().name() + "\".");
 				}
 			} else {
 				ok = checkShellLinkDelete(execute, getTitle(), desktopFolder);
@@ -93,37 +93,37 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
 				startMenuFolder = new File(ShellLinkWindows.getStartMenuFolder().getAbsolutePath() + File.separator
-				        + project.getName() + File.separator + project.getTag());
-			break;
+						+ project.getName() + File.separator + project.getTag());
+				break;
 			case linux:
 				startMenuFolder = new File(System.getenv("HOME") + "/.local/share/applications");
-			break;
+				break;
 			default:
 				throw new RapidEnvException("Icons are not supported for OS \"" + PlatformHelper.getOsfamily().name()
-				        + "\".");
+						+ "\".");
 			}
 			if (ok) {
 				if (this.getShowonstartmenu()) {
 					switch (PlatformHelper.getOsfamily()) {
 					case windows:
 						ok = checkShellLink(execute, getTitle(), startMenuFolder);
-					break;
+						break;
 					case linux:
 						switch (RapidEnvInterpreter.getLinuxDesktop()) {
 						case kde:
 							ok = checkShellLink(execute, getTitle(), startMenuFolder);
-						break;
+							break;
 						case gnome:
 							ok = checkShellLink(execute, getTitle(), startMenuFolder);
-						break;
+							break;
 						default:
 							RapidEnvInterpreter.log(Level.FINE, "No start menu shell link icon \"" + getTitle()
-							        + "\" for Linux desktop \"" + RapidEnvInterpreter.getLinuxDesktop().name());
+									+ "\" for Linux desktop \"" + RapidEnvInterpreter.getLinuxDesktop().name());
 						}
-					break;
+						break;
 					default:
 						throw new RapidEnvException("Icons are not supported for OS \""
-						        + PlatformHelper.getOsfamily().name() + "\".");
+								+ PlatformHelper.getOsfamily().name() + "\".");
 					}
 				} else {
 					ok = checkShellLinkDelete(execute, getTitle(), startMenuFolder);
@@ -160,17 +160,17 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 	/**
 	 * Check or create / update a shell link
-	 * 
+	 *
 	 * @boolean execute determines if the shell link should only be checked or
 	 *          really manipulated.
-	 * 
+	 *
 	 * @param title
 	 *            the shell link's title. Can not be changed since it also
 	 *            changes the file name.
-	 * 
+	 *
 	 * @param shellLinkFolder
 	 *            the folder where to store the shell link
-	 * 
+	 *
 	 * @return if the shell link is OK or must be updated
 	 */
 	private boolean checkShellLink(final boolean execute, final String title, final File shellLinkFolder) {
@@ -182,8 +182,8 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		} catch (RapidEnvException e) {
 			if (e.getCause() instanceof FileNotFoundException) {
 				setIssue("invalid icon configuration for installation unit \""
-				        + this.getParentInstallunit().getFullyQualifiedName() + "\".\n    Executable \""
-				        + getExecutable() + "\" not found.");
+						+ this.getParentInstallunit().getFullyQualifiedName() + "\".\n    Executable \""
+						+ getExecutable() + "\" not found.");
 				return false;
 			} else {
 				throw e;
@@ -197,31 +197,31 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		case cmd:
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
-				executable = new File(System.getenv("SystemRoot") + File.separator + "system32" + File.separator
-				        + "cmd.exe");
+				executable = new File(System.getenv("SystemRoot") + File.separator + "System32" + File.separator
+						+ "cmd.exe");
 				args.add(new Argument("/C"));
 				args.add(new Argument("call"));
 				argExePath = new Argument(getExecutableAsFile().getAbsolutePath());
 				argExePath.setQuoted(true);
 				args.add(argExePath);
-			break;
+				break;
 			case linux:
 				executable = new File("/bin/bash");
 				args.add(new Argument("-c"));
 				argExePath = new Argument(getExecutableAsFile().getAbsolutePath());
 				argExePath.setQuoted(true);
 				args.add(argExePath);
-			break;
+				break;
 			default:
 				throw new RapidEnvException("Icons with execution mode \"cmd\"" + " are not supported for OS \""
-				        + PlatformHelper.getOsfamily().name() + "\".");
+						+ PlatformHelper.getOsfamily().name() + "\".");
 			}
-		break;
+			break;
 		case cmdenv:
 			switch (PlatformHelper.getOsfamily()) {
 			case windows:
-				executable = new File(System.getenv("SystemRoot") + File.separator + "system32" + File.separator
-				        + "cmd.exe");
+				executable = new File(System.getenv("SystemRoot") + File.separator + "System32" + File.separator
+						+ "cmd.exe");
 				args.add(new Argument("/C"));
 				args.add(new Argument("call"));
 				argProfileCmd = new Argument(interpreter.getProfileCmd().getAbsolutePath());
@@ -232,7 +232,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				argExePath = new Argument(getExecutableAsFile().getAbsolutePath());
 				argExePath.setQuoted(true);
 				args.add(argExePath);
-			break;
+				break;
 			case linux:
 				executable = new File("/bin/bash");
 				args.add(new Argument("-c"));
@@ -243,14 +243,14 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				argExePath = new Argument(getExecutableAsFile().getAbsolutePath());
 				argExePath.setQuoted(true);
 				args.add(argExePath);
-			break;
+				break;
 			default:
 				throw new RapidEnvException("Icons are not supported for OS \"" + PlatformHelper.getOsfamily().name()
-				        + "\".");
+						+ "\".");
 			}
-		break;
+			break;
 		default:
-		break;
+			break;
 		}
 
 		if (configArgs != null) {
@@ -274,13 +274,13 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			ok = checkShellLinkWindows(execute, title, shellLinkFolder, executeInFolder, executable, args);
-		break;
+			break;
 		case linux:
 			ok = checkShellLinkLinux(execute, title, shellLinkFolder, executeInFolder, executable, args);
-		break;
+			break;
 		default:
 			throw new RapidEnvException("Icons are not supported for OS \"" + PlatformHelper.getOsfamily().name()
-			        + "\".");
+					+ "\".");
 		}
 
 		return ok;
@@ -288,17 +288,17 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 	/**
 	 * Check or create / update a shell link
-	 * 
+	 *
 	 * @boolean execute determines if the shell link should only be checked or
 	 *          really manipulated.
-	 * 
+	 *
 	 * @param title
 	 *            the shell link's title. Can not be changed since it also
 	 *            changes the file name.
-	 * 
+	 *
 	 * @param shellLinkFolder
 	 *            the folder where to store the shell link
-	 * 
+	 *
 	 * @return if the shell link is OK or must be updated
 	 */
 	private boolean checkShellLinkDelete(final boolean execute, final String title, final File shellLinkFolder) {
@@ -308,13 +308,13 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		switch (PlatformHelper.getOsfamily()) {
 		case windows:
 			shellLinkFile = new File(shellLinkFolder, title + ".lnk");
-		break;
+			break;
 		case linux:
 			shellLinkFile = new File(shellLinkFolder, title + ".desktop");
-		break;
+			break;
 		default:
 			throw new RapidEnvException("Icons are not supported for OS \"" + PlatformHelper.getOsfamily().name()
-			        + "\".");
+					+ "\".");
 		}
 
 		boolean ok = true;
@@ -323,21 +323,21 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			if (execute) {
 				if (ok = shellLinkFile.delete()) {
 					msgcheck = "shell link icon \"" + title + "\" has been deleted in folder \""
-					        + shellLinkFolder.getAbsolutePath() + "\".";
+							+ shellLinkFolder.getAbsolutePath() + "\".";
 					if (interpreter != null) {
 						interpreter.getOut().println(msgcheck);
 					}
 				} else {
 					throw new RapidEnvException("shell link icon \"" + title + "\" coud not be deleted in folder \""
-					        + shellLinkFolder.getAbsolutePath() + "\".");
+							+ shellLinkFolder.getAbsolutePath() + "\".");
 				}
 			} else {
 				if (ok = !shellLinkFile.exists()) {
 					msgcheck = "shell link icon \"" + title + "\" is not desired in folder \""
-					        + shellLinkFolder.getAbsolutePath() + "\".\n";
+							+ shellLinkFolder.getAbsolutePath() + "\".\n";
 				} else {
 					msgcheck = "shell link icon \"" + title + "\" needs to be deleted in folder \""
-					        + shellLinkFolder.getAbsolutePath() + "\".\n";
+							+ shellLinkFolder.getAbsolutePath() + "\".\n";
 				}
 			}
 			if (!ok) {
@@ -352,7 +352,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 	}
 
 	private boolean checkShellLinkWindows(final boolean execute, final String title, final File shellLinkFolder,
-	        final File executeInFolder, final File executable, final List<Argument> args) {
+			final File executeInFolder, final File executable, final List<Argument> args) {
 		boolean ok = true;
 		final List<Argument> arguments = new ArrayList<Argument>();
 		for (final Argument arg : args) {
@@ -370,7 +370,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		if (!shellLinkFile.exists()) {
 			ok = false;
 			msgcheck = "shell link icon \"" + title + "\" needs to be created" + " in folder \""
-			        + shellLinkFolder.getAbsolutePath() + "\".";
+					+ shellLinkFolder.getAbsolutePath() + "\".";
 		}
 
 		if (ok) {
@@ -381,8 +381,8 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			if (!newExe.equals(oldExe)) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Executable has changed\n"
-				        + "      from \"" + oldExe + "\"\n" + "        to \"" + newExe + "\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Executable has changed\n"
+						+ "      from \"" + oldExe + "\"\n" + "        to \"" + newExe + "\"";
 			}
 		}
 
@@ -399,30 +399,30 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			if (newArgumentsCount != oldArgumentsCount) {
 				if (RapidEnvInterpreter.getInstance().getLogLevel().intValue() <= Level.FINER.intValue()) {
 					RapidEnvInterpreter.log(Level.FINER, "Shell link icon \"" + title + "\" in folder \""
-					        + shellLinkFolder.getAbsolutePath() + "\" differs from configuration");
+							+ shellLinkFolder.getAbsolutePath() + "\" differs from configuration");
 					final StringBuilder sb = new StringBuilder();
 					sb.append("Current Arguments:\n");
 					int i = 0;
 					for (final Argument arg : shellLink.getArguments()) {
 						sb.append("  [" + Integer.toString(i) + "]: " + arg.getName() + ": \"" + arg.getValue()
-						        + "\", quoted = " + Boolean.toString(arg.getQuoted()) + "\n");
+								+ "\", quoted = " + Boolean.toString(arg.getQuoted()) + "\n");
 						i++;
 					}
 					sb.append("Configured Arguments:\n");
 					i = 0;
 					for (final Argument arg : arguments) {
 						sb.append("  [" + Integer.toString(i) + "]: " + arg.getName() + ": \"" + arg.getValue()
-						        + "\", quoted = " + Boolean.toString(arg.getQuoted()) + "\n");
+								+ "\", quoted = " + Boolean.toString(arg.getQuoted()) + "\n");
 						i++;
 					}
 					RapidEnvInterpreter.log(Level.FINER, sb.toString());
 				}
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Arguments count has changed\n"
-				        + "      from \"" + Integer.toString(oldArgumentsCount) + "\"\n" + "        to \""
-				        + Integer.toString(newArgumentsCount) + "\"\n" + "      old arguments: " + oldArgs + "\n"
-				        + "      new arguments: " + newArgs;
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Arguments count has changed\n"
+						+ "      from \"" + Integer.toString(oldArgumentsCount) + "\"\n" + "        to \""
+						+ Integer.toString(newArgumentsCount) + "\"\n" + "      old arguments: " + oldArgs + "\n"
+						+ "      new arguments: " + newArgs;
 			}
 		}
 		if (ok) {
@@ -432,16 +432,16 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				if (!newArg.equals(oldArg)) {
 					ok = false;
 					msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-					        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Argument number "
-					        + Integer.toString(i + 1) + " has changed\n" + "      from \"" + oldArg + "\"\n"
-					        + "        to \"" + newArg + "\"";
+							+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Argument number "
+							+ Integer.toString(i + 1) + " has changed\n" + "      from \"" + oldArg + "\"\n"
+							+ "        to \"" + newArg + "\"";
 				}
 				if (ok) {
 					if (arguments.get(i).getQuoted() != shellLink.getArguments().get(i).getQuoted()) {
 						ok = false;
 						msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-						        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Argument number "
-						        + Integer.toString(i + 1) + " has changed it's quoting.\n";
+								+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Argument number "
+								+ Integer.toString(i + 1) + " has changed it's quoting.\n";
 					}
 				}
 			}
@@ -452,8 +452,8 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			if (!newWd.equals(oldWd)) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Working directory has changed\n"
-				        + "      from \"" + oldWd + "\"\n" + "        to \"" + newWd + "\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Working directory has changed\n"
+						+ "      from \"" + oldWd + "\"\n" + "        to \"" + newWd + "\"";
 			}
 		}
 		if (ok) {
@@ -462,15 +462,15 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 			if (!newIconFilePath.equals(oldIconFilePath)) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file has changed\n" + "    from \""
-				        + oldIconFilePath + "\"\n" + "      to \"" + newIconFilePath + "\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file has changed\n" + "    from \""
+						+ oldIconFilePath + "\"\n" + "      to \"" + newIconFilePath + "\"";
 			}
 		}
 		if (ok) {
 			if (iconFile.lastModified() > shellLinkFile.lastModified()) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file is newer";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file is newer";
 			}
 		}
 		if (execute) {
@@ -491,7 +491,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 					shellLink.setIconFile(iconFile);
 					shellLink.save();
 					String msg = "    shell link icon \"" + title + "\" has been " + crorud + " successfully"
-					        + " in folder \"" + shellLinkFolder.getAbsolutePath() + "\".";
+							+ " in folder \"" + shellLinkFolder.getAbsolutePath() + "\".";
 					if (interpreter != null) {
 						interpreter.getOut().println(msg);
 						RapidEnvInterpreter.log(Level.FINE, msg);
@@ -523,9 +523,9 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 	/**
 	 * Creates a single String out of a list of arguments.
-	 * 
+	 *
 	 * @param args
-	 * 
+	 *
 	 * @return
 	 */
 	private String argsToString(final List<Argument> args) {
@@ -549,11 +549,11 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 	}
 
 	private boolean checkShellLinkLinux(final boolean execute, final String title, final File shellLinkFolder,
-	        final File executeInFolder, final File executable, final List<Argument> arguments) {
+			final File executeInFolder, final File executable, final List<Argument> arguments) {
 		boolean ok = true;
 		final File shellLinkFile = new File(shellLinkFolder, title + ".desktop");
 		final ConfigFileEditorProperties shellLink = new ConfigFileEditorProperties(new ConfigFileProperties(),
-		        shellLinkFile);
+				shellLinkFile);
 		final File iconFile = new File(getIconfile());
 		final RapidEnvInterpreter interpreter = RapidEnvInterpreter.getInstance();
 		final String args = this.argumentsToString(arguments);
@@ -566,54 +566,54 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 				ok = false;
 			}
 			msgcheck = "shell link icon \"" + title + "\" needs to be created" + " in folder \""
-			        + shellLinkFolder.getAbsolutePath() + "\".";
+					+ shellLinkFolder.getAbsolutePath() + "\".";
 		}
 		if (ok) {
 			shellLink.load();
 			if (shellLink.getProperty("Type") == null || (!shellLink.getProperty("Type").equals("Application"))) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Type is different from \"Application\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Type is different from \"Application\"";
 			}
 		}
 		if (ok) {
 			if (!title.equals(shellLink.getProperty("Name"))) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Title has changed\n" + "      from \""
-				        + shellLink.getProperty("Name") + "\"\n" + "        to \"" + title + "\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Title has changed\n" + "      from \""
+						+ shellLink.getProperty("Name") + "\"\n" + "        to \"" + title + "\"";
 			}
 		}
 		if (ok) {
 			if (!(executable.getAbsolutePath() + " " + args).equals(shellLink.getProperty("Exec"))) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Executable has changed\n"
-				        + "      from \"" + shellLink.getProperty("Exec") + "\"\n" + "        to \""
-				        + executable.getAbsolutePath() + " " + args + "\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Executable has changed\n"
+						+ "      from \"" + shellLink.getProperty("Exec") + "\"\n" + "        to \""
+						+ executable.getAbsolutePath() + " " + args + "\"";
 			}
 		}
 		if (ok) {
 			if (!executeInFolder.getAbsolutePath().equals(shellLink.getProperty("Path"))) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Working directory has changed\n"
-				        + "      from \"" + shellLink.getProperty("Path") + "\"\n" + "        to \""
-				        + executeInFolder.getAbsolutePath() + "\"";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Working directory has changed\n"
+						+ "      from \"" + shellLink.getProperty("Path") + "\"\n" + "        to \""
+						+ executeInFolder.getAbsolutePath() + "\"";
 			}
 		}
 		if (ok) {
 			if (!iconFile.getAbsolutePath().equals(shellLink.getProperty("Icon"))) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file has changed";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file has changed";
 			}
 		}
 		if (ok) {
 			if (iconFile.lastModified() > shellLinkFile.lastModified()) {
 				ok = false;
 				msgcheck = "shell link icon \"" + title + "\" needs to be updated" + " in folder \""
-				        + shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file is newer";
+						+ shellLinkFolder.getAbsolutePath() + "\".\n" + "    Icon file is newer";
 			}
 		}
 		if (execute) {
@@ -635,7 +635,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 					shellLink.setProperty("[Desktop Entry]", "Type", "Application");
 					shellLink.save();
 					String msg = "    shell link icon \"" + title + "\" has been " + crorud + " successfully"
-					        + " in folder \"" + shellLinkFolder.getAbsolutePath() + "\".";
+							+ " in folder \"" + shellLinkFolder.getAbsolutePath() + "\".";
 					interpreter.getOut().println(msg);
 					RapidEnvInterpreter.log(Level.FINE, msg);
 					ok = true;
@@ -654,7 +654,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 		if (!shellLinkFile.canExecute()) {
 			if (!shellLinkFile.setExecutable(true)) {
 				throw new RapidEnvException("Could not set execution rights for shell link file \""
-				        + shellLinkFile.getAbsolutePath() + "\".");
+						+ shellLinkFile.getAbsolutePath() + "\".");
 			}
 		}
 		return ok;
@@ -669,7 +669,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 	/**
 	 * constructor out of a string.
-	 * 
+	 *
 	 * @param s
 	 *            the string
 	 */
@@ -679,7 +679,7 @@ public class ShellLinkIcon extends RapidBeanBaseShellLinkIcon {
 
 	/**
 	 * constructor out of a string array.
-	 * 
+	 *
 	 * @param sa
 	 *            the string array
 	 */

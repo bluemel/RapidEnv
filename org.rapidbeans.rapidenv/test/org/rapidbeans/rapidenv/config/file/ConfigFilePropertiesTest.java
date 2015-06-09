@@ -1,10 +1,10 @@
 /*
  * RapidEnv: ConfigFileXmlTest.java
- *
+ * 
  * Copyright (C) 2010 Martin Bluemel
- *
+ * 
  * Creation Date: 09/10/2010
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
@@ -23,7 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -98,7 +98,7 @@ public class ConfigFilePropertiesTest {
 
 	/**
 	 * test configuring an XML file.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 */
 	@Test

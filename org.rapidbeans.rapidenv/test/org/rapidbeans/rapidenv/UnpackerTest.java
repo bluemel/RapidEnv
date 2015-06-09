@@ -2,7 +2,7 @@ package org.rapidbeans.rapidenv;
 
 import java.io.File;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,8 +42,8 @@ public class UnpackerTest {
 
 	private void assertUnpack() {
 		Assert.assertTrue("Contents of folders \"" + new File("testdata/unpack/testunpack/test1").getAbsolutePath()
-		        + "\"\n" + "and \"" + new File("testdata/unpack/testunpackref/test1").getAbsolutePath() + "\"\n"
-		        + "is different.", FileHelper.dirsEqualExcludeDotDirs(new File("testdata/unpack/testunpack/test1"),
-		        "testdata/unpack/testunpackref/test1"));
+				+ "\"\n" + "and \"" + new File("testdata/unpack/testunpackref/test1").getAbsolutePath() + "\"\n"
+				+ "is different.", FileHelper.dirsEqualExcludeDotDirs(new File("testdata/unpack/testunpack/test1"),
+				"testdata/unpack/testunpackref/test1"));
 	}
 }
