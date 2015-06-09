@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="eclipseheadless" uid="org.rapidbeans.rapidenv.eclipseheadless.product" id="org.rapidbeans.rapidenv.eclipseheadless.product" application="org.rapidbeans.rapidenv.eclipseheadless.cmdlineapp" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="eclipseheadless" uid="org.rapidbeans.rapidenv.eclipseheadless.product" id="org.rapidbeans.rapidenv.eclipseheadless.product" application="org.rapidbeans.rapidenv.eclipseheadless.cmdlineapp" version="1.0.1" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog</programArgs>
-      <vmArgs>-Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m</vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+      <programArgs>-consoleLog
+      </programArgs>
+      <vmArgs>-Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m
+      </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
    </launcherArgs>
 
    <launcher>
