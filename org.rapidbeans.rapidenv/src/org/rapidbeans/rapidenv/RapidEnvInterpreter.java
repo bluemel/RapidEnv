@@ -1060,7 +1060,7 @@ public class RapidEnvInterpreter {
 			case command:
 				deinstallAll = CmdLineInteractions.promptYesNo(this.in,
 						this.out,
-						"Do you really want do deinstall the complete evironment including:\n"
+						"Do you really want to deinstall the complete environment including:\n"
 								+ "- all install units\n"
 								+ "- your personal profile\n"
 								+ "- the RapidEnv command prompt?", false);
