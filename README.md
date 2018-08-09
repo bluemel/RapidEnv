@@ -1,3 +1,6 @@
+RapidEnv (renv)
+===============
+
 RapidEnv is a small tool to set up and maintain complex development environments
 (environment variables and tools) for large teams.
 The RapidEnv approach is to describe all necessary environment set up tasks:
