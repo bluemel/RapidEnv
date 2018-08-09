@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="target/testtargetdir"
+	>
+	<installunit name="jdk" version="1.6.0" sourceurl="dummy"
+		/>
+	<installunit space="org.apache" name="ant" version="1.8.0" sourceurl="dummy"
+		depends="jdk,org.apache.maven"
+		/>
+	<installunit space="org.apache" name="maven" version="2.2.1" sourceurl="dummy"
+		depends="jdk"
+		/>
+	<installunit space="org.rapidenv" name="test01" version="1.0.0" sourceurl="dummy"
+		depends="org.apache.ant,org.apache.maven"
+		>
+		<subunit name="test1" version="1.1.0" sourceurl="dummy"
+			depends="org.rapidenv.test01/test4"
+			homedir="test1/lib"
+			/>
+		<subunit name="test2" version="1.0.0" sourceurl="dummy"
+			homedir="test2">
+			<subunit name="test1" version="1.2.1" sourceurl="dummy"
+				/>
+			<subunit name="testx" version="1.0.0" sourceurl="dummy"
+				homedir="testx"/>
+		</subunit>
+		<subunit name="test3" version="1.0.0" sourceurl="dummy"
+			depends="org.rapidenv.test01/test4"/>
+		<subunit name="test4" version="1.0.0" sourceurl="dummy"
+			depends="org.rapidenv.test01/test5"/>
+		<subunit name="test5" version="1.0.0" sourceurl="dummy"
+			depends="org.rapidenv.test01/test4"/>
+	</installunit>
+	<installunit space="org.rapidenv" name="test02" version="1.0.0" sourceurl="dummy"
+		depends="org.rapidenv.test01"
+		/>
+</project>

@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbench progressCount="33" version="2.0">
+	<workbenchAdvisor />
+	<window height="671" maximized="true" width="955" x="69" y="0">
+		<fastViewData fastViewLocation="1024" />
+		<perspectiveBar>
+			<itemSize x="160" />
+		</perspectiveBar>
+		<coolbarLayout>
+			<coolItem id="group.file" itemType="typeGroupMarker" />
+			<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution"
+				x="122" y="22" />
+			<coolItem id="additions" itemType="typeGroupMarker" />
+			<coolItem id="org.eclipse.ant.ui.internal.editor.AntEditor"
+				itemType="typePlaceholder" x="-1" y="-1" />
+			<coolItem id="org.eclipse.debug.ui.launchActionSet"
+				itemType="typeToolBarContribution" x="124" y="22" />
+			<coolItem id="org.eclipse.jdt.ui.ClassFileEditor" itemType="typePlaceholder"
+				x="-1" y="-1" />
+			<coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor"
+				itemType="typeToolBarContribution" x="-1" y="-1" />
+			<coolItem id="org.eclipse.jdt.ui.JavaElementCreationActionSet"
+				itemType="typeToolBarContribution" x="74" y="22" />
+			<coolItem id="org.eclipse.pde.ui.manifestEditor" itemType="typeToolBarContribution"
+				x="37" y="22" />
+			<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution"
+				x="122" y="22" />
+			<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation"
+				itemType="typeToolBarContribution" x="133" y="22" />
+			<coolItem id="org.eclipse.wst.xml.ui.perspective.NewFileToolBar"
+				itemType="typeToolBarContribution" x="-1" y="-1" />
+			<coolItem id="org.eclipse.wst.xml.ui.design.DesignToolBar"
+				itemType="typeToolBarContribution" x="61" y="22" />
+			<coolItem
+				id="org.eclipse.amalgam.discovery.modeling.toolbars.sampleToolbar"
+				itemType="typeToolBarContribution" x="37" y="22" />
+			<coolItem id="group.nav" itemType="typeGroupMarker" />
+			<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution"
+				x="185" y="22" />
+			<coolItem id="group.editor" itemType="typeGroupMarker" />
+			<coolItem id="org.eclipse.pde.ui.productEditor" itemType="typeToolBarContribution"
+				x="-1" y="-1" />
+			<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typeToolBarContribution"
+				x="-1" y="-1" />
+			<coolItem id="ar.com.tadp.xmleditor.basic" itemType="typeToolBarContribution"
+				x="-1" y="-1" />
+			<coolItem
+				id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+				itemType="typeToolBarContribution" x="-1" y="-1" />
+			<coolItem id="group.help" itemType="typeGroupMarker" />
+			<coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution"
+				x="-1" y="-1" />
+		</coolbarLayout>
+		<page aggregateWorkingSetId="Aggregate for window 1319610563609"
+			focus="true" label="Workspace - Java">
+			<editors>
+				<editorArea activeWorkbook="DefaultEditorWorkbook">
+					<info part="DefaultEditorWorkbook">
+						<folder appearance="1" expanded="2">
+							<presentation
+								id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+								<part id="0" />
+								<part id="1" />
+								<part id="2" />
+								<part id="3" />
+							</presentation>
+						</folder>
+					</info>
+				</editorArea>
+				<editor id="org.eclipse.pde.ui.manifestEditor" name="plugin.xml"
+					partName="org.rapidbeans.rapidenv.eclipseheadless"
+					path="D:/Projects/RapidBeans/sources/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml"
+					title="org.rapidbeans.rapidenv.eclipseheadless" tooltip="org.rapidbeans.rapidenv.eclipseheadless/plugin.xml"
+					workbook="DefaultEditorWorkbook">
+					<input factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+				</editor>
+				<editor id="org.eclipse.pde.ui.productEditor" name="eclipseheadless.product"
+					partName="eclipseheadless.product"
+					path="D:/Projects/RapidBeans/sources/org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product"
+					title="eclipseheadless.product"
+					tooltip="org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product"
+					workbook="DefaultEditorWorkbook">
+					<input factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product" />
+				</editor>
+				<editor activePart="true" focus="true"
+					id="org.eclipse.jdt.ui.CompilationUnitEditor" name="EclipseHeadlessApplication.java"
+					partName="EclipseHeadlessApplication.java"
+					path="D:/Projects/RapidBeans/sources/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java"
+					title="EclipseHeadlessApplication.java"
+					tooltip="org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java"
+					workbook="DefaultEditorWorkbook">
+					<input factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editorState selectionHorizontalPixel="0"
+						selectionLength="0" selectionOffset="1459" selectionTopPixel="167" />
+				</editor>
+				<editor
+					id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+					name=".project" partName=".project"
+					path="D:/Projects/RapidBeans/eclipseworkspace/org.rapidbeans.addressbook/.project"
+					title=".project" tooltip="org.rapidbeans.addressbook/.project"
+					workbook="DefaultEditorWorkbook">
+					<input factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						path="/org.rapidbeans.addressbook/.project" />
+				</editor>
+			</editors>
+			<views>
+				<view id="org.eclipse.jdt.junit.ResultView" partName="JUnit">
+					<viewState failuresOnly="false" layout="1" orientation="2"
+						ratio="501" scroll="false" time="true" />
+				</view>
+				<view id="org.eclipse.search.ui.views.SearchView" partName="Search">
+					<viewState isPinned="false">
+						<view IMemento.internal.id=""
+							org.eclipse.search.lastActivation="0" />
+					</viewState>
+				</view>
+				<view id="org.eclipse.ui.views.ProblemView" partName="Problems">
+					<viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField"
+						categoryGroup="org.eclipse.ui.ide.severity"
+						markerContentGenerator="org.eclipse.ui.ide.problemsGenerator"
+						partName="Problems">
+						<columnWidths org.eclipse.ui.ide.locationField="75"
+							org.eclipse.ui.ide.markerType="75" org.eclipse.ui.ide.pathField="100"
+							org.eclipse.ui.ide.resourceField="75"
+							org.eclipse.ui.ide.severityAndDescriptionField="349" />
+						<visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField" />
+						<visible IMemento.internal.id="org.eclipse.ui.ide.resourceField" />
+						<visible IMemento.internal.id="org.eclipse.ui.ide.pathField" />
+						<visible IMemento.internal.id="org.eclipse.ui.ide.locationField" />
+						<visible IMemento.internal.id="org.eclipse.ui.ide.markerType" />
+					</viewState>
+				</view>
+				<view id="org.eclipse.jdt.ui.PackageExplorer" partName="Package Explorer">
+					<viewState group_libraries="1" layout="2" linkWithEditor="0"
+						rootMode="1" workingSetName="">
+						<customFilters userDefinedPatternsEnabled="false">
+							<xmlDefinedFilters>
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.LibraryFilter"
+									isEnabled="false" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.LocalTypesFilter"
+									isEnabled="false" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.StaticsFilter"
+									isEnabled="false" />
+								<child filterId="org.eclipse.pde.ui.ExternalPluginLibrariesFilter1"
+									isEnabled="true" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.ClosedProjectsFilter"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.NonSharedProjectsFilter"
+									isEnabled="false" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.NonJavaElementFilter"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.ContainedLibraryFilter"
+									isEnabled="false" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.CuAndClassFileFilter"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.NonJavaProjectsFilter"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.internal.ui.PackageExplorer.EmptyInnerPackageFilter"
+									isEnabled="true" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.PackageDeclarationFilter"
+									isEnabled="true" />
+								<child
+									filterId="org.eclipse.jdt.internal.ui.PackageExplorer.EmptyPackageFilter"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.ImportDeclarationFilter"
+									isEnabled="true" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.FieldsFilter"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.internal.ui.PackageExplorer.HideInnerClassFilesFilter"
+									isEnabled="true" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer.NonPublicFilter"
+									isEnabled="false" />
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.EmptyLibraryContainerFilter"
+									isEnabled="true" />
+								<child filterId="org.eclipse.pde.ui.BinaryProjectFilter1"
+									isEnabled="false" />
+								<child
+									filterId="org.eclipse.jdt.ui.PackageExplorer.SyntheticMembersFilter"
+									isEnabled="true" />
+								<child filterId="org.eclipse.mylyn.java.ui.MembersFilter"
+									isEnabled="false" />
+							</xmlDefinedFilters>
+							<lastRecentlyUsedFilters>
+								<child filterId="org.eclipse.jdt.ui.PackageExplorer_patternFilterId_.*" />
+							</lastRecentlyUsedFilters>
+						</customFilters>
+					</viewState>
+				</view>
+				<view id="org.eclipse.ui.console.ConsoleView" partName="Console">
+					<viewState />
+				</view>
+				<view id="org.eclipse.jdt.ui.SourceView" partName="Declaration">
+					<viewState />
+				</view>
+				<view id="org.eclipse.jdt.ui.JavadocView" partName="Javadoc">
+					<viewState />
+				</view>
+			</views>
+			<perspectives activePart="org.eclipse.jdt.ui.CompilationUnitEditor"
+				activePerspective="org.eclipse.jdt.ui.JavaPerspective">
+				<perspective editorAreaTrimState="2" editorAreaVisible="1"
+					fixed="0" version="0.016">
+					<descriptor class="org.eclipse.jdt.internal.ui.JavaPerspectiveFactory"
+						id="org.eclipse.jdt.ui.JavaPerspective" label="Java" />
+					<alwaysOnActionSet id="org.eclipse.egit.ui.navigation" />
+					<alwaysOnActionSet id="org.eclipse.mylyn.context.ui.actionSet" />
+					<alwaysOnActionSet id="org.eclipse.mylyn.doc.actionSet" />
+					<alwaysOnActionSet id="org.eclipse.mylyn.tasks.ui.navigation" />
+					<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet" />
+					<alwaysOnActionSet id="org.eclipse.search.searchActionSet" />
+					<alwaysOnActionSet
+						id="org.eclipse.ui.edit.text.actionSet.annotationNavigation" />
+					<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation" />
+					<alwaysOnActionSet
+						id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo" />
+					<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet" />
+					<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings" />
+					<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles" />
+					<alwaysOnActionSet id="org.eclipse.debug.ui.launchActionSet" />
+					<alwaysOnActionSet id="org.eclipse.jdt.ui.JavaActionSet" />
+					<alwaysOnActionSet
+						id="org.eclipse.jdt.ui.JavaElementCreationActionSet" />
+					<alwaysOnActionSet id="org.eclipse.ui.NavigateActionSet" />
+					<alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet" />
+					<alwaysOnActionSet id="org.eclipse.jdt.debug.ui.JDTDebugActionSet" />
+					<alwaysOnActionSet id="org.eclipse.jdt.junit.JUnitActionSet" />
+					<show_view_action id="org.eclipse.jdt.ui.PackageExplorer" />
+					<show_view_action id="org.eclipse.jdt.ui.TypeHierarchy" />
+					<show_view_action id="org.eclipse.jdt.ui.SourceView" />
+					<show_view_action id="org.eclipse.jdt.ui.JavadocView" />
+					<show_view_action id="org.eclipse.search.ui.views.SearchView" />
+					<show_view_action id="org.eclipse.ui.console.ConsoleView" />
+					<show_view_action id="org.eclipse.ui.views.ContentOutline" />
+					<show_view_action id="org.eclipse.ui.views.ProblemView" />
+					<show_view_action id="org.eclipse.ui.views.ResourceNavigator" />
+					<show_view_action id="org.eclipse.ui.views.TaskList" />
+					<show_view_action id="org.eclipse.ui.views.ProgressView" />
+					<show_view_action id="org.eclipse.ui.navigator.ProjectExplorer" />
+					<show_view_action id="org.eclipse.ui.texteditor.TemplatesView" />
+					<show_view_action id="org.eclipse.pde.runtime.LogView" />
+					<show_view_action id="org.eclipse.ant.ui.views.AntView" />
+					<show_view_action id="org.eclipse.mylyn.tasks.ui.views.tasks" />
+					<new_wizard_action id="org.eclipse.jdt.ui.wizards.JavaProjectWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewPackageCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewClassCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewInterfaceCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewEnumCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewAnnotationCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewSourceFolderCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewSnippetFileCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.ui.wizards.NewJavaWorkingSetWizard" />
+					<new_wizard_action id="org.eclipse.ui.wizards.new.folder" />
+					<new_wizard_action id="org.eclipse.ui.wizards.new.file" />
+					<new_wizard_action
+						id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard" />
+					<new_wizard_action
+						id="org.eclipse.jdt.junit.wizards.NewTestCaseCreationWizard" />
+					<new_wizard_action
+						id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task" />
+					<perspective_action id="org.eclipse.jdt.ui.JavaBrowsingPerspective" />
+					<perspective_action id="org.eclipse.debug.ui.DebugPerspective" />
+					<hide_toolbar_item_id
+						id="org.eclipse.jdt.ui.actions.OpenProjectWizard" />
+					<hide_toolbar_item_id
+						id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly" />
+					<view id="org.eclipse.jdt.ui.JavadocView" />
+					<view id="org.eclipse.jdt.ui.SourceView" />
+					<view id="org.eclipse.ui.console.ConsoleView" />
+					<view id="org.eclipse.search.ui.views.SearchView" />
+					<view id="org.eclipse.jdt.ui.PackageExplorer" />
+					<view id="org.eclipse.ui.views.ProblemView" />
+					<view id="org.eclipse.jdt.junit.ResultView" />
+					<fastViewBars />
+					<layout>
+						<mainWindow>
+							<info folder="true" part="left">
+								<folder appearance="2" expanded="2">
+									<page content="org.eclipse.jdt.ui.TypeHierarchy" label="LabelNotFound" />
+									<page content="org.eclipse.ui.views.ResourceNavigator"
+										label="LabelNotFound" />
+									<page content="org.eclipse.ui.navigator.ProjectExplorer"
+										label="LabelNotFound" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
+								</folder>
+							</info>
+							<info folder="true" part="org.eclipse.ui.internal.ViewStack@1516490"
+								ratio="0.75" ratioLeft="756" ratioRight="252" relationship="2"
+								relative="left">
+								<folder appearance="2" expanded="2">
+									<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound" />
+									<page content="org.eclipse.ui.internal.introview" label="LabelNotFound" />
+									<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView"
+										label="LabelNotFound" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
+								</folder>
+							</info>
+							<info folder="true" part="org.eclipse.ui.internal.ViewStack@5acf13"
+								ratio="0.25" ratioLeft="252" ratioRight="756" relationship="2"
+								relative="left">
+								<folder activePageID="org.eclipse.jdt.ui.PackageExplorer"
+									appearance="2" expanded="2">
+									<page content="org.eclipse.jdt.ui.PackageExplorer" label="Package Explorer" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+										<part id="0" />
+									</presentation>
+								</folder>
+							</info>
+							<info folder="true" part="org.eclipse.ui.internal.ViewStack@f40ddf"
+								ratio="0.7620751" ratioLeft="426" ratioRight="133" relationship="4"
+								relative="org.eclipse.ui.internal.ViewStack@5acf13">
+								<folder activePageID="org.eclipse.ui.views.ProblemView"
+									appearance="2" expanded="2">
+									<page content="org.eclipse.ui.views.ProblemView" label="Problems" />
+									<page content="org.eclipse.jdt.junit.ResultView" label="JUnit" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+										<part id="0" />
+										<part id="1" />
+									</presentation>
+								</folder>
+							</info>
+							<info folder="true" part="bottom" ratio="0.5694444"
+								ratioLeft="533" ratioRight="403" relationship="2"
+								relative="org.eclipse.ui.internal.ViewStack@f40ddf">
+								<folder activePageID="org.eclipse.search.ui.views.SearchView"
+									appearance="2" expanded="2">
+									<page content="org.eclipse.jdt.ui.JavadocView" label="Javadoc" />
+									<page content="org.eclipse.jdt.ui.SourceView" label="Declaration" />
+									<page content="org.eclipse.ui.console.ConsoleView" label="Console" />
+									<page content="org.eclipse.search.ui.views.SearchView"
+										label="Search" />
+									<page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound" />
+									<page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+										<part id="0" />
+										<part id="1" />
+										<part id="2" />
+										<part id="3" />
+									</presentation>
+								</folder>
+							</info>
+							<info folder="true" part="org.eclipse.ui.internal.ViewStack@1db8962"
+								ratio="0.75" ratioLeft="567" ratioRight="189" relationship="2"
+								relative="org.eclipse.ui.internal.ViewStack@5acf13">
+								<folder appearance="2" expanded="2">
+									<page content="org.eclipse.mylyn.tasks.ui.views.tasks"
+										label="LabelNotFound" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
+								</folder>
+							</info>
+							<info folder="true" part="right" ratio="0.49893844"
+								ratioLeft="235" ratioRight="236" relationship="4"
+								relative="org.eclipse.ui.internal.ViewStack@1db8962">
+								<folder appearance="2" expanded="2">
+									<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound" />
+									<page content="org.eclipse.ui.texteditor.TemplatesView"
+										label="LabelNotFound" />
+									<page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound" />
+									<presentation
+										id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
+								</folder>
+							</info>
+							<info part="org.eclipse.ui.editorss" ratio="0.35042736"
+								ratioLeft="328" ratioRight="608" relationship="2"
+								relative="org.eclipse.ui.internal.ViewStack@5acf13" />
+							<info part="org.eclipse.egit.ui.RepositoriesView" ratio="0.59936404"
+								ratioLeft="377" ratioRight="252" relationship="4" relative="left" />
+						</mainWindow>
+					</layout>
+				</perspective>
+			</perspectives>
+			<workingSets />
+			<navigationHistory>
+				<editors>
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.manifestEditor" path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.productEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product" />
+					<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory"
+						id="org.eclipse.ui.DefaultTextEditor"
+						uri="file:/D:/Projects/RapidBeans/runtime-eclipseheadless.product/.metadata/.log" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.ant.ui.internal.editor.AntEditor" path="/RapidBeans Environment/env.xml" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.manifestEditor" path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessActivator.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.manifestEditor" path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.productEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.manifestEditor" path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.ui.DefaultTextEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/dist/eclipse/configuration/1319818741296.log" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.pde.ui.manifestEditor" path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+						path="/org.rapidbeans.addressbook/.project" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.jdt.ui.CompilationUnitEditor"
+						path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+					<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+						id="org.eclipse.ant.ui.internal.editor.AntEditor" path="/RapidBeans Environment/env.xml" />
+				</editors>
+				<item historyLabel=".log" index="2">
+					<position />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="1" />
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="0" />
+				<item historyLabel="eclipseheadless.product" index="1" />
+				<item historyLabel=".log" index="2">
+					<position />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="1" />
+				<item historyLabel=".log" index="2">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="1" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="3">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="3">
+					<position />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="3">
+					<position info="not_deleted" x="1746" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="1" />
+				<item historyLabel="env.xml" index="4">
+					<position info="not_deleted" x="14324" y="46" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="1" />
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="5" />
+				<item historyLabel="EclipseHeadlessActivator.java" index="6">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="7">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="8" />
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="10" />
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="10" />
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="10" />
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="11">
+					<position info="not_deleted" x="1746" y="0" />
+				</item>
+				<item historyLabel="1319818741296.log" index="12">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="13">
+					<position info="not_deleted" x="1746" y="0" />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="13">
+					<position info="not_deleted" x="2273" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="13">
+					<position info="not_deleted" x="2273" y="0" />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="13">
+					<position info="not_deleted" x="2251" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="14">
+					<position info="not_deleted" x="2506" y="0" />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="14">
+					<position info="not_deleted" x="1869" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="14">
+					<position info="not_deleted" x="2418" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="org.rapidbeans.rapidenv.eclipseheadless"
+					index="15" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="14">
+					<position info="not_deleted" x="2500" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="16">
+					<position info="not_deleted" x="2535" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel="EclipseHeadlessApplication.java" index="17">
+					<position info="not_deleted" x="2343" y="0" />
+				</item>
+				<item historyLabel="eclipseheadless.product" index="9" />
+				<item historyLabel=".project" index="18">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item historyLabel="EclipseHeadlessApplication.java" index="19">
+					<position info="not_deleted" x="1459" y="0" />
+				</item>
+				<item historyLabel="env.xml" index="20">
+					<position info="not_deleted" x="0" y="0" />
+				</item>
+				<item active="true" historyLabel="EclipseHeadlessApplication.java"
+					index="19">
+					<position info="not_deleted" x="1459" y="0" />
+				</item>
+			</navigationHistory>
+			<input factoryID="org.eclipse.ui.internal.model.ResourceFactory"
+				path="/" type="8" />
+		</page>
+		<workbenchWindowAdvisor />
+		<actionBarAdvisor />
+		<trimLayout>
+			<trimArea IMemento.internal.id="128">
+				<trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar" />
+				<trimItem IMemento.internal.id="org.eclipse.mylyn.tasks.ui.trim.container" />
+			</trimArea>
+			<trimArea IMemento.internal.id="1024">
+				<trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar" />
+				<trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager" />
+				<trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion" />
+			</trimArea>
+		</trimLayout>
+	</window>
+	<mruList>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ant.ui.internal.editor.AntEditor"
+			name="env.xml" tooltip="RapidBeans Environment/env.xml">
+			<persistable path="/RapidBeans Environment/env.xml" />
+		</file>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory"
+			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+			name=".project" tooltip="org.rapidbeans.addressbook/.project">
+			<persistable path="/org.rapidbeans.addressbook/.project" />
+		</file>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor"
+			name="1319818741296.log"
+			tooltip="org.rapidbeans.rapidenv.eclipseheadless/dist/eclipse/configuration/1319818741296.log">
+			<persistable
+				path="/org.rapidbeans.rapidenv.eclipseheadless/dist/eclipse/configuration/1319818741296.log" />
+		</file>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor"
+			name="EclipseHeadlessApplication.java"
+			tooltip="org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java">
+			<persistable
+				path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessApplication.java" />
+		</file>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor"
+			name="EclipseHeadlessActivator.java"
+			tooltip="org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessActivator.java">
+			<persistable
+				path="/org.rapidbeans.rapidenv.eclipseheadless/src/org/rapidbeans/rapidenv/eclipseheadless/EclipseHeadlessActivator.java" />
+		</file>
+		<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory"
+			id="org.eclipse.ui.DefaultTextEditor" name=".log"
+			tooltip="D:\Projects\RapidBeans\runtime-eclipseheadless.product\.metadata\.log">
+			<persistable
+				uri="file:/D:/Projects/RapidBeans/runtime-eclipseheadless.product/.metadata/.log" />
+		</file>
+		<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory"
+			id="org.eclipse.ui.DefaultTextEditor" name="1319787806343.log"
+			tooltip="D:\Projects\RapidBeans\eclipseworkspace\.metadata\.plugins\org.eclipse.pde.core\eclipseheadless.product\1319787806343.log">
+			<persistable
+				uri="file:/D:/Projects/RapidBeans/eclipseworkspace/.metadata/.plugins/org.eclipse.pde.core/eclipseheadless.product/1319787806343.log" />
+		</file>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.pde.ui.productEditor"
+			name="eclipseheadless.product"
+			tooltip="org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product">
+			<persistable
+				path="/org.rapidbeans.rapidenv.eclipseheadless/eclipseheadless.product" />
+		</file>
+		<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory"
+			id="org.eclipse.ui.DefaultTextEditor" name=".log"
+			tooltip="D:\Projects\RapidBeans\runtime-org.rapidbeans.rapidenv.eclipseheadless.cmdlineapp\.metadata\.log">
+			<persistable
+				uri="file:/D:/Projects/RapidBeans/runtime-org.rapidbeans.rapidenv.eclipseheadless.cmdlineapp/.metadata/.log" />
+		</file>
+		<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.pde.ui.manifestEditor"
+			name="plugin.xml" tooltip="org.rapidbeans.rapidenv.eclipseheadless/plugin.xml">
+			<persistable path="/org.rapidbeans.rapidenv.eclipseheadless/plugin.xml" />
+		</file>
+		<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory"
+			id="ar.com.tadp.xmleditor.basic" name="workbench.xml"
+			tooltip="D:\Projects\RapidBeans\eclipseworkspace\.metadata\.plugins\org.eclipse.ui.workbench\workbench.xml">
+			<persistable
+				uri="file:/D:/Projects/RapidBeans/eclipseworkspace/.metadata/.plugins/org.eclipse.ui.workbench/workbench.xml" />
+		</file>
+		<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory"
+			id="org.eclipse.jdt.ui.ClassFileEditor" name="Workbench.class"
+			tooltip="org.eclipse.ui.internal.Workbench">
+			<persistable
+				org.eclipse.jdt.ui.ClassFileIdentifier="=org.rapidbeans.rapidenv.eclipseheadless/D:\/Projects\/RapidBeans\/tools\/eclipse\/3.7.1\/plugins\/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar&lt;org.eclipse.ui.internal(Workbench.class" />
+		</file>
+	</mruList>
+</workbench>

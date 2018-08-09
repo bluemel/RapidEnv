@@ -1,0 +1,49 @@
+<!-- Element: project
+	The root object for every project environment defined
+	by means of RapidEnv.
+	Attribute: name
+		The development environment project name
+	Attribute: tag
+		The tag specifies an ID which together with the project name
+		uniquely identifies a development environment on your machine.
+		Since you usually only have more than one development environment
+		concerning the same project on your machine in case you have to
+		work with different branches in parellel this tag will usually
+		specify the branch (e. g. "main"). but it's also possible to work with
+		two different local development environments on the same branch.
+		In this case the tag value has to be specified differently
+		(e. g. "main_a" and main_b").
+	Attribute: installsourceurl
+		The URL where all installation unit packages are taken from
+		by default. If an installunit's "sourceurl" is not defined
+		it automatically defaults to <installsourceurl>/<installunit.space>/<installunit.name>/<installunit.version>
+		whereas each component of "installunit.space" will become a separate subfolder. 
+		Otherwise install units define their specific source URL.
+		This property is not mandatory but you are supposed to
+		ether specify a value for it
+		or to specify "sourceurl" for all the project's installunits.
+	Attribute: installtargetdir
+		The relative or absolute path to the local folder where all install units are installed to by default.
+		If an installunit's "homedir" is not defined the "homedir" automatically defaults to
+		<installtargetdir>/<installunit.space>/<installunit.name>/<installunit.version>
+		whereas each component of "space" will become a separate subfolder. 
+		Otherwise install units define their specific home directory.
+		This property is not mandatory but you are supposed to
+		ether specify a value for it
+		or to specify a "homedir" for all the project's installunits.
+	Attribute: profiledir
+		The folder where all user profiles are located.
+		By default this value is the folder where the renv command is located.
+	Attribute: expressionLiteralEscaping
+		Set this value to true if you want to use
+-->
+<!ELEMENT project EMPTY>
+<!ATTLIST project
+	name CDATA #REQUIRED
+	tag CDATA #IMPLIED
+	installsourceurl CDATA #IMPLIED
+	installtargetdir CDATA #IMPLIED
+	profiledir CDATA #IMPLIED
+	expressionLiteralEscaping (false | true) #IMPLIED
+>
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * Rapid Beans Framework: OperatingSystemFamily.xml
+ *
+ * Copyright (C) 2011 Martin Bluemel
+ *
+ * Creation Date: 07/07/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- duplicated model for documentation reasons -->
+<enumtype name="org.rapidbeans.core.util.OperatingSystemFamily">
+	<description>Determines the operating system (family).</description>
+	<enum name="linux">
+		<description>The Linux open source operating system.</description>
+	</enum>
+	<enum name="windows">
+		<description>Microsoft Windows.</description>
+	</enum>
+	<enum name="mac">
+		<description>Apple Mac OS.</description>
+	</enum>
+	<codegen mode="none"/>
+</enumtype>

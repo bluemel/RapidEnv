@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installsourceurl="file:src/test/resources/site"
+	installtargetdir="target/testinstall"
+	>
+	<property name="my_osspecific_path"
+		category="common" value="">
+		<specificvalue osfamily="windows">
+			<value>C:\Program Files\Postgres</value>
+		</specificvalue>
+		<specificvalue osfamily="linux">
+			<value>/opt/postgres</value>
+		</specificvalue>
+	</property>
+	<property name="my_perso_prop"
+		category="personal" value="xyz">
+	</property>
+	<installunit name="myapp" version="1.0.2">
+		<property name="home" category="common"
+			value="homedir()">
+			<description>Home directory of myapp installation</description>
+			<environment name="MYAPP_HOME"/>
+		</property>
+	</installunit>
+	<installunit name="otherapp" version="1.0"
+		sourcefile="otherapp-${otherapp.testcommon}.zip"
+		>
+		<property name="data" category="personal"
+			valuetype="file"
+			value="src/test/resources/testinstall/OtherappData"
+			filetype="directory" mustExist="false"
+			>
+			<description>A directory tool &quot;otherapp&quot; urgently needs</description>
+			<environment name="OTHERAPP_DATA"/>
+		</property>
+		<property name="testcommon"
+			value="1test"
+			>
+			<description>Test a common property</description>
+		</property>
+		<anttask
+			installphase="preinstall"
+			anttaskname="echo"
+			silent="false"
+			>
+			<argument name="message" value="PRE INSTALL: testcommon =&quot;${otherapp.testcommon}&quot;!"/>
+		</anttask>
+	</installunit>
+</project>

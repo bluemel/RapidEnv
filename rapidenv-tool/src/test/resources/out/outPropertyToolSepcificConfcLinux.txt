@@ -1,0 +1,6 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+  = myapp.home = "@RAPIDENV_HOME@/target/testinstall/myapp/1.0.2"

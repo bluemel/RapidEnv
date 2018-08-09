@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="target/testinstall"
+	>
+
+	<property name="maven.repo" category="common"
+		valuetype="file"
+		value="MavenRepository"
+		filetype="directory" mustExist="true" createIfNotExist="true"
+		>
+		<description>The home directory of build tool Maven</description>
+		<environment name="MAVEN_REPO"/>
+	</property>
+
+	<installunit space="org.apache" name="maven" version="2.1.2"
+		sourceurl="file:src/test/resources/conf/mavensettingsTmp.xml"
+		>
+		<xmlfile path="conf/settings.xml"
+			sourceurl="file:src/test/resources/conf/mavensettings1.xml"
+			copycondition="notexist"
+			addeleminnewline="true"
+			indent="  ">
+
+			<!-- # Node value settings ######################### -->
+
+			<!-- ensure an XML element (node) value already set -->
+			<setnodevalue path="//settings/proxies/proxy/active"
+				value="false"/>
+			<!-- change an XML element (node) value -->
+			<setnodevalue path="//settings/proxies/proxy/protocol"
+				value="myproto"/>
+			<!-- change an XML element (node) value referenced by index -->
+			<setnodevalue path="//settings/servers/server[1]/id"
+				value="myserver1"/>
+			<!--  change an XML attribute value -->
+			<setnodevalue path="//settings/testnode02/@attr1"
+				value="yyy"/>
+
+			<!-- create a new XML attribute value within an existing XML element (node) -->
+			<setnodevalue path="//settings/localRepository/@testattr"
+				value="hello1"/>
+			<!-- create a second XML attribute value within an existing XML element (node) -->
+			<setnodevalue path="//settings/localRepository/@testattr2"
+				value="hello2"/>
+			<!-- create a new first sub element within an existing XML element (node) -->
+			<setnodevalue path="//settings/emptytestnode01/firstnewsubelement"
+				value="hello first"/>
+			<!-- create a new first sub element within an existing XML element (node) and one attribute value -->
+			<setnodevalue path="//settings/emptytestnode01/firstnewsubelement/@test1"
+				value="hello attr"/>
+			<!-- create a second new sub element within this XML element (node) -->
+			<setnodevalue path="//settings/emptytestnode01/secondsubelement"
+				value="hello second"/>
+			<setnodevalue path="//settings/emptytestnode02/firstnewsubelement/firstnewsubsubelement"
+				value="hello first subsub"/>
+<!--
+			<setnodevalue path="//settings/emptytestnode02/secondnewsubelement/@test1"
+				value="hello attr sub"/>
+-->
+
+			<!-- # Node insertions ######################### -->
+			<!-- insert / append a new node within an existing XML element (node) -->
+
+			<!-- # Node deletions ######################### -->
+			<!-- delete a node -->
+			<deletenode path="//settings/testnode01/subnodetodelete"/>
+			<deletenode path="//settings/testnode01/@attr1"/>
+		</xmlfile>
+	</installunit>
+</project>

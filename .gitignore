@@ -1,3 +1,5 @@
-eclipseworkspace
-mavenrepo
-tools
+setupenv.cmd
+.project
+.settings
+.classpath
+/target/

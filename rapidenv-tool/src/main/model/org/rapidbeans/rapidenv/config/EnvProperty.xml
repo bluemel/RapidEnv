@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: EnvProperty.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 06/03/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.EnvProperty" idtype="keyprops">
+
+	<description>A property is a named value that is either defined centrally
+(mode = "common") or personally (mode = "personal").</description>
+
+	<property name="fullyQualifiedName" key="true" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyFullyQualyfiedName"
+		transient="true">
+		<description>The property's fully qualified name which also is the speaky key to identify it uniquely.</description>
+	</property>
+
+	<property name="name" type="string">
+		<description>The property's name.</description>
+	</property>
+
+	<property name="description" type="string"
+		multiline="true">
+		<description>Describes the meaning of this property</description>
+	</property>
+
+	<property name="value" type="string"
+		emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The property's value depending from its mode:&#10;
+common: value simply defines the value.&#10;
+personal: value only defines the default value which interactively can be overwritten.</description>
+	</property>
+
+	<property name="category" type="choice"
+		default="common"
+		enum="PropertyCategory">
+		<description>Determines if the property's value can and should be
+individually set by the user or be a common setting for all environments
+which can be centrally controlled.</description>
+	</property>
+
+	<property name="valuetype" type="choice"
+		default="string"
+		enum="PropertyValueType">
+		<description>Determines the type of this property's value.</description>
+	</property>
+
+	<property name="filetype" type="choice"
+		default="directory"
+		enum="PropertyFileType">
+		<description>Specifies if a file is a folder / directory or a simple flat file.</description>
+	</property>
+
+	<property name="mustExist" type="boolean"
+		default="true">
+		<description>Only used for properties of type "file".
+If it is true it is verified if the local file or folder exists.</description>
+	</property>
+
+	<property name="createIfNotExist" type="boolean"
+		default="false">
+		<description>Only used for properties of type "file" with file type
+"directory" and if mustExist = "true".
+If it is true for properties of type 'common' the path automatically
+created if it does not exist. For properties of type 'personal' the
+user is asked for creation if it does not exist.</description>
+	</property>
+
+	<property name="normalize" type="boolean"
+		default="true">
+		<description>Only used for properties of type "file" and "path".
+If set to "true" file properties will become normalized which means
+have canonical path(s).
+Additionally in "paths" duplicate entries will be removed.</description>
+	</property>
+
+	<property name="interpret" type="boolean"
+		default="true">
+		<description>If true the specified property value is interpreted.
+If interpretation is not possible and you do not need it you can turn it off here.</description>
+	</property>
+
+	<property name="interpretdepth" type="integer"
+		default="-1">
+		<description>If less than 0 the interpretation depth ist unlimited.
+If greater or equal 1 the interpretation depth is limited.</description>
+	</property>
+
+	<property name="specificvalues" type="association"
+		composition="true"
+		targettype="PropertyValue">
+		<description>Specific value definition(s) for this property.
+You might use more than one in case you want to have this property
+different value for different operating systems.</description>
+	</property>
+
+	<property name="environments" type="association"
+		composition="true"
+		targettype="Environment">
+		<description>Environment variable definition(s) for this property.
+You might use more than one in case you want to name the environment variables
+differently for different operating systems.</description>
+	</property>
+
+	<property name="extensions" type="association"
+		composition="true"
+		targettype="PropertyExtension">
+		<description>Extensions extend the property value by being
+successively appended or prepended.</description>
+	</property>
+
+	<property name="installunitextensions" type="association"
+		targettype="PropertyExtensionFromInstallUnit" inverse="property">
+		<description>Install unit extensions extend the property value by being
+successively appended or prepended but lead to some automatic migration in
+case the install unit is upgraded.</description>
+	</property>
+
+	<xmlbinding>
+		<property name="description" bindingtype="element"/>
+	</xmlbinding>
+
+	<codegen mode="split" implementation="strict"/>
+</beantype>

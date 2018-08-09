@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE project SYSTEM "../../env.dtd">
+<project name="test"
+	installtargetdir="target/testinstall"
+	>
+	<property name="jdk_home" value="homedir('jdk')"/>
+	<installunit name="jdk" version="1.6.0"/>
+	<installunit space="org.apache" name="ant" version="1.8.0"/>
+	<installunit space="org.me" name="ant" version="1.8.1"/>
+</project>

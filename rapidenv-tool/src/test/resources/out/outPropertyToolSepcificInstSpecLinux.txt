@@ -1,0 +1,10 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+otherapp.data
+  A directory tool "otherapp" urgently needs
+  [@RAPIDENV_HOME@/target/testinstall/OtherappData] >directory @RAPIDENV_HOME@/target/testinstall/OtherappData does not exist. Create it? <Y|N> [Y] >  otherapp.data = "@RAPIDENV_HOME@/target/testinstall/OtherappData"
+
+  - introduced property "otherapp.testcommon" with value "xyz"
+installing otherapp 1.0 by unpacking file @RAPIDENV_HOME@/src/test/resources/site/otherapp/1.0/otherapp-1.0.zip
+  into local folder @RAPIDENV_HOME@/target/testinstall/otherapp/1.0...

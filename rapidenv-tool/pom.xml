@@ -1,0 +1,250 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.rapidbeans.rapidenv</groupId>
+	<artifactId>rapidenv-tool</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.rapidbeans</groupId>
+			<artifactId>rapidbeans-runtime</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.7</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.9.4</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/model</directory>
+			</resource>
+			<resource>
+				<directory>target/generated-dtds</directory>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/main/model</directory>
+									<targetPath>classes</targetPath>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources/rapidbeans</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.rapidbeans</groupId>
+				<artifactId>rapidbeans-sdk</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<id>generate-sources-rapidbeans</id>
+						<configuration>
+							<srcdir>src/main/model</srcdir>
+							<codeGenMode>flexible</codeGenMode>
+						</configuration>
+						<goals>
+							<goal>rapidbeans-generator</goal>
+						</goals>
+						<phase>generate-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+<!--
+			Executing Rapidenv DTD generation as Maven plugin does not work because the DTD generator
+			currently developed in rapidenv-sdk has dependencies to rapidenv-tool's domain classes.
+			As long as we do not break this dependency cycle we have to apply an alternate solution.
+
+			<plugin>
+				<groupId>org.rapidbeans.rapidenv</groupId>
+				<artifactId>rapidenv-sdk</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+
+				<executions>
+
+					<execution>
+						<id>generate-dtd-rapidenv-project</id>
+						<configuration>
+							<header>DTD for RapidEnv project definition</header>
+							<type>org.rapidbeans.rapidenv.config.Project</type>
+							<dtd>env.dtd</dtd>
+							<modelroot>src/main/model</modelroot>
+							<force>false</force>
+						</configuration>
+						<goals>
+							<goal>rapidenv-dtd-generator</goal>
+						</goals>
+						<phase>process-classes</phase>
+					</execution>
+
+				. . .
+
+				</executions>
+
+			</plugin>
+-->
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<executions>
+<!--
+			Executing Rapidenv DTD generation as Maven plugin does not work because the DTD generator
+			has dependencies to rapidenv-tool's domain classes.
+			So as an alternate solution (hack) we execute the DTD generator as extra "unit test" before all other tests
+-->
+					<execution>
+						<id>generate-before-tests</id>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/GenerateDtds.java</include>
+							</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-test</id>
+						<configuration>
+							<excludes>
+								<exclude>**/GenerateDtds.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+
+		<pluginManagement>
+
+			<plugins>
+
+				<!-- for Eclipse M2E only -->
+
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.rapidbeans</groupId>
+										<artifactId>rapidbeans-sdk</artifactId>
+										<versionRange>(0.0.0,)</versionRange>
+										<goals>
+											<goal>rapidbeans-generator</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-surefire-plugin</artifactId>
+										<versionRange>(0.0.0,)</versionRange>
+										<goals>
+											<goal>test</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+
+			</plugins>
+
+		</pluginManagement>
+
+	</build>
+
+</project>

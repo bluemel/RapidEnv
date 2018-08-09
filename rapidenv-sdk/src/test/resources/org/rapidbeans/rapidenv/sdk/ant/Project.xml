@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Project.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 06/02/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.sdk.ant.Project">
+	<description>The root object for every project environment defined
+by means of RapidEnv.</description>
+
+	<property name="name" type="string" mandatory="true">
+		<description>The development environment project name</description>
+	</property>
+
+	<property name="tag" type="string" default="main">
+		<description>The tag specifies an ID which together with the project name
+uniquely identifies a development environment on your machine.
+Since you usually only have more than one development environment
+concerning the same project on your machine in case you have to
+work with different branches in parellel this tag will usually
+specify the branch (e. g. "main"). but it's also possible to work with
+two different local development environments on the same branch.
+In this case the tag value has to be specified differently
+(e. g. "main_a" and main_b").</description>
+	</property>
+
+	<property name="installsourceurl" type="string">
+		<description>The URL where all installation unit packages are taken from
+by default. If an installunit's "sourceurl" is not defined
+it automatically defaults to &lt;installsourceurl&gt;/&lt;installunit.space&gt;/&lt;installunit.name&gt;/&lt;installunit.version&gt;
+whereas each component of "installunit.space" will become a separate subfolder. 
+Otherwise install units define their specific source URL.
+This property is not mandatory but you are supposed to
+ether specify a value for it
+or to specify "sourceurl" for all the project's installunits.</description>
+	</property>
+
+	<property name="installtargetdir" type="string">
+		<description>The relative or absolute path to the local folder where all install units are installed to by default.
+If an installunit's "homedir" is not defined the "homedir" automatically defaults to
+&lt;installtargetdir&gt;/&lt;installunit.space&gt;/&lt;installunit.name&gt;/&lt;installunit.version&gt;
+whereas each component of "space" will become a separate subfolder. 
+Otherwise install units define their specific home directory.
+This property is not mandatory but you are supposed to
+ether specify a value for it
+or to specify a "homedir" for all the project's installunits.</description>
+	</property>
+
+	<property name="profiledir" type="file"
+		default="profile"
+		filetype="directory"
+		>
+		<description>The folder where all user profiles are located.
+By default this value is the folder where the renv command is located.</description>
+	</property>
+
+	<property name="expressionLiteralEscaping" type="boolean"
+		default="false">
+		<description>Set this value to true if you want to use</description>
+	</property>
+
+	<xmlbinding xmlrootelement="project"/>
+	<codegen mode="split" implementation="strict"/>
+</beantype>

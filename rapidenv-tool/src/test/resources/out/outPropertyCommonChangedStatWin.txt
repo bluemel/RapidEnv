@@ -1,0 +1,16 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+  ! testprop01: new common property with value "D:\unknown" should be introduced.
+  ! testprop02: value of common property should be changed
+    from "oldvalue"
+      to "newvalue"
+  = testprop03 = "@RAPIDENV_HOME@\target\testinstall\jdk\1.6.0"
+  ! testprop04: new personal property needs to be specified
+  p testprop05 = "newvalue"
+  p testprop06 = "oldvalue"
+
+Install units:
+  ! jdk 1.6.0 installation required

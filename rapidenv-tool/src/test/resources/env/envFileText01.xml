@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	installtargetdir="target/testinstall"
+	>
+
+	<property name="maven.repo"
+		category="common"
+		valuetype="file"
+		value="MavenRepository"
+		filetype="directory" mustExist="true" createIfNotExist="true"
+		>
+		<description>The home directory of build tool Maven</description>
+		<environment name="MAVEN_REPO"/>
+	</property>
+
+	<installunit space="org.apache" name="maven" version="2.1.2"
+		sourceurl="http://maven.apache.org/xxx.zip"
+		>
+		<textfile path="conf/settings.xml"
+			sourceurl="file:src/test/resources/conf/mavensettings1.xml"
+			>
+			<insert line="1 1 1"
+				regexp="agreements"
+				mode="prepend"
+				/>
+		</textfile>
+	</installunit>
+</project>

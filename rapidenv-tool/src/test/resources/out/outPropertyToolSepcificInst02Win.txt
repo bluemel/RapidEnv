@@ -1,0 +1,16 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+  - introduced property "myapp.home" with value "@RAPIDENV_HOME@\target\testinstall\myapp\1.0.2"
+otherapp.data
+  A directory tool "otherapp" urgently needs
+  [@RAPIDENV_HOME@\src\test\resources\testinstall\OtherappData] >  otherapp.data = "/a/b/c"
+
+  - introduced property "otherapp.testcommon" with value "1test"
+installing myapp 1.0.2 by unpacking file @RAPIDENV_HOME@\src\test\resources\site\myapp\1.0.2\myapp-1.0.2.zip
+  into local folder @RAPIDENV_HOME@\target\testinstall\myapp\1.0.2...
+Executing Ant task "echo"...
+PRE INSTALL: testcommon ="1test"!
+installing otherapp 1.0 by unpacking file @RAPIDENV_HOME@\src\test\resources\site\otherapp\1.0\otherapp-1test.zip
+  into local folder D:\Projects\sources\RapidEnv\rapidenv-tool\target\testinstall\otherapp\1.0...
+Installation finished successfully

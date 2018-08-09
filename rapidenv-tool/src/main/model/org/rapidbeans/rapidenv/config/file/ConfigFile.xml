@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigFile.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/08/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFile"
+	extends="org.rapidbeans.rapidenv.config.Configuration">
+
+	<description>An configuration operation on a single file</description>
+
+	<property name="path" type="string"
+		mandatory="true" mustexist="false"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The path to the file to configure. The path usually is a relative one.
+If it is relative it is supposed to be relative to the parent installation unit's home directory.</description>
+	</property>
+
+	<property name="sourceurl" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>Defines where the file to configure comes from.
+If "sourceurl" is not defined the file to configure is supposed to be already
+existent and will only be changed from its original form.</description>
+	</property>
+
+    <property name="deleteafterdeinstall" type="boolean"
+        default="true">
+        <description>Determines if the configuration file should be deleted
+after deinstallation in case it is not under the installation root.
+In the case it is under the installation root it will be deleted anyway.
+Set this value to false if you want to prevent this default behavior.</description>
+    </property>
+
+    <property name="newline" type="choice"
+        enum="NewlineType" default="platform">
+        <description>Defines the newline character(s) to use.</description>
+    </property>
+
+    <property name="canread" type="boolean"
+        default="true">
+        <description>Determines if the file to configure can be read
+(default = true).</description>
+    </property>
+
+    <property name="canwrite" type="boolean"
+        default="true">
+        <description>Determines if the file to configure can be written
+(default = true).</description>
+    </property>
+
+	<property name="canexecute" type="boolean"
+		default="false">
+        <description>Determines if the file to configure can be executed
+(default = false).</description>
+	</property>
+
+	<property name="copycondition" type="choice"
+		enum="EnumFileCopyCondition"
+		default="sourcenewer">
+		<description>The condition when the source is copied over the target:
+notexist:    when the target does not exist
+sourcenewer: when the source is new than the target: allows manual and
+             automatic change aftwerwards but ensures template changes
+			 being processed
+diff:        strict binding to the source file (manual changes are excluded)</description>
+	</property>
+
+	<property name="encoding" type="choice"
+		enum="org.rapidbeans.datasource.CharsetsAvailable"
+		default="UTF-8">
+		<description>One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
+		IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
+		IBM1026, IBM1047, IBM273, IBM277, IBM278, IBM280, IBM284, IBM285, IBM297, IBM420, IBM424, IBM437, IBM500, IBM775, IBM850,
+		IBM852, IBM855, IBM857, IBM860, IBM861, IBM862, IBM863, IBM864, IBM865, IBM866, IBM868, IBM869, IBM870, IBM871, IBM918,
+		ISO-2022-CN, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-KR, ISO-8859-1, ISO-8859-13, ISO-8859-15, ISO-8859-2, ISO-8859-3, ISO-8859-4,
+		ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, JIS_X0201, JIS_X0212-1990, KOI8-R, KOI8-U, Shift_JIS, TIS-620,
+		US-ASCII, UTF-16, UTF-16BE, UTF-16LE, UTF-32, UTF-32BE, UTF-32LE, UTF-8, windows-1250, windows-1251, windows-1252, windows-1253,
+		windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j,
+		x-Big5-HKSCS-2001, x-Big5-Solaris, x-euc-jp-linux, x-EUC-TW, x-eucJP-Open, x-IBM1006, x-IBM1025, x-IBM1046, x-IBM1097,
+		x-IBM1098, x-IBM1112, x-IBM1122, x-IBM1123, x-IBM1124, x-IBM1381, x-IBM1383, x-IBM33722, x-IBM737, x-IBM833, x-IBM834,
+		x-IBM856, x-IBM874, x-IBM875, x-IBM921, x-IBM922, x-IBM930, x-IBM933, x-IBM935, x-IBM937, x-IBM939, x-IBM942, x-IBM942C,
+		x-IBM943, x-IBM943C, x-IBM948, x-IBM949, x-IBM949C, x-IBM950, x-IBM964, x-IBM970, x-ISCII91, x-ISO-2022-CN-CNS, x-ISO-2022-CN-GB,
+		x-iso-8859-11, x-JIS0208, x-JISAutoDetect, x-Johab, x-MacArabic, x-MacCentralEurope, x-MacCroatian, x-MacCyrillic, x-MacDingbat,
+		x-MacGreek, x-MacHebrew, x-MacIceland, x-MacRoman, x-MacRomania, x-MacSymbol, x-MacThai, x-MacTurkish, x-MacUkraine, x-MS932_0213,
+		x-MS950-HKSCS, x-MS950-HKSCS-XP, x-mswin-936, x-PCK, x-SJIS_0213, x-UTF-16LE-BOM, X-UTF-32BE-BOM, X-UTF-32LE-BOM, x-windows-50220,
+		x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp</description>
+	</property>
+
+	<property name="tasks" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.ConfigurationTask">
+		<description>Tasks serve to extend the configuration.</description>
+	</property>
+
+	<property name="commandonconfig" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+		maxmult="1"
+		>
+		<description>Defines a system command that is automatically
+executed whenever a configuration on this file or folder has been performed</description>
+	</property>
+
+	<codegen mode="split" implementation="strict"/>
+</beantype>

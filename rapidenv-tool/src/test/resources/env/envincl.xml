@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../envPartProject.dtd">
+
+<projectpart>
+	<installunit space="org.apache" name="ant" version="1.8.0"
+		sourceurl="http://ant.apache.org/xxx.zip">
+		<subunit space="xalan" name="serializer" version="2.7.1"
+			installmode="put" homedir="lib"
+			sourceurl="http://repo1.maven.org/maven2/xalan/serializer/''version()/serializer-''version().jar" />
+	</installunit>
+</projectpart>

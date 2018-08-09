@@ -1,0 +1,12 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+  = my_osspecific_path = "/opt/postgres"
+  p my_perso_prop = "xyz"
+  ! myapp.home: new common property with value "@RAPIDENV_HOME@/target/testinstall/myapp/1.0.2" should be introduced.
+
+Install units:
+  ! myapp 1.0.2 installation required
+  - otherapp 1.0 optional

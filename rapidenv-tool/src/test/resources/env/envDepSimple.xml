@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE project SYSTEM "../../env.dtd">
+
+<project name="test"
+	>
+	<installunit name="jdk" version="1.6.0"
+		sourceurl="http://java.sun.com/xxx.exe"
+		/>
+	<installunit space="org.apache" name="ant" version="1.8.0"
+		depends="jdk"
+		/>
+	<installunit space="org.apache" name="maven" version="2.2.1"
+		depends="jdk"
+		/>
+	<installunit space="org.rapidenv" name="test01" version="1.0.0"
+		depends="org.apache.ant,org.apache.maven"
+		/>
+	<installunit space="org.rapidenv" name="test02" version="1.0.0"
+		depends="org.rapidenv.test01"
+		/>
+</project>

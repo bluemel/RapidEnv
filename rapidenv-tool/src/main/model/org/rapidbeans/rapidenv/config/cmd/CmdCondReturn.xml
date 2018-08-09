@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: CmdCondReturn.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 10/03/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.cmd.CmdCondReturn">
+
+	<description>Defines a condition on the return value
+at the end of the system command execution.</description>
+
+	<property name="equals" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The return value has to equal a distinct value.</description>
+	</property>
+
+	<property name="matches" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The return value has to match the given pattern.</description>
+	</property>
+
+	<codegen implementation="strict"/>
+
+</beantype>

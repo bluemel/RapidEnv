@@ -1,0 +1,2 @@
+run a distinct test in Maven (default-test phase)
+  mvn surefire:test -Dtest=ConfigFileEditorXmlTest

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * Rapid Beans Framework: CmdRenvCommand.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 05/20/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.CmdRenvCommand">
+	<description>Valid command argument for the &quot;renv&quot; command line tool</description>
+	<header>
+		<column name="short1" type="String"/>
+	</header>
+	<enum name="boot">
+		<description>boot the environment.
+This command usually is issued automatically if the environment is not yet set up.</description>
+		<cell name="short1" value="b"/>
+	</enum>
+	<enum name="config">
+		<description>update configuration(s) of the given installation unit(s)</description>
+		<cell name="short1" value="c"/>
+	</enum>
+	<enum name="deinstall">
+		<description>uninstall the given installation unit(s) if installed</description>
+		<cell name="short1" value="d"/>
+	</enum>
+	<enum name="hashvalue">
+		<description>print the hash value of the given file using the given hash algorithm</description>
+		<cell name="short1" value="a"/>
+	</enum>
+	<enum name="help">
+		<description>print command help</description>
+		<cell name="short1" value="h"/>
+	</enum>
+	<enum name="install">
+		<description>install the given installation unit(s) if not installed</description>
+		<cell name="short1" value="i"/>
+	</enum>
+	<enum name="stat">
+		<description>print the installation and configuration status of the given installation unit(s)</description>
+		<cell name="short1" value="s"/>
+	</enum>
+	<enum name="update">
+		<description>update version(s) and configuration(s) of the given installation unit(s)</description>
+		<cell name="short1" value="u"/>
+	</enum>
+	<enum name="version">
+		<description>print RapidEnv version</description>
+		<cell name="short1" value="v"/>
+	</enum>
+</enumtype>

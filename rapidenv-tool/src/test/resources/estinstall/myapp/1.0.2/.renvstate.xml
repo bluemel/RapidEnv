@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<installunitdata
+	id="myapp"
+	fullname="myapp"
+	version="1.0.2"
+	installstate="installed"
+	>
+	<usedbyenviroment
+		envfile="D:\Projects\sources\RapidEnv\rapidenv-tool\src\test\resources\env\envPropsPath08.xml"
+		/>
+</installunitdata>

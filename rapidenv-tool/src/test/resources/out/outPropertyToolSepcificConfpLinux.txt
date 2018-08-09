@@ -1,0 +1,8 @@
+
+RapidEnv development environment
+  Project: test, Tag: main
+
+Properties:
+otherapp.data
+  A directory tool "otherapp" urgently needs
+  [@RAPIDENV_HOME@/target/testinstall/OtherappData] >  otherapp.data = "@RAPIDENV_HOME@/target/testinstall/OtherappData"

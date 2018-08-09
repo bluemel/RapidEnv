@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: PropertyValue.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/02/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.PropertyValue">
+	<description>A specific value definition for a RapidEnv property
+This specific value definition overrides the parent property's value attribute
+for two purposes:
+1) platform (os) specific value definitions
+2) complex value definitions that can't be performed in an XML attribute and need an
+   XML element</description>
+	<property name="osfamily" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystemFamily">
+		<description>If this value is defined the environment variable becomes a platform specific one.
+If it is undefined the definition the property's value is valid for all platforms.</description>
+	</property>
+	<property name="value" type="string"
+		emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString"
+		>
+		<description>The property's (default) value.
+Could be platform specific when using the "osfamily" attribute.
+If not defined the value will be taken from the parent property node's value attribute</description>
+	</property>
+	<!--<codegen mode="split"/>-->
+	<xmlbinding>
+		<property name="value" bindingtype="element"/>
+	</xmlbinding>
+	<codegen implementation="strict"/>
+</beantype>
