@@ -26,8 +26,8 @@ import org.rapidbeans.core.type.TypeProperty;
 import org.rapidbeans.core.type.TypePropertyString;
 import org.rapidbeans.core.util.StringHelper;
 import org.rapidbeans.rapidenv.RapidEnvException;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**

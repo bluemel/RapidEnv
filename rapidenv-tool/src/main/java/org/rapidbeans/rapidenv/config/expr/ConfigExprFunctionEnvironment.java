@@ -18,8 +18,8 @@
 package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 
 /**
  * Usage of function environment() is discouraged. In RapidEnv you are supposed

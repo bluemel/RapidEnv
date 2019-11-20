@@ -20,8 +20,8 @@ import java.util.logging.Level;
 
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**

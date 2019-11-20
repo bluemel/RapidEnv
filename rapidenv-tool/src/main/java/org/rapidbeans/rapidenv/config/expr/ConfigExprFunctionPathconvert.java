@@ -20,8 +20,8 @@ package org.rapidbeans.rapidenv.config.expr;
 import java.io.File;
 
 import org.rapidbeans.core.type.TypeRapidBean;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 
 /**
  * Function Expression to determine platform independently an platform specific

@@ -20,9 +20,9 @@ package org.rapidbeans.rapidenv.config.expr;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
-import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.RapidEnvConfigurationException;
 
 /**

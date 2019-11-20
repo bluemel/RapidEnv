@@ -19,9 +19,9 @@ package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
+import org.rapidbeans.rapidenv.config.EnvProperty;
 import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.Project;
-import org.rapidbeans.rapidenv.config.EnvProperty;
 
 /**
  * Used to insert the scheduled install unit version into strings.

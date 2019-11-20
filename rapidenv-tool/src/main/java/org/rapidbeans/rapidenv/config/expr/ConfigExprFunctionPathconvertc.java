@@ -22,8 +22,8 @@ import java.io.IOException;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.rapidenv.RapidEnvException;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 
 /**
  * Function Expression to determine a platform specific canonical (absolute and

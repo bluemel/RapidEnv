@@ -19,8 +19,8 @@ package org.rapidbeans.rapidenv.config.expr;
 
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.PlatformHelper;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 
 public class ConfigExprFunctionUsername extends RapidBeanBaseConfigExprFunctionUsername {
 

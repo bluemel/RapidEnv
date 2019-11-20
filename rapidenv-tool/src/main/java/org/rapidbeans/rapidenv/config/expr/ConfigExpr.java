@@ -19,8 +19,8 @@ package org.rapidbeans.rapidenv.config.expr;
 import java.util.List;
 
 import org.rapidbeans.core.basic.RapidBean;
-import org.rapidbeans.rapidenv.config.Installunit;
 import org.rapidbeans.rapidenv.config.EnvProperty;
+import org.rapidbeans.rapidenv.config.Installunit;
 
 /**
  * The parent class of each configuration expression. Configuration expressions

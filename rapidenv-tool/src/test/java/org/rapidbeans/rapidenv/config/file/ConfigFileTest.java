@@ -19,7 +19,6 @@ package org.rapidbeans.rapidenv.config.file;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -37,8 +36,6 @@ import org.rapidbeans.core.util.FileHelper;
 import org.rapidbeans.core.util.PlatformHelper;
 import org.rapidbeans.core.util.Version;
 import org.rapidbeans.datasource.Document;
-import org.rapidbeans.rapidenv.CmdRenvCommand;
-import org.rapidbeans.rapidenv.InstallStatus;
 import org.rapidbeans.rapidenv.RapidEnvInterpreter;
 import org.rapidbeans.rapidenv.RapidEnvTestHelper;
 import org.rapidbeans.rapidenv.cmd.CmdRenv;
