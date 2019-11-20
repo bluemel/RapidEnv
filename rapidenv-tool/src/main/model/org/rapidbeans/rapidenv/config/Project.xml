@@ -61,7 +61,6 @@ or to specify a "homedir" for all the project's installunits.</description>
 	</property>
 
 	<property name="profiledir" type="file"
-		default="profile"
 		filetype="directory"
 		>
 		<description>The folder where all user profiles are located.

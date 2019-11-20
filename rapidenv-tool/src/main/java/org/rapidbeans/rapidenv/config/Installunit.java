@@ -317,9 +317,9 @@ public class Installunit extends RapidBeanBaseInstallunit {
 					final int start = sourceurl.getProtocol().length() + 1;
 					final String path = sourceurl.toString().substring(start);
 					if (getProject() != null) {
-						final URL projectInstallsoureurl = getProject().getInstallsourceurlAsUrl();
-						if (projectInstallsoureurl != null) {
-							localsourcefile = new File(projectInstallsoureurl.getFile(), getFullyQualifiedName()
+						final URL projectInstallsourceurl = getProject().getInstallsourceurlAsUrl();
+						if (projectInstallsourceurl != null) {
+							localsourcefile = new File(projectInstallsourceurl.getFile(), getFullyQualifiedName()
 									.replace('.', '/')
 									+ File.separator
 									+ getVersion().toString()
@@ -1536,8 +1536,8 @@ public class Installunit extends RapidBeanBaseInstallunit {
 	 */
 	private List<Version> findInstalledVersions(final CmdRenvCommand command) {
 		final List<Version> installedVersions = new ArrayList<Version>();
-
-		if (RapidEnvInterpreter.getInstance().getEnvironmentInstallationsFile().exists()) {
+        final File environmentInstallationsFile = RapidEnvInterpreter.getInstance().getEnvironmentInstallationsFile();
+		if (environmentInstallationsFile.exists()) {
 			final InstallunitData data =
 					RapidEnvInterpreter.getInstance().getInstallations().findInstallunit(getFullyQualifiedName());
 			if (data != null && data.getInstallstate() == InstallState.installed) {

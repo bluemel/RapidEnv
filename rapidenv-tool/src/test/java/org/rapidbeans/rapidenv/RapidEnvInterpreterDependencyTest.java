@@ -334,7 +334,9 @@ public class RapidEnvInterpreterDependencyTest {
 	@Test
 	public void testInstallDependentUnitsAllow() {
 		try {
+			new File(".renvinstall.xml").delete();
 			assertFalse(new File("target/testtargetdir").exists());
+			assertFalse(new File(".renvinstall.xml").exists());
 			RapidEnvInterpreter env = new RapidEnvInterpreter(new CmdRenv(
 					new String[] { "-env", "src/test/resources/env/envDepSub.xml", "i", "ant", "maven", "jdk" }));
 			final ByteArrayOutputStream bStream = new ByteArrayOutputStream();

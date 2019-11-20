@@ -580,7 +580,10 @@ public class RapidEnvInterpreter {
 		try {
 			final String lf = PlatformHelper.getLineFeed();
 			osw = new OutputStreamWriter(new FileOutputStream(tmpfile));
-			final String rapidEnvHome = System.getenv("RAPID_ENV_HOME");
+			// final String rapidEnvHome = System.getenv("RAPID_ENV_HOME");
+			final String profileFilePropsPath = new File(getProject().getProfiledir(), "renv_"
+					+ PlatformHelper.username() + "_" + PlatformHelper.hostname()
+					+ ".cmd").getCanonicalPath().replace("/", "\\");
 			osw.write("Windows Registry Editor Version 5.00"
 					+ lf
 					+ lf
@@ -603,8 +606,10 @@ public class RapidEnvInterpreter {
 					+ getProject().getName() + " " + getProject().getTag()
 					+ " Command Prompt" + " & cd /D \\\"%L\\\""
 					+ " & call \\\""
-					+ rapidEnvHome.replace("\\", "\\\\").replace("\"", "\\\"")
-					+ "\\\\bin\\\\renv\\\"" + "\"" + lf);
+					// + rapidEnvHome.replace("\\", "\\\\").replace("\"", "\\\"")
+					// + "\\\\bin\\\\renv\\\"" + "\"" + lf);
+					+ profileFilePropsPath.replace("\\", "\\\\").replace("\"", "\\\"")
+					+ "\\\"\"" + lf);
 		} catch (IOException e) {
 			throw new RapidEnvException(e);
 		} finally {
@@ -883,7 +888,8 @@ public class RapidEnvInterpreter {
 		final List<Installunit> units = getInstallunitsToProcess();
 		if (isInstallUnitOrPropertyNamesExplicitelySpecified()) {
 			for (final Installunit unit : units) {
-				if (getInstallationStatus(unit, CmdRenvCommand.install) == InstallStatus.notinstalled
+				final InstallStatus installationSatus = getInstallationStatus(unit, CmdRenvCommand.install);
+				if (installationSatus == InstallStatus.notinstalled
 						&& unit.shouldBeInstalled()) {
 					boolean install = true;
 					if (unit.getInstallcontrol() == InstallControl.discontinued) {
