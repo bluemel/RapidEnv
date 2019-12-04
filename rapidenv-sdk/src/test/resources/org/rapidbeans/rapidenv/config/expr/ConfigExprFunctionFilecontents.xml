@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigExprFunctionFilecontents.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 11/01/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.expr.ConfigExprFunctionFilecontents"
+	extends="org.rapidbeans.rapidenv.config.expr.ConfigExprFunction">
+
+	<description>Give the contents of the specified text file in one single string.</description>
+
+	<property name="path" mandatory="true">
+		<description>Specifies the file to read.</description>
+	</property>
+
+	<property name="charsToEscape" mandatory="false">
+		<description>Every character in the given string will get a backslash prepended.</description>
+	</property>
+
+	<property name="linefeedControl" mandatory="false" default="preserve">
+		<description>Specifies how to handle line feeds:
+preserve: take the line feed from the file
+platform: always use the platform specific line feed
+normalize: always use \n as line feed</description>
+	</property>
+
+	<property name="returnval">
+		<description>The contents of the file specified.</description>
+	</property>
+
+	<codegen mode="split"/>
+
+</beantype>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Argtype.xml
+ *
+ * Copyright (C) 2011 Martin Bluemel
+ *
+ * Creation Date: 12/12/2011
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.config.cmd.Argtype">
+	<description>Forseen argument types.</description>
+	<enum name="string">
+		<description>
+			A string argument. Usually the default for argument choices.
+		</description>
+	</enum>
+	<enum name="bool">
+		<description>A boolean argument.</description>
+	</enum>
+	<enum name="date">
+		<description>A date argument.</description>
+	</enum>
+	<enum name="file">
+		<description>A file argument.</description>
+	</enum>
+	<enum name="integer">
+		<description>An integer number argument.</description>
+	</enum>
+	<enum name="floating">
+		<description>A floating point number argument.</description>
+	</enum>
+</enumtype>

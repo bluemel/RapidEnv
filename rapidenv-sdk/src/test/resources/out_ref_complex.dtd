@@ -1,0 +1,2248 @@
+<!-- Element: project
+	The root object for every project environment defined
+	by means of RapidEnv.
+	Subelement: propertys
+		The global property definitions.
+	Subelement: installunits
+		The install unit definitions
+	Subelement: includes
+		Pseudo element for including other files containing one ore more installunit definitions
+	Attribute: name
+		The development environment project name
+	Attribute: tag
+		The tag specifies an ID which together with the project name
+		uniquely identifies a development environment on your machine.
+		Since you usually only have more than one development environment
+		concerning the same project on your machine in case you have to
+		work with different branches in parellel this tag will usually
+		specify the branch (e. g. "main"). but it's also possible to work with
+		two different local development environments on the same branch.
+		In this case the tag value has to be specified differently
+		(e. g. "main_a" and main_b").
+	Attribute: installsourceurl
+		The URL where all installation unit packages are taken from
+		by default. If an installunit's "sourceurl" is not defined
+		it automatically defaults to <installsourceurl>/<installunit.space>/<installunit.name>/<installunit.version>
+		whereas each component of "installunit.space" will become a separate subfolder. 
+		Otherwise install units define their specific source URL.
+		This property is not mandatory but you are supposed to
+		ether specify a value for it
+		or to specify "sourceurl" for all the project's installunits.
+	Attribute: installtargetdir
+		The relative or absolute path to the local folder where all install units are installed to by default.
+		If an installunit's "homedir" is not defined the "homedir" automatically defaults to
+		<installtargetdir>/<installunit.space>/<installunit.name>/<installunit.version>
+		whereas each component of "space" will become a separate subfolder. 
+		Otherwise install units define their specific home directory.
+		This property is not mandatory but you are supposed to
+		ether specify a value for it
+		or to specify a "homedir" for all the project's installunits.
+	Attribute: profiledir
+		The folder where all user profiles are located.
+		By default this value is the folder where the renv command is located.
+	Attribute: expressionLiteralEscaping
+		Set this value to true if you want to use
+-->
+<!ELEMENT project (#PCDATA | propertys | installunits | includes)*>
+<!ATTLIST project
+	name CDATA #REQUIRED
+	tag CDATA #IMPLIED
+	installsourceurl CDATA #IMPLIED
+	installtargetdir CDATA #IMPLIED
+	profiledir CDATA #IMPLIED
+	expressionLiteralEscaping (false | true) #IMPLIED
+>
+
+<!-- Element: propertys
+	A property is a named value that is either defined centrally
+	(mode = "common") or personally (mode = "personal").
+	Subelement: description
+		Describes the meaning of this property
+	Subelement: specificvalues
+		Specific value definition(s) for this property.
+		You might use more than one in case you want to have this property
+		different value for different operating systems.
+	Subelement: environments
+		Environment variable definition(s) for this property.
+		You might use more than one in case you want to name the environment variables
+		differently for different operating systems.
+	Subelement: extensions
+		Extensions extend the property value by being
+		successively appended or prepended.
+	Attribute: name
+		The property's name.
+	Attribute: value
+		The property's value depending from its mode:
+		common: value simply defines the value.
+		personal: value only defines the default value which interactively can be overwritten.
+	Attribute: category
+		Determines if the property's value can and should be
+		individually set by the user or be a common setting for all environments
+		which can be centrally controlled.
+		Determines if the property's value can and should be
+		personally set by the user or be a common setting for all environments
+		which can be centrally controlled.
+		Value: common
+			A common property is defined in the
+			environment definition. Its value is not supposed to be changed not be changed personally.
+			Whenever its is changed in the environment definition file all installed environments can overtake
+			this change during the next run of the renv "update" or "configure" command.
+		Value: personal
+			A personal property can be adapted by a developer.
+	Attribute: valuetype
+		Determines the type of this property's value.
+		Determines the type of a property's values.
+		Value: string
+			A string of nearly arbitrary length only limited be the OS.
+		Value: file
+			A (path to a) local file or directory.
+		Value: path
+			A set of many paths to a local file like the
+			OS command path or the Java class path.
+		Value: url
+			A path to a remote resource.
+	Attribute: filetype
+		Specifies if a file is a folder / directory or a simple flat file.
+				Specifies if a file is a foler / directory or a simple flat file.
+			
+		Value: file
+						A flat file.
+					
+		Value: directory
+						A folder.
+					
+	Attribute: mustExist
+		Only used for properties of type "file".
+		If it is true it is verified if the local file or folder exists.
+	Attribute: createIfNotExist
+		Only used for properties of type "file" with file type
+		"directory" and if mustExist = "true".
+		If it is true for properties of type 'common' the path automatically
+		created if it does not exist. For properties of type 'personal' the
+		user is asked for creation if it does not exist.
+	Attribute: normalize
+		Only used for properties of type "file" and "path".
+		If set to "true" file properties will become normalized which means
+		have canonical path(s).
+		Additionally in "paths" duplicate entries will be removed.
+	Attribute: interpret
+		If true the specified property value is interpreted.
+		If interpretation is not possible and you do not need it you can turn it off here.
+	Attribute: interpretdepth
+		If less than 0 the interpretation depth ist unlimited.
+		If greater or equal 1 the interpretation depth is limited.
+	Attribute: installunitextensions
+		Install unit extensions extend the property value by being
+		successively appended or prepended but lead to some automatic migration in
+		case the install unit is upgraded.
+-->
+<!ELEMENT propertys (#PCDATA | description | specificvalues | environments | extensions)*>
+<!ATTLIST propertys
+	name CDATA #IMPLIED
+	value CDATA #IMPLIED
+	category (common | personal) #IMPLIED
+	valuetype (string | file | path | url) #IMPLIED
+	filetype (file | directory) #IMPLIED
+	mustExist (false | true) #IMPLIED
+	createIfNotExist (false | true) #IMPLIED
+	normalize (false | true) #IMPLIED
+	interpret (false | true) #IMPLIED
+	interpretdepth CDATA #IMPLIED
+	installunitextensions CDATA #IMPLIED
+>
+
+<!-- Element: description
+	Describes the meaning of this property
+-->
+<!ELEMENT description (#PCDATA)*>
+
+<!-- Element: specificvalues
+	A specific value definition for a RapidEnv property
+	This specific value definition overrides the parent property's value attribute
+	for two purposes:
+	1) platform (os) specific value definitions
+	2) complex value definitions that can't be performed in an XML attribute and need an
+	   XML element
+	Subelement: value
+		The property's (default) value.
+		Could be platform specific when using the "osfamily" attribute.
+		If not defined the value will be taken from the parent property node's value attribute
+	Attribute: osfamily
+		If this value is defined the environment variable becomes a platform specific one.
+		If it is undefined the definition the property's value is valid for all platforms.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+-->
+<!ELEMENT specificvalues (#PCDATA | value)*>
+<!ATTLIST specificvalues
+	osfamily (linux | windows | mac) #IMPLIED
+>
+
+<!-- Element: value
+	The property's (default) value.
+	Could be platform specific when using the "osfamily" attribute.
+	If not defined the value will be taken from the parent property node's value attribute
+-->
+<!ELEMENT value (#PCDATA)*>
+
+<!-- Element: environments
+	An environment variable defintion for a RapidEnv property
+	Attribute: name
+		The environment variable name
+	Attribute: osfamily
+		If this value is defined the environment variable will become a platform specific one.
+		If it is undefined the definition is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+-->
+<!ELEMENT environments EMPTY>
+<!ATTLIST environments
+	name CDATA #REQUIRED
+	osfamily (linux | windows | mac) #IMPLIED
+>
+
+<!-- Element: extensions
+	A path extension definition for a RapidEnv property containing any path.
+	The platform specific path separator is automatically used in order to prepend or append the extension.
+	Attribute: propextmode
+		Defines weather to "prepend" or "append" this path extension.
+		Determines how to extend a path like property.
+		Value: prepend
+						Prepend the path extension.
+					
+		Value: append
+						Append the path extension.
+					
+		Value: remove
+						Remove an unwanted path extension.
+					
+	Attribute: value
+		The environment variable's (default) value.
+		Could be platform specific when using the "osfamily" attribute.
+-->
+<!ELEMENT extensions EMPTY>
+<!ATTLIST extensions
+	propextmode (prepend | append | remove) #IMPLIED
+	value CDATA #REQUIRED
+>
+
+<!-- Element: installunits
+	An installation unit is an installable and configurable unit
+	needed for your development environment e. g the execution platform like JDK,
+	a build tool like Ant, or an IDE like Eclipse.
+	Subelement: propertys
+		Installation unit specific property definitions.
+	Subelement: downloads
+		URLs where to download the installation source
+	Subelement: sourcefilechecks
+		Checks on the source file
+	Subelement: subunits
+		Subunits if the installation unit. Subunits:
+		- can not be installed specifically before their parent units are installed.
+		- will be automatically installed when their parent units are installed.
+		- will be automatically deinstalled when their parent units are deinstalled (no confirmation).
+		- will be usually installed into the parent units installtion location.
+		f you install all units RapidEnv will choose an
+		appropriate installation sequence.
+	Subelement: propertiesfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: folder
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: anttask
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: icon
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: textfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: xmlfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: command
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: installcommand
+		Only valid for and mandatory for install units of mode "execute"
+	Subelement: deinstallcommand
+		Only valid for and mandatory for install units of mode "execute"
+	Subelement: propextensions
+		Defines a path extension defintion coming from this install unit.
+		The extension will lead to some migration of the property value during upgrade if it changes.
+	Subelement: include
+		Pseudo element for including other files containing partial installunit definitions
+	Attribute: space
+		The installation unit name space.
+					Works like a package in Java.
+	Attribute: name
+		The installation unit name.
+	Attribute: version
+		The version that is or should be installed.
+	Attribute: depends
+		Defines the n to n dependency assocition between installation units.
+		Installation of units that depend from other units (depends not null or empty)
+		requires the installation of these units before (this holds for transitive dependencies
+		too).
+		If you install such a unit depending on other ones selectively the required units will be
+		automatically be installed before. If you install all units RapidEnv will choose an
+		appropriate installation sequence.
+		If you deinstall a unit that is required by other ones selectively all other units directly
+		or indirectly requiering this unit will be automatically deinstalled before (after user
+		confirmation).
+	Attribute: sourcetype
+		Defines how to get access to the installation source.
+		Value: url
+						Installation unit source is defined by a url.
+					
+		Value: mavenrepo
+						Installation unit source comes from a Maven repository.
+					
+	Attribute: sourceurl
+		Defines where the installation source comes from.
+		If "sourceurl" is not defined it automatically defaults to
+		project.installsourceurl/space/name/version
+		whereas each component of "space" will become a separate subfolder.
+	Attribute: sourcefile
+		Specifies the source file name in case it is not the
+		default one "<install unit name>-<version>.zip".
+		Usually it is sufficient to define either a source file name or a
+		complete source URL. Complex source URLs on the other hand sometimes make
+		it hard or impossible to figure out the source file name.
+		In this case you simply specify the source file name additionally.
+	Attribute: downloadmode
+		Describes how to load the installation unit's file(s) (installer).
+		Describes the different modes to load from the LAN or Internet.
+		Value: automatic
+			Automatic download
+		Value: manual
+			Manual download
+		Value: never
+			No download at all
+	Attribute: homedir
+		The folder where the unit is installed on your machine.
+		If "homedir" is not defined it automatically defaults to
+		project.installtargetdir/space/name/version
+		whereas each component of "space" will become a separate subfolder.
+	Attribute: osfamily
+		If this value is defined the install unit will exclusively be installed on
+		this type of operating system family otherwise it will be installed operating system independently.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: os
+		If this value is defined the install unit will exclusively be installed on
+		this type of operating system otherwise it will be installed operating system independently.
+	Attribute: architecture
+		If this value is defined the install unit will exclusively be installed on
+		this platform architecture otherwise it will be installed platform architecture independently.
+	Attribute: installcontrol
+		Determines if to install or deinstall the installation unit.
+		normal: install and update as usual
+		optional: install only when explicitely specified in the installation or update command.
+		  Update as usual
+		discontinued: deinstall during update, refuse instsllstion snd configuration
+		Value: normal
+						Install and update as usual.
+					
+		Value: optional
+						Install only when explicitely specified in the installation or update command.
+			Update as usual.
+					
+		Value: discontinued
+						Deinstall during update, refuse installtion and configuration.
+					
+	Attribute: installmode
+		Determines how to install the installation unit.
+		Describes the different mode to install software.
+		Value: put
+			Simply put a single file into the specified folder.
+		Value: unpack
+			Unpack a zip, jar, or tar file.
+		Value: execute
+			Execute an installer.
+	Attribute: packaging
+		Determines the type of packaging.
+		Value: zip
+			zip file.
+		Value: jar
+			jar file.
+		Value: tar
+			tar file.
+		Value: ziptar
+			zipped tar file.
+	Attribute: unpackstrategy
+		This property drives the removal of one or more
+		(single) root directories after having unpacked the
+		installation archive file under "homedir()".
+		The default behavior is "removerootdeep" but in most cases "removeroot"
+		will be sufficient and have better performance as well as less problems under Windows file system.
+		Describes the different strategies to unpack an archive file.
+		Value: simple
+			Simply put a single file into the specified folder.
+		Value: removeroot
+			Remove the root folder. Requires the archive to have one
+			single root folder for all files included.
+		Value: removerootdeep
+			Automatically remove one or more root folders in case there are any.
+			Does not require the archive to have one or more root folders for all files included
+			but in case they are there they are removed.
+	Attribute: deinstallunusedmode
+		Determines if or if not to deinstall unused version(s) after upgrade.
+		Per default unused version(s) will always be deinstalled.
+		Value: never
+			never deinstall unused versions
+		Value: always
+			always deinstall unused versions
+		Value: prompt
+			prompt if unused versions should be deinstalled
+-->
+<!ELEMENT installunits (#PCDATA | propertys | downloads | sourcefilechecks | subunits | propertiesfile | folder | anttask | icon | textfile | xmlfile | command | installcommand | deinstallcommand | propextensions | include)*>
+<!ATTLIST installunits
+	space CDATA #IMPLIED
+	name CDATA #REQUIRED
+	version CDATA #REQUIRED
+	depends CDATA #IMPLIED
+	sourcetype (url | mavenrepo) #IMPLIED
+	sourceurl CDATA #IMPLIED
+	sourcefile CDATA #IMPLIED
+	downloadmode (automatic | manual | never) #IMPLIED
+	homedir CDATA #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	os (linux | windows_unknown_old | windows_xp | windows_vista | windows_7 | windows_8 | windows_unknown_new | mac) #IMPLIED
+	architecture CDATA #IMPLIED
+	installcontrol (normal | optional | discontinued) #IMPLIED
+	installmode (put | unpack | execute) #IMPLIED
+	packaging (zip | jar | tar | ziptar) #IMPLIED
+	unpackstrategy (simple | removeroot | removerootdeep) #IMPLIED
+	deinstallunusedmode (never | always | prompt) #IMPLIED
+>
+
+<!-- Element: downloads
+	Defines a download for one single file.
+	Attribute: osfamily
+		If this value is defined this check will become an operating system specific one.
+		If it is undefined the definition is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: downloadtype
+		Describes the method how to download (automatic versus manual))
+		Describes the different modes to download a file.
+		Value: automatic
+			The file may be loaded automatically by the tool.
+		Value: manual
+			You have to download the file manually e. g. for license reasons.
+	Attribute: url
+		The URL where you can download the file.
+-->
+<!ELEMENT downloads EMPTY>
+<!ATTLIST downloads
+	osfamily (linux | windows | mac) #IMPLIED
+	downloadtype (automatic | manual) #IMPLIED
+	url CDATA #IMPLIED
+>
+
+<!-- Element: sourcefilechecks
+	Defines a hash value check on a file.
+	Attribute: osfamily
+		If this value is defined this check will become an operating system specific one.
+		If it is undefined the definition is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: hashalgorithm
+		The hash algorithm to use for the check.
+		The hash algorithm to use for checksum computing
+		Value: MD5
+			MD5 hash algorithm
+		Value: SHA1
+			SHA1 hash algorithm
+	Attribute: hashvalue
+		The hash value to check against.
+-->
+<!ELEMENT sourcefilechecks EMPTY>
+<!ATTLIST sourcefilechecks
+	osfamily (linux | windows | mac) #IMPLIED
+	hashalgorithm (MD5 | SHA1) #IMPLIED
+	hashvalue CDATA #IMPLIED
+>
+
+<!-- Element: subunits
+	An installation unit is an installable and configurable unit
+	needed for your development environment e. g the execution platform like JDK,
+	a build tool like Ant, or an IDE like Eclipse.
+	Subelement: propertys
+		Installation unit specific property definitions.
+	Subelement: downloads
+		URLs where to download the installation source
+	Subelement: sourcefilechecks
+		Checks on the source file
+	Subelement: subunits
+		Subunits if the installation unit. Subunits:
+		- can not be installed specifically before their parent units are installed.
+		- will be automatically installed when their parent units are installed.
+		- will be automatically deinstalled when their parent units are deinstalled (no confirmation).
+		- will be usually installed into the parent units installtion location.
+		f you install all units RapidEnv will choose an
+		appropriate installation sequence.
+	Subelement: propertiesfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: folder
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: anttask
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: icon
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: textfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: xmlfile
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: command
+		Configurations serve to configure an installation unit in distinct phases.
+	Subelement: installcommand
+		Only valid for and mandatory for install units of mode "execute"
+	Subelement: deinstallcommand
+		Only valid for and mandatory for install units of mode "execute"
+	Subelement: propextensions
+		Defines a path extension defintion coming from this install unit.
+		The extension will lead to some migration of the property value during upgrade if it changes.
+	Subelement: include
+		Pseudo element for including other files containing partial installunit definitions
+	Attribute: space
+		The installation unit name space.
+					Works like a package in Java.
+	Attribute: name
+		The installation unit name.
+	Attribute: version
+		The version that is or should be installed.
+	Attribute: depends
+		Defines the n to n dependency assocition between installation units.
+		Installation of units that depend from other units (depends not null or empty)
+		requires the installation of these units before (this holds for transitive dependencies
+		too).
+		If you install such a unit depending on other ones selectively the required units will be
+		automatically be installed before. If you install all units RapidEnv will choose an
+		appropriate installation sequence.
+		If you deinstall a unit that is required by other ones selectively all other units directly
+		or indirectly requiering this unit will be automatically deinstalled before (after user
+		confirmation).
+	Attribute: sourcetype
+		Defines how to get access to the installation source.
+		Value: url
+						Installation unit source is defined by a url.
+					
+		Value: mavenrepo
+						Installation unit source comes from a Maven repository.
+					
+	Attribute: sourceurl
+		Defines where the installation source comes from.
+		If "sourceurl" is not defined it automatically defaults to
+		project.installsourceurl/space/name/version
+		whereas each component of "space" will become a separate subfolder.
+	Attribute: sourcefile
+		Specifies the source file name in case it is not the
+		default one "<install unit name>-<version>.zip".
+		Usually it is sufficient to define either a source file name or a
+		complete source URL. Complex source URLs on the other hand sometimes make
+		it hard or impossible to figure out the source file name.
+		In this case you simply specify the source file name additionally.
+	Attribute: downloadmode
+		Describes how to load the installation unit's file(s) (installer).
+		Describes the different modes to load from the LAN or Internet.
+		Value: automatic
+			Automatic download
+		Value: manual
+			Manual download
+		Value: never
+			No download at all
+	Attribute: homedir
+		The folder where the unit is installed on your machine.
+		If "homedir" is not defined it automatically defaults to
+		project.installtargetdir/space/name/version
+		whereas each component of "space" will become a separate subfolder.
+	Attribute: osfamily
+		If this value is defined the install unit will exclusively be installed on
+		this type of operating system family otherwise it will be installed operating system independently.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: os
+		If this value is defined the install unit will exclusively be installed on
+		this type of operating system otherwise it will be installed operating system independently.
+	Attribute: architecture
+		If this value is defined the install unit will exclusively be installed on
+		this platform architecture otherwise it will be installed platform architecture independently.
+	Attribute: installcontrol
+		Determines if to install or deinstall the installation unit.
+		normal: install and update as usual
+		optional: install only when explicitely specified in the installation or update command.
+		  Update as usual
+		discontinued: deinstall during update, refuse instsllstion snd configuration
+		Value: normal
+						Install and update as usual.
+					
+		Value: optional
+						Install only when explicitely specified in the installation or update command.
+			Update as usual.
+					
+		Value: discontinued
+						Deinstall during update, refuse installtion and configuration.
+					
+	Attribute: installmode
+		Determines how to install the installation unit.
+		Describes the different mode to install software.
+		Value: put
+			Simply put a single file into the specified folder.
+		Value: unpack
+			Unpack a zip, jar, or tar file.
+		Value: execute
+			Execute an installer.
+	Attribute: packaging
+		Determines the type of packaging.
+		Value: zip
+			zip file.
+		Value: jar
+			jar file.
+		Value: tar
+			tar file.
+		Value: ziptar
+			zipped tar file.
+	Attribute: unpackstrategy
+		This property drives the removal of one or more
+		(single) root directories after having unpacked the
+		installation archive file under "homedir()".
+		The default behavior is "removerootdeep" but in most cases "removeroot"
+		will be sufficient and have better performance as well as less problems under Windows file system.
+		Describes the different strategies to unpack an archive file.
+		Value: simple
+			Simply put a single file into the specified folder.
+		Value: removeroot
+			Remove the root folder. Requires the archive to have one
+			single root folder for all files included.
+		Value: removerootdeep
+			Automatically remove one or more root folders in case there are any.
+			Does not require the archive to have one or more root folders for all files included
+			but in case they are there they are removed.
+	Attribute: deinstallunusedmode
+		Determines if or if not to deinstall unused version(s) after upgrade.
+		Per default unused version(s) will always be deinstalled.
+		Value: never
+			never deinstall unused versions
+		Value: always
+			always deinstall unused versions
+		Value: prompt
+			prompt if unused versions should be deinstalled
+-->
+<!ELEMENT subunits (#PCDATA | propertys | downloads | sourcefilechecks | subunits | propertiesfile | folder | anttask | icon | textfile | xmlfile | command | installcommand | deinstallcommand | propextensions | include)*>
+<!ATTLIST subunits
+	space CDATA #IMPLIED
+	name CDATA #REQUIRED
+	version CDATA #REQUIRED
+	depends CDATA #IMPLIED
+	sourcetype (url | mavenrepo) #IMPLIED
+	sourceurl CDATA #IMPLIED
+	sourcefile CDATA #IMPLIED
+	downloadmode (automatic | manual | never) #IMPLIED
+	homedir CDATA #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	os (linux | windows_unknown_old | windows_xp | windows_vista | windows_7 | windows_8 | windows_unknown_new | mac) #IMPLIED
+	architecture CDATA #IMPLIED
+	installcontrol (normal | optional | discontinued) #IMPLIED
+	installmode (put | unpack | execute) #IMPLIED
+	packaging (zip | jar | tar | ziptar) #IMPLIED
+	unpackstrategy (simple | removeroot | removerootdeep) #IMPLIED
+	deinstallunusedmode (never | always | prompt) #IMPLIED
+>
+
+<!-- Element: propertiesfile
+	An configuration operation on a single properties file
+	Subelement: deleteprop
+		Tasks serve extend the configuration.
+	Subelement: setpropvalue
+		Tasks serve extend the configuration.
+	Subelement: commandonconfig
+		Defines a system command that is automatically
+		executed whenever a configuration on this file or folder has been performed
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: path
+		The path to the file to configure. The path usually is a relative one.
+		If it is relative it is supposed to be relative to the parent installation unit's home directory.
+	Attribute: sourceurl
+		Defines where the file to configure comes from.
+		If "sourceurl" is not defined the file to configure is supposed to be already
+		existent and will only be changed from its original form.
+	Attribute: deleteafterdeinstall
+		Determines if the configuration file should be deleted
+		after deinstallation in case it is not under the installation root.
+		In the case it is under the installation root it will be deleted anyway.
+		Set this value to false if you want to prevent this default behavior.
+	Attribute: newline
+		Defines the newline character(s) to use.
+		Defines newline character(s).
+		Value: platform
+			The platform specific newline character.
+		Value: lf
+			Simple newline with one single line feed sign.
+		Value: crlf
+			Windows specific newline character combination:
+						carriage return + line feed
+	Attribute: canread
+		Determines if the file to configure can be read
+		(default = true).
+	Attribute: canwrite
+		Determines if the file to configure can be written
+		(default = true).
+	Attribute: canexecute
+		Determines if the file to configure can be executed
+		(default = false).
+	Attribute: copycondition
+		The condition when the source is copied over the target:
+		notexist:    when the target does not exist
+		sourcenewer: when the source is new than the target: allows manual and
+		             automatic change aftwerwards but ensures template changes
+					 being processed
+		diff:        strict binding to the source file (manual changes are excluded)
+		Defines under which condition to copy a file to
+		an installation folder.
+		Value: notexist
+			Copy only if the target file does not exist.
+			The file can be changed individually after installation.
+		Value: sourcenewer
+			Copy only if the source file is newer that the target file.
+		Value: diff
+			Copy every time the target file differs from the source file.
+			This is the strictest rule.
+		Value: delete
+			Delete the file or folder if it exists.
+	Attribute: encoding
+		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
+				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
+				IBM1026, IBM1047, IBM273, IBM277, IBM278, IBM280, IBM284, IBM285, IBM297, IBM420, IBM424, IBM437, IBM500, IBM775, IBM850,
+				IBM852, IBM855, IBM857, IBM860, IBM861, IBM862, IBM863, IBM864, IBM865, IBM866, IBM868, IBM869, IBM870, IBM871, IBM918,
+				ISO-2022-CN, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-KR, ISO-8859-1, ISO-8859-13, ISO-8859-15, ISO-8859-2, ISO-8859-3, ISO-8859-4,
+				ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, JIS_X0201, JIS_X0212-1990, KOI8-R, KOI8-U, Shift_JIS, TIS-620,
+				US-ASCII, UTF-16, UTF-16BE, UTF-16LE, UTF-32, UTF-32BE, UTF-32LE, UTF-8, windows-1250, windows-1251, windows-1252, windows-1253,
+				windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j,
+				x-Big5-HKSCS-2001, x-Big5-Solaris, x-euc-jp-linux, x-EUC-TW, x-eucJP-Open, x-IBM1006, x-IBM1025, x-IBM1046, x-IBM1097,
+				x-IBM1098, x-IBM1112, x-IBM1122, x-IBM1123, x-IBM1124, x-IBM1381, x-IBM1383, x-IBM33722, x-IBM737, x-IBM833, x-IBM834,
+				x-IBM856, x-IBM874, x-IBM875, x-IBM921, x-IBM922, x-IBM930, x-IBM933, x-IBM935, x-IBM937, x-IBM939, x-IBM942, x-IBM942C,
+				x-IBM943, x-IBM943C, x-IBM948, x-IBM949, x-IBM949C, x-IBM950, x-IBM964, x-IBM970, x-ISCII91, x-ISO-2022-CN-CNS, x-ISO-2022-CN-GB,
+				x-iso-8859-11, x-JIS0208, x-JISAutoDetect, x-Johab, x-MacArabic, x-MacCentralEurope, x-MacCroatian, x-MacCyrillic, x-MacDingbat,
+				x-MacGreek, x-MacHebrew, x-MacIceland, x-MacRoman, x-MacRomania, x-MacSymbol, x-MacThai, x-MacTurkish, x-MacUkraine, x-MS932_0213,
+				x-MS950-HKSCS, x-MS950-HKSCS-XP, x-mswin-936, x-PCK, x-SJIS_0213, x-UTF-16LE-BOM, X-UTF-32BE-BOM, X-UTF-32LE-BOM, x-windows-50220,
+				x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+-->
+<!ELEMENT propertiesfile (#PCDATA | deleteprop | setpropvalue | commandonconfig)*>
+<!ATTLIST propertiesfile
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	path CDATA #REQUIRED
+	sourceurl CDATA #IMPLIED
+	deleteafterdeinstall (false | true) #IMPLIED
+	newline (platform | lf | crlf) #IMPLIED
+	canread (false | true) #IMPLIED
+	canwrite (false | true) #IMPLIED
+	canexecute (false | true) #IMPLIED
+	copycondition (notexist | sourcenewer | diff | delete) #IMPLIED
+	encoding (Big5 | Big5-HKSCS | CESU-8 | EUC-JP | EUC-KR | GB18030 | GB2312 | GBK | IBM-Thai | IBM00858 | IBM01140 | IBM01141 | IBM01142 | IBM01143 | IBM01144 | IBM01145 | IBM01146 | IBM01147 | IBM01148 | IBM01149 | IBM037 | IBM1026 | IBM1047 | IBM273 | IBM277 | IBM278 | IBM280 | IBM284 | IBM285 | IBM290 | IBM297 | IBM420 | IBM424 | IBM437 | IBM500 | IBM775 | IBM850 | IBM852 | IBM855 | IBM857 | IBM860 | IBM861 | IBM862 | IBM863 | IBM864 | IBM865 | IBM866 | IBM868 | IBM869 | IBM870 | IBM871 | IBM918 | ISO-2022-CN | ISO-2022-JP | ISO-2022-JP-2 | ISO-2022-KR | ISO-8859-1 | ISO-8859-13 | ISO-8859-15 | ISO-8859-2 | ISO-8859-3 | ISO-8859-4 | ISO-8859-5 | ISO-8859-6 | ISO-8859-7 | ISO-8859-8 | ISO-8859-9 | JIS_X0201 | JIS_X0212-1990 | KOI8-R | KOI8-U | Shift_JIS | TIS-620 | US-ASCII | UTF-16 | UTF-16BE | UTF-16LE | UTF-32 | UTF-32BE | UTF-32LE | UTF-8 | windows-1250 | windows-1251 | windows-1252 | windows-1253 | windows-1254 | windows-1255 | windows-1256 | windows-1257 | windows-1258 | windows-31j | x-Big5-HKSCS-2001 | x-Big5-Solaris | x-euc-jp-linux | x-EUC-TW | x-eucJP-Open | x-IBM1006 | x-IBM1025 | x-IBM1046 | x-IBM1097 | x-IBM1098 | x-IBM1112 | x-IBM1122 | x-IBM1123 | x-IBM1124 | x-IBM1166 | x-IBM1364 | x-IBM1381 | x-IBM1383 | x-IBM300 | x-IBM33722 | x-IBM737 | x-IBM833 | x-IBM834 | x-IBM856 | x-IBM874 | x-IBM875 | x-IBM921 | x-IBM922 | x-IBM930 | x-IBM933 | x-IBM935 | x-IBM937 | x-IBM939 | x-IBM942 | x-IBM942C | x-IBM943 | x-IBM943C | x-IBM948 | x-IBM949 | x-IBM949C | x-IBM950 | x-IBM964 | x-IBM970 | x-ISCII91 | x-ISO-2022-CN-CNS | x-ISO-2022-CN-GB | x-iso-8859-11 | x-JIS0208 | x-JISAutoDetect | x-Johab | x-MacArabic | x-MacCentralEurope | x-MacCroatian | x-MacCyrillic | x-MacDingbat | x-MacGreek | x-MacHebrew | x-MacIceland | x-MacRoman | x-MacRomania | x-MacSymbol | x-MacThai | x-MacTurkish | x-MacUkraine | x-MS932_0213 | x-MS950-HKSCS | x-MS950-HKSCS-XP | x-mswin-936 | x-PCK | x-SJIS_0213 | x-UTF-16LE-BOM | X-UTF-32BE-BOM | X-UTF-32LE-BOM | x-windows-50220 | x-windows-50221 | x-windows-874 | x-windows-949 | x-windows-950 | x-windows-iso2022jp) #IMPLIED
+>
+
+<!-- Element: deleteprop
+	Deletes a distinct property identified by its name and optionally an additional section name.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: section
+		The section of the property to delete.
+	Attribute: name
+		The name of the property to delete.
+-->
+<!ELEMENT deleteprop EMPTY>
+<!ATTLIST deleteprop
+	osfamily (linux | windows | mac) #IMPLIED
+	section CDATA #IMPLIED
+	name CDATA #REQUIRED
+>
+
+<!-- Element: setpropvalue
+	Sets a distinct property identified by its name and optionally an additional section name to the specified value.
+	Creates the property if not already present.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: section
+		The section of the property to set.
+	Attribute: name
+		The name of the property to set.
+	Attribute: value
+		The property value to set.
+	Attribute: commenttag
+		The comment tag.
+		Defaults to "RapidEnv project ((project name))".
+-->
+<!ELEMENT setpropvalue EMPTY>
+<!ATTLIST setpropvalue
+	osfamily (linux | windows | mac) #IMPLIED
+	section CDATA #IMPLIED
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED
+	commenttag CDATA #IMPLIED
+>
+
+<!-- Element: commandonconfig
+	A system command configuration allows you to define
+			the execution of an arbitrary batch script or executable synchronously
+			or asynchronously on operation system level with an arbitray set
+			of arguments. Additionally you can check preconditions on files
+			if the command has to be executed. Postconditions on the return code,
+			stdout and stderror as well as on files can be used to verify
+			command execution success.
+	Subelement: arguments
+		Command arguments.
+	Subelement: returns
+		Return value conditions.
+	Subelement: stdouts
+		Standard out contents conditions.
+	Subelement: stderrs
+		Standard err contents conditions.
+	Subelement: verifycmds
+		The verify commands.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: executable
+		The Executable or batch file to execute
+	Attribute: runasbatch
+		The command will run under control of a separate command line shell
+	Attribute: async
+		The command will run asynchronously
+	Attribute: workingdir
+		The working directory in which to execute the command.
+	Attribute: silent
+		The command will run silently
+	Attribute: messagestart
+		This message will be printed on standard output
+		before the command is executed
+	Attribute: messagesuccess
+		This message will be printed on standard output
+		after the command has been executed successfully
+	Attribute: messagefailure
+		This message will be printed on standard error
+		after the command execution ended with errors (return != 0)
+	Attribute: input
+		Define input lines if you intend to
+		to have automatic user input
+-->
+<!ELEMENT commandonconfig (#PCDATA | messagestart | messagesuccess | messagefailure | input | arguments | returns | stdouts | stderrs | verifycmds)*>
+<!ATTLIST commandonconfig
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	executable CDATA #IMPLIED
+	runasbatch (false | true) #IMPLIED
+	async (false | true) #IMPLIED
+	workingdir CDATA #IMPLIED
+	silent (false | true) #IMPLIED
+	messagestart CDATA #IMPLIED
+	messagesuccess CDATA #IMPLIED
+	messagefailure CDATA #IMPLIED
+	input CDATA #IMPLIED
+>
+
+<!-- Element: messagestart
+	This message will be printed on standard output
+	before the command is executed
+-->
+<!ELEMENT messagestart (#PCDATA)*>
+
+<!-- Element: messagesuccess
+	This message will be printed on standard output
+	after the command has been executed successfully
+-->
+<!ELEMENT messagesuccess (#PCDATA)*>
+
+<!-- Element: messagefailure
+	This message will be printed on standard error
+	after the command execution ended with errors (return != 0)
+-->
+<!ELEMENT messagefailure (#PCDATA)*>
+
+<!-- Element: input
+	Define input lines if you intend to
+	to have automatic user input
+-->
+<!ELEMENT input (#PCDATA)*>
+
+<!-- Element: arguments
+	Attribute: name
+		Optionally define a name either in order only to document
+		the argument or optionally to extend the argument value.
+	Attribute: value
+		The argument value. Can involve the argument name
+		using special pseudo property "argument.name"
+		e. g with "${argument.name}=((value))"
+	Attribute: valuetype
+		The value type of the argument.
+		Forseen argument types.
+		Value: string
+						A string argument. Usually the default for argument choices.
+					
+		Value: bool
+			A boolean argument.
+		Value: date
+			A date argument.
+		Value: file
+			A file argument.
+		Value: integer
+			An integer number argument.
+		Value: floating
+			A floating point number argument.
+	Attribute: quoted
+		Sometimes it's absolutely neccessary to have an argument
+		quoted in the command line string automatically. In some cases however you might
+		want to suppress this default behaviour. In these cases set this property to "false"
+-->
+<!ELEMENT arguments EMPTY>
+<!ATTLIST arguments
+	name CDATA #IMPLIED
+	value CDATA #REQUIRED
+	valuetype (string | bool | date | file | integer | floating) #IMPLIED
+	quoted (false | true) #IMPLIED
+>
+
+<!-- Element: returns
+	Defines a condition on the return value
+	at the end of the system command execution.
+	Attribute: equals
+		The return value has to equal a distinct value.
+	Attribute: matches
+		The return value has to match the given pattern.
+-->
+<!ELEMENT returns EMPTY>
+<!ATTLIST returns
+	equals CDATA #IMPLIED
+	matches CDATA #IMPLIED
+>
+
+<!-- Element: stdouts
+	Defines a condition on the standard out contents
+	at the end of the system command execution.
+	Subelement: equals
+		The standard out output has be exactly the specified (maybe multi lined) value.
+	Attribute: matches
+		The standard out output has to match the specified pattern (Java regular expression) from begin to end.
+	Attribute: contains
+		The standard out output must contain the specified string.
+	Attribute: containsmatch
+		The standard out output has to match the specified pattern (Java regular expression).
+-->
+<!ELEMENT stdouts (#PCDATA | equals)*>
+<!ATTLIST stdouts
+	matches CDATA #IMPLIED
+	contains CDATA #IMPLIED
+	containsmatch CDATA #IMPLIED
+>
+
+<!-- Element: equals
+	The standard out output has be exactly the specified (maybe multi lined) value.
+-->
+<!ELEMENT equals (#PCDATA)*>
+
+<!-- Element: stderrs
+	Defines a condition on the standard error contents
+	at the end of the system command execution.
+	Subelement: equals
+		The standard error output has be exactly the specified (maybe multi lined) value.
+	Attribute: matches
+		The standard error output has to match the specified pattern (Java regular expression) from begin to end.
+	Attribute: contains
+		The standard error output must contain the specified string.
+	Attribute: containsmatch
+		The standard error output has to match the specified pattern (Java regular expression).
+-->
+<!ELEMENT stderrs (#PCDATA | equals)*>
+<!ATTLIST stderrs
+	matches CDATA #IMPLIED
+	contains CDATA #IMPLIED
+	containsmatch CDATA #IMPLIED
+>
+
+<!-- Element: verifycmds
+	A system command configuration allows you to define
+			the execution of an arbitrary batch script or executable synchronously
+			or asynchronously on operation system level with an arbitray set
+			of arguments. Additionally you can check preconditions on files
+			if the command has to be executed. Postconditions on the return code,
+			stdout and stderror as well as on files can be used to verify
+			command execution success.
+	Subelement: arguments
+		Command arguments.
+	Subelement: returns
+		Return value conditions.
+	Subelement: stdouts
+		Standard out contents conditions.
+	Subelement: stderrs
+		Standard err contents conditions.
+	Subelement: verifycmds
+		The verify commands.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: executable
+		The Executable or batch file to execute
+	Attribute: runasbatch
+		The command will run under control of a separate command line shell
+	Attribute: async
+		The command will run asynchronously
+	Attribute: workingdir
+		The working directory in which to execute the command.
+	Attribute: silent
+		The command will run silently
+	Attribute: messagestart
+		This message will be printed on standard output
+		before the command is executed
+	Attribute: messagesuccess
+		This message will be printed on standard output
+		after the command has been executed successfully
+	Attribute: messagefailure
+		This message will be printed on standard error
+		after the command execution ended with errors (return != 0)
+	Attribute: input
+		Define input lines if you intend to
+		to have automatic user input
+-->
+<!ELEMENT verifycmds (#PCDATA | messagestart | messagesuccess | messagefailure | input | arguments | returns | stdouts | stderrs | verifycmds)*>
+<!ATTLIST verifycmds
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	executable CDATA #IMPLIED
+	runasbatch (false | true) #IMPLIED
+	async (false | true) #IMPLIED
+	workingdir CDATA #IMPLIED
+	silent (false | true) #IMPLIED
+	messagestart CDATA #IMPLIED
+	messagesuccess CDATA #IMPLIED
+	messagefailure CDATA #IMPLIED
+	input CDATA #IMPLIED
+>
+
+<!-- Element: folder
+	An configuration operation on a single folder
+	Subelement: tasks
+		Tasks serve to extend the configuration.
+	Subelement: commandonconfig
+		Defines a system command that is automatically
+		executed whenever a configuration on this file or folder has been performed
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: path
+		The path to the file to configure. The path usually is a relative one.
+		If it is relative it is supposed to be relative to the parent installation unit's home directory.
+	Attribute: sourceurl
+		Defines where the file to configure comes from.
+		If "sourceurl" is not defined the file to configure is supposed to be already
+		existent and will only be changed from its original form.
+	Attribute: deleteafterdeinstall
+		Determines if the configuration file should be deleted
+		after deinstallation in case it is not under the installation root.
+		In the case it is under the installation root it will be deleted anyway.
+		Set this value to false if you want to prevent this default behavior.
+	Attribute: newline
+		Defines the newline character(s) to use.
+		Defines newline character(s).
+		Value: platform
+			The platform specific newline character.
+		Value: lf
+			Simple newline with one single line feed sign.
+		Value: crlf
+			Windows specific newline character combination:
+						carriage return + line feed
+	Attribute: canread
+		Determines if the file to configure can be read
+		(default = true).
+	Attribute: canwrite
+		Determines if the file to configure can be written
+		(default = true).
+	Attribute: canexecute
+		Determines if the file to configure can be executed
+		(default = false).
+	Attribute: copycondition
+		The condition when the source is copied over the target:
+		notexist:    when the target does not exist
+		sourcenewer: when the source is new than the target: allows manual and
+		             automatic change aftwerwards but ensures template changes
+					 being processed
+		diff:        strict binding to the source file (manual changes are excluded)
+		Defines under which condition to copy a file to
+		an installation folder.
+		Value: notexist
+			Copy only if the target file does not exist.
+			The file can be changed individually after installation.
+		Value: sourcenewer
+			Copy only if the source file is newer that the target file.
+		Value: diff
+			Copy every time the target file differs from the source file.
+			This is the strictest rule.
+		Value: delete
+			Delete the file or folder if it exists.
+	Attribute: encoding
+		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
+				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
+				IBM1026, IBM1047, IBM273, IBM277, IBM278, IBM280, IBM284, IBM285, IBM297, IBM420, IBM424, IBM437, IBM500, IBM775, IBM850,
+				IBM852, IBM855, IBM857, IBM860, IBM861, IBM862, IBM863, IBM864, IBM865, IBM866, IBM868, IBM869, IBM870, IBM871, IBM918,
+				ISO-2022-CN, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-KR, ISO-8859-1, ISO-8859-13, ISO-8859-15, ISO-8859-2, ISO-8859-3, ISO-8859-4,
+				ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, JIS_X0201, JIS_X0212-1990, KOI8-R, KOI8-U, Shift_JIS, TIS-620,
+				US-ASCII, UTF-16, UTF-16BE, UTF-16LE, UTF-32, UTF-32BE, UTF-32LE, UTF-8, windows-1250, windows-1251, windows-1252, windows-1253,
+				windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j,
+				x-Big5-HKSCS-2001, x-Big5-Solaris, x-euc-jp-linux, x-EUC-TW, x-eucJP-Open, x-IBM1006, x-IBM1025, x-IBM1046, x-IBM1097,
+				x-IBM1098, x-IBM1112, x-IBM1122, x-IBM1123, x-IBM1124, x-IBM1381, x-IBM1383, x-IBM33722, x-IBM737, x-IBM833, x-IBM834,
+				x-IBM856, x-IBM874, x-IBM875, x-IBM921, x-IBM922, x-IBM930, x-IBM933, x-IBM935, x-IBM937, x-IBM939, x-IBM942, x-IBM942C,
+				x-IBM943, x-IBM943C, x-IBM948, x-IBM949, x-IBM949C, x-IBM950, x-IBM964, x-IBM970, x-ISCII91, x-ISO-2022-CN-CNS, x-ISO-2022-CN-GB,
+				x-iso-8859-11, x-JIS0208, x-JISAutoDetect, x-Johab, x-MacArabic, x-MacCentralEurope, x-MacCroatian, x-MacCyrillic, x-MacDingbat,
+				x-MacGreek, x-MacHebrew, x-MacIceland, x-MacRoman, x-MacRomania, x-MacSymbol, x-MacThai, x-MacTurkish, x-MacUkraine, x-MS932_0213,
+				x-MS950-HKSCS, x-MS950-HKSCS-XP, x-mswin-936, x-PCK, x-SJIS_0213, x-UTF-16LE-BOM, X-UTF-32BE-BOM, X-UTF-32LE-BOM, x-windows-50220,
+				x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+-->
+<!ELEMENT folder (#PCDATA | tasks | commandonconfig)*>
+<!ATTLIST folder
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	path CDATA #REQUIRED
+	sourceurl CDATA #IMPLIED
+	deleteafterdeinstall (false | true) #IMPLIED
+	newline (platform | lf | crlf) #IMPLIED
+	canread (false | true) #IMPLIED
+	canwrite (false | true) #IMPLIED
+	canexecute (false | true) #IMPLIED
+	copycondition (notexist | sourcenewer | diff | delete) #IMPLIED
+	encoding (Big5 | Big5-HKSCS | CESU-8 | EUC-JP | EUC-KR | GB18030 | GB2312 | GBK | IBM-Thai | IBM00858 | IBM01140 | IBM01141 | IBM01142 | IBM01143 | IBM01144 | IBM01145 | IBM01146 | IBM01147 | IBM01148 | IBM01149 | IBM037 | IBM1026 | IBM1047 | IBM273 | IBM277 | IBM278 | IBM280 | IBM284 | IBM285 | IBM290 | IBM297 | IBM420 | IBM424 | IBM437 | IBM500 | IBM775 | IBM850 | IBM852 | IBM855 | IBM857 | IBM860 | IBM861 | IBM862 | IBM863 | IBM864 | IBM865 | IBM866 | IBM868 | IBM869 | IBM870 | IBM871 | IBM918 | ISO-2022-CN | ISO-2022-JP | ISO-2022-JP-2 | ISO-2022-KR | ISO-8859-1 | ISO-8859-13 | ISO-8859-15 | ISO-8859-2 | ISO-8859-3 | ISO-8859-4 | ISO-8859-5 | ISO-8859-6 | ISO-8859-7 | ISO-8859-8 | ISO-8859-9 | JIS_X0201 | JIS_X0212-1990 | KOI8-R | KOI8-U | Shift_JIS | TIS-620 | US-ASCII | UTF-16 | UTF-16BE | UTF-16LE | UTF-32 | UTF-32BE | UTF-32LE | UTF-8 | windows-1250 | windows-1251 | windows-1252 | windows-1253 | windows-1254 | windows-1255 | windows-1256 | windows-1257 | windows-1258 | windows-31j | x-Big5-HKSCS-2001 | x-Big5-Solaris | x-euc-jp-linux | x-EUC-TW | x-eucJP-Open | x-IBM1006 | x-IBM1025 | x-IBM1046 | x-IBM1097 | x-IBM1098 | x-IBM1112 | x-IBM1122 | x-IBM1123 | x-IBM1124 | x-IBM1166 | x-IBM1364 | x-IBM1381 | x-IBM1383 | x-IBM300 | x-IBM33722 | x-IBM737 | x-IBM833 | x-IBM834 | x-IBM856 | x-IBM874 | x-IBM875 | x-IBM921 | x-IBM922 | x-IBM930 | x-IBM933 | x-IBM935 | x-IBM937 | x-IBM939 | x-IBM942 | x-IBM942C | x-IBM943 | x-IBM943C | x-IBM948 | x-IBM949 | x-IBM949C | x-IBM950 | x-IBM964 | x-IBM970 | x-ISCII91 | x-ISO-2022-CN-CNS | x-ISO-2022-CN-GB | x-iso-8859-11 | x-JIS0208 | x-JISAutoDetect | x-Johab | x-MacArabic | x-MacCentralEurope | x-MacCroatian | x-MacCyrillic | x-MacDingbat | x-MacGreek | x-MacHebrew | x-MacIceland | x-MacRoman | x-MacRomania | x-MacSymbol | x-MacThai | x-MacTurkish | x-MacUkraine | x-MS932_0213 | x-MS950-HKSCS | x-MS950-HKSCS-XP | x-mswin-936 | x-PCK | x-SJIS_0213 | x-UTF-16LE-BOM | X-UTF-32BE-BOM | X-UTF-32LE-BOM | x-windows-50220 | x-windows-50221 | x-windows-874 | x-windows-949 | x-windows-950 | x-windows-iso2022jp) #IMPLIED
+>
+
+<!-- Element: tasks
+	A single configuration step for a RapidEnv installation unit
+	configuration. g.
+	- copying or deleting a file
+	- an atomic change in one file
+	- executing a command
+	...
+	A configuration task always can be checked if it is neccessary
+	or already done.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+-->
+<!ELEMENT tasks EMPTY>
+<!ATTLIST tasks
+	osfamily (linux | windows | mac) #IMPLIED
+>
+
+<!-- Element: anttask
+	An ant task command configuration allows you to define
+			the execution of an arbitrary Ant task with an arbitrary set of
+			named arguments. As ant task are Java programs they have the
+			usual advantages over system commands. THe most important here
+			is: they are (or at least can be more likely) operating system independent.
+			Like with commands you could check preconditions on files
+			if the ant task has to be executed. Postconditions on the return code,
+			stdout and stderror as well as on files can be used to verify
+			ant task execution success.
+	Subelement: arguments
+		Command arguments.
+	Subelement: returns
+		Return value conditions.
+	Subelement: stdouts
+		Standard out contents conditions.
+	Subelement: stderrs
+		Standard err contents conditions.
+	Subelement: verifycmds
+		The verify commands.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: executable
+		The Executable or batch file to execute
+	Attribute: runasbatch
+		The command will run under control of a separate command line shell
+	Attribute: async
+		The command will run asynchronously
+	Attribute: workingdir
+		The working directory in which to execute the command.
+	Attribute: silent
+		The command will run silently
+	Attribute: messagestart
+		This message will be printed on standard output
+		before the command is executed
+	Attribute: messagesuccess
+		This message will be printed on standard output
+		after the command has been executed successfully
+	Attribute: messagefailure
+		This message will be printed on standard error
+		after the command execution ended with errors (return != 0)
+	Attribute: input
+		Define input lines if you intend to
+		to have automatic user input
+	Attribute: anttaskname
+		The ant task to execute
+-->
+<!ELEMENT anttask (#PCDATA | messagestart | messagesuccess | messagefailure | input | arguments | returns | stdouts | stderrs | verifycmds)*>
+<!ATTLIST anttask
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	executable CDATA #IMPLIED
+	runasbatch (false | true) #IMPLIED
+	async (false | true) #IMPLIED
+	workingdir CDATA #IMPLIED
+	silent (false | true) #IMPLIED
+	messagestart CDATA #IMPLIED
+	messagesuccess CDATA #IMPLIED
+	messagefailure CDATA #IMPLIED
+	input CDATA #IMPLIED
+	anttaskname CDATA #REQUIRED
+>
+
+<!-- Element: icon
+	A shell link icon configuration allows you to define
+			a desktop and / or startmenu icon / shortcut which serves
+			as a convenient mean to start or stop programs or processes
+			of your development environment.
+	Subelement: arguments
+		Program or shell command arguments.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: title
+		The title of your icon
+	Attribute: executable
+		The program or shell command to execute.
+	Attribute: executionmode
+		The mode how to execute the executable.
+		Value: simple
+						Simply execute the executable.
+					
+		Value: cmd
+						Execute in a command prompt (relevant for Windows).
+					
+		Value: cmdenv
+						Execute in a command prompt (relevant for Windows) and with this RapidEnv project's environment set before.
+					
+	Attribute: executein
+		The directory where to execute the program or shell command
+	Attribute: iconfile
+		The icon file to show
+	Attribute: showondesktop
+		Determines if the icon should show up on the desktop
+	Attribute: showonstartmenu
+		Determines if the icon should show up in the start menu
+-->
+<!ELEMENT icon (#PCDATA | arguments)*>
+<!ATTLIST icon
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	title CDATA #REQUIRED
+	executable CDATA #REQUIRED
+	executionmode (simple | cmd | cmdenv) #IMPLIED
+	executein CDATA #IMPLIED
+	iconfile CDATA #IMPLIED
+	showondesktop (false | true) #IMPLIED
+	showonstartmenu (false | true) #IMPLIED
+>
+
+<!-- Element: textfile
+	An configuration operation on a single text file
+	Subelement: replace
+		Tasks serve extend the configuration.
+	Subelement: insert
+		Tasks serve extend the configuration.
+	Subelement: delete
+		Tasks serve extend the configuration.
+	Subelement: commandonconfig
+		Defines a system command that is automatically
+		executed whenever a configuration on this file or folder has been performed
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: path
+		The path to the file to configure. The path usually is a relative one.
+		If it is relative it is supposed to be relative to the parent installation unit's home directory.
+	Attribute: sourceurl
+		Defines where the file to configure comes from.
+		If "sourceurl" is not defined the file to configure is supposed to be already
+		existent and will only be changed from its original form.
+	Attribute: deleteafterdeinstall
+		Determines if the configuration file should be deleted
+		after deinstallation in case it is not under the installation root.
+		In the case it is under the installation root it will be deleted anyway.
+		Set this value to false if you want to prevent this default behavior.
+	Attribute: newline
+		Defines the newline character(s) to use.
+		Defines newline character(s).
+		Value: platform
+			The platform specific newline character.
+		Value: lf
+			Simple newline with one single line feed sign.
+		Value: crlf
+			Windows specific newline character combination:
+						carriage return + line feed
+	Attribute: canread
+		Determines if the file to configure can be read
+		(default = true).
+	Attribute: canwrite
+		Determines if the file to configure can be written
+		(default = true).
+	Attribute: canexecute
+		Determines if the file to configure can be executed
+		(default = false).
+	Attribute: copycondition
+		The condition when the source is copied over the target:
+		notexist:    when the target does not exist
+		sourcenewer: when the source is new than the target: allows manual and
+		             automatic change aftwerwards but ensures template changes
+					 being processed
+		diff:        strict binding to the source file (manual changes are excluded)
+		Defines under which condition to copy a file to
+		an installation folder.
+		Value: notexist
+			Copy only if the target file does not exist.
+			The file can be changed individually after installation.
+		Value: sourcenewer
+			Copy only if the source file is newer that the target file.
+		Value: diff
+			Copy every time the target file differs from the source file.
+			This is the strictest rule.
+		Value: delete
+			Delete the file or folder if it exists.
+	Attribute: encoding
+		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
+				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
+				IBM1026, IBM1047, IBM273, IBM277, IBM278, IBM280, IBM284, IBM285, IBM297, IBM420, IBM424, IBM437, IBM500, IBM775, IBM850,
+				IBM852, IBM855, IBM857, IBM860, IBM861, IBM862, IBM863, IBM864, IBM865, IBM866, IBM868, IBM869, IBM870, IBM871, IBM918,
+				ISO-2022-CN, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-KR, ISO-8859-1, ISO-8859-13, ISO-8859-15, ISO-8859-2, ISO-8859-3, ISO-8859-4,
+				ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, JIS_X0201, JIS_X0212-1990, KOI8-R, KOI8-U, Shift_JIS, TIS-620,
+				US-ASCII, UTF-16, UTF-16BE, UTF-16LE, UTF-32, UTF-32BE, UTF-32LE, UTF-8, windows-1250, windows-1251, windows-1252, windows-1253,
+				windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j,
+				x-Big5-HKSCS-2001, x-Big5-Solaris, x-euc-jp-linux, x-EUC-TW, x-eucJP-Open, x-IBM1006, x-IBM1025, x-IBM1046, x-IBM1097,
+				x-IBM1098, x-IBM1112, x-IBM1122, x-IBM1123, x-IBM1124, x-IBM1381, x-IBM1383, x-IBM33722, x-IBM737, x-IBM833, x-IBM834,
+				x-IBM856, x-IBM874, x-IBM875, x-IBM921, x-IBM922, x-IBM930, x-IBM933, x-IBM935, x-IBM937, x-IBM939, x-IBM942, x-IBM942C,
+				x-IBM943, x-IBM943C, x-IBM948, x-IBM949, x-IBM949C, x-IBM950, x-IBM964, x-IBM970, x-ISCII91, x-ISO-2022-CN-CNS, x-ISO-2022-CN-GB,
+				x-iso-8859-11, x-JIS0208, x-JISAutoDetect, x-Johab, x-MacArabic, x-MacCentralEurope, x-MacCroatian, x-MacCyrillic, x-MacDingbat,
+				x-MacGreek, x-MacHebrew, x-MacIceland, x-MacRoman, x-MacRomania, x-MacSymbol, x-MacThai, x-MacTurkish, x-MacUkraine, x-MS932_0213,
+				x-MS950-HKSCS, x-MS950-HKSCS-XP, x-mswin-936, x-PCK, x-SJIS_0213, x-UTF-16LE-BOM, X-UTF-32BE-BOM, X-UTF-32LE-BOM, x-windows-50220,
+				x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+-->
+<!ELEMENT textfile (#PCDATA | replace | insert | delete | commandonconfig)*>
+<!ATTLIST textfile
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	path CDATA #REQUIRED
+	sourceurl CDATA #IMPLIED
+	deleteafterdeinstall (false | true) #IMPLIED
+	newline (platform | lf | crlf) #IMPLIED
+	canread (false | true) #IMPLIED
+	canwrite (false | true) #IMPLIED
+	canexecute (false | true) #IMPLIED
+	copycondition (notexist | sourcenewer | diff | delete) #IMPLIED
+	encoding (Big5 | Big5-HKSCS | CESU-8 | EUC-JP | EUC-KR | GB18030 | GB2312 | GBK | IBM-Thai | IBM00858 | IBM01140 | IBM01141 | IBM01142 | IBM01143 | IBM01144 | IBM01145 | IBM01146 | IBM01147 | IBM01148 | IBM01149 | IBM037 | IBM1026 | IBM1047 | IBM273 | IBM277 | IBM278 | IBM280 | IBM284 | IBM285 | IBM290 | IBM297 | IBM420 | IBM424 | IBM437 | IBM500 | IBM775 | IBM850 | IBM852 | IBM855 | IBM857 | IBM860 | IBM861 | IBM862 | IBM863 | IBM864 | IBM865 | IBM866 | IBM868 | IBM869 | IBM870 | IBM871 | IBM918 | ISO-2022-CN | ISO-2022-JP | ISO-2022-JP-2 | ISO-2022-KR | ISO-8859-1 | ISO-8859-13 | ISO-8859-15 | ISO-8859-2 | ISO-8859-3 | ISO-8859-4 | ISO-8859-5 | ISO-8859-6 | ISO-8859-7 | ISO-8859-8 | ISO-8859-9 | JIS_X0201 | JIS_X0212-1990 | KOI8-R | KOI8-U | Shift_JIS | TIS-620 | US-ASCII | UTF-16 | UTF-16BE | UTF-16LE | UTF-32 | UTF-32BE | UTF-32LE | UTF-8 | windows-1250 | windows-1251 | windows-1252 | windows-1253 | windows-1254 | windows-1255 | windows-1256 | windows-1257 | windows-1258 | windows-31j | x-Big5-HKSCS-2001 | x-Big5-Solaris | x-euc-jp-linux | x-EUC-TW | x-eucJP-Open | x-IBM1006 | x-IBM1025 | x-IBM1046 | x-IBM1097 | x-IBM1098 | x-IBM1112 | x-IBM1122 | x-IBM1123 | x-IBM1124 | x-IBM1166 | x-IBM1364 | x-IBM1381 | x-IBM1383 | x-IBM300 | x-IBM33722 | x-IBM737 | x-IBM833 | x-IBM834 | x-IBM856 | x-IBM874 | x-IBM875 | x-IBM921 | x-IBM922 | x-IBM930 | x-IBM933 | x-IBM935 | x-IBM937 | x-IBM939 | x-IBM942 | x-IBM942C | x-IBM943 | x-IBM943C | x-IBM948 | x-IBM949 | x-IBM949C | x-IBM950 | x-IBM964 | x-IBM970 | x-ISCII91 | x-ISO-2022-CN-CNS | x-ISO-2022-CN-GB | x-iso-8859-11 | x-JIS0208 | x-JISAutoDetect | x-Johab | x-MacArabic | x-MacCentralEurope | x-MacCroatian | x-MacCyrillic | x-MacDingbat | x-MacGreek | x-MacHebrew | x-MacIceland | x-MacRoman | x-MacRomania | x-MacSymbol | x-MacThai | x-MacTurkish | x-MacUkraine | x-MS932_0213 | x-MS950-HKSCS | x-MS950-HKSCS-XP | x-mswin-936 | x-PCK | x-SJIS_0213 | x-UTF-16LE-BOM | X-UTF-32BE-BOM | X-UTF-32LE-BOM | x-windows-50220 | x-windows-50221 | x-windows-874 | x-windows-949 | x-windows-950 | x-windows-iso2022jp) #IMPLIED
+>
+
+<!-- Element: replace
+	Replace the given seach pattern by the given text.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: regexp
+		Specifies the text to replace
+	Attribute: replaceby
+		Specifies the text to insert instead of the replaced text.
+-->
+<!ELEMENT replace EMPTY>
+<!ATTLIST replace
+	osfamily (linux | windows | mac) #IMPLIED
+	regexp CDATA #REQUIRED
+	replaceby CDATA #REQUIRED
+>
+
+<!-- Element: insert
+	Insert a new line at the end or the beginning of the
+	given file. Optionally you can insert the line before or after the first occurence
+	of a line specified by the given search pattern.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: line
+		The line that should be inserted.
+	Attribute: mode
+		append / prepend define if to append the line at
+		the end of the file or if to prepend it before the beginnig.
+		If regexp is defined the line will be appended after or prepended before
+		the first occurrence of this line.
+		Determines if to append or to prepend so text in
+		the configuration file.
+		Value: append
+			Append some (lines of) text in the configuration file.
+		Value: prepend
+			Prepend some (lines of) text in the configuration file.
+	Attribute: regexp
+		Specifies the line where to insert before (prepend)
+		or after (append)
+-->
+<!ELEMENT insert EMPTY>
+<!ATTLIST insert
+	osfamily (linux | windows | mac) #IMPLIED
+	line CDATA #REQUIRED
+	mode (append | prepend) #IMPLIED
+	regexp CDATA #IMPLIED
+>
+
+<!-- Element: delete
+	Delete all lines specified by the given search pattern.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: regexp
+		Specifies the line(s) to delete
+-->
+<!ELEMENT delete EMPTY>
+<!ATTLIST delete
+	osfamily (linux | windows | mac) #IMPLIED
+	regexp CDATA #REQUIRED
+>
+
+<!-- Element: xmlfile
+	An configuration operation on a single XML file
+	Subelement: setnodevalue
+		Tasks serve extend the configuration.
+	Subelement: deletenode
+		Tasks serve extend the configuration.
+	Subelement: commandonconfig
+		Defines a system command that is automatically
+		executed whenever a configuration on this file or folder has been performed
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: path
+		The path to the file to configure. The path usually is a relative one.
+		If it is relative it is supposed to be relative to the parent installation unit's home directory.
+	Attribute: sourceurl
+		Defines where the file to configure comes from.
+		If "sourceurl" is not defined the file to configure is supposed to be already
+		existent and will only be changed from its original form.
+	Attribute: deleteafterdeinstall
+		Determines if the configuration file should be deleted
+		after deinstallation in case it is not under the installation root.
+		In the case it is under the installation root it will be deleted anyway.
+		Set this value to false if you want to prevent this default behavior.
+	Attribute: newline
+		Defines the newline character(s) to use.
+		Defines newline character(s).
+		Value: platform
+			The platform specific newline character.
+		Value: lf
+			Simple newline with one single line feed sign.
+		Value: crlf
+			Windows specific newline character combination:
+						carriage return + line feed
+	Attribute: canread
+		Determines if the file to configure can be read
+		(default = true).
+	Attribute: canwrite
+		Determines if the file to configure can be written
+		(default = true).
+	Attribute: canexecute
+		Determines if the file to configure can be executed
+		(default = false).
+	Attribute: copycondition
+		The condition when the source is copied over the target:
+		notexist:    when the target does not exist
+		sourcenewer: when the source is new than the target: allows manual and
+		             automatic change aftwerwards but ensures template changes
+					 being processed
+		diff:        strict binding to the source file (manual changes are excluded)
+		Defines under which condition to copy a file to
+		an installation folder.
+		Value: notexist
+			Copy only if the target file does not exist.
+			The file can be changed individually after installation.
+		Value: sourcenewer
+			Copy only if the source file is newer that the target file.
+		Value: diff
+			Copy every time the target file differs from the source file.
+			This is the strictest rule.
+		Value: delete
+			Delete the file or folder if it exists.
+	Attribute: encoding
+		One of the following text file encodings: Big5, Big5-HKSCS, EUC-JP, EUC-KR, GB18030, GB2312, GBK, IBM-Thai,
+				IBM00858, IBM01140, IBM01141, IBM01142, IBM01143, IBM01144, IBM01145, IBM01146, IBM01147, IBM01148, IBM01149, IBM037,
+				IBM1026, IBM1047, IBM273, IBM277, IBM278, IBM280, IBM284, IBM285, IBM297, IBM420, IBM424, IBM437, IBM500, IBM775, IBM850,
+				IBM852, IBM855, IBM857, IBM860, IBM861, IBM862, IBM863, IBM864, IBM865, IBM866, IBM868, IBM869, IBM870, IBM871, IBM918,
+				ISO-2022-CN, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-KR, ISO-8859-1, ISO-8859-13, ISO-8859-15, ISO-8859-2, ISO-8859-3, ISO-8859-4,
+				ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, JIS_X0201, JIS_X0212-1990, KOI8-R, KOI8-U, Shift_JIS, TIS-620,
+				US-ASCII, UTF-16, UTF-16BE, UTF-16LE, UTF-32, UTF-32BE, UTF-32LE, UTF-8, windows-1250, windows-1251, windows-1252, windows-1253,
+				windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j,
+				x-Big5-HKSCS-2001, x-Big5-Solaris, x-euc-jp-linux, x-EUC-TW, x-eucJP-Open, x-IBM1006, x-IBM1025, x-IBM1046, x-IBM1097,
+				x-IBM1098, x-IBM1112, x-IBM1122, x-IBM1123, x-IBM1124, x-IBM1381, x-IBM1383, x-IBM33722, x-IBM737, x-IBM833, x-IBM834,
+				x-IBM856, x-IBM874, x-IBM875, x-IBM921, x-IBM922, x-IBM930, x-IBM933, x-IBM935, x-IBM937, x-IBM939, x-IBM942, x-IBM942C,
+				x-IBM943, x-IBM943C, x-IBM948, x-IBM949, x-IBM949C, x-IBM950, x-IBM964, x-IBM970, x-ISCII91, x-ISO-2022-CN-CNS, x-ISO-2022-CN-GB,
+				x-iso-8859-11, x-JIS0208, x-JISAutoDetect, x-Johab, x-MacArabic, x-MacCentralEurope, x-MacCroatian, x-MacCyrillic, x-MacDingbat,
+				x-MacGreek, x-MacHebrew, x-MacIceland, x-MacRoman, x-MacRomania, x-MacSymbol, x-MacThai, x-MacTurkish, x-MacUkraine, x-MS932_0213,
+				x-MS950-HKSCS, x-MS950-HKSCS-XP, x-mswin-936, x-PCK, x-SJIS_0213, x-UTF-16LE-BOM, X-UTF-32BE-BOM, X-UTF-32LE-BOM, x-windows-50220,
+				x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+	Attribute: standalone
+		One of the following values: yes, no
+		XML prologue "standalone" attribute.
+		Value: yes
+			standalone = "yes".
+		Value: no
+			standalone = "no".
+	Attribute: addeleminnewline
+		Defines if a new element node should be added to a new line
+	Attribute: addattrinnewline
+		Defines if a new attribute node should be added to a new line
+	Attribute: indent
+		Defines the indentation string
+-->
+<!ELEMENT xmlfile (#PCDATA | indent | setnodevalue | deletenode | commandonconfig)*>
+<!ATTLIST xmlfile
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	path CDATA #REQUIRED
+	sourceurl CDATA #IMPLIED
+	deleteafterdeinstall (false | true) #IMPLIED
+	newline (platform | lf | crlf) #IMPLIED
+	canread (false | true) #IMPLIED
+	canwrite (false | true) #IMPLIED
+	canexecute (false | true) #IMPLIED
+	copycondition (notexist | sourcenewer | diff | delete) #IMPLIED
+	encoding (Big5 | Big5-HKSCS | CESU-8 | EUC-JP | EUC-KR | GB18030 | GB2312 | GBK | IBM-Thai | IBM00858 | IBM01140 | IBM01141 | IBM01142 | IBM01143 | IBM01144 | IBM01145 | IBM01146 | IBM01147 | IBM01148 | IBM01149 | IBM037 | IBM1026 | IBM1047 | IBM273 | IBM277 | IBM278 | IBM280 | IBM284 | IBM285 | IBM290 | IBM297 | IBM420 | IBM424 | IBM437 | IBM500 | IBM775 | IBM850 | IBM852 | IBM855 | IBM857 | IBM860 | IBM861 | IBM862 | IBM863 | IBM864 | IBM865 | IBM866 | IBM868 | IBM869 | IBM870 | IBM871 | IBM918 | ISO-2022-CN | ISO-2022-JP | ISO-2022-JP-2 | ISO-2022-KR | ISO-8859-1 | ISO-8859-13 | ISO-8859-15 | ISO-8859-2 | ISO-8859-3 | ISO-8859-4 | ISO-8859-5 | ISO-8859-6 | ISO-8859-7 | ISO-8859-8 | ISO-8859-9 | JIS_X0201 | JIS_X0212-1990 | KOI8-R | KOI8-U | Shift_JIS | TIS-620 | US-ASCII | UTF-16 | UTF-16BE | UTF-16LE | UTF-32 | UTF-32BE | UTF-32LE | UTF-8 | windows-1250 | windows-1251 | windows-1252 | windows-1253 | windows-1254 | windows-1255 | windows-1256 | windows-1257 | windows-1258 | windows-31j | x-Big5-HKSCS-2001 | x-Big5-Solaris | x-euc-jp-linux | x-EUC-TW | x-eucJP-Open | x-IBM1006 | x-IBM1025 | x-IBM1046 | x-IBM1097 | x-IBM1098 | x-IBM1112 | x-IBM1122 | x-IBM1123 | x-IBM1124 | x-IBM1166 | x-IBM1364 | x-IBM1381 | x-IBM1383 | x-IBM300 | x-IBM33722 | x-IBM737 | x-IBM833 | x-IBM834 | x-IBM856 | x-IBM874 | x-IBM875 | x-IBM921 | x-IBM922 | x-IBM930 | x-IBM933 | x-IBM935 | x-IBM937 | x-IBM939 | x-IBM942 | x-IBM942C | x-IBM943 | x-IBM943C | x-IBM948 | x-IBM949 | x-IBM949C | x-IBM950 | x-IBM964 | x-IBM970 | x-ISCII91 | x-ISO-2022-CN-CNS | x-ISO-2022-CN-GB | x-iso-8859-11 | x-JIS0208 | x-JISAutoDetect | x-Johab | x-MacArabic | x-MacCentralEurope | x-MacCroatian | x-MacCyrillic | x-MacDingbat | x-MacGreek | x-MacHebrew | x-MacIceland | x-MacRoman | x-MacRomania | x-MacSymbol | x-MacThai | x-MacTurkish | x-MacUkraine | x-MS932_0213 | x-MS950-HKSCS | x-MS950-HKSCS-XP | x-mswin-936 | x-PCK | x-SJIS_0213 | x-UTF-16LE-BOM | X-UTF-32BE-BOM | X-UTF-32LE-BOM | x-windows-50220 | x-windows-50221 | x-windows-874 | x-windows-949 | x-windows-950 | x-windows-iso2022jp) #IMPLIED
+	standalone (yes | no) #IMPLIED
+	addeleminnewline (false | true) #IMPLIED
+	addattrinnewline (false | true) #IMPLIED
+	indent CDATA #IMPLIED
+>
+
+<!-- Element: indent
+	Defines the indentation string
+-->
+<!ELEMENT indent (#PCDATA)*>
+
+<!-- Element: setnodevalue
+	Sets an XML node (element or attribute).
+	Creates the node if not already present. Caution only use node creation for uniqe elements.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: path
+		The path to the file to the XML node (element or attribute) of which the
+		value has to be set.
+	Attribute: value
+		The node value to set.
+-->
+<!ELEMENT setnodevalue (#PCDATA | value)*>
+<!ATTLIST setnodevalue
+	osfamily (linux | windows | mac) #IMPLIED
+	path CDATA #REQUIRED
+	value CDATA #IMPLIED
+>
+
+<!-- Element: deletenode
+	Deletes an XML node (element or attribute) if it exists.
+	Attribute: osfamily
+		If this value is defined the configuration task gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: path
+		The path to the file to the XML node (element or attribute) of which the
+		value has to be set.
+-->
+<!ELEMENT deletenode EMPTY>
+<!ATTLIST deletenode
+	osfamily (linux | windows | mac) #IMPLIED
+	path CDATA #REQUIRED
+>
+
+<!-- Element: command
+	A system command configuration allows you to define
+			the execution of an arbitrary batch script or executable synchronously
+			or asynchronously on operation system level with an arbitray set
+			of arguments. Additionally you can check preconditions on files
+			if the command has to be executed. Postconditions on the return code,
+			stdout and stderror as well as on files can be used to verify
+			command execution success.
+	Subelement: arguments
+		Command arguments.
+	Subelement: returns
+		Return value conditions.
+	Subelement: stdouts
+		Standard out contents conditions.
+	Subelement: stderrs
+		Standard err contents conditions.
+	Subelement: verifycmds
+		The verify commands.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: executable
+		The Executable or batch file to execute
+	Attribute: runasbatch
+		The command will run under control of a separate command line shell
+	Attribute: async
+		The command will run asynchronously
+	Attribute: workingdir
+		The working directory in which to execute the command.
+	Attribute: silent
+		The command will run silently
+	Attribute: messagestart
+		This message will be printed on standard output
+		before the command is executed
+	Attribute: messagesuccess
+		This message will be printed on standard output
+		after the command has been executed successfully
+	Attribute: messagefailure
+		This message will be printed on standard error
+		after the command execution ended with errors (return != 0)
+	Attribute: input
+		Define input lines if you intend to
+		to have automatic user input
+-->
+<!ELEMENT command (#PCDATA | messagestart | messagesuccess | messagefailure | input | arguments | returns | stdouts | stderrs | verifycmds)*>
+<!ATTLIST command
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	executable CDATA #IMPLIED
+	runasbatch (false | true) #IMPLIED
+	async (false | true) #IMPLIED
+	workingdir CDATA #IMPLIED
+	silent (false | true) #IMPLIED
+	messagestart CDATA #IMPLIED
+	messagesuccess CDATA #IMPLIED
+	messagefailure CDATA #IMPLIED
+	input CDATA #IMPLIED
+>
+
+<!-- Element: installcommand
+	A system command configuration allows you to define
+			the execution of an arbitrary batch script or executable synchronously
+			or asynchronously on operation system level with an arbitray set
+			of arguments. Additionally you can check preconditions on files
+			if the command has to be executed. Postconditions on the return code,
+			stdout and stderror as well as on files can be used to verify
+			command execution success.
+	Subelement: arguments
+		Command arguments.
+	Subelement: returns
+		Return value conditions.
+	Subelement: stdouts
+		Standard out contents conditions.
+	Subelement: stderrs
+		Standard err contents conditions.
+	Subelement: verifycmds
+		The verify commands.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: executable
+		The Executable or batch file to execute
+	Attribute: runasbatch
+		The command will run under control of a separate command line shell
+	Attribute: async
+		The command will run asynchronously
+	Attribute: workingdir
+		The working directory in which to execute the command.
+	Attribute: silent
+		The command will run silently
+	Attribute: messagestart
+		This message will be printed on standard output
+		before the command is executed
+	Attribute: messagesuccess
+		This message will be printed on standard output
+		after the command has been executed successfully
+	Attribute: messagefailure
+		This message will be printed on standard error
+		after the command execution ended with errors (return != 0)
+	Attribute: input
+		Define input lines if you intend to
+		to have automatic user input
+-->
+<!ELEMENT installcommand (#PCDATA | messagestart | messagesuccess | messagefailure | input | arguments | returns | stdouts | stderrs | verifycmds)*>
+<!ATTLIST installcommand
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	executable CDATA #IMPLIED
+	runasbatch (false | true) #IMPLIED
+	async (false | true) #IMPLIED
+	workingdir CDATA #IMPLIED
+	silent (false | true) #IMPLIED
+	messagestart CDATA #IMPLIED
+	messagesuccess CDATA #IMPLIED
+	messagefailure CDATA #IMPLIED
+	input CDATA #IMPLIED
+>
+
+<!-- Element: deinstallcommand
+	A system command configuration allows you to define
+			the execution of an arbitrary batch script or executable synchronously
+			or asynchronously on operation system level with an arbitray set
+			of arguments. Additionally you can check preconditions on files
+			if the command has to be executed. Postconditions on the return code,
+			stdout and stderror as well as on files can be used to verify
+			command execution success.
+	Subelement: arguments
+		Command arguments.
+	Subelement: returns
+		Return value conditions.
+	Subelement: stdouts
+		Standard out contents conditions.
+	Subelement: stderrs
+		Standard err contents conditions.
+	Subelement: verifycmds
+		The verify commands.
+	Attribute: installphase
+		The phase when the configuration is executed:
+		- preinstall    before first or update installation
+		- postinstall   after first or update installation only
+		- config        after first or update installation or during explicit configuration
+		- predeinstall  before removing the installation
+		- postdeinstall after removing the installation
+		The phase when the configuration is executed
+		Value: preinstall
+			before first or update installation
+		Value: postinstall
+			after first or update installation only
+		Value: config
+			after first or update installation or during explicit configuration
+			which is automatically done if executing the update command or the config command.
+		Value: predeinstall
+			before removing the installation
+		Value: postdeinstall
+			after removing the installation
+	Attribute: osfamily
+		If this value is defined the configuration step gets a platform specific one.
+		If ist is undefined the configuration is valid for all platforms without specific definition.
+		Determines the operating system (family).
+		Value: linux
+			The Linux open source operating system.
+		Value: windows
+			Microsoft Windows.
+		Value: mac
+			Apple Mac OS.
+	Attribute: expressionliteralescaping
+		Set this value to true if you want to use expression literal escaping
+	Attribute: cleanupfilesonconfig
+		Defines a comma separated list of files that will be deleted
+		after this configuration has been performed
+	Attribute: executable
+		The Executable or batch file to execute
+	Attribute: runasbatch
+		The command will run under control of a separate command line shell
+	Attribute: async
+		The command will run asynchronously
+	Attribute: workingdir
+		The working directory in which to execute the command.
+	Attribute: silent
+		The command will run silently
+	Attribute: messagestart
+		This message will be printed on standard output
+		before the command is executed
+	Attribute: messagesuccess
+		This message will be printed on standard output
+		after the command has been executed successfully
+	Attribute: messagefailure
+		This message will be printed on standard error
+		after the command execution ended with errors (return != 0)
+	Attribute: input
+		Define input lines if you intend to
+		to have automatic user input
+-->
+<!ELEMENT deinstallcommand (#PCDATA | messagestart | messagesuccess | messagefailure | input | arguments | returns | stdouts | stderrs | verifycmds)*>
+<!ATTLIST deinstallcommand
+	installphase (preinstall | postinstall | config | predeinstall | postdeinstall) #IMPLIED
+	osfamily (linux | windows | mac) #IMPLIED
+	expressionliteralescaping (false | true) #IMPLIED
+	cleanupfilesonconfig CDATA #IMPLIED
+	executable CDATA #IMPLIED
+	runasbatch (false | true) #IMPLIED
+	async (false | true) #IMPLIED
+	workingdir CDATA #IMPLIED
+	silent (false | true) #IMPLIED
+	messagestart CDATA #IMPLIED
+	messagesuccess CDATA #IMPLIED
+	messagefailure CDATA #IMPLIED
+	input CDATA #IMPLIED
+>
+
+<!-- Element: propextensions
+	A path extension definition coming from an install unit.
+	This extension will lead to some migration of the property value during upgrade if it changes.
+	Attribute: propextmode
+		Defines weather to "prepend" or "append" this path extension.
+		Determines how to extend a path like property.
+		Value: prepend
+						Prepend the path extension.
+					
+		Value: append
+						Append the path extension.
+					
+		Value: remove
+						Remove an unwanted path extension.
+					
+	Attribute: value
+		The environment variable's (default) value.
+		Could be platform specific when using the "osfamily" attribute.
+	Attribute: property
+		The property to be modified by this extension
+-->
+<!ELEMENT propextensions (#PCDATA)*>
+<!ATTLIST propextensions
+	propextmode (prepend | append | remove) #IMPLIED
+	value CDATA #REQUIRED
+	property CDATA #IMPLIED
+>
+
+<!-- Element: include
+	A pseudo configuration element to include other files containing parts
+	of a project (environment) definition.
+	Splitting up a project definition in different files has two advantages:
+	1) It simply improves the structure and maintainability of a large environment definition.
+	2) Partial project definitions might be reused in different environment definitions.
+	Include elements are processed in advance and put together into one single big XML document
+	by a fuzzy RapidEnv preprocessor. Please note you must write the whole include XML element
+	in one single line in order to be processed correctly. Another pseudo element <projectpart>
+	will serve as the root element for partial definitions however with the current DTD
+	approach <installunit> is a syntactically valid root element as well.
+	Attribute: file
+		A relative or absolute path to the file to be included
+		(e. g. <include file="../inc/envincl.xml"/>).
+-->
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+	file CDATA #IMPLIED
+>
+
+<!-- Element: includes
+	A pseudo configuration element to include other files containing parts
+	of a project (environment) definition.
+	Splitting up a project definition in different files has two advantages:
+	1) It simply improves the structure and maintainability of a large environment definition.
+	2) Partial project definitions might be reused in different environment definitions.
+	Include elements are processed in advance and put together into one single big XML document
+	by a fuzzy RapidEnv preprocessor. Please note you must write the whole include XML element
+	in one single line in order to be processed correctly. Another pseudo element <projectpart>
+	will serve as the root element for partial definitions however with the current DTD
+	approach <installunit> is a syntactically valid root element as well.
+	Attribute: file
+		A relative or absolute path to the file to be included
+		(e. g. <include file="../inc/envincl.xml"/>).
+-->
+<!ELEMENT includes EMPTY>
+<!ATTLIST includes
+	file CDATA #IMPLIED
+>
+

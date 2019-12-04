@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: ConfigFileTextTaskReplace.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/28/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileTextTaskReplace"
+	extends="org.rapidbeans.rapidenv.config.ConfigurationTask">
+
+	<description>Replace the given seach pattern by the given text.</description>
+
+	<property name="regexp" type="string" mandatory="true">
+		<description>Specifies the text to replace</description>
+	</property>
+
+	<property name="replaceby" type="string" mandatory="true" emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>Specifies the text to insert instead of the replaced text.</description>
+	</property>
+
+	<codegen mode="split" implementation="strict"/>
+</beantype>

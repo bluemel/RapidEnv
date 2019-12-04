@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: InsertMode.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 09/21/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.config.file.InsertMode">
+	<description>Determines if to append or to prepend so text in
+the configuration file.</description>
+	<enum name="append">
+		<description>Append some (lines of) text in the configuration file.</description>
+	</enum>
+	<enum name="prepend">
+		<description>Prepend some (lines of) text in the configuration file.</description>
+	</enum>
+</enumtype>

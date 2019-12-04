@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.rapidbeans.core.type.RapidBeansTypeLoader;
 import org.rapidbeans.core.type.TypeRapidBean;
 import org.rapidbeans.core.util.FileHelper;
 
@@ -38,6 +39,7 @@ public final class TaskGenDtdTest {
 
 	@Before
 	public void setUp() throws Exception {
+		RapidBeansTypeLoader.typeMapClearRootElementBindingsGeneric();
 	}
 
 	@After
@@ -45,7 +47,7 @@ public final class TaskGenDtdTest {
 	}
 
 	@Test
-	public void testGenerateDTD() throws IOException {
+	public void testGenerateDTD_simple() throws IOException {
 		TypeRapidBean roottype = TypeRapidBean.forName("org.rapidbeans.rapidenv.sdk.ant.Project");
 		File outfile = new File("target/out.dtd");
 		if (outfile.exists()) {
@@ -54,6 +56,19 @@ public final class TaskGenDtdTest {
 		final FileWriter writer = new FileWriter(outfile);
 		TaskGenDtd.generateDTD(roottype, writer, null);
 		writer.close();
-		assertTrue(FileHelper.filesEqual(new File("src/test/resources/out_ref.dtd"), outfile, true, true));
+		assertTrue(FileHelper.filesEqual(new File("src/test/resources/out_ref_simple.dtd"), outfile, true, true));
+	}
+
+	@Test
+	public void testGenerateDTDComplex() throws IOException {
+		TypeRapidBean roottype = TypeRapidBean.forName("org.rapidbeans.rapidenv.config.Project");
+		File outfile = new File("target/out.dtd");
+		if (outfile.exists()) {
+			assertTrue(outfile.delete());
+		}
+		final FileWriter writer = new FileWriter(outfile);
+		TaskGenDtd.generateDTD(roottype, writer, null);
+		writer.close();
+		assertTrue(FileHelper.filesEqual(new File("src/test/resources/out_ref_complex.dtd"), outfile, true, true));
 	}
 }

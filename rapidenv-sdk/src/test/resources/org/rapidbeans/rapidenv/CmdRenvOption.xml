@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * Rapid Beans Framework: CmdRenvOption.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 05/20/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<enumtype name="org.rapidbeans.rapidenv.CmdRenvOption">
+	<header>
+		<column name="short1" type="String"/>
+		<column name="argcount" type="Integer"/>
+	</header>
+	<enum name="debug">
+		<description>debug log level</description>
+		<cell name="short1" value="d"/>
+		<cell name="argcount" value="0"/>
+	</enum>
+	<enum name="env">
+		<description>the folder or file containing the project environment settings file.
+If it is a folder the settings files is assumed to be 'env.xml'</description>
+		<cell name="short1" value="e"/>
+		<cell name="argcount" value="1"/>
+		<cell name="description" value=""/>
+	</enum>
+	<enum name="force">
+		<description>forces update regardless if something is uptodate or not</description>
+		<cell name="short1" value="f"/>
+		<cell name="argcount" value="0"/>
+	</enum>
+		<enum name="verbose">
+		<description>verbose log level</description>
+		<cell name="short1" value="v"/>
+		<cell name="argcount" value="0"/>
+	</enum>
+	<enum name="yes">
+		<description>batch (yes) run mode without user interaction.
+			If you use this option the "boot", "update", or "configuration"
+			will run without user interaction which causes personal properties to get the default values.
+			Yes / No questions (do you really want to...?) will be automatically answered with "Yes".</description>
+		<cell name="short1" value="y"/>
+		<cell name="argcount" value="0"/>
+	</enum>
+</enumtype>

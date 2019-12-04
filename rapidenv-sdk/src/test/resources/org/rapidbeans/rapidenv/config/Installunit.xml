@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: Installunit.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 06/03/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.Installunit"
+	idtype="keyprops">
+
+	<description>An installation unit is an installable and configurable unit
+needed for your development environment e. g the execution platform like JDK,
+a build tool like Ant, or an IDE like Eclipse.</description>
+
+	<property name="fullyQualifiedName" key="true"
+		transient="true" depends="space,name">
+		<description>The key property depends from name and space.</description>
+	</property>
+
+	<property name="space" type="string"
+		default=""
+		pattern="\A[a-z][0-9a-z._]*\z"
+		emptyvalid="true"
+		>
+		<description>The installation unit name space.
+			Works like a package in Java.</description>
+	</property>
+
+	<property name="name" type="string"
+		mandatory="true"
+		pattern="\A[A-Za-z][0-9A-Za-z_-]*\z"
+		>
+		<description>The installation unit name.</description>
+	</property>
+
+	<property name="version" type="version"
+		mandatory="true"
+		>
+		<description>The version that is or should be installed.</description>
+	</property>
+
+	<property name="depends" type="association"
+		targettype="Installunit" inverse="dependents">
+		<description>Defines the n to n dependency assocition between installation units.
+Installation of units that depend from other units (depends not null or empty)
+requires the installation of these units before (this holds for transitive dependencies
+too).
+If you install such a unit depending on other ones selectively the required units will be
+automatically be installed before. If you install all units RapidEnv will choose an
+appropriate installation sequence.
+If you deinstall a unit that is required by other ones selectively all other units directly
+or indirectly requiering this unit will be automatically deinstalled before (after user
+confirmation).
+</description>
+	</property>
+
+	<property name="sourcetype" type="choice"
+		default="url"
+		enum="InstallunitSourceType"
+		>
+		<description>Defines how to get access to the installation source.</description>
+	</property>
+
+	<property name="sourceurl" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>Defines where the installation source comes from.
+If "sourceurl" is not defined it automatically defaults to
+project.installsourceurl/space/name/version
+whereas each component of "space" will become a separate subfolder.</description>
+	</property>
+
+	<property name="sourcefile" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>Specifies the source file name in case it is not the
+default one "&lt;install unit name&gt;-&lt;version&gt;.zip".
+Usually it is sufficient to define either a source file name or a
+complete source URL. Complex source URLs on the other hand sometimes make
+it hard or impossible to figure out the source file name.
+In this case you simply specify the source file name additionally.</description>
+	</property>
+
+	<property name="downloadmode" type="choice"
+		enum="DownloadMode"
+		default="automatic"
+		>
+		<description>Describes how to load the installation unit's file(s) (installer).</description>
+	</property>
+
+	<property name="homedir" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The folder where the unit is installed on your machine.
+If "homedir" is not defined it automatically defaults to
+project.installtargetdir/space/name/version
+whereas each component of "space" will become a separate subfolder.</description>
+	</property>
+
+	<property name="osfamily" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystemFamily">
+		<description>If this value is defined the install unit will exclusively be installed on
+this type of operating system family otherwise it will be installed operating system independently.</description>
+	</property>
+
+	<property name="os" type="choice"
+		enum="org.rapidbeans.core.util.OperatingSystem">
+		<description>If this value is defined the install unit will exclusively be installed on
+this type of operating system otherwise it will be installed operating system independently.</description>
+	</property>
+
+	<property name="architecture" type="string">
+		<description>If this value is defined the install unit will exclusively be installed on
+this platform architecture otherwise it will be installed platform architecture independently.</description>
+	</property>
+
+	<property name="installcontrol" type="choice"
+		enum="InstallControl"
+		default="normal"
+		propclass="org.rapidbeans.rapidenv.config.InstallunitPropInstallcontrol"
+		>
+		<description>Determines if to install or deinstall the installation unit.
+normal: install and update as usual
+optional: install only when explicitely specified in the installation or update command.
+  Update as usual
+discontinued: deinstall during update, refuse instsllstion snd configuration</description>
+	</property>
+
+	<property name="installmode" type="choice"
+		enum="InstallMode"
+		default="unpack">
+		<description>Determines how to install the installation unit.</description>
+	</property>
+
+	<property name="packaging" type="choice"
+		enum="Packaging">
+		<description>Determines the type of packaging.</description>
+	</property>
+
+	<property name="unpackstrategy" type="choice"
+		enum="UnpackStrategy"
+		default="removerootdeep">
+		<description>This property drives the removal of one or more
+(single) root directories after having unpacked the
+installation archive file under &quot;homedir()&quot;.
+The default behavior is "removerootdeep" but in most cases &quot;removeroot&quot;
+will be sufficient and have better performance as well as less problems under Windows file system.</description>
+	</property>
+
+	<property name="deinstallunusedmode" type="choice"
+		enum="org.rapidbeans.rapidenv.DeinstallUnusedMode"
+		default="always">
+		<description>Determines if or if not to deinstall unused version(s) after upgrade.
+Per default unused version(s) will always be deinstalled.</description>
+	</property>
+
+	<property name="dependents" type="association"
+		targettype="Installunit" inverse="depends" transient="true">
+		<description>Defines the inverse part of the n to n dependency association between installation units.
+Installation of units with other dependent units (dependents not null or empty)
+is required before you install dependents (this holds for transitive dependencies too).
+</description>
+	</property>
+
+	<property name="propertys" type="association"
+		targettype="EnvProperty"
+		composition="true"
+		>
+		<description>Installation unit specific property definitions.</description>
+	</property>
+
+	<property name="downloads" type="association"
+		composition="true"
+		targettype="Download"
+		>
+		<description>URLs where to download the installation source</description>
+	</property>
+
+	<property name="sourcefilechecks" type="association"
+		composition="true"
+		targettype="Filecheck"
+		>
+		<description>Checks on the source file</description>
+	</property>
+
+	<property name="subunits" type="association"
+		composition="true"
+		targettype="Installunit">
+		<description>Subunits if the installation unit. Subunits:
+- can not be installed specifically before their parent units are installed.
+- will be automatically installed when their parent units are installed.
+- will be automatically deinstalled when their parent units are deinstalled (no confirmation).
+- will be usually installed into the parent units installtion location.
+f you install all units RapidEnv will choose an
+appropriate installation sequence.
+</description>
+	</property>
+
+	<property name="configurations" type="association"
+		composition="true"
+		targettype="Configuration">
+		<description>Configurations serve to configure an installation unit in distinct phases.</description>
+	</property>
+
+	<property name="installcommand" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+		maxmult="1"
+		>
+		<description>Only valid for and mandatory for install units of mode &quot;execute&quot;</description>
+	</property>
+
+	<property name="deinstallcommand" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+		maxmult="1"
+		>
+		<description>Only valid for and mandatory for install units of mode &quot;execute&quot;</description>
+	</property>
+
+	<property name="propextensions" type="association"
+		composition="true"
+		targettype="PropertyExtensionFromInstallUnit">
+		<description>Defines a path extension defintion coming from this install unit.
+The extension will lead to some migration of the property value during upgrade if it changes.</description>
+	</property>
+
+	<property name="include" type="association"
+		targettype="Include"
+		composition="true"
+		>
+		<description>Pseudo element for including other files containing partial installunit definitions</description>
+	</property>
+
+	<xmlbinding>
+		<property name="configurations">
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileXml"
+				xmlelement="xmlfile"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileProperties"
+				xmlelement="propertiesfile"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileText"
+				xmlelement="textfile"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFolder"
+				xmlelement="folder"/>
+			<beantype name="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+				xmlelement="command"/>
+			<beantype name="org.rapidbeans.rapidenv.config.cmd.AntTask"
+				xmlelement="anttask"/>
+			<beantype name="org.rapidbeans.rapidenv.config.cmd.ShellLinkIcon"
+				xmlelement="icon"/>
+		</property>
+	</xmlbinding>
+
+	<codegen mode="split" implementation="strict" />
+
+</beantype>

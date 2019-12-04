@@ -269,6 +269,9 @@ public final class TaskGenDtd extends Task {
 					if (colPropType.isComposition() && (!colPropType.isTransient())) {
 						for (final String subelementname : getSubelementNames(colPropType, type)) {
 							writer.write(" | ");
+if (subelementname.startsWith("inclux")) {
+	System.out.println("@@@ " + type.getName() + "::" + subelementname);
+}
 							writer.write(subelementname);
 						}
 					}
@@ -522,7 +525,7 @@ public final class TaskGenDtd extends Task {
 		}
 		if (subelementNames.size() == 0) {
 			String subelementName = colPropType.getPropName();
-			if (colPropType.getMaxmult() != 1 || subelementName.endsWith("s")) {
+			if (colPropType.getMaxmult() > 1 && subelementName.endsWith("s")) {
 				subelementName = subelementName.substring(0, subelementName.length() - 1);
 			}
 			subelementNames.add(subelementName);

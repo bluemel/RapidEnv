@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: InstallunitPart.xml
+ *
+ * Copyright (C) 2010 - 2013 Martin Bluemel
+ *
+ * Creation Date: 03/29/2013
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.InstallunitPart">
+	<description>The root object for every partial install unit definition included into
+other project environment definitions by means of the RapidEnv &gt;include&lt; element.</description>
+
+	<property name="propertys" type="association"
+		targettype="EnvProperty"
+		composition="true"
+		>
+		<description>Installation unit specific property definitions.</description>
+	</property>
+
+	<property name="downloads" type="association"
+		composition="true"
+		targettype="Download"
+		>
+		<description>URLs where to download the installation source</description>
+	</property>
+
+	<property name="sourcefilechecks" type="association"
+		composition="true"
+		targettype="Filecheck"
+		>
+		<description>Checks on the source file</description>
+	</property>
+
+	<property name="subunits" type="association"
+		composition="true"
+		targettype="Installunit">
+		<description>Subunits if the installation unit. Subunits:
+- can not be installed specifically before their parent units are installed.
+- will be automatically installed when their parent units are installed.
+- will be automatically deinstalled when their parent units are deinstalled (no confirmation).
+- will be usually installed into the parent units installtion location.
+f you install all units RapidEnv will choose an
+appropriate installation sequence.
+</description>
+	</property>
+
+	<property name="configurations" type="association"
+		composition="true"
+		targettype="Configuration">
+		<description>Configurations serve to configure an installation unit in distinct phases.</description>
+	</property>
+
+	<property name="installcommand" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+		maxmult="1"
+		>
+		<description>Only valid for and mandatory for install units of mode &quot;execute&quot;</description>
+	</property>
+
+	<property name="deinstallcommand" type="association"
+		composition="true"
+		targettype="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+		maxmult="1"
+		>
+		<description>Only valid for and mandatory for install units of mode &quot;execute&quot;</description>
+	</property>
+
+	<property name="propextensions" type="association"
+		composition="true"
+		targettype="PropertyExtensionFromInstallUnit">
+		<description>Defines a path extension definition coming from this install unit.
+The extension will lead to some migration of the property value during upgrade if it changes.</description>
+	</property>
+
+	<xmlbinding xmlrootelement="installunitpart">
+		<property name="configurations">
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileXml"
+				xmlelement="xmlfile"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileProperties"
+				xmlelement="propertiesfile"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFileText"
+				xmlelement="textfile"/>
+			<beantype name="org.rapidbeans.rapidenv.config.file.ConfigFolder"
+				xmlelement="folder"/>
+			<beantype name="org.rapidbeans.rapidenv.config.cmd.SystemCommand"
+				xmlelement="command"/>
+			<beantype name="org.rapidbeans.rapidenv.config.cmd.AntTask"
+				xmlelement="anttask"/>
+			<beantype name="org.rapidbeans.rapidenv.config.cmd.ShellLinkIcon"
+				xmlelement="icon"/>
+		</property>
+	</xmlbinding>
+	<codegen mode="simple" implementation="strict"/>
+</beantype>

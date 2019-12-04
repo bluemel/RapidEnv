@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: CmdCondStdout.xml
+ *
+ * Copyright (C) 2010 Martin Bluemel
+ *
+ * Creation Date: 10/03/2010
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.cmd.CmdCondStderr">
+
+	<description>Defines a condition on the standard error contents
+at the end of the system command execution.</description>
+
+	
+	<property name="equals" type="string"
+		multiline="true"
+		emptyvalid="true"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The standard error output has be exactly the specified (maybe multi lined) value.</description>
+	</property>
+
+	<property name="matches" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The standard error output has to match the specified pattern (Java regular expression) from begin to end.</description>
+	</property>
+
+	<property name="contains" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The standard error output must contain the specified string.</description>
+	</property>
+
+	<property name="containsmatch" type="string"
+		propclass="org.rapidbeans.rapidenv.config.PropertyInterpretedString">
+		<description>The standard error output has to match the specified pattern (Java regular expression).</description>
+	</property>
+
+	<xmlbinding>
+		<property name="equals" bindingtype="element"/>
+	</xmlbinding>
+
+	<codegen implementation="strict"/>
+
+</beantype>

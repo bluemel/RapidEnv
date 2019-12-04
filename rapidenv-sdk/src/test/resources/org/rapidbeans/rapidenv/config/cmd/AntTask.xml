@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * RapidEnv: AntTask.xml
+ *
+ * Copyright (C) 2011 Martin Bluemel
+ *
+ * Creation Date: 12/12/2011
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * You should have received a copies of the GNU Lesser General Public License and the
+ * GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beantype name="org.rapidbeans.rapidenv.config.cmd.AntTask"
+	extends="org.rapidbeans.rapidenv.config.cmd.SystemCommand">
+
+	<description>An ant task command configuration allows you to define
+		the execution of an arbitrary Ant task with an arbitrary set of
+		named arguments. As ant task are Java programs they have the
+		usual advantages over system commands. THe most important here
+		is: they are (or at least can be more likely) operating system independent.
+		Like with commands you could check preconditions on files
+		if the ant task has to be executed. Postconditions on the return code,
+		stdout and stderror as well as on files can be used to verify
+		ant task execution success.</description>
+
+	<property name="anttaskname" type="string"
+		mandatory="true">
+		<description>The ant task to execute</description>
+	</property>
+
+	<codegen mode="split" implementation="strict"/>
+
+</beantype>
