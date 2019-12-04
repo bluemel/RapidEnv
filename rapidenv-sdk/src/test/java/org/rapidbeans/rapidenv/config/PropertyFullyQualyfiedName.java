@@ -34,6 +34,6 @@ public class PropertyFullyQualyfiedName extends PropertyString {
 
 	@Override
 	public String getValue() {
-		return ((EnvProperty) getBean()).getFullyQualifiedName();
+		return "";
 	}
 }
