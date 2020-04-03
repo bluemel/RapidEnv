@@ -107,8 +107,15 @@ public class ShellLinkWindowsTest {
 		assertEquals(new File("src/test/resources/shelllink/testRead.lnk"), shellLink.getFile());
 		assertEquals(new File(System.getenv("SYSTEMROOT") + File.separator + "System32" + File.separator + "cmd.exe"),
 				shellLink.getTargetPath());
-		assertEquals(System.getenv("SYSTEMROOT") + File.separator + "System32",
-				shellLink.getWorkingDirectory().getAbsolutePath());
+		switch (PlatformHelper.getOs()) {
+		case windows_10:
+			assertEquals("C:\\Windows\\System32", shellLink.getWorkingDirectory().getAbsolutePath());
+			break;
+		default:
+			assertEquals(System.getenv("SYSTEMROOT") + File.separator + "System32",
+					shellLink.getWorkingDirectory().getAbsolutePath());
+			break;
+		}
 		assertEquals(2, shellLink.getArguments().size());
 		assertEquals("/C", shellLink.getArguments().get(0).getValue());
 		assertFalse(shellLink.getArguments().get(0).getQuoted());

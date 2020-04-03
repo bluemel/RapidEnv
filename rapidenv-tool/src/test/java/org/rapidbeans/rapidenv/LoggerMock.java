@@ -1046,8 +1046,9 @@ public class LoggerMock extends Logger {
 		// Fall back to searching up the call stack and trying each
 		// calling ClassLoader.
 		for (int ix = 0;; ix++) {
-			@SuppressWarnings({ "deprecation", "restriction" })
-			Class<?> clz = sun.reflect.Reflection.getCallerClass(ix);
+            // @SuppressWarnings({ "deprecation", "restriction" })
+            // Class<?> clz = sun.reflect.Reflection.getCallerClass(ix);
+			Class<?> clz = new Throwable().getStackTrace()[ix].getClass();
 			if (clz == null) {
 				break;
 			}

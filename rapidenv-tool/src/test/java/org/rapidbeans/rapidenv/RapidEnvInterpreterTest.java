@@ -155,6 +155,9 @@ public class RapidEnvInterpreterTest {
 				assertEquals(new File(System.getenv("SystemRoot") + "/System32/cmd.exe").getAbsolutePath(),
 						shellLinkWinRead.getTargetPath().getAbsolutePath());
 				break;
+			case windows_10:
+				assertEquals("C:\\Windows\\System32\\cmd.exe", shellLinkWinRead.getTargetPath().getAbsolutePath());
+				break;
 			default:
 				assertEquals(new File(System.getenv("SystemRoot") + "/System32/cmd.exe").getAbsolutePath(),
 						shellLinkWinRead.getTargetPath().getAbsolutePath());
@@ -227,6 +230,9 @@ public class RapidEnvInterpreterTest {
 			case windows_xp:
 				assertEquals(new File(System.getenv("SystemRoot") + "/System32/cmd.exe").getAbsolutePath(),
 						shellLinkWinRead.getTargetPath().getAbsolutePath());
+				break;
+			case windows_10:
+				assertEquals("C:\\Windows\\System32\\cmd.exe", shellLinkWinRead.getTargetPath().getAbsolutePath());
 				break;
 			default:
 				assertEquals(new File(System.getenv("SystemRoot") + "/System32/cmd.exe").getAbsolutePath(),
@@ -309,6 +315,8 @@ public class RapidEnvInterpreterTest {
 			case windows_xp:
 				assertEquals(new File(System.getenv("SystemRoot") + "/System32/cmd.exe").getAbsolutePath(),
 						shellLinkWinRead.getTargetPath().getAbsolutePath());
+			case windows_10:
+				assertEquals("C:\\Windows\\System32\\cmd.exe", shellLinkWinRead.getTargetPath().getAbsolutePath());
 				break;
 			default:
 				assertEquals(new File(System.getenv("SystemRoot") + "/System32/cmd.exe").getAbsolutePath(),
